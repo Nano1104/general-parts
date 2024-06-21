@@ -1,0 +1,112 @@
+
+#bg-home {
+    filter: grayscale(1);
+    position: absolute;
+    z-index: -10;
+    width: 100%;
+}
+
+#navBar {
+  background: rgb(25,40,76);
+  background: linear-gradient(0deg, rgba(25,40,76,0) 0%, rgba(0,0,0,1) 90%);
+}
+
+/* #svg-logo {
+    animation: rotate 10s linear infinite;
+}
+
+@keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  } */
+
+/* #logo {
+  width: 15%;
+}
+
+#sw {
+  background-color: white;
+  width: 35%;
+  padding: 2px 6px;
+  display: flex;
+  justify-content: start;
+  clip-path: polygon(0 0, 60% 0, 75% 100%, 0% 100%);
+  position: relative;
+  z-index: 5;
+}
+#parts {
+  width: 70%;
+  padding: 2px 6px;
+  display: flex;
+  justify-content: end;
+  position: absolute;
+  clip-path: polygon(100% 0, 20% 0, 31% 100%, 100% 100%);
+  top: 0;
+  right: 35px;
+} */
+
+.btn-logs::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 8px;
+  z-index: -1;
+  background-color: var(--lightGray);
+
+  transition: transform 300ms ease-in-out;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.btn-logs:hover::before {
+  transform: scaleX(1);
+} 
+
+.btn-logs {
+  padding: 3px 7px;
+  border-radius: 8px;
+  border: 1px solid white;
+  z-index: 1;
+  color: white;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  transition: 300ms all;
+}
+.btn-logs:hover {
+  color: var(--gray);
+  border: 1px solid var(--gray);
+}
+.btn-logs::after {
+  content: "";
+  border: 1px solid white;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  transition: background-color 300ms ease-in-out;
+}
+.btn-logs:hover::after {
+  background-color: var(--gray);
+  border: 1px solid transparent;
+}
+
+
+#home-title h1 {
+  text-shadow: 0px 0px 3px black;
+}
+#home-title span {
+  background-color: rgba(255, 255, 255, 0.541);
+  padding: 2px 0px;
+  width: 100%;
+  color: var(--gray);
+  text-align: center;
+  text-shadow: 0px 0px 0px black;
+} 

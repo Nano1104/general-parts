@@ -1,0 +1,32 @@
+#products-container-grid {
+    display: grid;
+    grid-template-columns: 15% 1fr;
+}
+
+#nav-categories {
+    grid-column: 1 / 2;
+    height: 100vh;
+}
+
+#products-container {
+    grid-column: 2 / 3;
+    height: 100vh;
+}
+
+
+/* Estilos de la barra de desplazamiento para navegadores WebKit (Chrome, Safari) */
+#products-container::-webkit-scrollbar {
+    width: 15px; 
+}
+
+#products-container::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+}
+
+#products-container::-webkit-scrollbar-thumb {
+    background: #888; 
+}
+
+#products-container::-webkit-scrollbar-thumb:hover {
+    background: #444; 
+}

@@ -1,24 +1,25 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-
-import { productos } from "../../utils/datamock.js";
+import { categoriesAndSubCategories } from "../../utils/categories&SubCategories.js";
+//components
 import { Category } from "../Category/Category.jsx";
-
+//icons
 import { HiHome } from "react-icons/hi2";
 
 export const InventaryList = () => {
     const [categories, setCategories] = useState([])
 
     useEffect(() => {
-        setCategories(productos)
+        setCategories(categoriesAndSubCategories.map(cat => cat.category))    
     }, [])
 
     return(
         <>
-            <nav className="bg-white h-[100vh] w-[15%] absolute">
+            <nav className="bg-white" id="nav-categories">
+                <h3 className="font-semibold text-white w-full h-[50px] bg-red flex justify-center items-center border-b-white">Repuestos</h3>
                 <ul className="flex gap-3 flex-col h-full">
                     {
-                        categories.map(prod => <Category category={prod.CATEGORIA} /> )
+                        categories.map((category, index) => <Category key={`category-${category}-${index}`} category={category} /> )
                     }
                     <hr />
                     <Link to="/" className="m-auto"><HiHome className="text-gray text-3xl" /></Link>

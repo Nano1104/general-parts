@@ -6,8 +6,10 @@ import { ProductsContainer } from "../../components/ProductsContainer/ProductsCo
 export const ProductosPage = () => {
     return(
         <>
-            <InventaryList />
-            <ProductsContainer />
+            <div id="products-container-grid">
+                <InventaryList />
+                <ProductsContainer />
+            </div>
         </>
     )
 }
