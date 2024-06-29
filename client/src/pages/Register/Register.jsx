@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import useSignup from "../../hooks/useSigup";
 import bgRegister from "../../images/bg-register.avif"
 import "./register.css"
 
 export const Register = () => {
     const { signUp } = useSignup();
+    const navigate = useNavigate();
     const [values, setValues] = useState({ first_name: "", last_name: "", email: "", phone: "", password: "" })
 
     const handleInputChange = (e) => {
@@ -22,6 +24,10 @@ export const Register = () => {
         } else {
             setValues({ ...values, first_name: fullName, last_name: '' });
         }
+    }
+
+    const handleNavigate = () => {
+        navigate(-1);
     }
 
     const handleSubmit = async (e) => {
@@ -47,6 +53,7 @@ export const Register = () => {
                     onChange={ (e) => { setValues({ ...values, password: e.target.value })} }/>
 
                     <button type="submit" className="py-2 px-4 m-4 bg-red text-center text-white rounded-md w-[8%]">REGISTRAR</button>
+                    <button onClick={handleNavigate} className="py-2 px-4 bg-red text-center text-white rounded-md w-[8%]">VOLVER</button>
                 </div>
             </form>
         </div>

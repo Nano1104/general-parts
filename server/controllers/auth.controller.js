@@ -1,9 +1,29 @@
 import User from "../models/user.model.js";
 import Cart from "../models/cart.model.js";
 import { createHash } from "../utils/bcrypt.js";
+import { isValidPassword } from "../utils/bcrypt.js";
+import { generateTokenAndSetCookie } from "../utils/jwt.js";
+
+export const getAuthUser = async (req, res) => {
+    try {
+        res.json(req.user);
+    } catch (err) {
+        res.status(404).json({ message: "Error getting auth user", error: err.message });
+    }
+}
 
 export const login = async (req, res) => {
     try {
+        const { email, password } = req.body;
+        if(!email || !password) return res.status(400).json({ message: "Some fields may be empty" });
+
+        const user = await User.findOne({ email: email })
+        if(!user) return res.status(404).json({ message: "User does not exist" })   //si no se encuentra el user
+
+        if(!isValidPassword(password, user)) return res.status(401).json({message: "password incorrect"})        //o si la contraseña es incorrecta 
+
+        generateTokenAndSetCookie(user._id, res)
+
         res.status(200).json({ message: "Login Successfull" });
     } catch (err) {
         res.status(404).json({ message: "Error trying to register", error: err.message });
@@ -36,5 +56,18 @@ export const register = async (req, res) => {
         res.status(200).json({ message: "Register Successfull" });
     } catch (err) {
         res.status(404).json({ message: "Error trying to register", error: err.message });
+    }
+}
+
+export const logout = async (req, res) => {
+    try {
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'Strict'
+        });
+        res.status(200).json({ message: "Success Logout" });
+    } catch (err) {
+        res.status(400).json({ message: "Error trying to logout", error: err.message });
     }
 }

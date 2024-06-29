@@ -1,15 +1,18 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { categoriesAndSubCategories } from "../../utils/categories&SubCategories.js";
+import { useAuthContext } from "../../context/AuthContext.jsx";
 //components
 import { Category } from "../Category/Category.jsx";
 //icons
 import { HiHome } from "react-icons/hi2";
 
 export const InventaryList = () => {
+    const { authUser } = useAuthContext();
     const [categories, setCategories] = useState([])
 
     useEffect(() => {
+        console.log(authUser)
         setCategories(categoriesAndSubCategories.map(cat => cat.category))    
     }, [])
 
@@ -22,6 +25,11 @@ export const InventaryList = () => {
                         categories.map((category, index) => <Category key={`category-${category}-${index}`} category={category} /> )
                     }
                     <hr />
+                    {
+                        authUser && authUser.role === "admin"
+                        ? <Link to="/admin">VER PAGINA DE ADMIN</Link>
+                        : null
+                    }
                     <Link to="/" className="m-auto"><HiHome className="text-gray text-3xl" /></Link>
                 </ul>
             </nav>
