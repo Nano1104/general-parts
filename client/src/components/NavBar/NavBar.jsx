@@ -14,9 +14,8 @@ export const NavBar = () => {
     
     return(
         <>
-        <nav className="font-montserrat py-3 px-4 text-lg text-white" id="navBar">
-            <ul className="flex justify-between items-center gap-7 m-7">
-                <Logo />
+        <nav className="font-montserrat py-3 px-4 text-lg text-white">
+            <ul className="flex justify-end items-center gap-7 m-7">
                 <div className="flex items-center gap-10 text-base">
                     <Link to="/productos" className="font-semibold hover:text-lightGray transition duration-200">Repuestos</Link>
                     <Link to="/contact" className="font-semibold hover:text-lightGray transition duration-200">Contáctanos</Link>

@@ -1,0 +1,25 @@
+
+#product {
+    transition: .2s ease-in-out;
+}
+
+.product-div-hover {
+    height: 450px;
+    width: 410px;
+    background: rgb(255,255,255);
+    background: linear-gradient(0deg, rgba(255,255,255,1) 15%, rgba(34,193,195,0) 100%);
+    visibility: hidden; 
+    opacity: 0; 
+    position: absolute;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    border-radius: 12px;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+}
+#product:hover .product-div-hover {
+    visibility: visible; /* Hacer visible al pasar el ratón */
+    opacity: 1; /* Hacer opaco al pasar el ratón */
+}

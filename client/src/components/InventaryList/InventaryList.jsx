@@ -18,19 +18,11 @@ export const InventaryList = () => {
 
     return(
         <>
-            <nav className="bg-white" id="nav-categories">
-                <h3 className="font-semibold text-white w-full h-[50px] bg-red flex justify-center items-center border-b-white">Repuestos</h3>
-                <ul className="flex gap-3 flex-col h-full">
+            <nav className="bg-gray py-1 relative px-7"> 
+                <ul className="flex items-center gap-2">
                     {
                         categories.map((category, index) => <Category key={`category-${category}-${index}`} category={category} /> )
                     }
-                    <hr />
-                    {
-                        authUser && authUser.role === "admin"
-                        ? <Link to="/admin">VER PAGINA DE ADMIN</Link>
-                        : null
-                    }
-                    <Link to="/" className="m-auto"><HiHome className="text-gray text-3xl" /></Link>
                 </ul>
             </nav>
         </>

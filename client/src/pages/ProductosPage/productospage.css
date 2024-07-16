@@ -1,4 +1,4 @@
-#products-container-grid {
+/* #products-container-grid {
     display: grid;
     grid-template-columns: 15% 1fr;
 }
@@ -11,7 +11,7 @@
 #products-container {
     grid-column: 2 / 3;
     height: 100vh;
-}
+} */
 
 
 /* Estilos de la barra de desplazamiento para navegadores WebKit (Chrome, Safari) */

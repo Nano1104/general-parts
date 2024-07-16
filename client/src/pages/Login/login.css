@@ -1,4 +1,25 @@
 
-/* #login-container {
-    filter: blur(5px);
-} */
+#bg-login {
+    background-image: url("../../images/bg-login.avif");
+    background-size: cover;
+    filter: brightness(0.5) blur(2px) grayscale(0.8);
+    width: 100%;
+    height: 100vh;
+}
+
+#form {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    /* box-shadow: 0px 0px 15px var(--cBlack); */
+}
+
+#footer-form {
+    width: 80%;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 100px;
+}

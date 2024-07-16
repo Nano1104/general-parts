@@ -13,8 +13,11 @@
   --poppins: "Poppins", sans-serif;
 
   --red: #66212a;
-  --gray: #2C3E50;
-  --deepGray: rgb(73, 70, 70);
+  --orange: #DC5F00;
+  --cBlack: #272829;
+  --deepGray: #373A40;
+  --lightBlack: #61677A;
+  --gray: #D8D9DA;
   --lightGray: #BDC3C7;
   --white: #ECF0F1;
 }
@@ -39,10 +42,12 @@
 *, ::after, ::before {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  background-color: var(--deepGray);
+  background-color: var(--cBlack);
+  overflow: auto;
 }
 
 a {

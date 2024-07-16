@@ -8,6 +8,7 @@ import { connectToDB } from "./db/dbConnection.js";
 import productRouter from "./routes/product.routes.js"
 import authRouter from "./routes/auth.routes.js"
 import userRouter from "./routes/user.routes.js"
+import cartRouter from "./routes/cart.routes.js"
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(cors({
 app.use("/api/products", productRouter)
 app.use("/api/auth", authRouter)
 app.use("/api/user", userRouter)
+app.use("/api/cart", cartRouter)
 
 app.listen(PORT, () => {
     console.log(`App listening on port ${PORT}`);

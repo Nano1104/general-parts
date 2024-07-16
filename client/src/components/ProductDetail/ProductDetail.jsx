@@ -1,26 +1,96 @@
 import { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useLocation, useParams } from "react-router-dom"
+import Swal from 'sweetalert2';
 
+import { useAuthContext } from "../../context/AuthContext.jsx"
+import { useCartContext } from "../../context/CartContext.jsx";
+
+import bgImg from "../../images/bg-contact.avif"
+import { renderToString } from 'react-dom/server';
+import { IoCartOutline } from "react-icons/io5";
+import { MdKeyboardArrowRight } from "react-icons/md";
+import { IoMdHeartEmpty } from "react-icons/io";
+import { ItemCount } from "../ItemCount/ItemCount.jsx"
+import { Loading } from "../Loading/Loading.jsx";
+
+
+const useQuery = () => {
+    return new URLSearchParams(useLocation().search);
+}
 
 export const ProductDetail = ({prod}) => {
-    const { codpro, desc_stock, rubro, subrub, proveed, desc_rubro, desc_marca, porcen1, precioimpre } = prod;
-    const navigate = useNavigate();
+    const { authUser } = useAuthContext();
+    const { addToCart } = useCartContext();
+
+    const { codpro, desc_stock, rubro, subrub, proveed, desc_rubro, desc_subrubro, desc_marca, porcen1, precioimpre } = prod;
+    const { id } = useParams();
+
+    const encodedCategory = desc_rubro ? desc_rubro.toLowerCase() : "";
+    const encodedSubcategory = desc_subrubro ? encodeURIComponent(desc_subrubro).toLowerCase() : "";
     
+    const navigate = useNavigate();
     const handleNavigate= () => {
         navigate(-1);
     }
 
+    const handleAddToCart = () => {
+        if(!authUser) {
+            Swal.fire({
+                icon: "question",
+                html: `<span style="font-weight: 500">NECESITAS INICIAR SESIÓN PARA AGREGAR AL CARRITO!</span>`,
+                confirmButtonColor: "#DC5F00"
+              });
+        } else {
+            addToCart()
+        }
+    }
+
     return(
         <>
-        <div className="h-[250px] w-[250px] rounded-md p-7 m-7 text-base text-center bg-lightGray" id="prod-detail-container">
-            <h2 className="font-semibold uppercase">{desc_stock}</h2>
-            <span className="italic">{rubro}</span>
-            <span></span>
-            <span>Proveedor: {proveed}</span>
-            <span>Marca: {desc_marca}</span>
-            <strong className="italic">Precio: {precioimpre}</strong>
-            <br />
-            <button className="py-2 px-4 m-4 text-center rounded-md bg-red text-white" onClick={handleNavigate}>Volver</button>
+        <div id="prod-detail-container"
+        className="h-[90vh] w-[75%] py-[50px] px-[65px] text-base text-center bg-[#EEEEEE] font-poppins flex m-auto mt-10 rounded-xl relative"
+        >
+            <div className="img-prod-detail basis-[58%] border-r-4">
+                <div className=""></div>
+                {/* <img src="#" alt={`prod-${codpro}-img`} /> */}
+            </div>
+            <div id="labels-prod-detail" className="basis-[42%] mt-10 text-base">
+                <div className="anchors flex justify-start items-center ml-10 italic absolute top-[25px] left-0 font-semibold">
+                    <Link className="first-letter:uppercase" to={`/productos/${encodedCategory}`}>{desc_rubro}</Link><MdKeyboardArrowRight />
+                    <Link className="first-letter:uppercase" to={`/productos/${encodedCategory}/${encodedSubcategory}`}>{desc_subrubro}</Link><MdKeyboardArrowRight />
+                    <span className="cursor-pointer">{id}</span>
+                </div>
+                <h1 className="uppercase font-poppins font-bold text-3xl px-2 ml-[35px]">{desc_stock}</h1>
+                <hr className="w-[50%] mt-5 border border-5 mx-auto" />
+                <div className="flex items-start flex-col p-10">
+                    <div className="flex flex-col mt-10 items-start gap-2">
+                        <span className="font-medium">Proveedor: {proveed}</span>
+                        <span className="font-medium">Marca: {desc_marca}</span>
+                        <span className="font-medium">Stock: <span className="italic text-red">No Disponible!</span></span>
+                        <span className="text-3xl">${precioimpre}</span>
+                    </div>
+                    <div className="flex flex-col items-start mt-2">
+                        <span className="font-semibold ml-1">Cantidad.</span>
+                        <ItemCount />
+                    </div>
+                    <div className="flex justify-center mt-4 gap-2">
+                        <button className="rounded-md py-2 px-4 bg-orange text-black flex justify-center items-center gap-1" onClick={handleAddToCart}>
+                            <IoCartOutline className="inline-block text-xl" />Agregar
+                        </button>
+                        <button className="rounded-md py-2 px-4 bg-deepGray text-white flex justify-center items-center gap-1">
+                            <IoMdHeartEmpty className="inline-block text-xl" />Favoritos
+                        </button>
+                    </div>
+                    {/* <hr className="w-[50%] mt-5 border border-5 mx-auto" /> */}
+                    <div className="text-left">
+                        <h2 className="font-semibold mt-16 text-3xl">DESCRIPCIÓN</h2>
+                        <div className="mt-4 h-[17vh] overflow-auto">
+                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Modi temporibus expedita reprehenderit consequuntur velit aperiam dolores?
+                            Delectus non illo quisquam, quia quis veritatis optio quibusdam facere fugiat blanditiis vitae reprehenderit!
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         </>
     )

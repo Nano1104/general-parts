@@ -1,6 +1,6 @@
 
 #bg-home {
-    filter: grayscale(1);
+    filter: brightness(0.5) blur(2px) grayscale(0.8);
     position: absolute;
     z-index: -10;
     width: 100%;
@@ -100,7 +100,7 @@
 
 
 #home-title h1 {
-  text-shadow: 0px 0px 3px black;
+  text-shadow: 0px 0px 5px black;
 }
 #home-title span {
   background-color: rgba(255, 255, 255, 0.541);

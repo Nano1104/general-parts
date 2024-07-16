@@ -3,12 +3,15 @@ import { Link } from "react-router-dom";
 import { IoIosArrowForward } from "react-icons/io";
 import { categoriesAndSubCategories } from "../../utils/categories&SubCategories.js";
 
+import "./category.css"
+import 'animate.css';
+
 export const Category = ({category}) => {
     const [isDropdownVisible, setDropdownVisible] = useState(false);
     const [subCategories, setSubCategories] = useState([]);
 
     const showSubCategories = () => setDropdownVisible(true);
-    /* const hideSubCategories = () => setDropdownVisible(false); */
+    const hideSubCategories = () => setDropdownVisible(false);
 
     useEffect(() => {
         const categoryFound = categoriesAndSubCategories.find(elem => elem.category === category);
@@ -19,23 +22,33 @@ export const Category = ({category}) => {
 
     return(
         <>
-            <div
-                className="relative flex justify-between items-center hover:cursor-pointer hover:bg-red hover:text-white transition duration-300"
-                onMouseEnter={showSubCategories}
-                /* onMouseLeave={hideSubCategories} */
-            >
-                <Link className="p-2 font-montserrat w-full uppercase" to={`/productos/${category}`} onMouseEnter={showSubCategories}>{category}</Link>
-                <IoIosArrowForward className="mr-2" />
-            </div>
+            <Link 
+                id={`category-${category}-link`}
+                className="category-link text-black font-medium text-sm uppercase font-poppins"
+                to={`/productos/${category}`}
+                onMouseLeave={hideSubCategories}
+                onMouseOver={showSubCategories}>{category} |
+            </Link>
 
             {
                 isDropdownVisible && (
                     <>
-                        {
-                            subCategories.map((subCategory, index) => (
-                                <Link to={`/productos/${category}/${subCategory}`} key={index} className="block px-4 py-2 hover:bg-gray-200 whitespace-nowrap">{subCategory}</Link>
-                            ))
-                        }
+                        <div
+                        className={`bg-white border border-white w-full h-[200px] absolute z-20 top-[100%] left-0`}
+                        onMouseOver={showSubCategories}
+                        onMouseLeave={hideSubCategories}
+                        >
+                            {
+                                subCategories.map((subCategory, index) => {
+                                    const encodedSubcategory = encodeURIComponent(subCategory);
+                                    return <Link to={`/productos/${category}/${encodedSubcategory}`}
+                                                key={index}
+                                                className="text-deepGray block px-4 py-2 hover:bg-gray-200 whitespace-nowrap font-medium first-letter:uppercase font-poppins text-[14px]">
+                                                {subCategory}
+                                            </Link>
+                                })
+                            }
+                        </div>
                     </>
                 )
             }
