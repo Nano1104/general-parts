@@ -10,8 +10,9 @@ const useSignin = () => {
             const data = res.data; 
             
             const authUserData = await axios.get("/api/auth/authUser", { withCredentials: true })
-
-            const user = await axios.get(`api/user/${authUserData.data.userId}`, { withCredentials: true })
+            console.log("🚀 ~ signIn ~ authUserData:", authUserData.data._id)
+            
+            const user = await axios.get(`api/user/${authUserData.data._id}`, { withCredentials: true })
             setAuthUser(user.data.userFound)
             
             console.log(data);

@@ -6,52 +6,51 @@ import { categoriesAndSubCategories } from "../../utils/categories&SubCategories
 import "./category.css"
 import 'animate.css';
 
-export const Category = ({category}) => {
-    const [isDropdownVisible, setDropdownVisible] = useState(false);
+export const Category = ({category, activeCategory, setActiveCategory, categoriesAndSubCategories}) => {
     const [subCategories, setSubCategories] = useState([]);
 
-    const showSubCategories = () => setDropdownVisible(true);
-    const hideSubCategories = () => setDropdownVisible(false);
+    const showSubCategories = () => setActiveCategory(category)
+    const hideSubCategories = () => setActiveCategory(null);
 
     useEffect(() => {
         const categoryFound = categoriesAndSubCategories.find(elem => elem.category === category);
         if(categoryFound) {
             setSubCategories(categoryFound.subCategories)
         }
-    }, [])
+    }, [category, categoriesAndSubCategories])
 
     return(
         <>
-            <Link 
+        <div onMouseOver={showSubCategories} onMouseLeave={hideSubCategories} className="">
+            <Link
                 id={`category-${category}-link`}
                 className="category-link text-black font-medium text-sm uppercase font-poppins"
                 to={`/productos/${category}`}
-                onMouseLeave={hideSubCategories}
-                onMouseOver={showSubCategories}>{category} |
+            >
+                {category} |
             </Link>
 
-            {
-                isDropdownVisible && (
-                    <>
-                        <div
-                        className={`bg-white border border-white w-full h-[200px] absolute z-20 top-[100%] left-0`}
-                        onMouseOver={showSubCategories}
-                        onMouseLeave={hideSubCategories}
-                        >
-                            {
-                                subCategories.map((subCategory, index) => {
-                                    const encodedSubcategory = encodeURIComponent(subCategory);
-                                    return <Link to={`/productos/${category}/${encodedSubcategory}`}
-                                                key={index}
-                                                className="text-deepGray block px-4 py-2 hover:bg-gray-200 whitespace-nowrap font-medium first-letter:uppercase font-poppins text-[14px]">
-                                                {subCategory}
-                                            </Link>
-                                })
-                            }
-                        </div>
-                    </>
-                )
-            }
+            {activeCategory === category && (
+                <div
+                    className="bg-white absolute w-[100vw] h-[200px] z-20 left-0 fade-in"
+                    onMouseOver={showSubCategories}
+                    onMouseLeave={hideSubCategories}
+                >
+                    {subCategories.map((subCategory, index) => {
+                        const encodedSubcategory = encodeURIComponent(subCategory);
+                        return (
+                            <Link
+                                to={`/productos/${category}/${encodedSubcategory}`}
+                                key={index}
+                                className="text-deepGray block px-4 pt-4 hover:bg-gray-200 font-poppins font-medium first-letter:uppercase text-[14px]"
+                            >
+                                {subCategory}
+                            </Link>
+                        );
+                    })}
+                </div>
+            )}
+        </div>
         </>
     )
 }

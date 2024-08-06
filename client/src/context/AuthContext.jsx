@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 
+import { Loading } from "../components/Loading/Loading";
+
 export const AuthContext = createContext();
 
 export const useAuthContext = () => {
@@ -8,21 +10,33 @@ export const useAuthContext = () => {
 }
 
 export const AuthContextProvider = ({children}) => {
-    const [authUser, setAuthUser] = useState();
+    const [authUser, setAuthUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const verifyUser = async () => {
             try {
                 const res = await axios.get("/api/auth/authUser", { withCredentials: true });
-                console.log(res.data)
-            } catch (err) {
+                console.log("🚀 ~ verifyUser ~ res:", res)
+
+                res.data ? setAuthUser(res.data) : setAuthUser(null)
+                console.log(authUser)
+            }
+            catch (err) {
                 console.error("Error verifying user:", err);
                 setAuthUser(null);
+            }
+            finally {
+                setLoading(false); // Indicar que la verificación ha terminado
             }
         };
 
         verifyUser();
     }, [])
+
+    if (loading) {
+        return <Loading />
+    }
 
     return (
         <AuthContext.Provider value={{ authUser, setAuthUser }}>

@@ -4,15 +4,15 @@ import useSignin from "../../hooks/useSingin.js"
 import { useAuthContext } from "../../context/AuthContext.jsx";
 
 import { FaArrowRight } from "react-icons/fa6";     //icons
-import "./login.css"
+import "./authpage.css"
 
-export const Login = () => {
+export const AuthPage = () => {
     const { signIn } = useSignin()
-    const { authUser, setAuthUser } = useAuthContext();
     const [values, setValues] = useState({ email: "", password: "" })
+    const [login, setLogin] = useState(true)
     
     const handleAuth = () => {
-        
+        setLogin(login => !login);
     }
 
     const handleSubmit = async (e) => {
@@ -20,7 +20,6 @@ export const Login = () => {
         try {
             await signIn(values)
             alert("Login success")
-            navigate(-1);
         } catch (err) {
             alert(err.message)
         }
@@ -38,20 +37,20 @@ export const Login = () => {
                 action="post"
                 id="form"
                 className="flex flex-col justify-start items-start gap-4
-                bg-[#272829] w-[800px] h-[700px] rounded-tl-[50px] rounded-bl-[50px]
+                bg-[#272829] w-[800px] h-[650px] rounded-tl-[50px] rounded-bl-[50px]
                 border-4 border-white border-double border-r-0 font-poppins relative"
                 onSubmit={handleSubmit}
             >
                 <h3 className="text-white text-[3rem] mt-12 ml-12 font-roboto">
-                    { authUser ? "INCIAR SESIÓN" : "REGISTRATE" }
+                    { login ? "INCIAR SESIÓN" : "REGISTRATE" }
                 </h3>
                 {
-                    authUser
+                    login
                     ?
                     <>
                     <input 
                     type="email"
-                    className="p-2 bg-transparent w-[45%] outline-0 text-black
+                    className="p-2 bg-transparent w-[45%] outline-0 text-white
                     border-[1px] border-white rounded-xl
                     focus:border-dotted ml-12"
                     placeholder="Ingrese su email"
@@ -60,7 +59,7 @@ export const Login = () => {
 
                     <input
                     type="password"
-                    className="p-2 bg-transparent w-[45%] outline-0 text-black
+                    className="p-2 bg-transparent w-[45%] outline-0 text-white
                     border-[1px] border-white rounded-xl
                     focus:border-dotted ml-12"
                     placeholder="Ingrese su contraseña" 
@@ -71,7 +70,7 @@ export const Login = () => {
                     <>
                     <input 
                     type="text"
-                    className="p-2 bg-transparent w-[45%] outline-0 text-black
+                    className="p-2 bg-transparent w-[45%] outline-0 text-white
                     border-[1px] border-white rounded-xl
                     focus:border-dotted ml-12"
                     placeholder="Ingrese su nombre y apellido"
@@ -80,7 +79,7 @@ export const Login = () => {
 
                     <input
                     type="email"
-                    className="p-2 bg-transparent w-[45%] outline-0 text-black
+                    className="p-2 bg-transparent w-[45%] outline-0 text-white
                     border-[1px] border-white rounded-xl
                     focus:border-dotted ml-12"
                     placeholder="Ingrese su email" 
@@ -89,7 +88,7 @@ export const Login = () => {
 
                     <input 
                     type="text"
-                    className="p-2 bg-transparent w-[45%] outline-0 text-black
+                    className="p-2 bg-transparent w-[45%] outline-0 text-white
                     border-[1px] border-white rounded-xl
                     focus:border-dotted ml-12"
                     placeholder="Ingrese su número teléfono"
@@ -98,7 +97,7 @@ export const Login = () => {
 
                     <input
                     type="password"
-                    className="p-2 bg-transparent w-[45%] outline-0 text-black
+                    className="p-2 bg-transparent w-[45%] outline-0 text-white
                     border-[1px] border-white rounded-xl
                     focus:border-dotted ml-12"
                     placeholder="Ingrese su contraseña" 
@@ -111,17 +110,17 @@ export const Login = () => {
                 <button type="submit"       //BOTON DE SUBMIT
                 className="bg-orange w-[18%] rounded-md py-1
                 text-black font-medium font-poppins ml-12 mt-4">
-                    { authUser ? "LOGIN" : "REGISTRATE" }
+                    { login ? "LOGIN" : "REGISTRATE" }
                 </button>
 
                 <div className="" id="footer-form">     {/* //FOOTER FORM  */}
                     <hr className="text-white" />
                     <span className="absolute top-0 left-0 m-5 text-white">
-                        { authUser ? "YA TIENES UNA CUENTA?" : "NO TIENES UNA CUENTA?" }    
+                        { login ? "NO TIENES UNA CUENTA?" : "YA TIENES UNA CUENTA?" }    
                     </span>
                     <div className="absolute top-0 right-0 m-5 text-white" id="btn-back">
-                        <button>
-                            { authUser ? "LOGIN" : "REGISTRAR" } 
+                        <button onClick={handleAuth}>
+                            { login ? "REGISTRAR" : "LOGIN" } 
                             <FaArrowRight className="inline-block" id="icon-back"/>
                         </button>
                     </div>

@@ -12,9 +12,6 @@ export const ProductosPage = () => {
             <ProductsContainerNav searchValue={searchValue} setSearchValue={setSearchValue} />
             <InventaryList />
             <ProductsContainer searchValue={searchValue} />
-            {/* <div id="products-container-grid">
-                <ProductsContainer />
-            </div> */}
         </>
     )
 }

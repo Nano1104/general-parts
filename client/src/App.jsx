@@ -4,13 +4,14 @@ import { useAuthContext } from "./context/AuthContext.jsx";
 
 //PAGES
 import { Home } from "./pages/Home/Home.jsx"
-import { Login } from "./pages/Login/Login.jsx"
+import { AuthPage } from "./pages/AuthPage/AuthPage.jsx"
 import { Register } from "./pages/Register/Register.jsx"
 import { ProductosPage } from "./pages/ProductosPage/ProductosPage.jsx"
 import { Contact } from "./pages/Contact/Contact.jsx"
 import { ProductDetailContainer } from "./pages/ProductDetailContainer/ProductDetailContainer.jsx";
 import { NoMatchRoute } from "./pages/NoMatchRoute/NoMatchRoute.jsx";
 import { AdminPage } from "./pages/AdminPage/AdminPage.jsx";
+import { Cart } from "./pages/Cart/Cart.jsx";
 
 function App() {
   const { authUser } = useAuthContext()
@@ -24,9 +25,10 @@ function App() {
         <Route path="/productos/:category/:subcategory" element={<ProductosPage />} />
         <Route path="/producto/detail/:id" element={<ProductDetailContainer />} />
         <Route path="/admin" element={ authUser ? <AdminPage /> : <Navigate to="/" /> } />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/admin/:manage" element={ authUser ? <AdminPage /> : <Navigate to="/" /> } />
+        <Route path="/authPage" element={ !authUser ? <AuthPage /> : <Navigate to="/" /> } />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/cart-v" element={<Cart />} />
         <Route path="*" element={<NoMatchRoute />} />
       </Routes>
     </>

@@ -58,7 +58,7 @@ export const ProductsContainer = ({ searchValue }) => {         //valor de la ba
 
     return(
         <>
-        <div className="text-white font-poppins mt-14 text-end flex justify-between w-full">
+        <div className="text-white font-poppins mt-[6rem] text-end flex justify-between w-full">
             <div className="ml-4 italic font-normal uppercase">
                 { category ? <Link className="" to={`/productos/${category}`} >{category}<MdKeyboardArrowRight className="inline-block" /></Link> : "" }
                 { subcategory ? <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`} >{subcategory}</Link> : "" }
@@ -79,10 +79,10 @@ export const ProductsContainer = ({ searchValue }) => {         //valor de la ba
 
         <div id="products-container" className="flex flex-wrap w-full mt-10 justify-evenly items-center">
             {
-                /* loading
+                loading
                 ? <Loading />
-                : prodsToRender.map(prod => <Product key={prod.codpro} data={prod} params={[category, subcategory]} />) */
-                prodsToRender.map(prod => <Product key={prod.codpro} data={prod} params={[category, subcategory]} />)
+                : prodsToRender.map(prod => <Product key={prod.codpro} data={prod} params={[category, subcategory]} />)
+                /* prodsToRender.map(prod => <Product key={prod.codpro} data={prod} params={[category, subcategory]} />) */
             }
         </div>
         </>

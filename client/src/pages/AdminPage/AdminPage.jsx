@@ -1,22 +1,41 @@
 import { useAuthContext } from "../../context/AuthContext.jsx";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
+//components
+import { AdminNavBar } from "../../components/AdminNavBar/AdminNavBar.jsx"
+import { UserManage } from "../../components/userManage/userManage.jsx"
+import { ProductsManage } from "../../components/productsManage/productsManage.jsx"
+import { ListManage } from "../../components/listManage/listManage.jsx"
 
 export const AdminPage = () => {
+    const { manage } = useParams();
     const { authUser } = useAuthContext();
+
+    useEffect(() => {}, [manage])
 
     return(
         <>
-            <h1 className="text-3xl font-bold text-white text-center">Bienvenido {authUser.first_name}/Juan!</h1>
-            <form action="" className="flex flex-col justify-center items-center gap-5 mt-10">
-                <div className="flex items-center">
-                    <input type="text" className="rounded-sm" /><button className="w-[50%] text-center bg-red text-white py-1 px-2 rounded-md">CAMBIAR PRECIO</button>
+            <div className="w-[95%] h-[95vh] rounded-3xl bg-gray flex
+            absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <AdminNavBar />
+                <div className="basis-[85%] flex flex-col items-center h-full overflow-y-auto">
+                    <h1 className="text-center text-3xl font-montserrat font-medium mt-5">Hola {authUser.first_name}!</h1>
+                    <hr className="border-[1.5px] border-cBlack w-[30%] rounded-sm mt-2" />
+                    <div className="h-full w-full font-poppins mt-20 ml-10">
+                        {
+                            manage === "users" ? (
+                                <UserManage />
+                            ) : 
+                            manage === "products" ? (
+                                <ProductsManage />
+                            ) : 
+                            manage === "orders" ? (
+                                <ListManage />
+                            ) : <></>
+                        }
+                    </div>
                 </div>
-                <div className="flex items-center">
-                    <input type="text" className="rounded-sm" /><button className="w-[50%] text-center bg-red text-white py-1 px-2 rounded-md">AGREGAR IMPUESTO</button>
-                </div>
-
-                <Link to="/" className="py-2 px-4 bg-red text-center text-white rounded-md w-[8%]">VOLVER</Link>
-            </form>
+            </div>
         </>
     )
 }
