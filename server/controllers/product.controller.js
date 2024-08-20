@@ -29,12 +29,21 @@ export const addFieldToProducts = async (req, res) => {
         const update = {};
         update[field] = value;
         
-        const updatedProducts = await Producto.updateMany(
+        /* const updatedProducts = await Producto.updateMany(
             { rubro: { $gte: 210, $lte: 215 } }, 
             { $set: update }
-        ); 
+        );  */
 
-        res.status(200).json({message: "Success adding field to products in DB", updatedProducts});
+        const updatedProducts = await Producto.updateMany(
+            {}, // Filtro vacío para seleccionar todos los documentos
+            { $set: update } // $set añade o actualiza el campo con el valor proporcionado
+        );
+
+        if (updatedProducts.acknowledged && updatedProducts.modifiedCount > 0) {
+            res.status(200).json({message: "Success adding field to all products in DB", updatedProducts});
+        } else {
+            res.status(200).json({message: "No products were updated", updatedProducts});
+        }
     } catch (err) {
         res.status(400).json({message: "Error adding field to products in DB", err});
     }
@@ -62,5 +71,21 @@ export const deleteMongoDBCollection = async (req, res) => {
         res.status(200).json({message: "Success deleting field mongo DB collection"});
     } catch (err) {
         res.status(400).json({message: "Error deleting mongo DB collection", err});
+    }
+}
+
+export const deleteFieldFromProducts = async (req, res) => {
+    try {
+        const { field } = req.body
+        if(!field) throw new Error("Field does not exists")
+
+        const update = {};
+        update[field] = ""; 
+
+        const updatedProducts = await Producto.updateMany({}, { $unset: update })
+
+        res.status(200).json({message: "Success deleting field from products"});
+    } catch (err) {
+        res.status(400).json({message: "Error deleting field from products", err});
     }
 }

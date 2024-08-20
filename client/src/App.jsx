@@ -11,6 +11,7 @@ import { Contact } from "./pages/Contact/Contact.jsx"
 import { ProductDetailContainer } from "./pages/ProductDetailContainer/ProductDetailContainer.jsx";
 import { NoMatchRoute } from "./pages/NoMatchRoute/NoMatchRoute.jsx";
 import { AdminPage } from "./pages/AdminPage/AdminPage.jsx";
+import { Reserves } from "./pages/reserves/reserves.jsx"
 import { Cart } from "./pages/Cart/Cart.jsx";
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         <Route path="/producto/detail/:id" element={<ProductDetailContainer />} />
         <Route path="/admin" element={ authUser ? <AdminPage /> : <Navigate to="/" /> } />
         <Route path="/admin/:manage" element={ authUser ? <AdminPage /> : <Navigate to="/" /> } />
+        <Route path="/reservas" element={ authUser ? <Reserves /> : <Navigate to="/" /> } />
         <Route path="/authPage" element={ !authUser ? <AuthPage /> : <Navigate to="/" /> } />
         <Route path="/contact" element={<Contact />} />
         <Route path="/cart-v" element={<Cart />} />

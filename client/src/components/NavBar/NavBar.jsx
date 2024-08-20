@@ -18,7 +18,14 @@ export const NavBar = () => {
         <nav className="font-montserrat py-3 px-4 text-lg text-white">
             <ul className="flex justify-end items-center gap-7 m-7">
                 <div className="flex items-center gap-10 text-base">
-                    { authUser && authUser.role === "admin" ? <Link to="/admin" className="font-semibold hover:text-lightGray hover:scale-110 transition duration-200">Administrador</Link> : <></> }
+                    { authUser && authUser.role === "admin"
+                        ? 
+                        <>
+                            <Link to="/admin" className="font-semibold hover:text-lightGray hover:scale-110 transition duration-200">Administrador</Link>
+                            <Link to="/reservas" className="font-semibold hover:text-lightGray hover:scale-110 transition duration-200">Reservas</Link>
+                        </>
+                        : <></>
+                    }
                     <Link to="/productos" className="font-semibold hover:text-lightGray hover:scale-110 transition duration-200">Repuestos</Link>
                     <Link to="/contact" className="font-semibold hover:text-lightGray hover:scale-110 transition duration-200">Contáctanos</Link>
                     {

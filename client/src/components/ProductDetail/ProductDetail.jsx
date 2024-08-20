@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { Link, useNavigate, useLocation, useParams } from "react-router-dom"
+import { useEffect, useState } from "react";
+import { Link, useLocation, useParams } from "react-router-dom"
 import Swal from 'sweetalert2';
 
 import { useAuthContext } from "../../context/AuthContext.jsx"
@@ -19,29 +19,25 @@ const useQuery = () => {
 }
 
 export const ProductDetail = ({prod}) => {
+    const { _id, codpro, desc_stock, rubro, subrub, proveed, desc_rubro, desc_subrubro, desc_marca, porcen1, precioimpre, stock } = prod;
     const { authUser } = useAuthContext();
-    const { addToCart } = useCartContext();
-
-    const { codpro, desc_stock, rubro, subrub, proveed, desc_rubro, desc_subrubro, desc_marca, porcen1, precioimpre } = prod;
+    const { addProductToCart } = useCartContext();
     const { id } = useParams();
+
+    const [quantity, setQuantity] = useState(stock);
+    const [amount, setAmount] = useState(0);
 
     const encodedCategory = desc_rubro ? desc_rubro.toLowerCase() : "";
     const encodedSubcategory = desc_subrubro ? encodeURIComponent(desc_subrubro).toLowerCase() : "";
-    
-    const navigate = useNavigate();
-    const handleNavigate= () => {
-        navigate(-1);
-    }
 
     const handleAddToCart = () => {
         if(!authUser) {
             Swal.fire({
-                icon: "question",
                 html: `<span style="font-weight: 500">NECESITAS INICIAR SESIÓN PARA AGREGAR AL CARRITO!</span>`,
                 confirmButtonColor: "#DC5F00"
               });
         } else {
-            addToCart()
+            addProductToCart(_id, authUser.cart, amount)
         }
     }
 
@@ -64,14 +60,14 @@ export const ProductDetail = ({prod}) => {
                 <hr className="w-[50%] mt-5 border border-5 mx-auto" />
                 <div className="flex items-start flex-col p-10">
                     <div className="flex flex-col mt-10 items-start gap-2">
-                        <span className="font-medium">Proveedor: {proveed}</span>
-                        <span className="font-medium">Marca: {desc_marca}</span>
-                        <span className="font-medium">Stock: <span className="italic text-red">No Disponible!</span></span>
+                        <span className="font-medium">Proveedor: <span className="font-semibold">{proveed}</span></span>
+                        <span className="font-medium">Marca: <span className="font-semibold">{desc_marca}</span></span>
+                        <span className="font-medium">Stock: <span className="italic text-red">{quantity ? quantity : "No Disponible!"}</span></span>
                         <span className="text-3xl">${precioimpre}</span>
                     </div>
                     <div className="flex flex-col items-start mt-2">
                         <span className="font-semibold ml-1">Cantidad.</span>
-                        <ItemCount />
+                        <ItemCount handleQuantity={{ quantity, amount, setAmount }} />
                     </div>
                     <div className="flex justify-center mt-4 gap-2">
                         <button className="rounded-md py-2 px-4 bg-orange text-black flex justify-center items-center gap-1" onClick={handleAddToCart}>

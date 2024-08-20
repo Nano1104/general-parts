@@ -42,7 +42,7 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-})
+}, { strict: false })
 
 const Product = mongoose.model("Product", productSchema);
 export default Product;

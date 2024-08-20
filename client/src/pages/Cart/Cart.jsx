@@ -8,6 +8,7 @@ import { CiWarning } from "react-icons/ci";
 export const Cart = () => {
     const { authUser } = useAuthContext()
     const { cart } = authUser
+    console.log("🚀 ~ Cart ~ cart:", cart)
 
     return(
         <>

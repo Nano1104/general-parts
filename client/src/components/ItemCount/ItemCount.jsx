@@ -1,17 +1,21 @@
 import { useState } from "react"
 
-export const ItemCount = () => {
-    const [amount, setAmount] = useState(0);
- 
+export const ItemCount = ({handleQuantity}) => {
+    const { quantity, amount, setAmount } = handleQuantity
+
     const handlePlus = () => {
-        setAmount(amount + 1);
+        if(amount == quantity) {
+            return
+        } else {
+            setAmount(amount + 1)
+        }
     }
 
     const handleLess = () => {
         if(amount == 0) {
             return
         } else {
-            setAmount(amount - 1);
+            setAmount(amount - 1)
         }
     }
 

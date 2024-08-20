@@ -18,7 +18,7 @@ export const Product = ({data, params}) => {
             </div>
             <div className="product-div-hover">
                 <Link to={`/producto/detail/${codpro}?category=${category}&subCategory=${subcategory}`}
-                    className="py-2 px-4 text-center text-black rounded-2xl border font-poppins hover:bg-orange transition duration-200"
+                    className="py-2 px-4 text-center text-black rounded-2xl border font-poppins hover:bg-deepGray hover:text-gray transition duration-200"
                     id="btn-see-prod">
                     Ver Repuesto
                 </Link>

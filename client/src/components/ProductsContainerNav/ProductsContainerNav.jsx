@@ -39,9 +39,15 @@ export const ProductsContainerNav = ({ searchValue, setSearchValue }) => {
                             ? 
                             <>
                             <PiUser className="text-3xl" />
-                            <Link to="/cart-v" className="flex justify-center items-center">
-                                <IoCartOutline className="inline-block text-3xl" />
-                            </Link>
+                            {
+                                authUser.role !== "admin"
+                                ? 
+                                <Link to="/cart-v" className="flex justify-center items-center">
+                                    <IoCartOutline className="inline-block text-3xl" />
+                                </Link>
+                                :
+                                <></>
+                            }
                             </>
                             : <Link to="/authPage" className="font-semibold relative btn-logs">Iniciar Sesión<div></div></Link>
                         }
