@@ -29,9 +29,9 @@ export const AuthPage = () => {
         <>
         <div className="h-[100vh] w-full overflow-hidden relative" id="login-container">
             <div id="bg-login" className="relative"></div>
-            <Link to="/" className="text-[2rem] absolute top-0 my-7 ml-10">
-                <span className="font-extrabold text-orange font-poppins tracking-tighter italic text-[3.8rem]">SW</span>
-                <span className="font-bold text-white font-poppins tracking-tight italic text-[3.8rem]">Parts</span>
+            <Link to="/" className="absolute top-0 my-7 ml-10">
+                <span className="font-extrabold text-orange font-poppins tracking-tighter italic text-[8rem]">SW</span>
+                <span className="font-bold text-white font-poppins tracking-tight italic text-[8rem]">Parts</span>
             </Link>
             <form 
                 action="post"

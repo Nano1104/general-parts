@@ -30,7 +30,7 @@ function App() {
         <Route path="/reservas" element={ authUser ? <Reserves /> : <Navigate to="/" /> } />
         <Route path="/authPage" element={ !authUser ? <AuthPage /> : <Navigate to="/" /> } />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/cart-v" element={<Cart />} />
+        <Route path="/cart-v" element={ authUser ? <Cart /> : <Navigate to="/" /> } />
         <Route path="*" element={<NoMatchRoute />} />
       </Routes>
     </>

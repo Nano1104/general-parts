@@ -33,11 +33,13 @@ export const ProductDetail = ({prod}) => {
     const handleAddToCart = () => {
         if(!authUser) {
             Swal.fire({
-                html: `<span style="font-weight: 500">NECESITAS INICIAR SESIÓN PARA AGREGAR AL CARRITO!</span>`,
-                confirmButtonColor: "#DC5F00"
+                html: `<a href="http://localhost:5173/authPage" style="font-weight: 500">NECESITAS INICIAR SESIÓN PARA AGREGAR AL CARRITO!</a>`,
+                /* confirmButtonColor: `<a href="http://localhost:5173/authPage" style="font-weight: 500">NECESITAS INICIAR SESIÓN PARA AGREGAR AL CARRITO!</a>` */
               });
         } else {
-            addProductToCart(_id, authUser.cart, amount)
+            /* const cartId = authUser.cart ? authUser.cart._id : null;
+            console.log(authUser.cart); */
+            addProductToCart(_id, authUser.cart._id || null, amount)
         }
     }
 
