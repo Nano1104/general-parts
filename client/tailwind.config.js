@@ -17,8 +17,8 @@ export default {
         red: "#66212a",
         cBlack: "#272829",
         deepGray: "#61677A",
-        gray: "#D8D9DA",
-        lightGray: "#BDC3C7",
+        gray: "#BDC3C7",
+        lightGray: "#D8D9DA",
       }
     },
   },

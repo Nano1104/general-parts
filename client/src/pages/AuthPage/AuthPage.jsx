@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import useSignin from "../../hooks/useSingin.js"
 import { useAuthContext } from "../../context/AuthContext.jsx";
 
+import Swal from 'sweetalert2';
+
 import { FaArrowRight } from "react-icons/fa6";     //icons
 import "./authpage.css"
 
@@ -19,9 +21,21 @@ export const AuthPage = () => {
         e.preventDefault();
         try {
             await signIn(values)
-            alert("Login success")
+            Swal.fire({
+                title: "Sesion Iniciada!",
+                icon: "success",
+                confirmButtonColor: "#DC5F00",
+                backdrop: true
+              });
         } catch (err) {
-            alert(err.message)
+            console.log("🚀 ~ handleSubmit ~ err:", err)
+            Swal.fire({
+                title: "Error",
+                text: "Revisa los valores ingresados en los campos",
+                icon: "error",
+                confirmButtonColor: "#DC5F00",
+                backdrop: true
+              });
         }
     }
     

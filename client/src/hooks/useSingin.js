@@ -17,7 +17,7 @@ const useSignin = () => {
             
             console.log(data);
         } catch (err) {
-            alert(err.message);
+            throw new Error(err.response?.data?.message || "Error en la autenticación");
         }
     }
 

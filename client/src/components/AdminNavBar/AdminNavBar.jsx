@@ -1,12 +1,30 @@
 import { Link } from "react-router-dom"
-
+import { useAuthContext } from "../../context/AuthContext";
 //icons
 import { LiaBoxSolid } from "react-icons/lia"; //box
 import { PiUsers } from "react-icons/pi";
 import { GoHome } from "react-icons/go";
 import { LuClipboardList } from "react-icons/lu";
 
+import Swal from 'sweetalert2'
+
 export const AdminNavBar = () => {
+    const { logout } = useAuthContext()
+
+    const handleLogOut = () => {
+        Swal.fire({
+            title: "Estas seguro que quiere cerrar sesión?",
+            showCancelButton: true,
+            confirmButtonText: "CERRAR",
+            confirmButtonColor: "#DC5F00",
+            cancelButtonText: `CANCELAR`
+          }).then((result) => {
+                if (result.isConfirmed) {
+                    logout()
+                }
+          });
+    }
+
     return(
         <>
             <nav className="bg-deepGray basis-[15%] rounded-tl-3xl rounded-bl-3xl flex flex-col justify-between items-center">
@@ -27,7 +45,10 @@ export const AdminNavBar = () => {
                         </Link>
                     </ul>
                 </div>
-                <button className="bg-red w-[50%] rounded-md py-1 text-gray font-medium font-poppins mb-5" type="submit">CERRAR SESIÓN</button>
+                <button
+                    type="submit"
+                    className="bg-orange text-black w-[50%] border border-black rounded-md py-1 font-medium font-poppins mb-5" 
+                    onClick={handleLogOut}>CERRAR SESIÓN</button>
             </nav>
         </>
     )

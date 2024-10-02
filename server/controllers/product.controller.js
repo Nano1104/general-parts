@@ -74,6 +74,26 @@ export const deleteMongoDBCollection = async (req, res) => {
     }
 }
 
+export const updateStock = async (req, res) => {
+    try {
+        const { productId } = req.params
+        const { newStock } = req.body
+
+        const prodFound = await Producto.findById(productId);
+        if (!prodFound) return res.status(404).json({ message: "Product not found in db" });
+
+        const updatedProduct = await Producto.findByIdAndUpdate(
+            productId,
+            { stock: prodFound.stock + Number(newStock) },
+            { new: true } // Esto devuelve el documento actualizado
+        );
+
+        res.status(200).json({message: "Success updating stock from product", updatedProduct });
+    } catch (err) {
+        res.status(400).json({message: "Error deleting mongo DB collection", err});
+    }
+}
+
 export const deleteFieldFromProducts = async (req, res) => {
     try {
         const { field } = req.body

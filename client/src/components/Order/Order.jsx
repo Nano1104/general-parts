@@ -1,0 +1,63 @@
+import axios from "axios"
+import Swal from 'sweetalert2'
+
+export const Order = ({order}) => {
+    const { _id: orderId, userId, products, totalOrder } = order
+
+    const handleDeleteOrder = async () => {
+        try {
+            const result = await Swal.fire({
+                title: "¿Seguro que quieres eliminar la reserva?",
+                showCancelButton: true,
+                confirmButtonText: "Sí, eliminar",
+                confirmButtonColor: "#DC5F00"
+            });
+    
+            if (result.isConfirmed) {
+                const res = await axios.delete(`/api/order/${orderId}`, { withCredentials: true });
+                // Aquí podrías actualizar el estado o eliminar el pedido de la UI en lugar de recargar la página
+                if (res.status === 200) window.location.reload()
+            }
+        } catch (err) {
+            console.error("Error eliminando la reserva:", err);
+            Swal.fire({
+                text: "Hubo un problema al eliminar la reserva. Intenta de nuevo.",
+                icon: "error",
+                confirmButtonColor: "#DC5F00"
+            });
+        }
+    };
+ 
+    return(
+        <> 
+            <div key={orderId} className="bg-gray w-[70%] h-[60%] my-6 rounded-md p-6 font-poppins relative">
+                <h3 className="text-center text-2xl font-medium">{userId.first_name} {userId.last_name}</h3>
+                <div className="flex flex-col mt-4">
+                    <span>Id de reserva: <span className="font-semibold">{orderId}</span></span>
+                    <span>Telefono/Celular: <span className="font-semibold">{userId.phone}</span></span>
+                    <span>Rol: <span className="font-semibold">{userId.role}</span></span>
+                    <span>Total de reserva: <span className="font-semibold">${totalOrder}</span></span>
+                </div>
+                <hr className="mt-2" />
+
+                <div className="mt-4 overflow-y-auto">
+                    <h3 className="text-xl font-medium">Productos: </h3>
+                    {
+                        products.map(prod => {
+                            return(
+                                <>
+                                    <div key={prod.product.desc_stock} className="flex justify-between ml-2 border-b-[1px]">
+                                        <span className="first-letter:uppercase">{prod.product.desc_stock}</span>
+                                        <span>Cantidad: <span className="font-semibold">x{prod.quantity}</span></span>
+                                    </div>
+                                </>
+                            )
+                        })
+                    }
+                </div>
+
+                <button className="py-2 px-4 bg-orange text-sm rounded-md absolute bottom-0 left-0 m-4 border" onClick={handleDeleteOrder}>Cancelar Reservas</button>
+            </div>
+        </>
+    )
+}

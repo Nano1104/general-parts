@@ -21,7 +21,7 @@ export const AdminPage = () => {
                 <div className="basis-[85%] flex flex-col items-center h-full overflow-y-auto">
                     <h1 className="text-center text-3xl font-montserrat font-medium mt-5">Hola {authUser.first_name}!</h1>
                     <hr className="border-[1.5px] border-cBlack w-[30%] rounded-sm mt-2" />
-                    <div className="h-full w-full font-poppins mt-20 ml-10">
+                    <div className="h-full w-full font-poppins mt-20">
                         {
                             manage === "users" ? (
                                 <UserManage />

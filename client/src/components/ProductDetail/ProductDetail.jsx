@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom"
 import Swal from 'sweetalert2';
-
+//context
 import { useAuthContext } from "../../context/AuthContext.jsx"
 import { useCartContext } from "../../context/CartContext.jsx";
-
+//components
 import bgImg from "../../images/bg-contact.avif"
 import { renderToString } from 'react-dom/server';
 import { IoCartOutline } from "react-icons/io5";
@@ -12,6 +12,8 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { ItemCount } from "../ItemCount/ItemCount.jsx"
 import { Loading } from "../Loading/Loading.jsx";
+//icons
+import { FaPencil } from "react-icons/fa6";
 
 
 const useQuery = () => {
@@ -26,15 +28,27 @@ export const ProductDetail = ({prod}) => {
 
     const [quantity, setQuantity] = useState(stock);
     const [amount, setAmount] = useState(0);
+    const [prodDetails, setProdDetails] = useState(`Lorem ipsum dolor sit, amet consectetur adipisicing elit. Modi temporibus expedita reprehenderit consequuntur velit aperiam dolores?
+                                                    Delectus non illo quisquam, quia quis veritatis optio quibusdam facere fugiat blanditiis vitae reprehenderit!`)
 
     const encodedCategory = desc_rubro ? desc_rubro.toLowerCase() : "";
     const encodedSubcategory = desc_subrubro ? encodeURIComponent(desc_subrubro).toLowerCase() : "";
 
+    const handleChangeDetails = () => {
+
+    }
+
     const handleAddToCart = () => {
         if(!authUser) {
             Swal.fire({
-                html: `<a href="http://localhost:5173/authPage" style="font-weight: 500">NECESITAS INICIAR SESIÓN PARA AGREGAR AL CARRITO!</a>`,
-                /* confirmButtonColor: `<a href="http://localhost:5173/authPage" style="font-weight: 500">NECESITAS INICIAR SESIÓN PARA AGREGAR AL CARRITO!</a>` */
+                html:   `
+                            <span style="font-weight: 400">Necesitas iniciar sesión para agregar al carrito!</span><br />
+                            <a href="http://localhost:5173/authPage" class="font-bold text-orange underline rounded-lg">INICIAR SESIÓN</a>
+                        `,
+                showConfirmButton: false,
+                allowOutsideClick: true,
+                allowEscapeKey: true,     
+                backdrop: true  
               });
         } else {
             /* const cartId = authUser.cart ? authUser.cart._id : null;
@@ -81,10 +95,13 @@ export const ProductDetail = ({prod}) => {
                     </div>
                     {/* <hr className="w-[50%] mt-5 border border-5 mx-auto" /> */}
                     <div className="text-left">
-                        <h2 className="font-semibold mt-16 text-3xl">DESCRIPCIÓN</h2>
+                        <div className="flex justify-between items-end">
+                            <h2 className="font-semibold mt-16 text-3xl">DESCRIPCIÓN</h2>
+                            { authUser && authUser.role === "admin" ? <FaPencil className="text-2xl mr-6 mb-1" /> : <></> }
+                            
+                        </div>
                         <div className="mt-4 h-[17vh] overflow-auto">
-                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Modi temporibus expedita reprehenderit consequuntur velit aperiam dolores?
-                            Delectus non illo quisquam, quia quis veritatis optio quibusdam facere fugiat blanditiis vitae reprehenderit!
+                            {prodDetails}
                         </div>
                     </div>
                 </div>

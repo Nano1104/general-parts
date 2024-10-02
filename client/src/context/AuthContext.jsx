@@ -13,6 +13,11 @@ export const AuthContextProvider = ({children}) => {
     const [authUser, setAuthUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const logout = async () => {
+        const res = await axios.post(`/api/auth/logout`, { withCredentials: true })
+        setAuthUser(null)
+    }
+
     useEffect(() => {
         const verifyUser = async () => {
             try {
@@ -39,7 +44,7 @@ export const AuthContextProvider = ({children}) => {
     }
 
     return (
-        <AuthContext.Provider value={{ authUser, setAuthUser }}>
+        <AuthContext.Provider value={{ authUser, setAuthUser, logout }}>
             {children}
         </AuthContext.Provider>
     );

@@ -8,7 +8,7 @@ export const Product = ({data, params}) => {
 
     return(
         <>
-        <div id="product" className="h-[450px] w-[410px] font-roboto bg-gray rounded-xl relative my-3">
+        <div id="product" className="h-[490px] w-[450px] font-roboto bg-gray rounded-md relative my-3">
             <div className="w-full h-[65%]">
                 <img src="#" alt="" className="rounded-t-xl" />
             </div>

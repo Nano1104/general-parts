@@ -42,7 +42,8 @@ export const Category = ({category, activeCategory, setActiveCategory, categorie
                             <Link
                                 to={`/productos/${category}/${encodedSubcategory}`}
                                 key={index}
-                                className="text-deepGray block px-4 pt-4 hover:bg-gray-200 font-poppins font-medium first-letter:uppercase text-[14px]"
+                                className="text-deepGray block px-4 pt-4 hover:bg-gray-200 hover:font-semibold transition ease-in duration-300
+                                            font-poppins font-medium first-letter:uppercase text-[14px]"
                             >
                                 {subCategory}
                             </Link>
