@@ -5,7 +5,6 @@ import { useAuthContext } from "./context/AuthContext.jsx";
 //PAGES
 import { Home } from "./pages/Home/Home.jsx"
 import { AuthPage } from "./pages/AuthPage/AuthPage.jsx"
-import { Register } from "./pages/Register/Register.jsx"
 import { ProductosPage } from "./pages/ProductosPage/ProductosPage.jsx"
 import { Contact } from "./pages/Contact/Contact.jsx"
 import { ProductDetailContainer } from "./pages/ProductDetailContainer/ProductDetailContainer.jsx";

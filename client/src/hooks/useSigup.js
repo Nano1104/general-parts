@@ -9,7 +9,7 @@ const useSignup = () => {
 
             console.log(data);
         } catch (err) {
-            alert("Error register user in front")
+            throw new Error(err.response?.data?.message || "Error en el registro");
         }
     }
 

@@ -32,7 +32,7 @@ export const Category = ({category, activeCategory, setActiveCategory, categorie
 
             {activeCategory === category && (
                 <div
-                    className="bg-white absolute w-[100vw] h-[200px] z-20 left-0 fade-in"
+                    className="bg-white flex flex-col items-center absolute w-[100vw] h-[200px] z-20 left-0 fade-in"
                     onMouseOver={showSubCategories}
                     onMouseLeave={hideSubCategories}
                 >

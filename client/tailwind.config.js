@@ -19,6 +19,9 @@ export default {
         deepGray: "#61677A",
         gray: "#BDC3C7",
         lightGray: "#D8D9DA",
+      },
+      backgroundImage: {
+        'homeBg': "url('./src/images/bg-home.avif')",
       }
     },
   },
