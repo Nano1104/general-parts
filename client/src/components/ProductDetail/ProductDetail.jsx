@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import { useAuthContext } from "../../context/AuthContext.jsx"
 import { useCartContext } from "../../context/CartContext.jsx";
 //components
-import bgImg from "../../images/bg-contact.avif"
+import imgDetail from "../../images/tornillos.png"
 import { renderToString } from 'react-dom/server';
 import { IoCartOutline } from "react-icons/io5";
 import { MdKeyboardArrowRight } from "react-icons/md";
@@ -62,10 +62,11 @@ export const ProductDetail = ({prod}) => {
         <div id="prod-detail-container"
         className="h-[90vh] w-[75%] py-[50px] px-[65px] text-base text-center bg-[#EEEEEE] font-poppins flex m-auto mt-10 rounded-xl relative"
         >
-            <div className="img-prod-detail basis-[58%] border-r-4">
-                <div className=""></div>
-                {/* <img src="#" alt={`prod-${codpro}-img`} /> */}
+            <div className="img-prod-detail flex justify-center items-center pr-10 basis-[58%]">
+                {/* <div className="border w-[800px] h-[700px]"></div> */}
+                <img src={imgDetail} className="w-[800px] h-[700px]" alt={`prod-${codpro}-img`} />
             </div>
+            <div className="border mx-4"></div>
             <div id="labels-prod-detail" className="basis-[42%] mt-10 text-base">
                 <div className="anchors flex justify-start items-center ml-10 italic absolute top-[25px] left-0 font-semibold">
                     <Link className="first-letter:uppercase" to={`/productos/${encodedCategory}`}>{desc_rubro}</Link><MdKeyboardArrowRight />

@@ -13,14 +13,16 @@ export const postProductInCertainCart = async (req, res) => {
             return res.status(404).json({ message: "Carrito o producto no encontrado" });
         }
 
-        /* if(cartFound.products.find(prod => prod.product.toString() === prodFound._id.toString()) {   //caso de que ya se haya agregado el prod previamente en el cart
+        if (prodFound.stock < amountToAdd) {
+            return res.status(400).json({ message: "No hay suficiente stock disponible" });
+        }
 
+        const prodInCart = cartFound.products.find(prod => prod.product.toString() === prodFound._id.toString())
+        if(prodInCart) {   //caso de que ya se haya agregado el prod previamente en el cart
+            prodInCart.quantity += amountToAdd
         } else {
-
-        } */
-
-        
-        cartFound.products.push({ product: prodFound, quantity: amountToAdd })      //agrega el prod al carrito 
+            cartFound.products.push({ product: prodFound, quantity: amountToAdd })      //agrega el prod al carrito 
+        }
         await cartFound.save();
 
         await Product.updateOne(        //modifica el stock del producto

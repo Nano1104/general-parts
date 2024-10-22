@@ -47,7 +47,7 @@ export const register = async (req, res) => {
     try {
         const { first_name, email, phone, password, role } = req.body
         
-        if(!first_name || !email || !phone || !password) throw new Error("Some fields may be empty");
+        if(!first_name || !email || !phone || !password) throw new Error("some fields may be empty");
 
         const userToCreate = {
             ...req.body,
@@ -58,7 +58,7 @@ export const register = async (req, res) => {
         if(email == "swrepuestos@yahoo.com.ar" && password == '12345') userToCreate.role = "admin" 
 
         const userFound = await User.findOne({ email: email });
-        if(userFound) res.status(400).json({message: "User already exists"})
+        if(userFound) return res.status(404).json({message: "user already exists"})
 
         const user = await User.create({ ...userToCreate })     //user create 
         const cart = await Cart.create({ userId: user._id })    //cart create

@@ -22,10 +22,10 @@ export const Filters = ({ filtered }) => {
 
     return(
         <>
-        <div id="filter" className="bg-cBlack text-white w-[20vw] top-0 h-[90vh]">
-            <h4>Filtrar</h4>
-            <label htmlFor="price-sort">Marca:</label>
-            <div className="h-[300px] overflow-auto">
+        <div id="filter" className="bg-cBlack col-start-1 col-span-1 p-4 justify-self-center text-white w-[20vw] top-0">
+            <h4 className="text-2xl font-medium font-montserrat">Filtrar</h4><hr className="w-[60%] my-3"/>
+            <label htmlFor="price-sort" className="text-xl font-montserrat">Marca:</label>
+            <div className="h-[300px] overflow-auto font-poppins">
                 {
                     brands.map((brand) => (
                         <div key={brand}>
@@ -37,7 +37,7 @@ export const Filters = ({ filtered }) => {
             </div>
 
             <div className="mt-4">
-                <label htmlFor="price-sort">Precio:</label>
+                <label htmlFor="price-sort" className="text-xl font-montserrat">Precio:</label>
             </div>
 
         </div>

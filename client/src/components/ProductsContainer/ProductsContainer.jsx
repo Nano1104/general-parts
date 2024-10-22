@@ -82,17 +82,22 @@ export const ProductsContainer = ({ searchValue }) => {         //valor de la ba
             </div>
         </div>
 
-        <div id="products-container" className="flex flex-wrap w-full mt-10 justify-evenly items-center relative">
+        <div id="products-container" className="grid grid-cols-[1fr_3fr_3fr_3fr] w-full mt-10 relative">
             {
                 showFilters
                 ? <Filters filtered={{filterBrands, setFilterBrands, filterPrice, setFilterPrice}} />
                 : <></>
             }
-            {
-               loading
-               ? <Loading />
-               : prodsToRender.map(prod => <Product key={prod.codpro} data={prod} params={[category, subcategory]} />)
-            }
+            <div className={`col-start-${ showFilters ? '2' : '1' } col-span-${ showFilters ? '3' : '4' } flex flex-wrap justify-around gap-3`}>
+                {
+                loading 
+                ? <Loading />
+                : (
+                    prodsToRender.map((prod) => (
+                        <Product key={prod.codpro} data={prod} params={[category, subcategory]} />
+                    ))
+                )}
+            </div>
         </div>
         </>
     )
