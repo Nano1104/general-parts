@@ -17,7 +17,7 @@ export const InventaryList = () => {
     return(
         <>
             <nav className="bg-gray py-1 relative px-7"> 
-                <ul className="flex items-center justify-center gap-2">
+                <ul className="flex items-center justify-center xl:justify-start gap-2">
                     {
                         categories.map((category, index) => <Category
                                                                 key={`category-${category}-${index}`}

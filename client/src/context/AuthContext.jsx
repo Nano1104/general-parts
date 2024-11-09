@@ -28,20 +28,20 @@ export const AuthContextProvider = ({children}) => {
                 console.log(authUser)
             }
             catch (err) {
-                console.error("Error verifying user:", err);
+                console.log(err.response.data.message)
                 setAuthUser(null);
             }
-            finally {
+            /* finally {
                 setLoading(false); // Indicar que la verificación ha terminado
-            }
+            } */
         };
 
         verifyUser();
     }, [])
 
-    if (loading) {
+    /* if (loading) {
         return <Loading />
-    }
+    } */
 
     return (
         <AuthContext.Provider value={{ authUser, setAuthUser, logout }}>

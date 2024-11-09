@@ -21,7 +21,7 @@ export const ItemCount = ({handleQuantity}) => {
 
     return(
         <>
-            <div id="item-count-container" className="text-xl flex justify-start border border-[#373A40] rounded-2xl w-[30%]">
+            <div id="item-count-container" className="text-xl lg:text-base flex justify-start border border-[#373A40] rounded-2xl w-[30%]">
                 <button className="flex-grow basis-0 rounded-tr-xl rounded-br-xl py-1 pl-2 pr-3" onClick={handleLess}>-</button>
                 <input type="text" value={amount} className="w-[40%] text-center bg-transparent" />
                 <button className="flex-grow basis-0 rounded-tl-xl rounded-bl-xl py-1 pl-3 pr-2" onClick={handlePlus}>+</button>

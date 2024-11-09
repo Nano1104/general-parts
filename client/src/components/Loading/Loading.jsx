@@ -3,7 +3,7 @@ import "./loading.css"
 export const Loading = () => {
     return(
         <>
-            <section id="loader">
+            <section id="loader" className="xl:col-span-3 2xl:col-span-4">
                 <div className="relative w-32 h-32">
                     <span style={{ '--i': 1 }}></span>
                     <span style={{ '--i': 2 }}></span>
