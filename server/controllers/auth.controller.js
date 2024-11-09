@@ -6,9 +6,7 @@ import { generateTokenAndSetCookie } from "../utils/jwt.js";
 
 export const getAuthUser = async (req, res) => {
     try {
-        if (!req.user) {
-            return res.status(404).json({ message: "No authenticated user found" });
-        }
+        if (!req.user) return res.status(404).json({ message: "No authenticated user found" });
 
         const user = await User.findById(req.user.userId).populate({
             path: 'cart',

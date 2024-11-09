@@ -5,6 +5,14 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    screens: {
+      "mobile": "375px",
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
+    },
     extend: {
       fontFamily: {
         montserrat: ["Montserrat", "sans-serif"],
@@ -22,6 +30,7 @@ export default {
       },
       backgroundImage: {
         'homeBg': "url('./src/images/bg-home.avif')",
+        'custom-gradient': 'linear-gradient(0deg, rgba(255,255,255,1) 15%, rgba(34,193,195,0) 100%)',
       }
     },
   },
