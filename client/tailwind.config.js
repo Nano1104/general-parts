@@ -29,7 +29,7 @@ export default {
         lightGray: "#D8D9DA",
       },
       backgroundImage: {
-        'homeBg': "url('./src/images/bg-home.avif')",
+        'homeBg': "url('/images/bg-home.avif')",
         'custom-gradient': 'linear-gradient(0deg, rgba(255,255,255,1) 15%, rgba(34,193,195,0) 100%)',
       }
     },
