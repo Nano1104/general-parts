@@ -16,11 +16,9 @@ export const Home = () => {
             {/* <img src={bgImg} alt="" id="bg-home" className="hidden lg:block" /> */}
             <NavBar />
 
-            <div className="h-screen absolute top-[10%] font-roboto border-white w-full blur-none flex flex-col items-center lg:items-start"> {/* large screen: absolute top-0 left-[5%] */}
+            <div className="h-screen absolute top-[10%] font-roboto border-white w-full blur-none flex flex-col items-center lg:items-start">
                 <Logo />
-                <div className="text-center lg:text-left p-3 mt-20 lg:mt-0 lg:w-[50%] lg:ml-10 lg:text-xl">
-                    <span className="text-white text-[1.7em]">Venta de repuestos para automóviles de todas las marcas</span>
-                </div>
+                <span className="text-white text-center text-xl mobile:text-2xl lg:text-left p-3 mt-14 lg:mt-0 lg:ml-8 lg:text-3xl">Venta de repuestos para automóviles de todas las marcas</span>
                 <div className="flex gap-4 text-white italic font-medium mt-4 lg:ml-10 lg:text-xl">
                     <div className="flex items-center">
                         <FaWhatsapp className="" /><span className="ml-2">1160487294</span>

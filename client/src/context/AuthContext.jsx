@@ -18,6 +18,8 @@ export const AuthContextProvider = ({children}) => {
         setAuthUser(null)
     }
 
+    const userIsAdmin = () => authUser.role == "admin"
+
     useEffect(() => {
         const verifyUser = async () => {
             try {
@@ -44,7 +46,7 @@ export const AuthContextProvider = ({children}) => {
     } */
 
     return (
-        <AuthContext.Provider value={{ authUser, setAuthUser, logout }}>
+        <AuthContext.Provider value={{ authUser, setAuthUser, userIsAdmin, logout }}>
             {children}
         </AuthContext.Provider>
     );

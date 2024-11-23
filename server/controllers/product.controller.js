@@ -49,6 +49,34 @@ export const addFieldToProducts = async (req, res) => {
     }
 }
 
+export const changeProductFieldVal = async (req, res) => {
+    try {
+        const { prodId } = req.params
+        const { field, value } = req.body
+        if(!field || !value) throw new Error("Field does not exists")  
+
+        const prodFound = await Producto.findById(prodId);      //busca si existe el producto en la db
+        if (!prodFound) return res.status(404).json({ message: "Product not found in db" });
+
+        const fieldExists = await Producto.findOne({ _id: prodId, [field]: { $exists: true } });    //busca si existe el campo del producto en la db
+        if (!fieldExists) return res.status(400).json({ message: `Field '${field}' does not exist in the document` });
+
+        const updateData = { [field]: value };
+
+        const updatedProduct = await Producto.findByIdAndUpdate(
+            prodId,
+            updateData,
+            { new: true }
+        );
+
+        if (!updatedProduct) return res.status(500).json({ message: "Error renaming field in DB" });
+
+        res.status(200).json({message: "Success changing product field", updatedProduct});
+    } catch (err) {
+        res.status(400).json({message: "Error changing field to product in DB", err});
+    }
+}
+
 export const changeFieldToProducts = async (req, res) => {
     try {
         const { field, newField } = req.body

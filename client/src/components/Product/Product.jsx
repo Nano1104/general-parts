@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+import imgProduct from "../../images/tornillos.png"
+
 export const Product = ({data, params}) => {
     const [category, subcategory] = params;
     const [isMobile, setIsMobile] = useState(false);
@@ -28,11 +30,12 @@ export const Product = ({data, params}) => {
         <>
         <div onMouseEnter={() => handleMouseEnter()} key={`key_${codpro}`} id="product" className="w-[85%] h-[65vh] mobile:h-[60vh] lg:w-[19em] xl:w-[22em] 2xl:w-[25em] 2xl:h-[55vh] font-roboto bg-gray rounded-xl relative my-3">
             <div className="w-full h-[65%]">
-                <img src="#" alt="" className="rounded-t-xl" />
+                <img src={imgProduct} alt="" className="rounded-t-xl object-contain h-full" />
             </div>
             <div className="flex flex-col text-xs mobile:text-sm 2xl:text-base items-start px-4 font-poppins">
                 <h3 className="text-start uppercase font-bold mt-2">{desc_stock}</h3>
                 <span className="">{desc_rubro}</span>
+                <span>PRECIO: {precioimpre}</span>
             </div>
             {
                 !isMobile

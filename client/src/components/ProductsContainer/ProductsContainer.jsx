@@ -16,15 +16,15 @@ import "../../pages/ProductosPage/productospage.css"
 
 
 
-export const ProductsContainer = ({ searchValue }) => {         //valor de la barra de busqueda
+export const ProductsContainer = ({ searchValue }) => {                 //valor de la barra de busqueda
     const { category, subcategory } = useParams();
     const encodedSubcategory = encodeURIComponent(subcategory);
 
-    const [prodsToRender, setProdsToRender] = useState([]);     //productos que renderiza la pagina
-    const [loading, setLoading] = useState();                   //loading del renderizado
-    const [filterBrands, setFilterBrands] = useState([]);              
-    const [filterPrice, setFilterPrice] = useState(null);   
-    const [showFilters, setShowFilter] = useState(false);                 //ocultar o mostrar los filtros de busqueda
+    const [prodsToRender, setProdsToRender] = useState([]);             //productos que renderiza la pagina
+    const [loading, setLoading] = useState();                           //loading del renderizado
+    const [filterBrands, setFilterBrands] = useState([]);               //marcas del menu para filtrar
+    const [price, setPrice] = useState([]);                             //precios del menu para filtrar
+    const [showFilters, setShowFilter] = useState(false);               //ocultar o mostrar los filtros de busqueda
 
     const handleFilter = () => setShowFilter(showFilters => !showFilters);
 
@@ -52,6 +52,16 @@ export const ProductsContainer = ({ searchValue }) => {         //valor de la ba
                 if (filterBrands.length > 0) {
                     products = products.filter(prod => filterBrands.includes(prod.desc_marca));
                 }
+
+                // Filtrar por precio
+                if (price.length > 0) {
+                    console.log(typeof price, price.length)
+                    if (price.length > 1) {     //si el array tiene mas de una valor como: [10000, 80000]
+                        products = products.filter(prod => prod.precioimpre >= price[0] && prod.precioimpre <= price[1]);
+                    } else {        //un valor solo: [80000]
+                        products = products.filter(prod => prod.precioimpre > price[0])
+                    }
+                }
     
                 setProdsToRender(products);
             } catch (err) {
@@ -62,7 +72,7 @@ export const ProductsContainer = ({ searchValue }) => {         //valor de la ba
         };
     
         fetchData();
-    }, [category, subcategory, searchValue, filterBrands]);
+    }, [category, subcategory, searchValue, filterBrands, price]);
 
     return(
         <>
@@ -82,7 +92,7 @@ export const ProductsContainer = ({ searchValue }) => {         //valor de la ba
         <div id="products-container" className={`grid grid-cols-1 ${ showFilters ? `md:grid-cols-[30%_1fr] 2xl:grid-cols-[15%_1fr]` : `md:grid-cols-1` } w-full mt-10`}>
             {showFilters && (
                 <div>
-                    <Filters filtered={{ filterBrands, setFilterBrands, filterPrice, setFilterPrice, setShowFilter }} />
+                    <Filters filtered={{ filterBrands, setFilterBrands, price, setPrice, setShowFilter }} />
                 </div>
             )}
 

@@ -4,11 +4,16 @@ import { IoIosArrowBack } from "react-icons/io"; //flecha izquierda
 import { IoIosArrowDown } from "react-icons/io"; //flecha abajo
 import { IoIosArrowUp } from "react-icons/io"; //flecha arriba
 
+import { isMobileFunction } from "../../utils/isMobile.js"
+
 export const Filters = ({ filtered }) => {
-    const { filterBrands, setFilterBrands, filterPrice, setFilterPrice, setShowFilter } = filtered;
-    const [isMobile, setIsMobile] = useState(false);
-    const [showElements, setShowElements] = useState(false);
+    const { filterBrands, setFilterBrands, price, setPrice, setShowFilter } = filtered;
+
+    const [isMobile, setIsMobile] = useState(false);            //indica si la resolucion se encuentra en mobile o no
+    const [showElements, setShowElements] = useState(false);    //(funciona para la resolucion de mobile) - Muestra o desaparece las marcas o precios
     const [showPrice, setShowPrice] = useState(false);
+    const [selectedPrice, setSelectedPrice] = useState(null);
+    const [isChecked, setIsChecked] = useState(false);
 
     const handleShowElements = (e) => {
         const val = e.currentTarget.getAttribute("customVal")
@@ -29,21 +34,18 @@ export const Filters = ({ filtered }) => {
         }
     }
 
-    const handlePrice = (e) => {
-
+    const handlePrice = (e, array) => {
+        if(e.target.checked) {
+            setSelectedPrice(array)
+            setPrice(array)
+        } else {
+            setSelectedPrice([])
+            setPrice([])
+        }
     }
 
     useEffect(() => {
-        const handleResize = () => {
-            setIsMobile(window.innerWidth < 768);
-        };
-
-        handleResize(); // Ejecutar al cargar el componente
-        window.addEventListener("resize", handleResize); // Escuchar cambios de tamaño
-
-        return () => {
-            window.removeEventListener("resize", handleResize); // Limpiar evento
-        };
+        isMobileFunction(768, isMobile, setIsMobile)
     }, [])
 
     return(
@@ -85,7 +87,7 @@ export const Filters = ({ filtered }) => {
             <div className="h-[300px] overflow-auto font-poppins">
                 {
                     brands.map((brand) => (
-                        <div key={brand} className="sm:text-xs">
+                        <div key={brand} className="sm:text-xs my-1">
                             <input type="checkbox" id={`checkbox-${brand}`} className="accent-orange" checked={filterBrands.includes(brand)} value={brand} onChange={handleBrand} />
                             <label className="ml-1">{brand}</label>
                         </div>
@@ -95,6 +97,19 @@ export const Filters = ({ filtered }) => {
 
             <div className="mt-4">
                 <label htmlFor="price-sort" className="text-xl font-montserrat">Precio:</label>
+                <div className="sm:text-xs my-1">
+                    <input type="checkbox" className="accent-orange" checked={JSON.stringify(selectedPrice) === JSON.stringify([0, 10000])} onChange={(e) => handlePrice(e, [0, 10000])} />
+                    <label className="ml-1">Hasta - $10000</label>
+                </div>
+                <div className="sm:text-xs my-1">
+                    <input type="checkbox" className="accent-orange" checked={JSON.stringify(selectedPrice) === JSON.stringify([10000, 85000])} onChange={(e) => handlePrice(e, [10000, 85000])}  />
+                    <label className="ml-1">$10000 - $85000</label>
+                </div>
+
+                <div className="sm:text-xs my-1">
+                    <input type="checkbox" className="accent-orange" checked={JSON.stringify(selectedPrice) === JSON.stringify([85000])} onChange={(e) => handlePrice(e, [85000])}  />
+                    <label className="ml-1">Más de - $85000</label>
+                </div>
             </div>
         </div>
         }
