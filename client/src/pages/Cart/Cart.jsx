@@ -31,7 +31,7 @@ export const Cart = () => {
     return(
         <>
             {
-                cart.products.length > 0
+                cart && cart.products.length > 0
                 ?
                 <>
                 <div className="flex">
@@ -48,7 +48,7 @@ export const Cart = () => {
                         </div>
                         <div className="ml-14 mt-16 h-28 text-lightGray relative">
                             <h3 className="text-[1.7rem] font-montserrat font-medium">Total de la reserva: <span className="ml-2">${totalPrice}ARS</span></h3>
-                            <span className="italic absolute top-[50px]">El carrito se vaciará en el plazo de 1hr en caso de no haber sido confirmada la reserva.</span>
+                            <span className="italic absolute top-[50px]">El carrito se vaciará en el plazo de 1 día en caso de no haber sido confirmada la reserva.</span>
                         </div>
                     </div>
                     <div className="basis-[25%] bg-[#EEEEEE] h-[100vh] flex flex-col justify-between font-poppins">

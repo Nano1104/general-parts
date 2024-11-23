@@ -16,6 +16,7 @@ import { Cart } from "./pages/Cart/Cart.jsx";
 function App() {
   const { authUser } = useAuthContext()
 
+
   return (
     <>
       <Routes>

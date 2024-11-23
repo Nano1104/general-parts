@@ -33,7 +33,7 @@ export const UserIcon = () => {
                 <div className="text-black text-center" id="user-menu">
                     <div className="h-full">
                         <button className="text-xs font-medium py-1 w-full rounded-tl-[20px] rounded-tr-[20px] absolute left-0 border-t
-                    hover:bg-amber-600 hover:border-transparent transition duration-200" onClick={handleLogout}>CERRAR SESIÓN</button>
+                                        hover:bg-amber-600 hover:border-transparent transition duration-200" onClick={handleLogout}>CERRAR SESIÓN</button>
                     </div>
                 </div>
                 : <></>
@@ -43,12 +43,3 @@ export const UserIcon = () => {
     )
 }
 
-{/* <div className="text-black  relative text-center" id="user-menu">
-                    <div className="mt-4 flex flex-col">
-                        <span className="italic text-sm first-letter:uppercase">{authUser.role}</span>
-                        <span className="mt-2">{authUser?.first_name}</span><span className="mt-2 first-letter:uppercase inline-block">{authUser?.last_name}</span>
-                        <hr className="m-2" />
-                    </div>
-                    <button className="text-xs font-medium py-1 w-full rounded-bl-[20px] rounded-br-[20px border-t
-                    hover:bg-amber-600 hover:border-transparent transition duration-200" onClick={handleLogout}>CERRAR SESIÓN</button>
-                </div> */}

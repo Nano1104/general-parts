@@ -2,7 +2,6 @@ import { NavBar } from "../../components/NavBar/NavBar.jsx"
 import { Logo } from "../../components/Logo/Logo.jsx"
 import { Link } from "react-router-dom";
 
-import bgImg from "../../images/bg-home.avif"
 //icons
 import { FaWhatsapp } from "react-icons/fa";
 

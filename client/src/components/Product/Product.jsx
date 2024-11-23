@@ -35,7 +35,7 @@ export const Product = ({data, params}) => {
             <div className="flex flex-col text-xs mobile:text-sm 2xl:text-base items-start px-4 font-poppins">
                 <h3 className="text-start uppercase font-bold mt-2">{desc_stock}</h3>
                 <span className="">{desc_rubro}</span>
-                <span>PRECIO: {precioimpre}</span>
+                <span>PRECIO: <span className="font-semibold">{precioimpre} ARG</span></span>
             </div>
             {
                 !isMobile
