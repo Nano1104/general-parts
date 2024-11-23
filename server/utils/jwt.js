@@ -1,14 +1,14 @@
 import jwt from "jsonwebtoken";
 
-import { JWT_TOKEN_KEY } from "../config/envConfig.js";
+import { NODE_ENV, JWT_TOKEN_KEY } from "../config/envConfig.js";
 
 export const generateTokenAndSetCookie = (userId, res) => {
     const token = jwt.sign({userId}, JWT_TOKEN_KEY, {expiresIn: '1h'})
 
     res.cookie('token', token, {
         httpOnly: true,
-        secure: false, // Asegúrate de que está habilitado para HTTPS
-        sameSite: 'Strict', // Para permitir el envío de cookies entre sitios
+        secure: NODE_ENV === 'production', // Asegúrate de que está habilitado para HTTPS
+        sameSite: NODE_ENV === 'production' ? "None" : "Lax", // Para permitir el envío de cookies entre sitios
         maxAge: 24 * 60 * 60 * 1000, // 1 día
     });
 }
