@@ -8,7 +8,7 @@ export default defineConfig({
     proxy: {
       "/api": {
         target: process.env.VITE_PROD_SERVER_URL || "http://localhost:5000",
-        secure: false, //Si VITE_PROD_SERVER_URL está configurada, se supone que el servidor de producción utiliza HTTPS, por lo que se activa
+        secure: process.env.VITE_PROD_SERVER_URL ? true : false,
       },
     },
   },

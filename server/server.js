@@ -32,7 +32,7 @@ app.use("/api/cart", cartRouter)
 app.use("/api/order", orderRouter)
 
 app.listen(PORT, () => {
-    console.log(`App listening on port ${PORT}`);
+    console.log(`App listening on port ${PORT} ${process.env.NODE_ENV}`);
     connectToDB()
 })
 
