@@ -17,11 +17,6 @@ const app = express();
 app.use(express.json())
 app.use(cookieParser())
 
-/* app.use(cors({
-  origin: "http://localhost/5173",
-  credentials: true
-})) */
-
 const prodOrigin = [CLIENT_URL]
 const devOrigin = ["http://localhost/5173"]
 const allowedOrigins = NODE_ENV === "production" ? prodOrigin : devOrigin
@@ -39,12 +34,6 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE"]
 }))
 
-/* app.use(cors({
-    origin: process.env.NODE_ENV === 'production' 
-            ? 'https://general-parts.vercel.app' 
-            : 'http://localhost:5173', 
-    credentials: true
-  })); */
 
 //routes
 app.use("/api/products", productRouter)
@@ -55,7 +44,7 @@ app.use("/api/order", orderRouter)
 
 app.listen(PORT, () => {
     console.log("🚀 ~ allowedOrigins:", allowedOrigins)
-    console.log(`App listening on port ${PORT} ${process.env.NODE_ENV}`);
+    console.log(`App listening on port ${PORT} ${NODE_ENV}`);
     connectToDB()
 })
 

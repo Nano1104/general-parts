@@ -1,12 +1,14 @@
 import axios from "axios";
 import { useAuthContext } from "../context/AuthContext.jsx";
 
+const API_URL = import.meta.env.VITE_PROD_SERVER_URL;
+
 const useSignin = () => {
     const { setAuthUser } = useAuthContext()
 
     const signIn = async ({ email, password }) => {
         try {
-            const res = await axios.post("/api/auth/login", { email, password }, { withCredentials: true });
+            const res = await axios.post(`${API_URL}/api/auth/login`, { email, password }, { withCredentials: true });
             const data = res.data; 
             
             const authUserData = await axios.get("/api/auth/authUser", { withCredentials: true })

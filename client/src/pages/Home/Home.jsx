@@ -11,7 +11,7 @@ export const Home = () => {
     return(
         <>
         <div className="h-[100vh] w-full relative overflow-hidden">
-            <div className="bg-homeBg bg-cover brightness-50 blur-[2px] grayscale-[0.8]" id="bg-home"></div>
+            <div className="bg-[url(url('/bg-home.avif')] bg-cover brightness-50 blur-[2px] grayscale-[0.8]" id="bg-home"></div>
             {/* <img src={bgImg} alt="" id="bg-home" className="hidden lg:block" /> */}
             <NavBar />
 

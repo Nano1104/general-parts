@@ -56,7 +56,7 @@ export const ProductDetail = ({prod}) => {
             Swal.fire({
                 html:   `
                             <span style="font-weight: 400">Necesitas iniciar sesión para agregar al carrito!</span><br />
-                            <a href="http://localhost:5173/authPage" class="font-bold text-orange underline rounded-lg">INICIAR SESIÓN</a>
+                            <a href="https://general-parts.vercel.app/authPage" class="font-bold text-orange underline rounded-lg">INICIAR SESIÓN</a>
                         `,
                 showConfirmButton: false,
                 allowOutsideClick: true,

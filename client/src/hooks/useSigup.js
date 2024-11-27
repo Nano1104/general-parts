@@ -1,10 +1,12 @@
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_PROD_SERVER_URL;
+
 const useSignup = () => {
 
     const signUp = async ({ first_name, last_name, email, phone, password }) => {
         try {
-            const res = await axios.post("/api/auth/register", { first_name, last_name, email, phone: Number(phone), password }, { withCredentials: true });
+            const res = await axios.post(`${API_URL}/api/auth/register`, { first_name, last_name, email, phone: Number(phone), password }, { withCredentials: true });
             const data = res.data; 
 
             console.log(data);
