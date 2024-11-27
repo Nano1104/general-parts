@@ -13,7 +13,6 @@ export const useAuthContext = () => {
 
 export const AuthContextProvider = ({children}) => {
     const [authUser, setAuthUser] = useState(null);
-    const [loading, setLoading] = useState(true);
 
     const logout = async () => {
         const res = await axios.post(`${API_URL}/api/auth/logout`, { withCredentials: true })
@@ -35,17 +34,10 @@ export const AuthContextProvider = ({children}) => {
                 console.log(err.response.data.message)
                 setAuthUser(null);
             }
-            /* finally {
-                setLoading(false); // Indicar que la verificación ha terminado
-            } */
         };
 
         verifyUser();
     }, [])
-
-    /* if (loading) {
-        return <Loading />
-    } */
 
     return (
         <AuthContext.Provider value={{ authUser, setAuthUser, userIsAdmin, logout }}>
