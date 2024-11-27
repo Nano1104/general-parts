@@ -4,6 +4,8 @@ import { useAuthContext } from "../../context/AuthContext";
 import { PiUser } from "react-icons/pi";
 import { useState } from "react";
 
+const API_URL = import.meta.env.VITE_PROD_SERVER_URL;
+
 export const UserIcon = () => {
     const { setAuthUser, authUser } = useAuthContext();
     console.log("🚀 ~ UserIcon ~ authUser:", authUser)
@@ -15,7 +17,7 @@ export const UserIcon = () => {
 
     const handleLogout = async () => {
         try {
-            const logout = await axios.post("/api/auth/logout", { withCredentials: true })
+            const logout = await axios.post(`${API_URL}/api/auth/logout`, { withCredentials: true })
             console.log(logout);
             setAuthUser(null)
         } catch (err) {

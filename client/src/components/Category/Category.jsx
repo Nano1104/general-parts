@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { IoIosArrowDown } from "react-icons/io"; //flecha abajo
 import { IoIosArrowUp } from "react-icons/io"; //flecha arriba
 
-import "./category.css"
 import 'animate.css';
 
 export const Category = ({category, activeCategory, setActiveCategory, categoriesAndSubCategories}) => {

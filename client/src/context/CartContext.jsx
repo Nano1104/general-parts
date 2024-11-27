@@ -2,8 +2,9 @@ import axios from "axios";
 import { createContext, useContext, useState } from "react";
 import Swal from 'sweetalert2';
 
-
 export const CartContext = createContext();
+
+const API_URL = import.meta.env.VITE_PROD_SERVER_URL;
 
 export const useCartContext = () => {
     return useContext(CartContext);
@@ -14,7 +15,7 @@ export const CartContextProvider = ({children}) => {
 
     const addProductToCart = async (productId, cartId, amountToAdd) => {
         try {
-            const res = await axios.post(`/api/cart/${cartId}/products/${productId}`, { amountToAdd }, { withCredentials: true });
+            const res = await axios.post(`${API_URL}/api/cart/${cartId}/products/${productId}`, { amountToAdd }, { withCredentials: true });
             console.log("🚀 ~ addProductToCart ~ res:", res)
             if(res.status == 200) {
                 Swal.fire({
@@ -45,8 +46,8 @@ export const CartContextProvider = ({children}) => {
                 confirmButtonText: "Si, eliminar!"
             }).then(async (result) => {             // Añadir async aquí
                 if (result.isConfirmed) {
-                    const res = await axios.delete(`/api/cart/${cartId}/products/${prodId}`, { withCredentials: true });
-                    await axios.put(`/api/products/update-stock/${prodId}`, { newStock: quantity }, { withCredentials: true })
+                    const res = await axios.delete(`${API_URL}/api/cart/${cartId}/products/${prodId}`, { withCredentials: true });
+                    await axios.put(`${API_URL}/api/products/update-stock/${prodId}`, { newStock: quantity }, { withCredentials: true })
                     console.log("🚀 ~ handleDeleteProdFromCart ~ res:", res);
                     window.location.reload();
                 }
@@ -60,11 +61,11 @@ export const CartContextProvider = ({children}) => {
         const { _id: cartId, products: prods } = cart
 
         try {
-            const res = await axios.post("/api/order", { userId, prods, totalPrice }, { withCredentials: true})
+            const res = await axios.post(`${API_URL}/api/order`, { userId, prods, totalPrice }, { withCredentials: true})
 
             if (res.status === 200) {
                 alert("Orden creada de manera exitosa");
-                await axios.put(`/api/user/${userId}/cart/${cartId}`, {}, { withCredentials: true });
+                await axios.put(`${API_URL}/api/user/${userId}/cart/${cartId}`, {}, { withCredentials: true });
             } else {
                 throw new Error("Error en la creación de la orden");
             }

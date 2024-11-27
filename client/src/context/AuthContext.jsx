@@ -5,6 +5,8 @@ import { Loading } from "../components/Loading/Loading";
 
 export const AuthContext = createContext();
 
+const API_URL = import.meta.env.VITE_PROD_SERVER_URL;
+
 export const useAuthContext = () => {
     return useContext(AuthContext);
 }
@@ -14,7 +16,7 @@ export const AuthContextProvider = ({children}) => {
     const [loading, setLoading] = useState(true);
 
     const logout = async () => {
-        const res = await axios.post(`/api/auth/logout`, { withCredentials: true })
+        const res = await axios.post(`${API_URL}/api/auth/logout`, { withCredentials: true })
         setAuthUser(null)
     }
 
@@ -23,7 +25,7 @@ export const AuthContextProvider = ({children}) => {
     useEffect(() => {
         const verifyUser = async () => {
             try {
-                const res = await axios.get("/api/auth/authUser", { withCredentials: true });
+                const res = await axios.get(`${API_URL}/api/auth/authUser`, { withCredentials: true });
                 console.log("🚀 ~ verifyUser ~ res:", res)
 
                 res.data ? setAuthUser(res.data) : setAuthUser(null)

@@ -1,6 +1,8 @@
 import axios from "axios";
 import Swal from 'sweetalert2';
 
+const API_URL = import.meta.env.VITE_PROD_SERVER_URL;
+
 export const ProductsManage = () => {
 
     const handleChange = async (e) => {
@@ -8,7 +10,7 @@ export const ProductsManage = () => {
         const prodId = e.target.prodId.value
         const newStock = e.target.stock.value
 
-        const res = await axios.put(`/api/products/update-stock/${prodId}`, { newStock }, { withCredentials: true })
+        const res = await axios.put(`${API_URL}/api/products/update-stock/${prodId}`, { newStock }, { withCredentials: true })
         console.log(res)
         if(res.status == 200) Swal.fire("Stock cambiado!");
     }

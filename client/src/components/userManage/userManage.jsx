@@ -3,12 +3,14 @@ import Swal from 'sweetalert2';
 import { useEffect, useState } from "react"
 import { User } from "../User/User.jsx";
 
+const API_URL = import.meta.env.VITE_PROD_SERVER_URL;
+
 export const UserManage = () => {
     const [users, setUsers] = useState([])
 
     const handleGetUsers = async () => {
         try {
-            const res = await axios.get("/api/user", { withCredentials: true })
+            const res = await axios.get(`${API_URL}/api/user`, { withCredentials: true })
             setUsers([...res.data.users])
         } catch (err) {
             console.log(err.message)
@@ -18,7 +20,7 @@ export const UserManage = () => {
     const handleDeleteUser = async (e) => {
         e.preventDefault()
         try {
-            const res = await axios.delete(`/api/user/${e.target.prodId.value}`, { withCredentials: true })
+            const res = await axios.delete(`${API_URL}/api/user/${e.target.prodId.value}`, { withCredentials: true })
             console.log(res)
             await handleGetUsers()
 

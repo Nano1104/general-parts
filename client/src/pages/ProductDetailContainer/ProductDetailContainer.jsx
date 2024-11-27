@@ -5,6 +5,9 @@ import { useParams } from "react-router-dom";
 import { ProductDetail } from "../../components/ProductDetail/ProductDetail.jsx";
 import { Loading } from "../../components/Loading/Loading.jsx";
 
+const API_URL = import.meta.env.VITE_PROD_SERVER_URL;
+console.log("🚀 ~ API_URL:", API_URL)
+
 export const ProductDetailContainer = () => {
     const { id } = useParams();
     const [prodToRender, setProdToRender] = useState([]);
@@ -14,7 +17,7 @@ export const ProductDetailContainer = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const res = await axios.get("/api/products", { withCredentials: true });
+                const res = await axios.get(`${API_URL}/api/products`, { withCredentials: true });
                 const prodFound = res.data.products.find(prod => prod.codpro === id);
                 setProdToRender(prodFound);
             } catch (error) {

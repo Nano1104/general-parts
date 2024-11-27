@@ -17,6 +17,8 @@ import { FaPencil } from "react-icons/fa6";
 //image
 import imgDetail from "../../images/tornillos.png"
 
+const API_URL = import.meta.env.VITE_PROD_SERVER_URL;
+
 export const ProductDetail = ({prod}) => {
     const { _id, codpro, desc_stock, proveed, desc_rubro, desc_subrubro, desc_marca, precioimpre, stock, prod_details } = prod;
     const { authUser, userIsAdmin } = useAuthContext();
@@ -41,7 +43,7 @@ export const ProductDetail = ({prod}) => {
         const newText = textareaRef.current.value; 
 
         try {
-            const res = await axios.put(`/api/products/change-product-fieldValue/${_id}`, { field: "prod_details", value: newText }, { withCredentials: true })
+            const res = await axios.put(`${API_URL}/api/products/change-product-fieldValue/${_id}`, { field: "prod_details", value: newText }, { withCredentials: true })
             console.log("🚀 ~ handleSubmitNewText ~ res:", res)
             window.location.reload()
         } catch (err) {

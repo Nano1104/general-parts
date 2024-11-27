@@ -6,13 +6,9 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      "/api": {
-        /* target: process.env.NODE_ENV === 'production'
-          ? "https://general-parts.onrender.com"
-          : "http://localhost:5000",
+      '/api': {
+        target: 'https://general-parts.onrender.com',
         changeOrigin: true,
-        secure: process.env.NODE_ENV === 'production',  */
-        target: "http://localhost:8000"
       },
     },
   },

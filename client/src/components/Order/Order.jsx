@@ -1,6 +1,8 @@
 import axios from "axios"
 import Swal from 'sweetalert2'
 
+const API_URL = import.meta.env.VITE_PROD_SERVER_URL;
+
 export const Order = ({order}) => {
     const { _id: orderId, userId, products, totalOrder } = order
 
@@ -14,7 +16,7 @@ export const Order = ({order}) => {
             });
     
             if (result.isConfirmed) {
-                const res = await axios.delete(`/api/order/${orderId}`, { withCredentials: true });
+                const res = await axios.delete(`${API_URL}/api/order/${orderId}`, { withCredentials: true });
                 // Aquí podrías actualizar el estado o eliminar el pedido de la UI en lugar de recargar la página
                 if (res.status === 200) window.location.reload()
             }

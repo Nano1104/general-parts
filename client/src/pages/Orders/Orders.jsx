@@ -8,6 +8,8 @@ import { IoCartOutline } from "react-icons/io5";
 import { CiWarning } from "react-icons/ci";
 import { LuClipboardList } from "react-icons/lu";
 
+const API_URL = import.meta.env.VITE_PROD_SERVER_URL;
+
 export const Orders = () => {
     const [orders, setOrders] = useState([])
 
@@ -17,7 +19,7 @@ export const Orders = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get("/api/order", { withCredentials: true });
+                const res = await axios.get(`${API_URL}/api/order`, { withCredentials: true });
                 console.log("🚀 ~ fetchData ~ res:", res.data.orders)
                 setOrders([...res.data.orders])
             } catch (error) {

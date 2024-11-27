@@ -13,7 +13,7 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 //css
 import "../../pages/ProductosPage/productospage.css"
 
-
+const API_URL = import.meta.env.VITE_PROD_SERVER_URL;
 
 
 export const ProductsContainer = ({ searchValue }) => {                 //valor de la barra de busqueda
@@ -32,7 +32,7 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
         const fetchData = async () => {
             setLoading(true);
             try {
-                const res = await axios.get("/api/products", { withCredentials: true });
+                const res = await axios.get(`${API_URL}/api/products`, { withCredentials: true });
                 let products = res.data.products;
     
                 // Filtrar por subcategoría y categoría
