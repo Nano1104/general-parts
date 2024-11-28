@@ -13,7 +13,7 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 //css
 import "../../pages/ProductosPage/productospage.css"
 
-const API_URL = import.meta.env.VITE_PROD_SERVER_URL;
+import { API_URL } from "../../utils/api_url.js";
 
 
 export const ProductsContainer = ({ searchValue }) => {                 //valor de la barra de busqueda

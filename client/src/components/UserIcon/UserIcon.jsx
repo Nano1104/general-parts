@@ -4,22 +4,23 @@ import { useAuthContext } from "../../context/AuthContext";
 import { PiUser } from "react-icons/pi";
 import { useState } from "react";
 
-const API_URL = import.meta.env.VITE_PROD_SERVER_URL;
+import { API_URL } from "../../utils/api_url.js";
 
 export const UserIcon = () => {
     const { setAuthUser, authUser } = useAuthContext();
-    console.log("🚀 ~ UserIcon ~ authUser:", authUser)
     const [showMenu, setShowMenu] = useState(false);
-    console.log(showMenu)
+
     const handleMenu = () => {
         setShowMenu(showMenu => !showMenu)
     }
 
     const handleLogout = async () => {
         try {
-            const logout = await axios.post(`${API_URL}/api/auth/logout`, { withCredentials: true })
-            console.log(logout);
-            setAuthUser(null)
+            await axios.post(`${API_URL}/api/auth/logout`, { withCredentials: true })
+                            .then(res => {
+                                console.log(res.json())
+                                setAuthUser(null)
+                            })
         } catch (err) {
             console.log("Error al tratar de hacer logout")
         }

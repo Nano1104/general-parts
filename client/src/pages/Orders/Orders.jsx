@@ -8,7 +8,7 @@ import { IoCartOutline } from "react-icons/io5";
 import { CiWarning } from "react-icons/ci";
 import { LuClipboardList } from "react-icons/lu";
 
-const API_URL = import.meta.env.VITE_PROD_SERVER_URL;
+import { API_URL } from "../../utils/api_url.js";
 
 export const Orders = () => {
     const [orders, setOrders] = useState([])

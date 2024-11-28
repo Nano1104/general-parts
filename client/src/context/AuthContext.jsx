@@ -5,7 +5,7 @@ import { Loading } from "../components/Loading/Loading";
 
 export const AuthContext = createContext();
 
-const API_URL = import.meta.env.VITE_PROD_SERVER_URL;
+import { API_URL } from "../utils/api_url.js";
 
 export const useAuthContext = () => {
     return useContext(AuthContext);
@@ -13,13 +13,16 @@ export const useAuthContext = () => {
 
 export const AuthContextProvider = ({children}) => {
     const [authUser, setAuthUser] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     const logout = async () => {
-        const res = await axios.post(`${API_URL}/api/auth/logout`, { withCredentials: true })
-        setAuthUser(null)
+        try {
+            await axios.post(`${API_URL}/api/auth/logout`, { withCredentials: true })
+            setAuthUser(null)
+        } catch (err) {
+            console.log(err.response.data.message)
+        }
     }
-
-    const userIsAdmin = () => authUser.role == "admin"
 
     useEffect(() => {
         const verifyUser = async () => {
@@ -27,8 +30,14 @@ export const AuthContextProvider = ({children}) => {
                 const res = await axios.get(`${API_URL}/api/auth/authUser`, { withCredentials: true });
                 console.log("🚀 ~ verifyUser ~ res:", res)
 
-                res.data ? setAuthUser(res.data) : setAuthUser(null)
-                console.log(authUser)
+                if(res.data) {
+                    setAuthUser(res.data)
+                    setIsAdmin(res.data.role === "admin")
+                } else {
+                    setAuthUser(null)
+                    setIsAdmin(false)
+                } 
+                /* console.log(authUser) */
             }
             catch (err) {
                 console.log(err.response.data.message)
@@ -40,7 +49,7 @@ export const AuthContextProvider = ({children}) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ authUser, setAuthUser, userIsAdmin, logout }}>
+        <AuthContext.Provider value={{ authUser, setAuthUser, isAdmin, logout }}>
             {children}
         </AuthContext.Provider>
     );

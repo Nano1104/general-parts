@@ -24,10 +24,11 @@ export const AuthPage = () => {
         setLoginError("")
         setLogin(login => !login)
     };
+    
     const onSubmit = handleSubmit(async (data) => {
         try {
             if(login) {
-                const res = await signIn({email: data.emailLogin, password: data.passwordLogin})
+                const res = await signIn({email: data.emailLogin, password: data.passwordLogin })
                 console.log("🚀 ~ onSubmit ~ res:", res)
             } else {
                 const res = await signUp({first_name: data.nombre, last_name: data.apellido, email: data.email, phone: data.phone, password: data.password})

@@ -1,7 +1,7 @@
 import axios from "axios";
 import Swal from 'sweetalert2';
 
-const API_URL = import.meta.env.VITE_PROD_SERVER_URL;
+import { API_URL } from "../../utils/api_url.js";
 
 export const ProductsManage = () => {
 

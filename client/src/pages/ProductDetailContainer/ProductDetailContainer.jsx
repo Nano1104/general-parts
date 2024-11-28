@@ -5,8 +5,7 @@ import { useParams } from "react-router-dom";
 import { ProductDetail } from "../../components/ProductDetail/ProductDetail.jsx";
 import { Loading } from "../../components/Loading/Loading.jsx";
 
-const API_URL = import.meta.env.VITE_PROD_SERVER_URL;
-console.log("🚀 ~ API_URL:", API_URL)
+import { API_URL } from "../../utils/api_url.js";
 
 export const ProductDetailContainer = () => {
     const { id } = useParams();

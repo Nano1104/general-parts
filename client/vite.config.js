@@ -9,6 +9,8 @@ export default defineConfig({
       '/api': {
         target: 'https://general-parts.onrender.com',
         changeOrigin: true,
+        secure: true, // Asegúrate de usar HTTPS correctamente
+        cookieDomainRewrite: 'localhost', // Reescribe el dominio de las cookies para que funcionen en localhost
       },
     },
   },

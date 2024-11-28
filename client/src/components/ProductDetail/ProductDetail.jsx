@@ -17,7 +17,7 @@ import { FaPencil } from "react-icons/fa6";
 //image
 import imgDetail from "../../images/tornillos.png"
 
-const API_URL = import.meta.env.VITE_PROD_SERVER_URL;
+import { API_URL } from "../../utils/api_url.js";
 
 export const ProductDetail = ({prod}) => {
     const { _id, codpro, desc_stock, proveed, desc_rubro, desc_subrubro, desc_marca, precioimpre, stock, prod_details } = prod;

@@ -18,13 +18,12 @@ app.use(express.json())
 app.use(cookieParser())
 
 const prodOrigin = [CLIENT_URL]
-const devOrigin = ["http://localhost/5173"]
+const devOrigin = ["http://localhost:5173"]
 const allowedOrigins = NODE_ENV === "production" ? prodOrigin : devOrigin
 
 app.use(cors({
   origin: (origin, callback) => {
     if(!origin || allowedOrigins.includes(origin)) {
-      console.log(origin, allowedOrigins)
       callback(null, true)
     } else {
       callback(new Error("Not allowed by CORS"))
