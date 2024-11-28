@@ -21,7 +21,7 @@ import { API_URL } from "../../utils/api_url.js";
 
 export const ProductDetail = ({prod}) => {
     const { _id, codpro, desc_stock, proveed, desc_rubro, desc_subrubro, desc_marca, precioimpre, stock, prod_details } = prod;
-    const { authUser, userIsAdmin } = useAuthContext();
+    const { authUser, isAdmin } = useAuthContext();
     const { addProductToCart } = useCartContext();
     const { id } = useParams();
 
@@ -93,7 +93,7 @@ export const ProductDetail = ({prod}) => {
                 <div className="flex items-start flex-col p-5 mobile:p-8 lg:p-4 2xl:p-8 mt-10 lg:mt-0 2xl:mt-10 lg:text-sm 2xl:text-base">
                     <div className="flex flex-col items-start gap-2">
                         {
-                            authUser && userIsAdmin() ?
+                            authUser && isAdmin ?
                             <span className="font-medium">Proveedor: <span className="font-semibold">{proveed}</span></span>
                             :
                             <span className="font-medium">Código producto: <span className="font-semibold">{id}</span></span>
@@ -117,7 +117,7 @@ export const ProductDetail = ({prod}) => {
                     <div className="text-left w-full">
                         <div className="flex justify-between items-end">
                             <h2 className="font-semibold mt-16 lg:mt-4 text-2xl lg:text-2xl 2xl:mt-12">DESCRIPCIÓN</h2>
-                            { authUser && userIsAdmin() ? <FaPencil className="text-2xl mr-6 mb-1 cursor-pointer" onClick={() => handleFocus()} /> : <></> }
+                            { authUser && isAdmin ? <FaPencil className="text-2xl mr-6 mb-1 cursor-pointer" onClick={() => handleFocus()} /> : <></> }
                         </div>
                         <form action="" onSubmit={handleSubmitNewText}>
                             <textarea ref={textareaRef} defaultValue={prod_details} readOnly={!isFocus}

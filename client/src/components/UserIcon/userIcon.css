@@ -10,7 +10,6 @@
 #user-menu::before {
     content: '';
     position: absolute;
-    border: 1px solid red;
     top: -0.6rem;
     right: 1.2rem;
     width: 25px;

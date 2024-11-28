@@ -15,20 +15,19 @@ export const AuthContextProvider = ({children}) => {
     const [authUser, setAuthUser] = useState(null);
     const [isAdmin, setIsAdmin] = useState(false);
 
-    const logout = async () => {
+    /* const logout = async () => {
         try {
             await axios.post(`${API_URL}/api/auth/logout`, { withCredentials: true })
             setAuthUser(null)
         } catch (err) {
             console.log(err.response.data.message)
         }
-    }
+    } */
 
     useEffect(() => {
         const verifyUser = async () => {
             try {
                 const res = await axios.get(`${API_URL}/api/auth/authUser`, { withCredentials: true });
-                console.log("🚀 ~ verifyUser ~ res:", res)
 
                 if(res.data) {
                     setAuthUser(res.data)
@@ -37,7 +36,6 @@ export const AuthContextProvider = ({children}) => {
                     setAuthUser(null)
                     setIsAdmin(false)
                 } 
-                /* console.log(authUser) */
             }
             catch (err) {
                 console.log(err.response.data.message)
@@ -49,7 +47,7 @@ export const AuthContextProvider = ({children}) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ authUser, setAuthUser, isAdmin, logout }}>
+        <AuthContext.Provider value={{ authUser, setAuthUser, isAdmin }}>
             {children}
         </AuthContext.Provider>
     );
