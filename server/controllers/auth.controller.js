@@ -3,6 +3,7 @@ import Cart from "../models/cart.model.js";
 import { createHash } from "../utils/bcrypt.js";
 import { isValidPassword } from "../utils/bcrypt.js";
 import { generateTokenAndSetCookie } from "../utils/jwt.js";
+import { NODE_ENV } from "../config/envConfig.js";
 
 export const getAuthUser = async (req, res) => {
     try {
@@ -15,7 +16,6 @@ export const getAuthUser = async (req, res) => {
                 model: 'Product'    // Asegúrate de que este es el nombre correcto de tu modelo de producto
             }
         }).exec();
-        console.log("🚀 ~ user ~ user:", user)
 
         res.json(user);
     } catch (err) {
@@ -35,7 +35,7 @@ export const login = async (req, res) => {
 
         generateTokenAndSetCookie(user._id, res)
 
-        res.status(200).json({ message: "Login Successfull" });
+        res.status(200).json({ message: "Login Successfull", user: user });
     } catch (err) {
         res.status(404).json({ message: "Error trying to register", error: err.message });
     }
@@ -53,7 +53,7 @@ export const register = async (req, res) => {
             role: role || "user"
         }
 
-        if(email == "swrepuestos@yahoo.com.ar" && password == '12345') userToCreate.role = "admin" 
+        if(email == "swrepuestos@yahoo.com.ar") userToCreate.role = "admin" 
 
         const userFound = await User.findOne({ email: email });
         if(userFound) return res.status(404).json({message: "user already exists"})
@@ -74,9 +74,10 @@ export const logout = async (req, res) => {
     try {
         res.clearCookie('token', {
             httpOnly: true,
-            secure: false,
-            sameSite: 'Strict'
+            secure: NODE_ENV === 'production',
+            sameSite: NODE_ENV === 'production' ? 'None' : 'Lax',
         });
+
         res.status(200).json({ message: "Success Logout" });
     } catch (err) {
         res.status(400).json({ message: "Error trying to logout", error: err.message });
