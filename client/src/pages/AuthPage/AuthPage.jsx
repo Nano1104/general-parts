@@ -1,12 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+//hooks
+import { useForm } from "react-hook-form"
 import useSignup from "../../hooks/useSigup.js"
 import useSignin from "../../hooks/useSingin.js"
-import { useAuthContext } from "../../context/AuthContext.jsx";
-
-import Swal from 'sweetalert2';
-import { useForm } from "react-hook-form"
-
 //icons
 import { FaArrowRight } from "react-icons/fa6";     //icons
 import "./authpage.css"
@@ -28,11 +25,9 @@ export const AuthPage = () => {
     const onSubmit = handleSubmit(async (data) => {
         try {
             if(login) {
-                const res = await signIn({email: data.emailLogin, password: data.passwordLogin })
-                console.log("🚀 ~ onSubmit ~ res:", res)
+                await signIn({email: data.emailLogin, password: data.passwordLogin })
             } else {
-                const res = await signUp({first_name: data.nombre, last_name: data.apellido, email: data.email, phone: data.phone, password: data.password})
-                console.log(res) 
+                await signUp({first_name: data.nombre, last_name: data.apellido, email: data.email, phone: data.phone, password: data.password})
             }
         } catch (err) {
             console.log(err)

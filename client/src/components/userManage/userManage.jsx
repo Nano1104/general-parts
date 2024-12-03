@@ -57,15 +57,15 @@ export const UserManage = () => {
     return(
         <>
         <div className="px-5 h-full flex">
-           <div className="basis-[50%]">
-            <h2 className="text-[2rem] font-poppins font-bold mb-3">USUARIOS</h2>
+            <div className="basis-[50%]">
+                <h2 className="text-4xl font-montserrat tracking-tight font-bold mb-3">USUARIOS</h2>
                 <div>
-                    <h3 className="font-medium">VER USUARIOS</h3>
+                    <h3 className="font-semibold">VER USUARIOS</h3>
                     <button className="bg-orange w-[30%] rounded-md py-1 text-sm text-lightGray font-medium font-poppins" type="submit" onClick={handleGetUsers}>Ver lista de usuarios</button>
                 </div>
                 <hr className="my-4 w-[45%] ml-2" />
                 <div className="flex flex-col">
-                    <h3 className="font-medium">BORRAR USUARIO DE LA BASE DE DATOS</h3>
+                    <h3 className="font-semibold">BORRAR USUARIO DE LA BASE DE DATOS</h3>
                     <form action="" className="flex flex-col text-sm" onSubmit={handleDeleteUser}>
                         <input type="text" name="prodId" placeholder="Ingresar ID del usuario" className="w-[30%] rounded-md py-1 px-2 my-2" />
                         <button className="bg-orange w-[30%] rounded-md py-1 text-sm text-lightGray font-medium font-poppins" type="submit">Borrar usuario</button>
@@ -73,21 +73,21 @@ export const UserManage = () => {
                 </div>
                 <hr className="my-4 w-[45%] ml-2" />
                 <div className="flex flex-col">
-                    <h3 className="font-medium">MODIFICAR USUARIO</h3>
+                    <h3 className="font-semibold">MODIFICAR USUARIO</h3>
                     <form action="" className="flex flex-col text-sm" onSubmit={handleUpdateUser}>
                         <div>
-                            <label className="font-medium">Id del producto:</label><input type="text" placeholder="Ingresar ID del usuario" className="w-[30%] rounded-md py-1 px-2 my-2 ml-2" />
+                            <label className="font-medium">Id del producto:</label><input type="text" placeholder="Ingresar ID del usuario" className="w-[30%] rounded-md py-1 px-2 my-1 ml-2" />
                         </div>
                         <div>
-                            <label className="font-medium">Email:</label><input type="text" placeholder="Nuevo email" className="w-[30%] rounded-md py-1 px-2 my-2 ml-2" />
+                            <label className="font-medium">Email:</label><input type="text" placeholder="Nuevo email" className="w-[30%] rounded-md py-1 px-2 my-1 ml-2" />
                         </div>
                         <div>
-                            <label className="font-medium">Telofono/celular</label><input type="text" placeholder="Nuevo Telofono/celular" className="w-[30%] rounded-md py-1 px-2 my-2 ml-2" />
+                            <label className="font-medium">Telofono/celular</label><input type="text" placeholder="Nuevo Telofono/celular" className="w-[30%] rounded-md py-1 px-2 my-1 ml-2" />
                         </div>
                         <div>
-                            <label className="font-medium">Rol</label><input type="text" placeholder="Nuevo rol" className="w-[30%] rounded-md py-1 px-2 my-2 ml-2" />
+                            <label className="font-medium">Rol</label><input type="text" placeholder="Nuevo rol" className="w-[30%] rounded-md py-1 px-2 my-1 ml-2" />
                         </div>
-                        <button className="bg-orange w-[30%] rounded-md py-1 text-sm text-lightGray font-medium font-poppins" type="submit">Modificar usuario</button>
+                        <button className="bg-orange w-[30%] rounded-md py-1 text-sm text-lightGray font-medium font-poppins mt-1" type="submit">Modificar usuario</button>
                     </form>
                 </div>
                 <hr className="my-4 w-[45%] ml-2" />

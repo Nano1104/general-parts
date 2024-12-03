@@ -6,10 +6,12 @@ import { PiUsers } from "react-icons/pi";
 import { GoHome } from "react-icons/go";
 import { LuClipboardList } from "react-icons/lu";
 
+import useLogout from "../../hooks/useLogout.js"
+
 import Swal from 'sweetalert2'
 
 export const AdminNavBar = () => {
-    const { logout } = useAuthContext()
+    const { logOut } = useLogout()
 
     const handleLogOut = () => {
         Swal.fire({
@@ -18,9 +20,9 @@ export const AdminNavBar = () => {
             confirmButtonText: "CERRAR",
             confirmButtonColor: "#DC5F00",
             cancelButtonText: `CANCELAR`
-          }).then((result) => {
+          }).then(async (result) => {
                 if (result.isConfirmed) {
-                    logout()
+                    await logOut()
                 }
           });
     }

@@ -14,6 +14,7 @@ export const useAuthContext = () => {
 export const AuthContextProvider = ({children}) => {
     const [authUser, setAuthUser] = useState(null);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     /* const logout = async () => {
         try {
@@ -40,11 +41,17 @@ export const AuthContextProvider = ({children}) => {
             catch (err) {
                 console.log(err.response.data.message)
                 setAuthUser(null);
+            } finally {
+                setLoading(false)
             }
         };
 
         verifyUser();
     }, [])
+
+    if (loading) {
+        return <Loading />; 
+    }
 
     return (
         <AuthContext.Provider value={{ authUser, setAuthUser, isAdmin }}>

@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useAuthContext } from "../context/AuthContext.jsx";
 
+import Swal from 'sweetalert2'
+
 import { API_URL } from "../utils/api_url.js";
 
 const useSignin = () => {
@@ -10,7 +12,11 @@ const useSignin = () => {
         try {
             await axios.post(`${API_URL}/api/auth/login`, { email, password }, { withCredentials: true })
                 .then(res => {
-                    setAuthUser(res.data.user)
+                    Swal.fire({
+                        title: 'Sesión Iniciada',
+                        confirmButtonColor: "#DC5F00",
+                    })
+                    .then((result) => { if (result.isConfirmed) setAuthUser(res.data.user)});
                 })
             
             /* const authUserData = await axios.get("/api/auth/authUser", { withCredentials: true })

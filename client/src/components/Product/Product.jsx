@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import imgProduct from "../../images/tornillos.png"
 
-export const Product = ({data, params}) => {
+export const Product = ({data, params, featured}) => {
     const [category, subcategory] = params;
     const [isMobile, setIsMobile] = useState(false);
     const [hover, setShowHover] = useState(false)
@@ -29,6 +29,7 @@ export const Product = ({data, params}) => {
     return(
         <>
         <div onMouseEnter={() => handleMouseEnter()} key={`key_${codpro}`} id="product" className="w-[85%] h-[65vh] mobile:h-[60vh] lg:w-[19em] xl:w-[22em] 2xl:w-[25em] 2xl:h-[55vh] font-roboto bg-gray rounded-xl relative my-3">
+            { featured ? <span className="absolute m-3 text-sm font-poppins font-medium tracking-tight bg-orange py-0.5 px-1 rounded-md">DESTACADO</span> : <></> }
             <div className="w-full h-[65%]">
                 <img src={imgProduct} alt="" className="rounded-t-xl object-contain h-full" />
             </div>
