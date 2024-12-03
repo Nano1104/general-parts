@@ -6,7 +6,8 @@ import { Category } from "../Category/Category.jsx";
 //icons
 import { HiHome } from "react-icons/hi2";
 
-export const InventaryList = () => {
+export const InventaryList = ({ stateNews }) => {
+    const { setShowNews } = stateNews
     const [categories, setCategories] = useState([])
     const [showCategories, setShowCategories] = useState(false)
     const [activeCategory, setActiveCategory] = useState(null);
@@ -18,7 +19,15 @@ export const InventaryList = () => {
     return(
         <>
             <nav className="bg-gray py-1 relative px-7"> 
-                <span className="font-semibold text-sm uppercase block font-poppins tracking-tight cursor-pointer" onClick={() => setShowCategories(showCategories => !showCategories)}>CATEGORIAS</span>
+                <span className="font-semibold text-sm uppercase font-poppins tracking-tight cursor-pointer" onClick={() => {
+                    setShowCategories(showCategories => !showCategories)
+                    setShowNews(false)
+                }}>CATEGORIAS</span>
+                <span className="font-semibold text-sm uppercase font-poppins mx-2">-</span>
+                <span className="font-semibold text-sm uppercase font-poppins tracking-tight cursor-pointer" onClick={() => {
+                    setShowCategories(false)
+                    setShowNews(true)
+                }}>DESTACADO</span>
                 {
                     showCategories
                     ?

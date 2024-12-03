@@ -102,7 +102,7 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
                     <Loading />
                 ) : (
                     prodsToRender.map((prod) => (
-                    <Product key={prod.codpro} data={prod} params={[category, subcategory]} />
+                    <Product key={prod.codpro} data={prod} params={[category, subcategory]} featured={false} />
                     ))
                 )}
             </div>
