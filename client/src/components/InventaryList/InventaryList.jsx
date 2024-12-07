@@ -31,7 +31,7 @@ export const InventaryList = ({ stateNews }) => {
                 {
                     showCategories
                     ?
-                    <ul className="flex flex-col mt-2 gap-2">
+                    <ul className="flex flex-col mt-8 absolute top-0 left-0 border-t-[1px] gap-2 bg-gray px-7 py-2">
                     {
                         categories.map((category, index) => <Category
                                                                 key={`category-${category}-${index}`}
