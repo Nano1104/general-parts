@@ -3,7 +3,7 @@
 export const Logo = () => {
     return(
         <>
-            <div className="text-[4rem] sm:text-[6.5rem] lg:text-[6rem] relative mt-16 sm:mt-[25%] lg:mt-0 flex flex-col lg:flex-row items-center w-full"> 
+            <div className="text-[4rem] sm:text-[6.5rem] lg:text-[6rem] xl:text-[8rem] relative mt-16 sm:mt-[25%] lg:mt-0 flex flex-col lg:flex-row items-center w-full"> 
                 <span className="
                 font-extrabold text-orange font-poppins tracking-tighter italic lg:ml-12">SW</span>
                 <span className="
