@@ -31,6 +31,8 @@ export const Home = () => {
                     VER REPUESTOS
                 </Link>
             </div>
+
+            <FaWhatsapp className="absolute cursor-pointer bottom-0 right-0 text-[3.5em] p-1 mr-8 mb-8 border bg-orange text-white rounded-full" />
         </div>
         </>
     )
