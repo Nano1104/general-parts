@@ -13,6 +13,15 @@ export const Category = ({category, activeCategory, setActiveCategory, categorie
 
     const handleClick = () => setShowMenu(showMenu => !showMenu);
 
+    const showSubCategories = (category) => {
+        if(category) {
+            setActiveCategory(category);
+        } else {
+            setActiveCategory(null)
+        }
+    }
+    const hideSubCategories = () => setActiveCategory(null);
+
     useEffect(() => {
         const categoryFound = categoriesAndSubCategories.find(elem => elem.category === category);
         if(categoryFound) {
@@ -27,15 +36,15 @@ export const Category = ({category, activeCategory, setActiveCategory, categorie
             <div className="flex items-center gap-1">
                 <Link
                     id={`category-${category}-link`}
-                    className={`category-link gap-1 text-black font-medium lg:font-normal mb-1 uppercase font-poppins`}
+                    className={`category-link gap-1 text-black font-medium lg:${ activeCategory != category ? "font-normal" : "font-bold" } text-base mb-1 uppercase font-poppins`}
                     to={`/productos/${category}`}
                 >
                     {category}
                 </Link>
-                { !showMenu ? <IoIosArrowUp onClick={handleClick} className="text-base mb-1 cursor-pointer" /> : <IoIosArrowDown onClick={handleClick} className="text-base mb-1 cursor-pointer" /> }
+                { activeCategory != category ? <IoIosArrowUp onClick={() => showSubCategories(category)} className="text-base mb-1 cursor-pointer" /> : <IoIosArrowForward onClick={() => showSubCategories(null)} className="text-base mb-1 cursor-pointer" /> }
 
-                { showMenu && (
-                <div className="bg-gray flex flex-col w-[20vw] h-[20vh] absolute top-0 left-[9em]">
+                { activeCategory == category && (
+                <div className="bg-gray flex flex-col w-[20vw] h-[20vh] absolute top-0 left-[10.8em] border">
                     {subCategories.map((subCategory, index) => {
                         const encodedSubcategory = encodeURIComponent(subCategory);
                         return (
