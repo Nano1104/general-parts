@@ -17,6 +17,8 @@ const useSignup = () => {
                     .then((result) => { if (result.isConfirmed) window.location.reload() });
                 })
             const data = res.data; 
+            console.log("🚀 ~ signUp ~ data:", data)
+
         } catch (err) {
             throw new Error(err.response?.data?.message || "Error en el registro");
         }

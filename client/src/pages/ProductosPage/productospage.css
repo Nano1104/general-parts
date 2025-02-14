@@ -49,6 +49,7 @@
     gap: 5px;
     transition: 300ms all;
   }
+  
   .btn-logs:hover {
     color: var(--cBlack);
     border: 1px solid var(--cBlack);

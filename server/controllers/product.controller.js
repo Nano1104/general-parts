@@ -12,8 +12,11 @@ export const getProducts = async (req, res) => {
 
 export const postProducts = async (req, res) => {
     try {
-        const dataToPost = await postProductsInDB("./utils/encendido.json")
+        const dataToPost = await postProductsInDB("./utils/json/motor-tornillos.json")
         await Producto.insertMany(dataToPost)
+
+        /* req.body = { field: "rubro", newField: "MOTOR" };
+        await changeFieldToProducts(req, res) */
         console.log("Productos insertados correctamente");
         res.status(200).json({message: "Success posting products in mongo database", dataToPost});
     } catch (err) {
@@ -29,15 +32,15 @@ export const addFieldToProducts = async (req, res) => {
         const update = {};
         update[field] = value;
         
-        /* const updatedProducts = await Producto.updateMany(
-            { rubro: { $gte: 210, $lte: 215 } }, 
-            { $set: update }
-        );  */
-
         const updatedProducts = await Producto.updateMany(
+            { rubro: { $gte: 200, $lte: 220 } }, 
+            { $set: update }
+        ); 
+
+        /* const updatedProducts = await Producto.updateMany(
             {}, // Filtro vacío para seleccionar todos los documentos
             { $set: update } // $set añade o actualiza el campo con el valor proporcionado
-        );
+        ); */
 
         if (updatedProducts.acknowledged && updatedProducts.modifiedCount > 0) {
             res.status(200).json({message: "Success adding field to all products in DB", updatedProducts});
@@ -77,6 +80,24 @@ export const changeProductFieldVal = async (req, res) => {
     }
 }
 
+export const changeFieldValueToProducts = async (req, res) => {
+    try {
+        const { field, value } = req.body
+        if(!field || !value) throw new Error("Field does not exists")  
+
+        const missingFieldCount = await Producto.countDocuments({ [field]: { $exists: false } });
+        if (missingFieldCount > 0) throw new Error(`The field "${field}" is missing in ${missingFieldCount} documents`);
+        
+        const updateObject = { [field]: value };
+
+        const updatedProducts = await Producto.updateMany({}, { $set: updateObject });
+
+        res.status(200).json({message: "Success changing field name and its value", updatedProducts});
+    } catch (err) {
+        res.status(400).json({message: "Error changing field name and its value", err});
+    }
+}
+
 export const changeFieldToProducts = async (req, res) => {
     try {
         const { field, newField } = req.body
@@ -96,7 +117,7 @@ export const changeFieldToProducts = async (req, res) => {
 export const deleteMongoDBCollection = async (req, res) => {
     try {
         await Producto.deleteMany({})
-        res.status(200).json({message: "Success deleting field mongo DB collection"});
+        res.status(200).json({message: "Success deleting mongo DB collection"});
     } catch (err) {
         res.status(400).json({message: "Error deleting mongo DB collection", err});
     }

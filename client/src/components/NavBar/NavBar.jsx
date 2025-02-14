@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { useAuthContext } from "../../context/AuthContext.jsx";
 
-import { FaUser } from "react-icons/fa";
 import { UserIcon } from "../UserIcon/UserIcon.jsx";
 import { HiBars3 } from "react-icons/hi2";
 import { useState } from "react";

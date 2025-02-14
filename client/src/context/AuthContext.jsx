@@ -25,8 +25,26 @@ export const AuthContextProvider = ({children}) => {
         }
     } */
 
+    const verifyUser = async () => {
+        try {
+            const res = await axios.get(`${API_URL}/api/auth/authUser`, { withCredentials: true });
+
+            if(res.data) {
+                setAuthUser(res.data)
+                setIsAdmin(res.data.role === "admin")
+            } else {
+                setAuthUser(null)
+                setIsAdmin(false)
+            } 
+        }
+        catch (err) {
+            console.log(err.response.data.message)
+            setAuthUser(null);
+        }
+    };
+
     useEffect(() => {
-        const verifyUser = async () => {
+        /* const verifyUser = async () => {
             try {
                 const res = await axios.get(`${API_URL}/api/auth/authUser`, { withCredentials: true });
 
@@ -46,12 +64,12 @@ export const AuthContextProvider = ({children}) => {
             }
         };
 
-        verifyUser();
+        verifyUser(); */
     }, [])
 
-    if (loading) {
+    /* if (loading) {
         return <Loading />; 
-    }
+    } */
 
     return (
         <AuthContext.Provider value={{ authUser, setAuthUser, isAdmin }}>

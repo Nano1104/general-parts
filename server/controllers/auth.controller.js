@@ -28,7 +28,14 @@ export const login = async (req, res) => {
         const { email, password } = req.body;
         if(!email || !password) return res.status(400).json({ message: "Some fields may be empty" });
 
-        const user = await User.findOne({ email: email })
+        const user = await User.findOne({ email: email }).populate({
+            path: 'cart',
+            populate: {
+                path: 'products.product',
+                model: 'Product'    // Asegúrate de que este es el nombre correcto de tu modelo de producto
+            }
+        }).exec();
+        
         if(!user) return res.status(404).json({ message: "User does not exist" })   //si no se encuentra el user
 
         if(!isValidPassword(password, user)) return res.status(401).json({message: "password incorrect"})        //o si la contraseña es incorrecta 

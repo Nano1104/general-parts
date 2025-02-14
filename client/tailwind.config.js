@@ -27,9 +27,11 @@ export default {
         deepGray: "#61677A",
         gray: "#BDC3C7",
         lightGray: "#D8D9DA",
+        cWhite: "#ECF0F1"
       },
       backgroundImage: {
         'homeBg': "url('/bg-home.avif')",
+        'authPageBg': "url('/bg-login.avif')",
         'custom-gradient': 'linear-gradient(0deg, rgba(255,255,255,1) 15%, rgba(34,193,195,0) 100%)',
       }
     },

@@ -6,11 +6,6 @@
     animation: animateLoader 10s linear infinite;
 }
 
-/* @keyframes animateLoader {
-    0% { filter: hue-rotate(0deg) }
-    100% { filter: hue-rotate(360deg) }
-}
- */
 #loader div span {
     position: absolute;
     top: 0;

@@ -5,19 +5,17 @@ import { Link } from "react-router-dom";
 //icons
 import { FaWhatsapp } from "react-icons/fa";
 
-import "./Home.css"
-
 export const Home = () => {
     return(
         <>
         <div className="h-[100vh] w-full relative overflow-hidden">
-            <div className="bg-homeBg bg-cover brightness-50 blur-[2px] grayscale-[0.8]" id="bg-home"></div>
+            <div className="bg-homeBg bg-cover brightness-50 blur-[2px] grayscale-[0.8] w-full h-[100vh]"></div>
             {/* <img src={bgImg} alt="" id="bg-home" className="hidden lg:block" /> */}
             <NavBar />
 
             <div className="h-screen absolute top-[10%] font-roboto border-white w-full blur-none flex flex-col items-center lg:items-start">
                 <Logo />
-                <span className="text-white text-center text-xl mobile:text-2xl lg:text-left p-3 mt-14 lg:mt-0 lg:ml-8 lg:text-3xl">Venta de repuestos para automóviles de todas las marcas</span>
+                <span className="text-white text-center lg:text-left text-2xl lg:text-3xl p-3 mt-14 lg:mt-0 lg:ml-8">Venta de repuestos para automóviles de todas las marcas</span>
                 <div className="flex gap-4 text-white italic font-medium mt-4 lg:ml-10 lg:text-xl">
                     <div className="flex items-center">
                         <FaWhatsapp className="" /><span className="ml-2">1160487294</span>
