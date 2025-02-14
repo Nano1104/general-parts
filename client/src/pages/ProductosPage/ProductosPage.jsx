@@ -13,9 +13,9 @@ export const ProductosPage = () => {
         <>
             <ProductsContainerNav searchValue={searchValue} setSearchValue={setSearchValue} />
             <InventaryList stateNews={{showNews, setShowNews}} />
-            {/* {
+            {
                 showNews ? <News /> : <ProductsContainer searchValue={searchValue} />
-            } */}
+            }
         </>
     )
 }

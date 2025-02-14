@@ -17,12 +17,12 @@ import { API_URL } from "../../utils/api_url.js";
 
 
 export const ProductsContainer = ({ searchValue }) => {                 //valor de la barra de busqueda
-    const { category, subcategory } = useParams();
+    const { category, subcategory, categories } = useParams();
     const encodedSubcategory = encodeURIComponent(subcategory);
 
     const [prodsToRender, setProdsToRender] = useState([]);             //productos que renderiza la pagina
     const [loading, setLoading] = useState();                           //loading del renderizado
-    const [filterBrands, setFilterBrands] = useState([]);               //marcas del menu para filtrar
+    const [brand, setBrand] = useState(null);               //marcas del menu para filtrar
     const [price, setPrice] = useState([]);                             //precios del menu para filtrar
     const [showFilters, setShowFilter] = useState(false);               //ocultar o mostrar los filtros de busqueda
 
@@ -35,12 +35,21 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
                 const res = await axios.get(`${API_URL}/api/products`, { withCredentials: true });
                 let products = res.data.products;
     
-                // Filtrar por subcategoría y categoría
-                if (subcategory) {
-                    products = products.filter(prod => prod.desc_subrubro === subcategory.toUpperCase());
+                // Filtrar por subcategoría y categoría 
+                if (categories) {
+                    products = products.filter(prod => prod.desc_subrubro == categories.toUpperCase())
+                } else if (subcategory) {
+                    const categoryFound = categoriesAndSubCategories.find(c => c.description == category)
+                    const isObject = categoryFound.subCategories.some(item => typeof item === 'object' && item !== null)
+
+                    if(isObject) {           //EN CASO DE QUE HAYA UN SUBMENU, ES DECIR SUBCATEGORIES DEL RUBRO PADRE TENGA SUBRUBROS
+                        const subCategoryFound = categoryFound.subCategories.find(subc => subc.description === subcategory)
+                        products = products.filter(prod => prod.rubro >= subCategoryFound.idSubcategory[0] && prod.rubro <= subCategoryFound.idSubcategory[1])
+                    } else {
+                        products = products.filter(prod => prod.desc_subrubro === subcategory.toUpperCase())
+                    }
                 } else if (category) {
-                    const categoryFound = categoriesAndSubCategories.find(cat => cat.category === category);
-                    products = products.filter(prod => prod.subrub === categoryFound.idCategory);
+                    products = products.filter(prod => prod.desc_rubro.toLowerCase() == category);
                 }
     
                 // Filtrar por valor de búsqueda
@@ -49,8 +58,8 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
                 }
     
                 // Filtrar por marca
-                if (filterBrands.length > 0) {
-                    products = products.filter(prod => filterBrands.includes(prod.desc_marca));
+                if (brand) {
+                    products = products.filter(prod => prod.desc_marca == brand);
                 }
 
                 // Filtrar por precio
@@ -70,20 +79,22 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
                 setLoading(false);
             }
         };
+
     
         fetchData();
-    }, [category, subcategory, searchValue, filterBrands, price]);
+    }, [category, subcategory, categories, searchValue, brand, price]);
 
     return(
         <>
         <div className="text-white text-xs font-poppins mt-[6rem] text-end flex justify-between w-[95%] m-auto">
 
-            <div className="ml-4 text-sm italic font-normal uppercase">
+            <div className="ml-4 text-sm xl:text-base italic font-normal uppercase">
                 { category ? <Link className="" to={`/productos/${category}`} >{category}<MdKeyboardArrowRight className="inline-block" /></Link> : "" }
                 { subcategory ? <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`} >{subcategory}</Link> : "" }
+                { categories ? <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`} ><MdKeyboardArrowRight className="inline-block" />{categories}</Link> : ""  }
             </div>
             <div>
-                <button className="mr-4 sm:mr-8 text-sm">
+                <button className="mr-4 sm:mr-8 text-sm xl:text-base">
                     <span onClick={handleFilter}>{!showFilters ? "Mostrar Filtros" : "Ocultar Filtros"}</span><BsFilterLeft className="inline-block"/>
                 </button>
             </div>
@@ -92,7 +103,7 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
         <div id="products-container" className={`grid grid-cols-1 ${ showFilters ? `md:grid-cols-[30%_1fr] 2xl:grid-cols-[15%_1fr]` : `md:grid-cols-1` } w-full mt-10`}>
             {showFilters && (
                 <div>
-                    <Filters filtered={{ filterBrands, setFilterBrands, price, setPrice, setShowFilter }} />
+                    <Filters filtered={{ setBrand, price, setPrice, setShowFilter }} />
                 </div>
             )}
 

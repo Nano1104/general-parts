@@ -6,7 +6,6 @@ import useSignup from "../../hooks/useSigup.js"
 import useSignin from "../../hooks/useSingin.js"
 //icons
 import { FaArrowRight } from "react-icons/fa6";     //icons
-import "./authpage.css"
 
 export const AuthPage = () => {
     const { signIn } = useSignin()
@@ -14,7 +13,6 @@ export const AuthPage = () => {
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const [login, setLogin] = useState(true)
     const [loginError, setLoginError] = useState(" ")
-    console.log(errors)
 
     
     const handleAuth = () => {
@@ -38,7 +36,9 @@ export const AuthPage = () => {
     return(
         <>
         <div className="w-full overflow-y-auto relative" id="login-container">
-            <div id="bg-login" className="hidden lg:block relative"></div>
+            {/* FONDO DE AUTHPAGE */}
+            <div className="bg-authPageBg hidden lg:block relative w-full h-screen bg-cover bg-center filter brightness-50 blur-[3px] grayscale"></div>
+
             <Link to="/" className="relative flex flex-col items-center lg:flex-row top-4 lg:absolute lg:top-0 lg:my-7 lg:left-[7%]">
                 <span className="font-extrabold text-orange font-poppins tracking-tighter italic text-[4.4em] md:text-[6.4em] lg:text-[8em] 2xl:text-[9em]">SW</span>
                 <span className="font-bold text-white font-poppins tracking-tight italic absolute lg:static top-12 md:top-16 text-[4.4em] md:text-[6.4em] lg:text-[8em] 2xl:text-[9em]">Parts</span>

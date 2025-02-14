@@ -24,6 +24,7 @@ function App() {
         <Route path="/productos" element={<ProductosPage />} />
         <Route path="/productos/:category" element={<ProductosPage />} />
         <Route path="/productos/:category/:subcategory" element={<ProductosPage />} />
+        <Route path="/productos/:category/:subcategory/:categories" element={<ProductosPage />} />    {/* RUTA PARA LOS CATEGORIAS DE LOS SUBRUBROS DEL RUBRO PRINCIPAL */}
         <Route path="/producto/detail/:id" element={<ProductDetailContainer />} />
         <Route path="/admin" element={ authUser ? <AdminPage /> : <Navigate to="/" /> } />
         <Route path="/admin/:manage" element={ authUser ? <AdminPage /> : <Navigate to="/" /> } />

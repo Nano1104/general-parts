@@ -7,24 +7,35 @@ import { IoIosArrowForward } from "react-icons/io"; //flecha mirando derecha
 
 import 'animate.css';
 
-export const Category = ({category, activeCategory, setActiveCategory, categoriesAndSubCategories}) => {
+export const Category = ({category, activeCategory, setActiveCategory, activeSubCategory, setActiveSubCategory, categoriesAndSubCategories}) => {
+    const [categoryData, setCategoryData] = useState(null)
     const [subCategories, setSubCategories] = useState([]);
-    const [showMenu, setShowMenu] = useState(false);
+    const [showCategoriesSubmenu, setShowCategoriesSubmenu] = useState(false);
 
-    const handleClick = () => setShowMenu(showMenu => !showMenu);
+    //renderiza las categorias del rubro principal en caso de que no haya submenu de subrubros
+    const showSubCategories = (category) => category ? setActiveCategory(category) : setActiveCategory(null)
 
-    const showSubCategories = (category) => {
-        if(category) {
-            setActiveCategory(category);
-        } else {
-            setActiveCategory(null)
+    //renderiza los subrubros del rubro principal
+    const showSubCategoriesSubmenu = (subcategory) => subcategory ? setActiveSubCategory(subcategory) : setActiveSubCategory(null)
+
+    const getSubCategories = (subcategoryName) => {             //FUNCION QUE DEVUELVE
+        const categoriesWithSubmenu = categoriesAndSubCategories.filter((category) => category.submenu);
+    
+        for (const category of categoriesWithSubmenu) {
+            const foundSubcategory = category.subCategories.find(subcategory => subcategory.description === subcategoryName);
+
+            if (foundSubcategory) {
+                return [...foundSubcategory.categories]; // Devuelve un array con la subcategoría encontrada
+            }
         }
-    }
-    const hideSubCategories = () => setActiveCategory(null);
+
+        return []; // Devuelve un array vacío si no encuentra nada
+    };
 
     useEffect(() => {
-        const categoryFound = categoriesAndSubCategories.find(elem => elem.category === category);
-        if(categoryFound) {
+        const categoryFound = categoriesAndSubCategories.find(elem => elem.description === category)
+        if (categoryFound) {
+            setCategoryData(categoryFound)
             setSubCategories(categoryFound.subCategories)
         }
 
@@ -32,40 +43,75 @@ export const Category = ({category, activeCategory, setActiveCategory, categorie
 
     return(
         <>
-        <div className="text-xs 2xl:text-sm relative">
-            <div className="flex items-center gap-1">
-                <Link
-                    id={`category-${category}-link`}
-                    className={`category-link gap-1 text-black font-medium lg:${ activeCategory != category ? "font-normal" : "font-bold" } text-base mb-1 uppercase font-poppins`}
-                    to={`/productos/${category}`}
-                >
-                    {category}
-                </Link>
-                { activeCategory != category ? <IoIosArrowUp onClick={() => showSubCategories(category)} className="text-base mb-1 cursor-pointer" /> : <IoIosArrowForward onClick={() => showSubCategories(null)} className="text-base mb-1 cursor-pointer" /> }
+        <div className="text-xs 2xl:text-sm">
+            <div className="flex items-center gap-1 relative">
+                <div className="flex w-32 justify-between items-center">            {/*RENDERIZA UN PARA UN RUBRO */}
+                    <Link
+                        id={`category-${category}-link`}
+                        className={`category-link gap-1 text-black font-medium lg:${ activeCategory != category ? "font-normal" : "font-extrabold" } text-base mb-1 uppercase font-poppins`}
+                        to={`/productos/${category}`}
+                    >
+                        {category}
+                    </Link>
+                    { activeCategory != category ? <IoIosArrowUp onClick={() => showSubCategories(category)} className="text-base mb-1 cursor-pointer" /> : <IoIosArrowForward onClick={() => showSubCategories(null)} className="text-base mb-1 cursor-pointer" /> }
+                </div>
+
+
 
                 { activeCategory == category && (
-                <div className="bg-gray flex flex-col w-[20vw] h-[20vh] absolute top-0 left-[10.8em] border">
-                    {subCategories.map((subCategory, index) => {
-                        const encodedSubcategory = encodeURIComponent(subCategory);
-                        return (
-                            <Link
-                                to={`/productos/${category}/${encodedSubcategory}`}
-                                key={index}
-                                className="text-cBlack block px-4 pt-4 hover:bg-gray-200 hover:font-semibold transition ease-in duration-300
-                                            font-poppins font-medium first-letter:uppercase"
-                            >
-                                {subCategory}
-                            </Link>
-                        );
-                    })}
-                </div>
-            )}
-            </div> { showMenu ? <hr/> : <></> }
+                    categoryData && categoryData.submenu ? (        //EN CASO DE QUE EL SUBRUBRO DEL RUBRO PADRE CONTENGA MAS SUBCATEGORIAS DENTRO
+                        <div className="absolute z-20 top-0 left-full py-3 bg-gray border w-40">
+                        {
+                            subCategories.map((subCategory, index) => (
+                                <div key={index} className="flex items-center relative">
+                                    <Link
+                                        to={`/productos/${category}/${encodeURIComponent(subCategory.description)}`}
+                                        className="text-cBlack text-sm block px-4 hover:bg-gray-200 hover:font-semibold transition ease-in duration-300 font-poppins font-medium">
+                                        {subCategory.description}
+                                    </Link>
+                                    { activeSubCategory != subCategory.description              // CAMBIA LA FLECHA DE CUANDO SE ABRE O CIERRA UN SUBRUBRO
+                                        ? <IoIosArrowUp onClick={() => showSubCategoriesSubmenu(subCategory.description)} className="text-base mb-1 cursor-pointer" />
+                                        : <IoIosArrowForward  onClick={() => showSubCategoriesSubmenu(null)} className="text-base mb-1 cursor-pointer" /> }
 
-            
+                                    { activeSubCategory == subCategory.description && (         //RENDERIZA LAS SUBCATEROGIRAS DEL SUBRUBRO CORRESPONDIENTE
+                                        <div key={`subcategory-${subCategory.description}`} className="absolute z-20 top-0 left-full bg-gray py-4 border w-72 flex flex-col gap-3 justify-center">
+                                            {
+                                                getSubCategories(subCategory.description).map((sub) => (
+                                                    <Link
+                                                        key={sub.idSubcategory} // Agrega una clave única para cada subcategoría
+                                                        to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(subCategory.description)}/${encodeURIComponent(sub)}`}
+                                                        className="text-cBlack text-sm block px-4 hover:bg-gray-200 hover:font-semibold transition ease-in duration-300 font-poppins font-medium"
+                                                    >
+                                                        {sub}
+                                                    </Link>
+                                                ))
+                                            }
+                                        </div>
+                                    )}
+                                </div>
+                            ))
+                        }
+                        </div>
+                    ) : (
+                        <div className="absolute z-20 top-0 left-full bg-gray py-4 border w-72 flex flex-col gap-3 justify-center">
+                        {
+                            (                  
+                            subCategories.map((subCategory, index) => (
+                                <Link
+                                    to={`/productos/${category}/${encodeURIComponent(subCategory)}`}
+                                    key={index}
+                                    className="text-cBlack text-sm block px-4 hover:bg-gray-200 hover:font-semibold transition ease-in duration-300 font-poppins font-medium">
+                                    {subCategory}
+                                </Link> )
+                            ))
+                        }
+                        </div>
+                    )
+                )}
+            </div>
+            { activeCategory == category ? <hr/> : <></> }
+
         </div>
         </>
     )
 }
-
-/* className="bg-gray flex flex-col pl-3 xl:items-start absolute w-[100vw] h-[200px] z-20 left-0 fade-in"> */
