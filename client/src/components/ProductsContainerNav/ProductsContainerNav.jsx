@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { useAuthContext } from "../../context/AuthContext.jsx"
 //icons
 import { BsSearch } from "react-icons/bs";
-import { PiUser } from "react-icons/pi";
 import { IoCartOutline } from "react-icons/io5";
 //components
 import { UserIcon } from "../UserIcon/UserIcon.jsx"; 

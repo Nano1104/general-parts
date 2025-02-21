@@ -1,4 +1,3 @@
-import { useState } from "react"
 
 export const ItemCount = ({handleQuantity}) => {
     const { quantity, amount, setAmount } = handleQuantity

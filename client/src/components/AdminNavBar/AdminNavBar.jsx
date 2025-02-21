@@ -1,9 +1,7 @@
 import { Link } from "react-router-dom"
-import { useAuthContext } from "../../context/AuthContext";
 //icons
 import { LiaBoxSolid } from "react-icons/lia"; //box
 import { PiUsers } from "react-icons/pi";
-import { GoHome } from "react-icons/go";
 import { LuClipboardList } from "react-icons/lu";
 
 import useLogout from "../../hooks/useLogout.js"

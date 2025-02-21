@@ -1,15 +1,13 @@
 import axios from "axios"
-import { useEffect, useState, useRef } from "react";
-import { Link, useLocation, useParams } from "react-router-dom"
+import { useState, useRef } from "react";
+import { Link, useParams } from "react-router-dom"
 import Swal from 'sweetalert2';
 //context
 import { useAuthContext } from "../../context/AuthContext.jsx"
 import { useCartContext } from "../../context/CartContext.jsx";
 //components
-import { renderToString } from 'react-dom/server';
 import { IoCartOutline } from "react-icons/io5";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import { IoMdHeartEmpty } from "react-icons/io";
 import { ItemCount } from "../ItemCount/ItemCount.jsx"
 import { Loading } from "../Loading/Loading.jsx";
 //icons
@@ -110,9 +108,6 @@ export const ProductDetail = ({prod}) => {
                         <button className="rounded-md py-2 px-4 bg-orange text-black flex justify-center items-center gap-1 lg:text-xs 2xl:text-base" onClick={handleAddToCart}>
                             <IoCartOutline className="inline-block text-xl lg:text-sm" />Agregar
                         </button>
-                        {/* <button className="rounded-md py-2 px-4 bg-deepGray text-white flex justify-center items-center gap-1 lg:text-xs 2xl:text-base">
-                            <IoMdHeartEmpty className="inline-block text-xl lg:text-sm" />Favoritos
-                        </button> */}
                     </div>
                     <div className="text-left w-full">
                         <div className="flex justify-between items-end">

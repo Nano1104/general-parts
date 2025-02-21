@@ -1,6 +1,6 @@
 import { useAuthContext } from "../../context/AuthContext.jsx";
 import { useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 //components
 import { AdminNavBar } from "../../components/AdminNavBar/AdminNavBar.jsx"
 import { UserManage } from "../../components/userManage/userManage.jsx"
