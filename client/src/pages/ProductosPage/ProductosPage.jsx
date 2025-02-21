@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { InventaryList } from "../../components/InventaryList/InventaryList.jsx";
 import { News } from "../../components/News/News.jsx";

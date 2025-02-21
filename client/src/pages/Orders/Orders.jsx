@@ -3,8 +3,6 @@ import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 
 import { Order } from "../../components/Order/Order.jsx"
-//icons
-import { IoCartOutline } from "react-icons/io5";
 import { CiWarning } from "react-icons/ci";
 import { LuClipboardList } from "react-icons/lu";
 

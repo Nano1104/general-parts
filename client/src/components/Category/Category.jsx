@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { IoIosArrowDown } from "react-icons/io"; //flecha abajo
 import { IoIosArrowUp } from "react-icons/io"; //flecha arriba
-import { IoIosArrowBack } from "react-icons/io";   //flecha mirando izquierda
 import { IoIosArrowForward } from "react-icons/io"; //flecha mirando derecha
 
 import 'animate.css';

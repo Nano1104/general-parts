@@ -5,9 +5,7 @@ import { useAuthContext } from "../../context/AuthContext"
 //components
 import { ProdsInCart } from "../../components/ProdsInCart/ProdsInCart.jsx"
 import { EmptyCart } from "../../components/EmptyCart/EmptyCart.jsx"
-//icons
-import { IoCartOutline } from "react-icons/io5";
-import { CiWarning } from "react-icons/ci";
+
 import { useEffect, useState } from "react"
 
 export const Cart = () => {
