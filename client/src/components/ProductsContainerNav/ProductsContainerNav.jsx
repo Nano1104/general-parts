@@ -16,13 +16,13 @@ export const ProductsContainerNav = ({ searchValue, setSearchValue }) => {
 
     return(
         <>
-            <nav className="p-2 bg-[#272829] font-roboto">
+            <nav className="p-2 bg-[#272829]">
                 <ul className="px-4 grid sm:grid-cols-[1fr_45%_1fr] 2xl:grid-cols-[1fr_30%_1fr]">
-                    <Link to="/" className="mobile:text-[2rem] xl:text-[3em] w-0">
-                        <span className="font-extrabold text-orange font-poppins tracking-tighter italic">SW</span>
-                        <span className="font-bold text-white font-poppins tracking-tight italic">Parts</span>
+                    <Link to="/" className="mobile:text-[2rem] italic font-roboto xl:text-[3em] w-0">
+                        <span className="font-extrabold text-orange tracking-tighter">SW</span>
+                        <span className="font-bold text-white tracking-tight">Parts</span>
                     </Link>
-                    <div className="flex justify-end items-center sm:order-1 gap-4 mr-2 text-white">
+                    <div className="flex justify-end font-montserrat font-black items-center sm:order-1 gap-4 mr-2 text-white">
                         {
                             authUser
                             ? 
@@ -38,10 +38,10 @@ export const ProductsContainerNav = ({ searchValue, setSearchValue }) => {
                                 <></>
                             }
                             </>
-                            : <Link to="/authPage" className="text-sm rounded-[8px] font-medium relative btn-logs">Iniciar Sesión<div></div></Link>
+                            : <Link to="/authPage" className="text-sm rounded-[8px] relative btn-logs">Iniciar Sesión<div></div></Link>
                         }
                     </div>
-                    <div className="flex items-center col-span-2 sm:col-span-1">
+                    <div className="flex font-roboto items-center col-span-2 sm:col-span-1">
                         <input type="text"
                                 placeholder="Buscar..."
                                 className="h-[30px] rounded-tl-2xl rounded-bl-2xl rounded-tr-none rounded-br-none py-2 px-3 flex-grow basis-[80%] focus:outline-none"

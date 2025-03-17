@@ -1,40 +1,59 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { useIsMobile } from "../../hooks/isMobile.js";      //hook para renderizar breakpoints
 
 import imgProduct from "../../images/tornillos.png"
 
 export const Product = ({data, params, featured}) => {
-    const [category, subcategory] = params;
-    const [isMobile, setIsMobile] = useState(false);
-    const [hover, setShowHover] = useState(false)
     const { codpro, desc_stock, rubro, subrub, proveed, desc_rubro, desc_marca, porcen1, precioimpre } = data;
+    const isMobile = useIsMobile(1280); // Puedes cambiar el breakpoint si lo necesitas
+    const componentRef = useRef(null)
+
+    const [category, subcategory] = params;
+    const [hover, setShowHover] = useState(false)
+    const [isLoaded, setIsLoaded] = useState(false)
+    
 
     const handleMouseEnter = () => setShowHover(true)
 
     const handleMouseLeave = () => setShowHover(false);
 
-    useEffect(() => {
-        const handleResize = () => {
-            setIsMobile(window.innerWidth < 1280);
-        };
-
-        handleResize(); // Ejecutar al cargar el componente
-        window.addEventListener("resize", handleResize); // Escuchar cambios de tamaño
-
+    /* useEffect(() => {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting && !isLoaded) {
+                // Cargar la imagen cuando entra en el viewport
+                setIsLoaded(true);
+                observer.unobserve(entry.target); // Dejar de observar
+              }
+            });
+          },
+          {
+            rootMargin: "100px", // Cargar la imagen 100px antes de que entre en el viewport
+          }
+        );
+    
+        if (componentRef.current) {
+          observer.observe(componentRef.current);
+        }
+    
         return () => {
-            window.removeEventListener("resize", handleResize); // Limpiar evento
+          if (componentRef.current) {
+            observer.unobserve(componentRef.current);
+          }
         };
-    }, [])
+      }, [isLoaded]); */
 
     return(
         <>
-        <div onMouseEnter={() => handleMouseEnter()} key={`key_${codpro}`} id="product" className="w-[85%] h-[65vh] mobile:h-[60vh] lg:w-[19em] xl:w-[22em] 2xl:w-[25em] 2xl:h-[55vh] font-roboto bg-gray rounded-xl relative my-3">
-            { featured ? <span className="absolute m-3 text-sm font-poppins font-medium tracking-tight bg-orange py-0.5 px-1 rounded-md">DESTACADO</span> : <></> }
+        <div ref={componentRef} onMouseEnter={() => handleMouseEnter()} key={`key_${codpro}`} id="product" className="w-[85%] h-[65vh] mobile:h-[60vh] lg:w-[19em] xl:w-[22em] 2xl:w-[25em] 2xl:h-[55vh] bg-gray font-roboto rounded-xl relative my-3">
+            { featured ? <span className="absolute m-3 text-sm font-poppins font-black tracking-tight bg-orange py-0.5 px-1 rounded-md">DESTACADO</span> : <></> }
             <div className="w-full h-[65%]">
                 <img src={imgProduct} alt="" className="rounded-t-xl object-contain h-full" />
             </div>
-            <div className="flex flex-col text-xs mobile:text-sm 2xl:text-base items-start px-4 font-poppins">
-                <h3 className="text-start uppercase font-bold mt-2">{desc_stock}</h3>
+            <div className="flex flex-col text-xs mobile:text-sm 2xl:text-base items-start px-4">
+                <h3 className="text-start uppercase font-black mt-2">{desc_stock}</h3>
                 <span className="">{desc_rubro}</span>
                 <span>PRECIO: <span className="font-semibold">{precioimpre} ARG</span></span>
             </div>
@@ -43,7 +62,7 @@ export const Product = ({data, params, featured}) => {
                 ?
                 <div onMouseLeave={() => handleMouseLeave()} className={`border h-full absolute top-0 w-full rounded-xl flex justify-center items-center bg-custom-gradient ${ hover ? "block" : "hidden" }`}>
                     <Link to={`/producto/detail/${codpro}?category=${category}&subCategory=${subcategory}`}
-                        className="py-2 px-4 text-center text-black rounded-2xl border font-poppins hover:bg-deepGray hover:border-transparent hover:text-white transition duration-200"
+                        className="py-2 px-4 text-center text-black rounded-2xl border hover:bg-deepGray hover:border-transparent hover:text-white transition duration-200"
                         id="btn-see-prod">
                         Ver Repuesto
                     </Link>
@@ -51,7 +70,7 @@ export const Product = ({data, params, featured}) => {
                 :
                 <>
                 <Link id="btn-see-prod" to={`/producto/detail/${codpro}?category=${category}&subCategory=${subcategory}`}
-                    className="py-2 px-4 text-xs flex justify-center bg-deepGray text-white text-center font-poppins absolute w-full bottom-[10px]"
+                    className="py-2 px-4 text-xs flex justify-center bg-deepGray text-white text-center absolute w-full bottom-[10px]"
                 >
                     Ver Repuesto
                 </Link>

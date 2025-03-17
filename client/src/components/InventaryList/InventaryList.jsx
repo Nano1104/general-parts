@@ -19,11 +19,11 @@ export const InventaryList = ({ stateNews }) => {
     return(
         <>
             <nav className="bg-gray flex h-8 relative px-7"> 
-                <span className="font-medium flex items-center italic mobile:text-sm xl:text-base px-4 h-full bg-black text-lightGray uppercase font-poppins tracking-tight cursor-pointer" onClick={() => {
+                <span className="flex items-center italic mobile:text-sm xl:text-base px-4 h-full bg-black text-lightGray uppercase font-poppins font-bold tracking-tight cursor-pointer" onClick={() => {
                     setShowCategories(showCategories => !showCategories)
                     setShowNews(false)
                 }}>CATEGORIAS</span>
-                <span className="font-medium flex items-center italic mobile:text-sm xl:text-base ml-4 px-4 text-black  bg-orange h-full uppercase font-poppins tracking-tight cursor-pointer" onClick={() => {
+                <span className="flex items-center italic mobile:text-sm xl:text-base ml-4 px-4 text-black  bg-orange h-full uppercase font-poppins font-bold tracking-tight cursor-pointer" onClick={() => {
                     setShowCategories(false)
                     setShowNews(true)
                 }}>DESTACADO</span>
