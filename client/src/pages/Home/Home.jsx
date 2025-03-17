@@ -13,10 +13,10 @@ export const Home = () => {
             {/* <img src={bgImg} alt="" id="bg-home" className="hidden lg:block" /> */}
             <NavBar />
 
-            <div className="h-screen absolute top-[10%] font-roboto border-white w-full blur-none flex flex-col items-center lg:items-start">
+            <div className="h-screen absolute top-[10%] border-white w-full blur-none flex flex-col items-center lg:items-start">
                 <Logo />
-                <span className="text-white text-center lg:text-left text-2xl lg:text-3xl p-3 mt-14 lg:mt-0 lg:ml-8">Venta de repuestos para automóviles de todas las marcas</span>
-                <div className="flex gap-4 text-white italic font-medium mt-4 lg:ml-10 lg:text-xl">
+                <span className="text-white text-center lg:text-left text-2xl lg:text-3xl p-3 mt-14 lg:mt-0 lg:ml-8 font-montserrat font-semibold">Venta de repuestos para automóviles de todas las marcas</span>
+                <div className="flex gap-4 text-white italic mt-4 lg:ml-10 lg:text-xl font-montserrat font-semibold">
                     <div className="flex items-center">
                         <FaWhatsapp className="" /><span className="ml-2">1160487294</span>
                     </div>
@@ -25,7 +25,7 @@ export const Home = () => {
                         <FaWhatsapp className="" /><span className="ml-2">1154327294</span>
                     </div>
                 </div> 
-                <Link to="/productos" className="font-bold font-montserrat text-lightGray [text-shadow:_0_2px_4px_rgb(0_0_0/_0.5)] mt-[3rem] text-3xl sm:text-4xl lg:mt-24 lg:mx-auto lg:block">
+                <Link to="/productos" className="font-roboto font-medium text-lightGray [text-shadow:_0_2px_4px_rgb(0_0_0/_0.5)] mt-[3rem] text-3xl sm:text-4xl lg:mt-24 lg:mx-auto lg:block">
                     VER REPUESTOS
                 </Link>
             </div>

@@ -4,12 +4,12 @@ import { IoIosArrowBack } from "react-icons/io"; //flecha izquierda
 import { IoIosArrowDown } from "react-icons/io"; //flecha abajo
 import { IoIosArrowUp } from "react-icons/io"; //flecha arriba
 
-import { isMobileFunction } from "../../utils/isMobile.js"
+import { useIsMobile } from "../../hooks/isMobile.js";
 
 export const Filters = ({ filtered }) => {
     const { setBrand, price, setPrice, setShowFilter } = filtered;
+    const isMobile = useIsMobile(768); // Puedes cambiar el breakpoint si lo necesitas 
 
-    const [isMobile, setIsMobile] = useState(false);            //indica si la resolucion se encuentra en mobile o no
     const [showElements, setShowElements] = useState(false);    //(funciona para la resolucion de mobile) - Muestra o desaparece las marcas o precios
     const [showPrice, setShowPrice] = useState(false);          //(funciona para la resolucion de mobile)
 
@@ -44,11 +44,6 @@ export const Filters = ({ filtered }) => {
             setPrice([])
         }
     }
-
-    useEffect(() => {
-        //funcion --> verifica si el sitio se encuentra en resolucion para mobile
-        isMobileFunction(768, isMobile, setIsMobile)
-    }, [])
 
     return(
         <>
@@ -85,9 +80,9 @@ export const Filters = ({ filtered }) => {
         </div>
         // RESOLUCION PARA DESKTOP
         :               
-        <div id="filter" className="bg-cBlack col-start-1 col-span-1 p-4 justify-self-center text-white w-[20vw] md:w-full md:ml-6 top-0 hidden md:block">
-            <h4 className="text-2xl sm:text-xl font-medium font-montserrat">Filtrar</h4><hr className="w-[60%] my-3"/>
-            <label htmlFor="price-sort" className="text-xl font-montserrat">Marca:</label>
+        <div id="filter" className="bg-cBlack col-start-1 col-span-1 p-4 justify-self-center font-montserrat text-white w-[20vw] md:w-full md:ml-6 top-0 hidden md:block">
+            <h4 className="text-2xl sm:text-xl font-bold">Filtrar</h4><hr className="w-[60%] my-3"/>
+            <label htmlFor="price-sort" className="text-xl font-bold">Marca:</label>
             <div className="h-[300px] overflow-auto font-poppins">
                 {
                     productsBrands.map((brand) => (
@@ -100,7 +95,7 @@ export const Filters = ({ filtered }) => {
             </div>
 
             <div className="mt-4">
-                <label htmlFor="price-sort" className="text-xl font-montserrat">Precio:</label>
+                <label htmlFor="price-sort" className="text-xl font-bold">Precio:</label>
                 <div className="sm:text-xs my-1">
                     <input type="checkbox" className="accent-orange" checked={JSON.stringify(selectedPrice) === JSON.stringify([0, 10000])} onChange={(e) => handlePrice(e, [0, 10000])} />
                     <label className="ml-1">Hasta - $10000</label>

@@ -94,7 +94,7 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
                 { categories ? <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`} ><MdKeyboardArrowRight className="inline-block" />{categories}</Link> : ""  }
             </div>
             <div>
-                <button className="mr-4 sm:mr-8 text-sm xl:text-base">
+                <button className="mr-4 sm:mr-8 text-sm xl:text-base font-bold">
                     <span onClick={handleFilter}>{!showFilters ? "Mostrar Filtros" : "Ocultar Filtros"}</span><BsFilterLeft className="inline-block"/>
                 </button>
             </div>
@@ -113,7 +113,7 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
                     <Loading />
                 ) : (
                     prodsToRender.map((prod) => (
-                    <Product key={prod.codpro} data={prod} params={[category, subcategory]} featured={false} />
+                        <Product key={prod.codpro} data={prod} params={[category, subcategory]} featured={false} />
                     ))
                 )}
             </div>
