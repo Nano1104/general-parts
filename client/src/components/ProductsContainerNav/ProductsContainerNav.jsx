@@ -22,7 +22,7 @@ export const ProductsContainerNav = ({ searchValue, setSearchValue }) => {
                         <span className="font-extrabold text-orange tracking-tighter">SW</span>
                         <span className="font-bold text-white tracking-tight">Parts</span>
                     </Link>
-                    <div className="flex justify-end font-montserrat font-black items-center sm:order-1 gap-4 mr-2 text-white">
+                    <div className="flex justify-end font-montserrat font-bold items-center sm:order-1 gap-4 mr-2 text-white">
                         {
                             authUser
                             ? 

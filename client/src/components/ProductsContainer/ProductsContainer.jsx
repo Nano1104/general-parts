@@ -86,20 +86,21 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
 
     return(
         <>
+        {/*  LINK DE CATEGOIRAS Y SUBCATEGORIAS JUNTO CON MOSTRAR Y OCULTAR PRODUCTOS */} 
         <div className="text-white text-xs font-poppins mt-[6rem] text-end flex justify-between w-[95%] m-auto">
-
             <div className="ml-4 text-sm xl:text-base italic font-normal uppercase">
                 { category ? <Link className="" to={`/productos/${category}`} >{category}<MdKeyboardArrowRight className="inline-block" /></Link> : "" }
                 { subcategory ? <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`} >{subcategory}</Link> : "" }
                 { categories ? <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`} ><MdKeyboardArrowRight className="inline-block" />{categories}</Link> : ""  }
             </div>
             <div>
-                <button className="mr-4 sm:mr-8 text-sm xl:text-base font-bold">
+                <button className="mr-4 sm:mr-8 text-sm xl:text-base">
                     <span onClick={handleFilter}>{!showFilters ? "Mostrar Filtros" : "Ocultar Filtros"}</span><BsFilterLeft className="inline-block"/>
                 </button>
             </div>
         </div>
 
+        {/* CONTAINER DE PRODUCTOS JUNTO CON FILTERS */}
         <div id="products-container" className={`grid grid-cols-1 ${ showFilters ? `md:grid-cols-[30%_1fr] 2xl:grid-cols-[15%_1fr]` : `md:grid-cols-1` } w-full mt-10`}>
             {showFilters && (
                 <div>

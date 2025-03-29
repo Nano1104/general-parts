@@ -49,7 +49,7 @@ export const Filters = ({ filtered }) => {
         <>
         {
         isMobile
-        // RESOLUCION PARA MOBILE
+        //////////////////// RESOLUCION PARA MOBILE
         ?               
         <div className="bg-white absolute z-50 top-0 w-full">
             <IoIosArrowBack className="text-[1.5em] m-6" onClick={() => setShowFilter(false)} />
@@ -78,9 +78,9 @@ export const Filters = ({ filtered }) => {
                 { !showPrice ? <IoIosArrowDown customVal="price" onClick={handleShowElements} className="text-xl" /> : <IoIosArrowUp customVal="price"  onClick={handleShowElements} className="text-xl" /> }
             </div>
         </div>
-        // RESOLUCION PARA DESKTOP
+        //////////////////// RESOLUCION PARA DESKTOP
         :               
-        <div id="filter" className="bg-cBlack col-start-1 col-span-1 p-4 justify-self-center font-montserrat text-white w-[20vw] md:w-full md:ml-6 top-0 hidden md:block">
+        <div id="filter" className="bg-cBlack col-start-1 col-span-1 p-4 justify-self-center font-poppins text-white w-[20vw] md:w-full md:ml-6 top-0 hidden md:block">
             <h4 className="text-2xl sm:text-xl font-bold">Filtrar</h4><hr className="w-[60%] my-3"/>
             <label htmlFor="price-sort" className="text-xl font-bold">Marca:</label>
             <div className="h-[300px] overflow-auto font-poppins">

@@ -11,51 +11,27 @@ export const Product = ({data, params, featured}) => {
 
     const [category, subcategory] = params;
     const [hover, setShowHover] = useState(false)
-    const [isLoaded, setIsLoaded] = useState(false)
-    
 
     const handleMouseEnter = () => setShowHover(true)
 
     const handleMouseLeave = () => setShowHover(false);
 
-    /* useEffect(() => {
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting && !isLoaded) {
-                // Cargar la imagen cuando entra en el viewport
-                setIsLoaded(true);
-                observer.unobserve(entry.target); // Dejar de observar
-              }
-            });
-          },
-          {
-            rootMargin: "100px", // Cargar la imagen 100px antes de que entre en el viewport
-          }
-        );
-    
-        if (componentRef.current) {
-          observer.observe(componentRef.current);
-        }
-    
-        return () => {
-          if (componentRef.current) {
-            observer.unobserve(componentRef.current);
-          }
-        };
-      }, [isLoaded]); */
-
     return(
         <>
-        <div ref={componentRef} onMouseEnter={() => handleMouseEnter()} key={`key_${codpro}`} id="product" className="w-[85%] h-[65vh] mobile:h-[60vh] lg:w-[19em] xl:w-[22em] 2xl:w-[25em] 2xl:h-[55vh] bg-gray font-roboto rounded-xl relative my-3">
-            { featured ? <span className="absolute m-3 text-sm font-poppins font-black tracking-tight bg-orange py-0.5 px-1 rounded-md">DESTACADO</span> : <></> }
+        <div ref={componentRef} onMouseEnter={() => handleMouseEnter()} key={`key_${codpro}`} id="product" className="w-[85%] h-[65vh] mobile:h-[60vh] lg:w-[19em] xl:w-[22em] 2xl:w-[25em] 2xl:h-[55vh] bg-gray font-poppins rounded-xl relative my-3">
+            { featured ? <span className="absolute m-3 text-sm font-bold tracking-tight bg-orange py-0.5 px-1 rounded-md">DESTACADO</span> : <></> }
             <div className="w-full h-[65%]">
                 <img src={imgProduct} alt="" className="rounded-t-xl object-contain h-full" />
             </div>
             <div className="flex flex-col text-xs mobile:text-sm 2xl:text-base items-start px-4">
-                <h3 className="text-start uppercase font-black mt-2">{desc_stock}</h3>
-                <span className="">{desc_rubro}</span>
-                <span>PRECIO: <span className="font-semibold">{precioimpre} ARG</span></span>
+                <div className="text-sm">
+                  <span>Código producto: </span><span className="font-bold">{codpro}</span>
+                </div>
+                <h3 className="text-start uppercase font-bold mt-2">{desc_stock}</h3>
+                <span className="italic">{desc_rubro}</span>
+                <div className="mt-2">
+                  <span>PRECIO: <span className="font-bold">{precioimpre} ARG</span></span>
+                </div>
             </div>
             {
                 !isMobile

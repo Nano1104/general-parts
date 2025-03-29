@@ -41,12 +41,12 @@ export const Category = ({category, activeCategory, setActiveCategory, activeSub
 
     return(
         <>
-        <div className="text-xs 2xl:text-sm">
+        <div className="text-xs 2xl:text-sm font-montserrat">
             <div className="flex items-center gap-1 relative">
                 <div className="flex w-32 justify-between items-center">            {/*RENDERIZA UN PARA UN RUBRO */}
                     <Link
                         id={`category-${category}-link`}
-                        className={`category-link gap-1 text-black font-bold text-md mb-1 uppercase font-montserrat`}
+                        className={`category-link gap-1 text-black text-md mb-1 uppercase`}
                         to={`/productos/${category}`}
                     >
                         {category}
@@ -64,7 +64,7 @@ export const Category = ({category, activeCategory, setActiveCategory, activeSub
                                 <div key={index} className="flex items-center relative">
                                     <Link
                                         to={`/productos/${category}/${encodeURIComponent(subCategory.description)}`}
-                                        className="text-cBlack text-sm block px-4 hover:bg-gray-200 hover:font-black transition ease-in duration-300 uppercase font-montserrat font-bold">
+                                        className="text-cBlack text-sm block px-4 transition ease-in duration-300 uppercase">
                                         {subCategory.description}
                                     </Link>
                                     { activeSubCategory != subCategory.description              // CAMBIA LA FLECHA DE CUANDO SE ABRE O CIERRA UN SUBRUBRO
@@ -78,7 +78,7 @@ export const Category = ({category, activeCategory, setActiveCategory, activeSub
                                                     <Link
                                                         key={sub.idSubcategory} // Agrega una clave única para cada subcategoría
                                                         to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(subCategory.description)}/${encodeURIComponent(sub)}`}
-                                                        className="text-cBlack text-sm block px-4 hover:bg-gray-200 hover:font-extrabold transition ease-in duration-300 font-montserrat font-bold"
+                                                        className="text-cBlack text-sm block px-4 hover:font-bold transition ease-in"
                                                     >
                                                         {sub}
                                                     </Link>
@@ -91,14 +91,14 @@ export const Category = ({category, activeCategory, setActiveCategory, activeSub
                         }
                         </div>
                     ) : (
-                        <div className="absolute z-20 top-0 left-full bg-gray py-4 border w-72 flex flex-col gap-3 justify-center font-montserrat">
+                        <div className="absolute z-20 top-0 left-full bg-gray py-4 border w-72 flex flex-col gap-3 justify-center">
                         {
                             (                  
                             subCategories.map((subCategory, index) => (
                                 <Link
                                     to={`/productos/${category}/${encodeURIComponent(subCategory)}`}
                                     key={index}
-                                    className="text-cBlack text-sm block px-4 hover:bg-gray-200 hover:font-black transition ease-in duration-300 font-bold">
+                                    className="text-cBlack text-sm block px-4 hover:bg-gray-200 hover:font-bold transition ease-in">
                                     {subCategory}
                                 </Link> )
                             ))

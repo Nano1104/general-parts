@@ -21,9 +21,10 @@ export const NavBar = () => {
         {
             showMenu
             ? 
+            /***** RESOLUCION PARA CELULAR *****/
             <nav className="bg-lightGray font-montserrat text-[1rem] flex flex-col items-center py-2 px-4 h-screen w-[40%] z-40 absolute top-0 lg:hidden">
                 <RxCross1 onClick={handleMenuBurger} className="mt-4 sm:mt-10 text-[2em]" />
-                <ul className="flex flex-col font-black relative items-center mt-16 gap-4 w-full h-[80%] sm:text-[1.2em]">
+                <ul className="flex flex-col font-bold relative items-center mt-16 gap-4 w-full h-[80%] sm:text-[1.2em]">
                     { authUser && authUser.role === "admin"
                         ? 
                         <>
@@ -39,9 +40,9 @@ export const NavBar = () => {
             : <></>
         }
 
-
+        {/* RESOLUCION PARA DESKTOP */}
         <nav className="hidden absolute top-0 w-full text-sm font-montserrat text-white lg:block">
-            <ul className="flex font-black justify-end items-center gap-7 m-7">
+            <ul className="flex font-bold justify-end items-center gap-7 m-7">
                 <div className="flex items-center gap-10">
                     { authUser && authUser.role === "admin"
                         ? 
