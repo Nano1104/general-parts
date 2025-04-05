@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { useIsMobile } from "../../hooks/isMobile.js";      //hook para renderizar breakpoints
 
-import imgProduct from "../../images/tornillos.png"
+import imgProduct from "../../images/bulones.png"
 
 export const Product = ({data, params, featured}) => {
     const { codpro, desc_stock, rubro, subrub, proveed, desc_rubro, desc_marca, porcen1, precioimpre } = data;
@@ -28,7 +28,9 @@ export const Product = ({data, params, featured}) => {
                   <span>Código producto: </span><span className="font-bold">{codpro}</span>
                 </div>
                 <h3 className="text-start uppercase font-bold mt-2">{desc_stock}</h3>
-                <span className="italic">{desc_rubro}</span>
+                <div className="italic text-sm">
+                    <span>{desc_rubro} </span><span>- {desc_marca}</span>
+                </div>
                 <div className="mt-2">
                   <span>PRECIO: <span className="font-bold">{precioimpre} ARG</span></span>
                 </div>
