@@ -36,6 +36,7 @@ export const ProductDetail = ({prod}) => {
         if (!isFocus) textareaRef.current?.focus(); // Da foco al textarea
     }
 
+    ////////////////// CAMBIAR DESCRIPCION DEL PRODUCTO
     const handleSubmitNewText = async (e) => {
         e.preventDefault()
         const newText = textareaRef.current.value; 
@@ -49,6 +50,7 @@ export const ProductDetail = ({prod}) => {
         }
     }
 
+    ////////////////// AÑADIR AL CARRITO
     const handleAddToCart = () => {
         if(!authUser) {
             Swal.fire({
@@ -70,7 +72,9 @@ export const ProductDetail = ({prod}) => {
 
     return(
         <>
-        <div className="w-full lg:h-[90vh] lg:w-[85%] xl:w-[75%] lg:py-[50px] lg:px-[65px] text-center bg-[#EEEEEE] font-poppins flex flex-col lg:m-auto lg:mt-10 lg:flex-row lg:rounded-xl relative">
+        <div className="w-full lg:h-[90vh] lg:w-[85%] xl:w-[75%] lg:py-[50px] lg:px-[65px] text-center bg-[#EEEEEE] flex flex-col lg:m-auto lg:mt-10 lg:flex-row lg:rounded-xl relative">
+
+            {/* PRIMERA PARTE DEL PRODUCT DESCRIPTION */}
             <div className="basis-[58%] text-xs lg:text-sm 2xl:text-base">
                 <img src={imgDetail} className="w-full object-contain h-full my-28 mobile:my-14 lg:my-3" alt={`prod-${codpro}-img`} />
                 <div className="font-roboto font-semibold italic flex flex-col mobile:flex-row items-start mobile:justify-center lg:justify-start w-full mt-5 absolute top-0">
@@ -83,21 +87,24 @@ export const ProductDetail = ({prod}) => {
                     <span className="cursor-pointer mx-2 my-1 lg:mx-0">{id}</span>
                 </div>
             </div>
+            
             <div className="border mx-8 mb-6"></div>
-            <div className="basis-[42%]">
-                <h1 className="uppercase text-2xl 2xl:text-3xl font-poppins font-bold mobile:px-2">{desc_stock}</h1>
+
+            {/* SEGUNDA PARTE DEL CARD */}
+            <div className="basis-[42%] font-poppins">
+                <h1 className="font-bold uppercase text-2xl 2xl:text-3xl mobile:px-2">{desc_stock}</h1>
                 <hr className="w-[50%] mt-5 border border-5 mx-auto" />
 
                 <div className="flex items-start flex-col p-5 mobile:p-8 lg:p-4 2xl:p-8 mt-10 lg:mt-0 2xl:mt-10 lg:text-sm 2xl:text-base">
                     <div className="flex flex-col items-start gap-2">
                         {
                             authUser && isAdmin ?
-                            <span className="font-medium">Proveedor: <span className="font-semibold">{proveed}</span></span>
+                            <span>Proveedor: <span className="font-semibold">{proveed}</span></span>
                             :
-                            <span className="font-medium">Código producto: <span className="font-semibold">{id}</span></span>
+                            <span>Código producto: <span className="font-bold">{id}</span></span>
                         }
-                        <span className="font-medium">Marca: <span className="font-semibold">{desc_marca}</span></span>
-                        <span className="font-medium">Stock: <span className="italic text-red">{quantity ? quantity : "No Disponible!"}</span></span>
+                        <span>Marca: <span className="font-bold">{desc_marca}</span></span>
+                        <span>Stock: <span className="italic text-red">{quantity ? quantity : "No Disponible!"}</span></span>
                         <span className="text-2xl">${precioimpre}</span>
                     </div>
                     <div className="flex flex-col items-start mt-2">
@@ -114,6 +121,8 @@ export const ProductDetail = ({prod}) => {
                             <h2 className="font-semibold mt-16 lg:mt-4 text-2xl lg:text-2xl 2xl:mt-12">DESCRIPCIÓN</h2>
                             { authUser && isAdmin ? <FaPencil className="text-2xl mr-6 mb-1 cursor-pointer" onClick={() => handleFocus()} /> : <></> }
                         </div>
+
+                        {/* FORM PARA CAMBIAR LA DESCRIPCIOND EL PRODUCTO */}
                         <form action="" onSubmit={handleSubmitNewText}>
                             <textarea ref={textareaRef} defaultValue={prod_details} readOnly={!isFocus}
                             className={`mt-4 lg:mt-2 resize-none h-16 xl:h-20 text-xs xl:text-sm rounded-none overflow-auto w-full p-2 bg-transparent ${ isFocus ? "border rounded" : "" }`}>

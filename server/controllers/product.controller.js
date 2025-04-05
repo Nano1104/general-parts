@@ -1,14 +1,71 @@
 import { postProductsInDB } from "../utils/post-products-db.js";
 import Producto from "../models/product.model.js";
 
+/* /api/products?limit=10&category=Electrodomésticos&subcategory=Heladeras&brand=Samsung&minPrice=1000&maxPrice=5000 */
+
 export const getProducts = async (req, res) => {
     try {
-        const products = await Producto.find({})
-        res.status(200).json({message: "Success getting products from mongo database", products});
+        const limit = parseInt(req.query.limit) || 10;
+        const lastId = req.query.lastId;
+        const category = req.query.category;
+        const subcategory = req.query.subcategory;
+        const brand = req.query.brand;
+        const minPrice = parseFloat(req.query.minPrice);
+        const maxPrice = parseFloat(req.query.maxPrice);
+        const search = req.query.search;
+
+        // Construir objeto de filtro
+        const filter = {};
+        
+        if (category) filter.desc_rubro = category.toUpperCase();   //pasamos a mayus porque asi estan en los documentos de la db
+        if (subcategory) filter.desc_subrubro = subcategory.toUpperCase();  //pasamos a mayus porque asi estan en los documentos de la db
+        if (brand) filter.desc_marca = brand.toUpperCase();     //pasamos a mayus porque asi estan en los documentos de la db
+        
+        // Filtro por rango de precios
+        if (!isNaN(minPrice) && !isNaN(maxPrice)) {
+            filter.precioimpre = { $gte: minPrice, $lte: maxPrice };
+        } else if (!isNaN(minPrice)) {
+            filter.precioimpre = { $gte: minPrice };
+        } else if (!isNaN(maxPrice)) {
+            filter.precioimpre = { $lte: maxPrice };
+        }
+        
+        // Filtro de búsqueda (búsqueda en nombre y descripción)
+        if (search) {
+            filter.$or = [
+                { codpro: { $regex: search, $options: 'i' } },
+                { desc_stock: { $regex: search, $options: 'i' } }
+            ];
+        }
+
+        // Consulta con paginación
+        let query = Producto.find(filter);
+        
+        if (lastId) {
+            query = query.where('_id').gt(lastId); // Cursor-based pagination
+        }
+        
+        const products = await query
+            .sort({ _id: 1 }) // Ordenar por ID para la paginación
+            .limit(limit);
+        
+        const total = await Producto.countDocuments(filter);
+        const hasMore = products.length === limit;
+
+        res.status(200).json({
+            success: true,
+            products,
+            total,
+            hasMore
+        });
     } catch (err) {
-        res.status(400).json({message: "Error getting products from mongo database", err});
+        res.status(500).json({
+            success: false,
+            message: "Error al obtener productos",
+            error: err.message,
+        });
     }
-}
+};
 
 export const postProducts = async (req, res) => {
     try {

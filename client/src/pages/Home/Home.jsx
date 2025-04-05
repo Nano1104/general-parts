@@ -15,14 +15,14 @@ export const Home = () => {
 
             <div className="h-screen absolute top-[10%] border-white w-full blur-none flex flex-col items-center lg:items-start">
                 <Logo />
-                <span className="text-white text-center lg:text-left text-2xl lg:text-3xl p-3 mt-14 lg:mt-0 lg:ml-8 font-montserrat font-semibold">Venta de repuestos para automóviles de todas las marcas</span>
-                <div className="flex gap-4 text-white italic mt-4 lg:ml-10 lg:text-xl font-montserrat font-semibold">
+                <span className="text-white text-center lg:text-left text-2xl lg:text-3xl p-3 mt-14 lg:mt-0 lg:ml-8 font-montserrat font-bold">Venta de repuestos para automóviles de todas las marcas</span>
+                <div className="flex gap-4 text-white italic mt-4 lg:ml-10 lg:text-xl font-montserrat font-bold">
                     <div className="flex items-center">
-                        <FaWhatsapp className="" /><span className="ml-2">1160487294</span>
+                        <FaWhatsapp /><span className="ml-2">11 5452-9682</span>
                     </div>
                     <span>-</span>
                     <div className="flex items-center">
-                        <FaWhatsapp className="" /><span className="ml-2">1154327294</span>
+                        <FaWhatsapp /><span className="ml-2">11 6335-8220</span>
                     </div>
                 </div> 
                 <Link to="/productos" className="font-roboto font-medium text-lightGray [text-shadow:_0_2px_4px_rgb(0_0_0/_0.5)] mt-[3rem] text-3xl sm:text-4xl lg:mt-24 lg:mx-auto lg:block">

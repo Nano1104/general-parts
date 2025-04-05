@@ -38,13 +38,14 @@ export const AuthPage = () => {
         <div className="w-full overflow-y-auto relative" id="login-container">
             {/* FONDO DE AUTHPAGE */}
             <div className="bg-authPageBg hidden lg:block relative w-full h-screen bg-cover bg-center filter brightness-50 blur-[3px] grayscale"></div>
-
-            <Link to="/" className="relative flex flex-col items-center lg:flex-row top-4 lg:absolute lg:top-0 lg:my-7 lg:left-[7%]">
-                <span className="font-extrabold text-orange font-poppins tracking-tighter italic text-[4.4em] md:text-[6.4em] lg:text-[8em] 2xl:text-[9em]">SW</span>
-                <span className="font-bold text-white font-poppins tracking-tight italic absolute lg:static top-12 md:top-16 text-[4.4em] md:text-[6.4em] lg:text-[8em] 2xl:text-[9em]">Parts</span>
+            {/* LOGO SWPARTS */}
+            <Link to="/" className="relative flex flex-col items-center lg:flex-row top-4 lg:absolute lg:top-0 lg:my-7 lg:left-[7%] font-roboto font-bold">
+                <span className="text-orange tracking-tighter italic text-[4.4em] md:text-[6.4em] lg:text-[8em] 2xl:text-[9em]">SW</span>
+                <span className="text-white tracking-tight italic absolute lg:static top-12 md:top-16 text-[4.4em] md:text-[6.4em] lg:text-[8em] 2xl:text-[9em]">Parts</span>
             </Link>
             <hr className="border-white mt-[20%] w-[75%] mx-auto lg:hidden" />
             
+            {/* FORM */}
             <form key={login ? "login" : "register"} action="post" id="form"
                 className="flex flex-col items-center mt-10 gap-4
                 lg:absolute lg:top-[15%] lg:right-[5%] lg:rounded-[50px] lg:border-4 border-white border-double lg:bg-[#272829] lg:w-[500px]
@@ -58,7 +59,7 @@ export const AuthPage = () => {
 
                 <div className="w-full flex flex-col gap-2 2xl:mt-10">
                 { login 
-                    ?   //login inputs
+                    ?   ///////////////////////////////////LOGIN INPUTSS 
                     <>
                         <div className="w-full flex flex-col xl:flex-row items-center lg:items-start relative">
                             <input 
@@ -93,7 +94,7 @@ export const AuthPage = () => {
                             {loginError === "password incorrect" ? <span className="text-orange font-custom font-medium text-xs mt-2 lg:ml-12 xl:absolute xl:left-[47%] xl:bottom-[4px]">Contraseña Incorrecta</span> : <></>}
                         </div>
                     </>
-                    :   //register inputs
+                    :   ///////////////////////////////////REGISTER INPUTSS 
                     <>
                         <div className="w-full flex flex-col xl:flex-row items-center lg:items-start relative">
                             <input 
@@ -216,11 +217,10 @@ export const AuthPage = () => {
                 }
                 </div>
                 
-
-                <div className="w-full flex justify-center lg:justify-start xl:relative">
-                    <button type="submit"       //BOTON DE SUBMIT
-                    className="bg-orange w-[30%] sm:w-[20%] md:w-[15%] lg:w-[25%] 2xl:w-[20%] rounded-md py-1
-                    text-black font-medium font-poppins lg:ml-12">
+                {/* BUTTON SUBMIT  */}
+                <div className="w-full flex justify-center lg:justify-start xl:relative"> 
+                    <button type="submit"       
+                    className="bg-orange w-[30%] sm:w-[20%] md:w-[15%] lg:w-[25%] 2xl:w-[20%] rounded-md py-1 text-black font-montserrat lg:ml-12">
                         { login ? "LOGIN" : "REGISTRATE" }
                     </button>
                     {loginError === "user already exists" ? <span className="text-orange font-custom font-medium text-xs xl:text-base mt-2 lg:ml-12 xl:absolute xl:left-[27%] xl:bottom-[4px]">Usuario ya registrado</span> : <></>}
