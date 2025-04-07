@@ -52,7 +52,7 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
             // Pequeño delay para evitar saturación
             /* await new Promise(resolve => setTimeout(resolve, 300)); */
 
-            const lastId = prodsToRender && prodsToRender.length > 0 
+            const lastId = prodsToRender?.length > 0 
                 ? prodsToRender[prodsToRender.length - 1]._id 
                 : null;
 
@@ -72,7 +72,7 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
                 })
             };
 
-            const response = await axios.get('/api/products', { params });
+            const response = await axios.get(`${API_URL}/api/products`, { withCredentials: true, params: params });
             console.log("🚀 ~ loadMoreProducts ~ response:", response)
             const { products, hasMore } = response.data;
 
