@@ -1,6 +1,8 @@
 import { postProductsInDB } from "../utils/post-products-db.js";
 import Producto from "../models/product.model.js";
 
+import cache from "memory-cache";
+
 /* /api/products?limit=10&category=Electrodomésticos&subcategory=Heladeras&brand=Samsung&minPrice=1000&maxPrice=5000 */
 
 export const getProducts = async (req, res) => {
@@ -14,14 +16,31 @@ export const getProducts = async (req, res) => {
         const maxPrice = parseFloat(req.query.maxPrice);
         const search = req.query.search;
 
-        // Construir objeto de filtro
+        // 1. Crear una clave única para el cache basada en todos los parámetros
+        const cacheKey = JSON.stringify({
+            limit,
+            lastId,
+            category,
+            subcategory,
+            brand,
+            minPrice,
+            maxPrice,
+            search
+        });
+
+        // 2. Verificar si existe respuesta en cache
+        const cachedData = cache.get(cacheKey);
+        if (cachedData) {
+            console.log('📦 Sirviendo desde cache', cacheKey);
+            return res.status(200).json(cachedData);
+        }
+
+        // 3. Construir filtro (tu lógica original)
         const filter = {};
+        if (category) filter.desc_rubro = category.toUpperCase();
+        if (subcategory) filter.desc_subrubro = subcategory.toUpperCase();
+        if (brand) filter.desc_marca = brand.toUpperCase();
         
-        if (category) filter.desc_rubro = category.toUpperCase();   //pasamos a mayus porque asi estan en los documentos de la db
-        if (subcategory) filter.desc_subrubro = subcategory.toUpperCase();  //pasamos a mayus porque asi estan en los documentos de la db
-        if (brand) filter.desc_marca = brand.toUpperCase();     //pasamos a mayus porque asi estan en los documentos de la db
-        
-        // Filtro por rango de precios
         if (!isNaN(minPrice) && !isNaN(maxPrice)) {
             filter.precioimpre = { $gte: minPrice, $lte: maxPrice };
         } else if (!isNaN(minPrice)) {
@@ -30,7 +49,6 @@ export const getProducts = async (req, res) => {
             filter.precioimpre = { $lte: maxPrice };
         }
         
-        // Filtro de búsqueda (búsqueda en nombre y descripción)
         if (search) {
             filter.$or = [
                 { codpro: { $regex: search, $options: 'i' } },
@@ -38,26 +56,30 @@ export const getProducts = async (req, res) => {
             ];
         }
 
-        // Consulta con paginación
+        // 4. Consulta a MongoDB
         let query = Producto.find(filter);
-        
         if (lastId) {
-            query = query.where('_id').gt(lastId); // Cursor-based pagination
+            query = query.where('_id').gt(lastId);
         }
         
-        const products = await query
-            .sort({ _id: 1 }) // Ordenar por ID para la paginación
-            .limit(limit);
-        
+        const products = await query.sort({ _id: 1 }).limit(limit);
         const total = await Producto.countDocuments(filter);
         const hasMore = products.length === limit;
 
-        res.status(200).json({
+        // 5. Preparar respuesta y guardar en cache
+        const response = {
             success: true,
             products,
             total,
             hasMore
-        });
+        };
+
+        // Cachear por 5 minutos (300000 ms) - Ajusta según tus necesidades
+        cache.put(cacheKey, response, 300000);
+        console.log('🔍 Consultando DB y cacheando', cacheKey);
+
+        res.status(200).json(response);
+
     } catch (err) {
         res.status(500).json({
             success: false,
