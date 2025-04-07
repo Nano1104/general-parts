@@ -50,9 +50,9 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
         
         try {
             // Pequeño delay para evitar saturación
-            await new Promise(resolve => setTimeout(resolve, 300));
+            /* await new Promise(resolve => setTimeout(resolve, 300)); */
 
-            const lastId = prodsToRender.length > 0 
+            const lastId = prodsToRender && prodsToRender.length > 0 
                 ? prodsToRender[prodsToRender.length - 1]._id 
                 : null;
 
