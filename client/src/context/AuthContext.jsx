@@ -12,67 +12,80 @@ export const useAuthContext = () => {
 }
 
 export const AuthContextProvider = ({children}) => {
-    const [authUser, setAuthUser] = useState(null);
-    const [isAdmin, setIsAdmin] = useState(false);
-    const [loading, setLoading] = useState(true);
-
-    /* const logout = async () => {
-        try {
-            await axios.post(`${API_URL}/api/auth/logout`, { withCredentials: true })
-            setAuthUser(null)
-        } catch (err) {
-            console.log(err.response.data.message)
-        }
-    } */
-
-    const verifyUser = async () => {
-        try {
-            const res = await axios.get(`${API_URL}/api/auth/authUser`, { withCredentials: true });
-
-            if(res.data) {
-                setAuthUser(res.data)
-                setIsAdmin(res.data.role === "admin")
-            } else {
-                setAuthUser(null)
-                setIsAdmin(false)
-            } 
-        }
-        catch (err) {
-            console.log(err.response.data.message)
-            setAuthUser(null);
-        }
-    };
+    const [state, setState] = useState({
+        authUser: null,
+        isAdmin: false,
+        loading: true,
+        error: null
+    });
 
     useEffect(() => {
-        /* const verifyUser = async () => {
+        const source = axios.CancelToken.source();
+
+        const verifyUser = async () => {
             try {
-                const res = await axios.get(`${API_URL}/api/auth/authUser`, { withCredentials: true });
+                const res = await axios.get(`${API_URL}/api/auth/authUser`, { 
+                    withCredentials: true,
+                    cancelToken: source.token
+                });
 
                 if(res.data) {
-                    setAuthUser(res.data)
-                    setIsAdmin(res.data.role === "admin")
+                    setState({
+                        authUser: res.data,
+                        isAdmin: res.data.role === "admin",
+                        loading: false,
+                        error: null
+                    });
                 } else {
-                    setAuthUser(null)
-                    setIsAdmin(false)
+                    setState(prev => ({
+                        ...prev,
+                        authUser: null,
+                        isAdmin: false,
+                        loading: false
+                    }));
                 } 
             }
             catch (err) {
-                console.log(err.response.data.message)
-                setAuthUser(null);
-            } finally {
-                setLoading(false)
+                if (axios.isCancel(err)) {
+                    console.log('Request canceled:', err.message);
+                } else {
+                    console.error('Auth error:', err.response?.data?.message || err.message);
+                    setState(prev => ({
+                        ...prev,
+                        authUser: null,
+                        isAdmin: false,
+                        loading: false,
+                        error: err.response?.data?.message || 'Authentication error'
+                    }));
+                }
             }
         };
 
-        verifyUser(); */
-    }, [])
+        verifyUser();
 
-    /* if (loading) {
+        return () => source.cancel('Component unmounted');
+    }, []);
+
+    const setAuthUser = (user) => {
+        setState({
+            authUser: user,
+            isAdmin: user?.role === "admin",
+            loading: false,
+            error: null
+        });
+    };
+
+    if (state.loading) {
         return <Loading />; 
-    } */
+    }
 
     return (
-        <AuthContext.Provider value={{ authUser, setAuthUser, isAdmin }}>
+        <AuthContext.Provider value={{ 
+            authUser: state.authUser, 
+            setAuthUser, 
+            isAdmin: state.isAdmin,
+            error: state.error
+        }}>
             {children}
         </AuthContext.Provider>
     );

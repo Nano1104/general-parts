@@ -1,0 +1,20 @@
+name: Keep Alive
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # Ejecuta cada 5 minutos
+  workflow_dispatch:
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      # Paso 1: Ping al Frontend (Vercel)
+      - name: Ping Frontend
+        run: |
+          curl -s -o /dev/null -w "Frontend Status: %{http_code}\n" https://general-parts.vercel.app/
+
+      # Paso 2: Ping al Backend (Render)
+      - name: Ping Backend
+        run: |
+          curl -s -o /dev/null -w "Backend Status: %{http_code}\n" https://general-parts.onrender.com/api/health
