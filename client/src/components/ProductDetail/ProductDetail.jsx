@@ -13,7 +13,7 @@ import { Loading } from "../Loading/Loading.jsx";
 //icons
 import { FaPencil } from "react-icons/fa6";
 //image
-import imgDetail from "../../images/tornillos.png"
+import imgDetail from "../../images/bulones.png"
 
 import { API_URL } from "../../utils/api_url.js";
 
