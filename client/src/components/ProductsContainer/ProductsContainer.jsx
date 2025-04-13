@@ -14,7 +14,7 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 //css
 import "../../pages/ProductosPage/productospage.css"
 
-import { API_URL } from "../../utils/api_url.js";
+import { API_URL, EDGE_API_URL } from "../../utils/api_url.js";
 
 
 export const ProductsContainer = ({ searchValue }) => {                 //valor de la barra de busqueda
@@ -72,7 +72,13 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
                 })
             };
 
-            const response = await axios.get(`${API_URL}/api/products`, { withCredentials: true, params: params });
+            const response = await axios.get(`${EDGE_API_URL}/products`, { 
+                withCredentials: true,
+                params,
+                headers: {
+                    'Cache-Strategy': 'stale-while-revalidate' // Opcional
+                }
+            });
             console.log("🚀 ~ loadMoreProducts ~ response:", response)
             const { products, hasMore } = response.data;
 

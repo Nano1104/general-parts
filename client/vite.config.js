@@ -1,27 +1,35 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  
   build: {
-    minify: 'esbuild', // Asegura la minificación del código
+    minify: 'esbuild',
     rollupOptions: {
-      treeshake: true, // Intenta eliminar código no usado
+      treeshake: true,
     },
   },
+
   optimizeDeps: {
-    exclude: ['react-icons'], // Evita que Vite precompile todo el paquete
+    exclude: ['react-icons'],
   },
+
   server: {
     proxy: {
-      '/api': {
-        /* target: 'https://general-parts.onrender.com', */
+      // Proxy para desarrollo local (Edge Functions simuladas)
+      '/api/edge': {
         target: "http://localhost:5000",
+        rewrite: path => path.replace(/^\/api\/edge/, '/api'),
         changeOrigin: true,
-        secure: true, // Asegúrate de usar HTTPS correctamente
-        cookieDomainRewrite: 'localhost', // Reescribe el dominio de las cookies para que funcionen en localhost
+        secure: false, // Desactivado para desarrollo local
+        cookieDomainRewrite: 'localhost',
       },
     },
   },
+
+  // Configuración especial para Vercel (producción)
+  define: {
+    'import.meta.env.VERCEL': JSON.stringify(process.env.VERCEL || false)
+  }
 })
