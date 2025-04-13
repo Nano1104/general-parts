@@ -3,6 +3,7 @@ import Producto from "../models/product.model.js";
 
 import cache from "memory-cache";
 
+
 /* /api/products?limit=10&category=Electrodomésticos&subcategory=Heladeras&brand=Samsung&minPrice=1000&maxPrice=5000 */
 
 export const getProducts = async (req, res) => {
