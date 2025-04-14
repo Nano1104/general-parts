@@ -71,8 +71,10 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
                     maxPrice: price[1] 
                 })
             };
+            
+            console.log("🚀 ~ loadMoreProducts ~ EDGE_API_URL:", EDGE_API_URL)
 
-            const response = await axios.get(`${EDGE_API_URL}/products`, { 
+            const response = await axios.get(`${API_URL}/api/products`, { 
                 withCredentials: true,
                 params,
                 headers: {
@@ -147,6 +149,9 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
                     prodsToRender.map((prod, index) => (
                         <Product key={`${prod.codpro}-${index}`} data={prod} params={[category, subcategory]} featured={false} />
                     ))
+                }
+                {
+                    prodsToRender.length == 0 ?  <span className="col-span-full italic text-xl px-4 py-2 text-gray">No hay productos que cumplan con los filtros</span> : <></>
                 }
             </div>
             <div ref={observerTarget} style={{ height: '1px' }}> </div> 
