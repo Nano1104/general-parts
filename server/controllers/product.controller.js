@@ -1,10 +1,22 @@
 import { postProductsInDB } from "../utils/post-products-db.js";
 import Producto from "../models/product.model.js";
-
 import cache from "memory-cache";
+import { getSubcategory } from "../utils/getSubcategories.js"
 
+export const getAllProducts = async (req, res) => {
+    const { rubro } = req.params
 
-/* /api/products?limit=10&category=Electrodomésticos&subcategory=Heladeras&brand=Samsung&minPrice=1000&maxPrice=5000 */
+    if (!rubro) {
+        return res.status(400).json({ message: "El parámetro 'desc_rubro' es requerido" });
+    }
+
+    try {
+        const products = await Producto.find({ desc_rubro: rubro })
+        res.status(200).json({message: "Success getting all products from db", productsQuantity: products.length});
+    } catch (err) {
+        res.status(400).json({message: "Error getting all products from db", err});
+    }
+}
 
 export const getProducts = async (req, res) => {
     try {
@@ -12,6 +24,7 @@ export const getProducts = async (req, res) => {
         const lastId = req.query.lastId;
         const category = req.query.category;
         const subcategory = req.query.subcategory;
+        const categories = req.query.categories;
         const brand = req.query.brand;
         const minPrice = parseFloat(req.query.minPrice);
         const maxPrice = parseFloat(req.query.maxPrice);
@@ -23,6 +36,7 @@ export const getProducts = async (req, res) => {
             lastId,
             category,
             subcategory,
+            categories,
             brand,
             minPrice,
             maxPrice,
@@ -32,14 +46,29 @@ export const getProducts = async (req, res) => {
         // 2. Verificar si existe respuesta en cache
         const cachedData = cache.get(cacheKey);
         if (cachedData) {
-            console.log('📦 Sirviendo desde cache', cacheKey);
+            /* console.log('📦 Sirviendo desde cache', cacheKey); */
             return res.status(200).json(cachedData);
         }
 
         // 3. Construir filtro (tu lógica original)
         const filter = {};
         if (category) filter.desc_rubro = category.toUpperCase();
-        if (subcategory) filter.desc_subrubro = subcategory.toUpperCase();
+        if (subcategory) {
+            if (subcategory == "bulones" || subcategory == "engranaje") {
+                const arrayIdsSubcategory = getSubcategory(category, subcategory)
+                console.log("🚀 ~ getProducts ~ arrayIdsSubcategory:", arrayIdsSubcategory)
+
+                if (arrayIdsSubcategory?.length === 2) {
+                    filter.subrub = {
+                        $gte: arrayIdsSubcategory[0],
+                        $lte: arrayIdsSubcategory[1]
+                    };
+                }
+            } else {
+                filter.desc_subrubro = subcategory.toUpperCase();
+            }
+        }
+        if (categories) filter.desc_subrubro = categories.toUpperCase();
         if (brand) filter.desc_marca = brand.toUpperCase();
         
         if (!isNaN(minPrice) && !isNaN(maxPrice)) {
@@ -51,9 +80,10 @@ export const getProducts = async (req, res) => {
         }
         
         if (search) {
+            const decodedSearch = decodeURIComponent(search);
             filter.$or = [
-                { codpro: { $regex: search, $options: 'i' } },
-                { desc_stock: { $regex: search, $options: 'i' } }
+                { codpro: { $regex: decodedSearch, $options: 'i' } },
+                { desc_stock: { $regex: decodedSearch, $options: 'i' } }
             ];
         }
 
@@ -77,7 +107,7 @@ export const getProducts = async (req, res) => {
 
         // Cachear por 5 minutos (300000 ms) - Ajusta según tus necesidades
         cache.put(cacheKey, response, 300000);
-        console.log('🔍 Consultando DB y cacheando', cacheKey);
+        /* console.log('🔍 Consultando DB y cacheando', cacheKey); */
 
         res.status(200).json(response);
 
@@ -92,15 +122,21 @@ export const getProducts = async (req, res) => {
 
 export const postProducts = async (req, res) => {
     try {
-        const dataToPost = await postProductsInDB("./utils/json/motor-tornillos.json")
-        await Producto.insertMany(dataToPost)
-
-        /* req.body = { field: "rubro", newField: "MOTOR" };
-        await changeFieldToProducts(req, res) */
+        const dataToPost = await postProductsInDB("./utils/json/inyeccion-sondas.json");
+        const result = await Producto.insertMany(dataToPost);
+        
         console.log("Productos insertados correctamente");
-        res.status(200).json({message: "Success posting products in mongo database", dataToPost});
+        res.status(201).json({  // 201 Created es más apropiado para POST
+            message: "Success posting products in MongoDB",
+            insertedCount: result.length,
+            data: result
+        });
     } catch (err) {
-        res.status(400).json({message: "Error posting products in mongo database", err});
+        console.error("Error posting products:", err);
+        res.status(500).json({  // 500 para errores del servidor
+            message: "Error posting products in MongoDB",
+            error: err.message
+        });
     }
 }
 
@@ -112,16 +148,18 @@ export const addFieldToProducts = async (req, res) => {
         const update = {};
         update[field] = value;
         
-        const updatedProducts = await Producto.updateMany(
-            { rubro: { $gte: 200, $lte: 220 } }, 
-            { $set: update }
-        ); 
-
+        //agrega el campo solo a los prods que cumplan con la condicion
         /* const updatedProducts = await Producto.updateMany(
-            {}, // Filtro vacío para seleccionar todos los documentos
-            { $set: update } // $set añade o actualiza el campo con el valor proporcionado
-        ); */
+            { rubro: { $gte: 361, $lte: 361 } }, 
+            { $set: update }
+        );  */
 
+        //agrega el campo a todos los prods de la collection
+        const updatedProducts = await Producto.updateMany(
+            {},  // Selecciona TODOS los productos
+            { $set: update }  // Añade/modifica el campo
+          );
+       
         if (updatedProducts.acknowledged && updatedProducts.modifiedCount > 0) {
             res.status(200).json({message: "Success adding field to all products in DB", updatedProducts});
         } else {

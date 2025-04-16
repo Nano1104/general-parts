@@ -3,6 +3,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 
 import { useParams, Link } from "react-router-dom";
 import { categoriesAndSubCategories } from "../../utils/categories&SubCategories.js";
+import { getSubcategory } from "../../utils/getSubcategory"
 
 //components
 import { Product } from "../Product/Product.jsx";
@@ -14,7 +15,7 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 //css
 import "../../pages/ProductosPage/productospage.css"
 
-import { API_URL, EDGE_API_URL } from "../../utils/api_url.js";
+import { API_URL } from "../../utils/api_url.js";
 
 
 export const ProductsContainer = ({ searchValue }) => {                 //valor de la barra de busqueda
@@ -39,7 +40,7 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
     useEffect(() => {
         setProdsToRender([]);
         setHasMore(true);
-    }, [searchValue, category, subcategory, brand, price]);
+    }, [searchValue, category, subcategory, categories, brand, price]);
 
     ///////load more products
     const loadMoreProducts = useCallback(async () => {
@@ -50,13 +51,12 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
         
         try {
             // Pequeño delay para evitar saturación
-            /* await new Promise(resolve => setTimeout(resolve, 300)); */
+            await new Promise(resolve => setTimeout(resolve, 300));
 
             const lastId = prodsToRender?.length > 0 
                 ? prodsToRender[prodsToRender.length - 1]._id 
                 : null;
 
-            //checkeamos que tipo de subcategory llega
         
             //parametros para los filtros
             const params = {
@@ -64,6 +64,7 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
                 ...(lastId && { lastId }), // Solo si existe
                 ...(category && { category }),
                 ...(subcategory && { subcategory: subcategory }),
+                ...(categories && { categories: categories }),
                 ...(searchValue && { search: encodeURIComponent(searchValue) }),
                 ...(brand && { brand }),
                 ...(price.length === 2 && { 
@@ -71,8 +72,6 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
                     maxPrice: price[1] 
                 })
             };
-            
-            console.log("🚀 ~ loadMoreProducts ~ EDGE_API_URL:", EDGE_API_URL)
 
             const response = await axios.get(`${API_URL}/api/products`, { 
                 withCredentials: true,
@@ -81,7 +80,7 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
                     'Cache-Strategy': 'stale-while-revalidate' // Opcional
                 }
             });
-            console.log("🚀 ~ loadMoreProducts ~ response:", response)
+            /* console.log("🚀 ~ loadMoreProducts ~ response:", response) */
             const { products, hasMore } = response.data;
 
             if (products.length > 0) {
@@ -98,7 +97,7 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
           setLoading(false);
         }
       }, [prodsToRender, hasMore, productsPerPage, 
-        category, encodedSubcategory, searchValue, brand, price])
+        category, encodedSubcategory, categories, searchValue, brand, price])
 
       useEffect(() => {
         const observer = new IntersectionObserver(
@@ -150,169 +149,17 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
                         <Product key={`${prod.codpro}-${index}`} data={prod} params={[category, subcategory]} featured={false} />
                     ))
                 }
-                {
-                    prodsToRender.length == 0 ?  <span className="col-span-full italic text-xl px-4 py-2 text-gray">No hay productos que cumplan con los filtros</span> : <></>
-                }
+                {/* <span className="col-span-full italic text-xl px-4 py-2 text-gray">No hay productos que cumplan con los filtros</span> */}
             </div>
             <div ref={observerTarget} style={{ height: '1px' }}> </div> 
 
             {loading && <Loading />}
             {!hasMore && !loading && prodsToRender.length > 0 && (
-                <div className="col-span-full text-center mt-8 overline py-4 text-gray-500 text-white italic">
-                    No hay más productos por filtrar
+                <div className="col-span-full text-center text-xl mt-8 py-4 text-gray-500 text-gray italic">
+                    No hay más productos por cargar
                 </div>
             )}
         </div>
         </>
     )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* export const ProductsContainer = ({ searchValue }) => {                 //valor de la barra de busqueda
-    const { category, subcategory, categories } = useParams();
-    const encodedSubcategory = encodeURIComponent(subcategory);
-
-    const [prodsToRender, setProdsToRender] = useState([]);             //productos que renderiza la pagina
-    const [loading, setLoading] = useState();                           //loading del renderizado
-    const [brand, setBrand] = useState(null);               //marcas del menu para filtrar
-    const [price, setPrice] = useState([]);                             //precios del menu para filtrar
-    const [showFilters, setShowFilter] = useState(false);               //ocultar o mostrar los filtros de busqueda
-
-    const handleFilter = () => setShowFilter(showFilters => !showFilters);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const res = await axios.get(`${API_URL}/api/products`, { withCredentials: true });
-                let products = res.data.products;
-    
-                // Filtrar por subcategoría y categoría 
-                if (categories) {
-                    products = products.filter(prod => prod.desc_subrubro == categories.toUpperCase())
-                } else if (subcategory) {
-                    const categoryFound = categoriesAndSubCategories.find(c => c.description == category)
-                    const isObject = categoryFound.subCategories.some(item => typeof item === 'object' && item !== null)
-
-                    if(isObject) {           //EN CASO DE QUE HAYA UN SUBMENU, ES DECIR SUBCATEGORIES DEL RUBRO PADRE TENGA SUBRUBROS
-                        const subCategoryFound = categoryFound.subCategories.find(subc => subc.description === subcategory)
-                        products = products.filter(prod => prod.rubro >= subCategoryFound.idSubcategory[0] && prod.rubro <= subCategoryFound.idSubcategory[1])
-                    } else {
-                        products = products.filter(prod => prod.desc_subrubro === subcategory.toUpperCase())
-                    }
-                } else if (category) {
-                    products = products.filter(prod => prod.desc_rubro.toLowerCase() == category);
-                }
-    
-                // Filtrar por valor de búsqueda
-                if (searchValue) {
-                    products = products.filter(prod => prod.desc_stock.toLowerCase().includes(searchValue.toLowerCase()));
-                }
-    
-                // Filtrar por marca
-                if (brand) {
-                    products = products.filter(prod => prod.desc_marca == brand);
-                }
-
-                // Filtrar por precio
-                if (price.length > 0) {
-                    console.log(typeof price, price.length)
-                    if (price.length > 1) {     //si el array tiene mas de una valor como: [10000, 80000]
-                        products = products.filter(prod => prod.precioimpre >= price[0] && prod.precioimpre <= price[1]);
-                    } else {        //un valor solo: [80000]
-                        products = products.filter(prod => prod.precioimpre > price[0])
-                    }
-                }
-    
-                setProdsToRender(products);
-            } catch (err) {
-                console.log("Error rendering products", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-    
-        fetchData();
-    }, [category, subcategory, categories, searchValue, brand, price]);
-
-    return(
-        <>
-        
-        <div className="text-white text-xs font-poppins mt-[6rem] text-end flex justify-between w-[95%] m-auto">
-            <div className="ml-4 text-sm xl:text-base italic font-normal uppercase">
-                { category ? <Link className="" to={`/productos/${category}`} >{category}<MdKeyboardArrowRight className="inline-block" /></Link> : "" }
-                { subcategory ? <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`} >{subcategory}</Link> : "" }
-                { categories ? <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`} ><MdKeyboardArrowRight className="inline-block" />{categories}</Link> : ""  }
-            </div>
-            <div>
-                <button className="mr-4 sm:mr-8 text-sm xl:text-base">
-                    <span onClick={handleFilter}>{!showFilters ? "Mostrar Filtros" : "Ocultar Filtros"}</span><BsFilterLeft className="inline-block"/>
-                </button>
-            </div>
-        </div>
-
-       
-        <div id="products-container" className={`grid grid-cols-1 ${ showFilters ? `md:grid-cols-[30%_1fr] 2xl:grid-cols-[15%_1fr]` : `md:grid-cols-1` } w-full mt-10`}>
-            {showFilters && (
-                <div>
-                    <Filters filtered={{ setBrand, price, setPrice, setShowFilter }} />
-                </div>
-            )}
-
-            
-            <div className={`grid gap-3 justify-items-center grid-cols-1 ${!showFilters ? "md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4" : "md:grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3"}`}>
-                {loading ? (
-                    <Loading />
-                ) : (
-                    prodsToRender.map((prod) => (
-                        <Product key={prod.codpro} data={prod} params={[category, subcategory]} featured={false} />
-                    ))
-                )}
-            </div>
-        </div>
-        </>
-    )
-} */

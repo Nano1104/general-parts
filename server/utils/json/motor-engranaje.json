@@ -8,7 +8,8 @@
         "desc_rubro": "CADENAS DE DISTRIBUCION",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "13732.75"
+        "precioimpre": "14419.39",
+        "costoart": "6612.23"
     },
     {
         "codpro": "1490098",
@@ -19,7 +20,8 @@
         "desc_rubro": "CADENAS DE DISTRIBUCION",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "16290.31"
+        "precioimpre": "17104.83",
+        "costoart": "7843.2"
     },
     {
         "codpro": "1490001",
@@ -30,7 +32,8 @@
         "desc_rubro": "CADENAS DE DISTRIBUCION",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "8339.89"
+        "precioimpre": "8756.88",
+        "costoart": "4015.38"
     },
     {
         "codpro": "1490089/1",
@@ -41,7 +44,8 @@
         "desc_rubro": "CADENAS DE DISTRIBUCION",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "8033.85"
+        "precioimpre": "8435.54",
+        "costoart": "3868.46"
     },
     {
         "codpro": "1490115",
@@ -52,7 +56,8 @@
         "desc_rubro": "CADENAS DE DISTRIBUCION",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "21925.9"
+        "precioimpre": "23022.2",
+        "costoart": "9959.5"
     },
     {
         "codpro": "1490344",
@@ -63,7 +68,8 @@
         "desc_rubro": "CADENAS DE DISTRIBUCION",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "46109.44"
+        "precioimpre": "48414.91",
+        "costoart": "20943.29"
     },
     {
         "codpro": "1490351",
@@ -74,7 +80,8 @@
         "desc_rubro": "CADENAS DE DISTRIBUCION",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "30595.48"
+        "precioimpre": "32125.25",
+        "costoart": "13897.76"
     },
     {
         "codpro": "1490362",
@@ -85,7 +92,8 @@
         "desc_rubro": "CADENAS DE DISTRIBUCION",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "28355"
+        "precioimpre": "29772.75",
+        "costoart": "13652.35"
     },
     {
         "codpro": "1490362/1",
@@ -96,7 +104,8 @@
         "desc_rubro": "CADENAS DE DISTRIBUCION",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "52750.44"
+        "precioimpre": "55387.96",
+        "costoart": "23960.13"
     },
     {
         "codpro": "1490091",
@@ -107,7 +116,8 @@
         "desc_rubro": "CADENAS DE DISTRIBUCION",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "15011.44"
+        "precioimpre": "15762.01",
+        "costoart": "7227.59"
     },
     {
         "codpro": "1490092/1",
@@ -118,7 +128,8 @@
         "desc_rubro": "CADENAS DE DISTRIBUCION",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "17291.11"
+        "precioimpre": "18155.67",
+        "costoart": "8325.21"
     },
     {
         "codpro": "1490106",
@@ -129,7 +140,8 @@
         "desc_rubro": "CADENAS DE DISTRIBUCION",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "24240.68"
+        "precioimpre": "25452.71",
+        "costoart": "11671.47"
     },
     {
         "codpro": "1492004",
@@ -140,7 +152,8 @@
         "desc_rubro": "CADENAS DE DISTRIBUCION",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "7890.42"
+        "precioimpre": "8284.94",
+        "costoart": "3583.66"
     },
     {
         "codpro": "1492005",
@@ -151,7 +164,8 @@
         "desc_rubro": "CADENAS DE DISTRIBUCION",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "7682.55"
+        "precioimpre": "8066.68",
+        "costoart": "3489.21"
     },
     {
         "codpro": "1492006",
@@ -162,7 +176,8 @@
         "desc_rubro": "CADENAS DE DISTRIBUCION",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "7475.06"
+        "precioimpre": "7848.81",
+        "costoart": "3394.87"
     },
     {
         "codpro": "1490089",
@@ -173,7 +188,8 @@
         "desc_rubro": "CADENAS DE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "8033.85"
+        "precioimpre": "8435.54",
+        "costoart": "3868.46"
     },
     {
         "codpro": "1492007",
@@ -184,7 +200,8 @@
         "desc_rubro": "CADENAS DE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "11675.41"
+        "precioimpre": "12259.18",
+        "costoart": "5621.87"
     },
     {
         "codpro": "1492008",
@@ -195,7 +212,8 @@
         "desc_rubro": "CADENAS DE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "12042.19"
+        "precioimpre": "12644.3",
+        "costoart": "5469.91"
     },
     {
         "codpro": "1492009",
@@ -206,7 +224,8 @@
         "desc_rubro": "CADENAS DE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "10380.63"
+        "precioimpre": "10899.66",
+        "costoart": "4715.43"
     },
     {
         "codpro": "1490092",
@@ -217,7 +236,20 @@
         "desc_rubro": "CADENAS DE DISTRIBUCION",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "17291.11"
+        "precioimpre": "18155.67",
+        "costoart": "8325.21"
+    },
+    {
+        "codpro": "1470761",
+        "desc_stock": "conjun c/cadena valiant/polara/coronado 36/37/495",
+        "rubro": "147",
+        "subrub": "140",
+        "proveed": "1040",
+        "desc_rubro": "CONJUNTO DISTRI CAD SILENCIOSA",
+        "desc_marca": "CHRYSLER",
+        "porcen1": "21",
+        "precioimpre": "146350.98",
+        "costoart": "69360.66"
     },
     {
         "codpro": "1470745",
@@ -228,7 +260,8 @@
         "desc_rubro": "CONJUNTO DISTRI CAD SILENCIOSA",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "127402.18"
+        "precioimpre": "162601.06",
+        "costoart": "77062.11"
     },
     {
         "codpro": "1470751",
@@ -239,7 +272,8 @@
         "desc_rubro": "CONJUNTO DISTRI CAD SILENCIOSA",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "86421.75"
+        "precioimpre": "110298.49",
+        "costoart": "52274.17"
     },
     {
         "codpro": "1470762",
@@ -250,7 +284,8 @@
         "desc_rubro": "CONJUNTO DISTRI CAD SILENCIOSA",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "88773.8"
+        "precioimpre": "113300.38",
+        "costoart": "53696.86"
     },
     {
         "codpro": "1470765",
@@ -261,7 +296,8 @@
         "desc_rubro": "CONJUNTO DISTRI CAD SILENCIOSA",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "89647.44"
+        "precioimpre": "114415.37",
+        "costoart": "54225.3"
     },
     {
         "codpro": "1470758",
@@ -272,7 +308,8 @@
         "desc_rubro": "CONJUNTO DISTRI CAD SILENCIOSA",
         "desc_marca": "IKA",
         "porcen1": "21",
-        "precioimpre": "237617.54"
+        "precioimpre": "303266.87",
+        "costoart": "143728.38"
     },
     {
         "codpro": "1470759",
@@ -283,7 +320,8 @@
         "desc_rubro": "CONJUNTO DISTRI CAD SILENCIOSA",
         "desc_marca": "IKA",
         "porcen1": "21",
-        "precioimpre": "252141.77"
+        "precioimpre": "264748.86",
+        "costoart": "152513.7"
     },
     {
         "codpro": "1460711",
@@ -294,7 +332,8 @@
         "desc_rubro": "CONJUNTO DISTRIBUC CAD RODILLO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "66454.69"
+        "precioimpre": "84814.89",
+        "costoart": "40196.64"
     },
     {
         "codpro": "1460714",
@@ -305,7 +344,8 @@
         "desc_rubro": "CONJUNTO DISTRIBUC CAD RODILLO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "70723.36"
+        "precioimpre": "90262.92",
+        "costoart": "42778.64"
     },
     {
         "codpro": "1460715",
@@ -316,7 +356,8 @@
         "desc_rubro": "CONJUNTO DISTRIBUC CAD RODILLO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "66454.69"
+        "precioimpre": "84821.54",
+        "costoart": "40199.79"
     },
     {
         "codpro": "1460720",
@@ -327,7 +368,8 @@
         "desc_rubro": "CONJUNTO DISTRIBUC CAD RODILLO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "67796.74"
+        "precioimpre": "86527.7",
+        "costoart": "41008.39"
     },
     {
         "codpro": "1460700",
@@ -338,7 +380,8 @@
         "desc_rubro": "CONJUNTO DISTRIBUC CAD RODILLO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "47377.4"
+        "precioimpre": "60466.91",
+        "costoart": "28657.3"
     },
     {
         "codpro": "1460743/1",
@@ -349,7 +392,8 @@
         "desc_rubro": "CONJUNTO DISTRIBUC CAD RODILLO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "39839.94"
+        "precioimpre": "50847.01",
+        "costoart": "24098.11"
     },
     {
         "codpro": "1460742",
@@ -360,7 +404,8 @@
         "desc_rubro": "CONJUNTO DISTRIBUC CAD RODILLO",
         "desc_marca": "IKA",
         "porcen1": "21",
-        "precioimpre": "124323.66"
+        "precioimpre": "158672",
+        "costoart": "75200"
     },
     {
         "codpro": "1460737",
@@ -371,7 +416,8 @@
         "desc_rubro": "CONJUNTO DISTRIBUC CAD RODILLO",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "138234.46"
+        "precioimpre": "176426.11",
+        "costoart": "83614.27"
     },
     {
         "codpro": "1460723",
@@ -382,7 +428,8 @@
         "desc_rubro": "CONJUNTO DISTRIBUC CAD RODILLO",
         "desc_marca": "PERKINS",
         "porcen1": "21",
-        "precioimpre": "213920.02"
+        "precioimpre": "273022.2",
+        "costoart": "129394.41"
     },
     {
         "codpro": "1460716",
@@ -393,7 +440,8 @@
         "desc_rubro": "CONJUNTO DISTRIBUC CAD RODILLO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "61422.61"
+        "precioimpre": "78392.54",
+        "costoart": "37152.86"
     },
     {
         "codpro": "1460718",
@@ -404,7 +452,8 @@
         "desc_rubro": "CONJUNTO DISTRIBUC CAD RODILLO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "156379.02"
+        "precioimpre": "199583.64",
+        "costoart": "94589.41"
     },
     {
         "codpro": "1460719",
@@ -415,7 +464,8 @@
         "desc_rubro": "CONJUNTO DISTRIBUC CAD RODILLO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "181042.14"
+        "precioimpre": "231060.76",
+        "costoart": "109507.47"
     },
     {
         "codpro": "1460242",
@@ -426,7 +476,8 @@
         "desc_rubro": "CONJUNTO DISTRIBUC CAD RODILLO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "43636.92"
+        "precioimpre": "55693.01",
+        "costoart": "26394.8"
     },
     {
         "codpro": "1460242/1",
@@ -437,7 +488,8 @@
         "desc_rubro": "CONJUNTO DISTRIBUC CAD RODILLO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "65448.02"
+        "precioimpre": "83530.08",
+        "costoart": "39587.72"
     },
     {
         "codpro": "1460740",
@@ -448,7 +500,8 @@
         "desc_rubro": "CONJUNTO DISTRIBUC CAD RODILLO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "37095.47"
+        "precioimpre": "47344.3",
+        "costoart": "22438.06"
     },
     {
         "codpro": "1460741",
@@ -459,7 +512,8 @@
         "desc_rubro": "CONJUNTO DISTRIBUC CAD RODILLO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "30039.29"
+        "precioimpre": "38338.58",
+        "costoart": "18169.95"
     },
     {
         "codpro": "1460743",
@@ -470,7 +524,8 @@
         "desc_rubro": "CONJUNTO DISTRIBUC CAD RODILLO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "39839.94"
+        "precioimpre": "50847.01",
+        "costoart": "24098.11"
     },
     {
         "codpro": "1460744",
@@ -481,7 +536,8 @@
         "desc_rubro": "CONJUNTO DISTRIBUC CAD RODILLO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "43636.92"
+        "precioimpre": "55693.01",
+        "costoart": "26394.8"
     },
     {
         "codpro": "1460704",
@@ -492,7 +548,8 @@
         "desc_rubro": "CONJUNTO DISTRIBUC CAD RODILLO",
         "desc_marca": "TOYOTA",
         "porcen1": "21",
-        "precioimpre": "63640.28"
+        "precioimpre": "81222.91",
+        "costoart": "38494.27"
     },
     {
         "codpro": "1460739",
@@ -503,7 +560,8 @@
         "desc_rubro": "CONJUNTO DISTRIBUC CAD RODILLO",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "65118.71"
+        "precioimpre": "83109.82",
+        "costoart": "39388.55"
     },
     {
         "codpro": "1513282",
@@ -514,7 +572,8 @@
         "desc_rubro": "CORRECTORES DE LEVA",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "67941.58"
+        "precioimpre": "71338.66",
+        "costoart": "33809.79"
     },
     {
         "codpro": "1513006",
@@ -525,7 +584,8 @@
         "desc_rubro": "CORRECTORES DE LEVA",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "77893.83"
+        "precioimpre": "81788.52",
+        "costoart": "38762.34"
     },
     {
         "codpro": "1513026",
@@ -536,7 +596,8 @@
         "desc_rubro": "CORRECTORES DE LEVA",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "73908.96"
+        "precioimpre": "77604.41",
+        "costoart": "36779.35"
     },
     {
         "codpro": "1513027",
@@ -547,7 +608,8 @@
         "desc_rubro": "CORRECTORES DE LEVA",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "73908.96"
+        "precioimpre": "77604.41",
+        "costoart": "36779.35"
     },
     {
         "codpro": "1513290",
@@ -558,7 +620,8 @@
         "desc_rubro": "CORRECTORES DE LEVA",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "67941.58"
+        "precioimpre": "71338.66",
+        "costoart": "33809.79"
     },
     {
         "codpro": "1513024",
@@ -569,7 +632,8 @@
         "desc_rubro": "CORRECTORES DE LEVA",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "85600.85"
+        "precioimpre": "89880.89",
+        "costoart": "42597.59"
     },
     {
         "codpro": "1513159",
@@ -580,7 +644,8 @@
         "desc_rubro": "CORRECTORES DE LEVA",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "97212.7"
+        "precioimpre": "102073.34",
+        "costoart": "48375.99"
     },
     {
         "codpro": "1400007",
@@ -591,7 +656,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "39017.52"
+        "precioimpre": "53781.13",
+        "costoart": "25488.69"
     },
     {
         "codpro": "1400088",
@@ -602,7 +668,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "105199.14"
+        "precioimpre": "145004.8",
+        "costoart": "68722.66"
     },
     {
         "codpro": "1400282",
@@ -613,7 +680,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "23226.79"
+        "precioimpre": "32015.43",
+        "costoart": "15173.19"
     },
     {
         "codpro": "1400284",
@@ -624,7 +692,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "49721.99"
+        "precioimpre": "68536",
+        "costoart": "32481.52"
     },
     {
         "codpro": "1400286",
@@ -635,7 +704,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "27215.22"
+        "precioimpre": "37513.01",
+        "costoart": "17778.68"
     },
     {
         "codpro": "1400302",
@@ -646,7 +716,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "49721.99"
+        "precioimpre": "68536",
+        "costoart": "32481.52"
     },
     {
         "codpro": "1400312",
@@ -657,7 +728,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "27972.64"
+        "precioimpre": "38557.03",
+        "costoart": "18273.48"
     },
     {
         "codpro": "1400403/2",
@@ -668,7 +740,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "44576.66"
+        "precioimpre": "61443.76",
+        "costoart": "29120.27"
     },
     {
         "codpro": "14093326080",
@@ -679,7 +752,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "54589.92"
+        "precioimpre": "47601.12",
+        "costoart": "22559.78"
     },
     {
         "codpro": "1400037",
@@ -690,7 +764,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "CHRYSLER",
         "porcen1": "21",
-        "precioimpre": "33901.35"
+        "precioimpre": "46729.1",
+        "costoart": "22146.5"
     },
     {
         "codpro": "1400295/1",
@@ -701,7 +776,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "CITROEN",
         "porcen1": "21",
-        "precioimpre": "0"
+        "precioimpre": "0",
+        "costoart": "0"
     },
     {
         "codpro": "1400296/1",
@@ -712,7 +788,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "CITROEN",
         "porcen1": "21",
-        "precioimpre": "22460.29"
+        "precioimpre": "23583.3",
+        "costoart": "10814.19"
     },
     {
         "codpro": "1400006",
@@ -723,7 +800,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "27986.09"
+        "precioimpre": "38575.57",
+        "costoart": "18282.26"
     },
     {
         "codpro": "1400026",
@@ -734,7 +812,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "25807.54"
+        "precioimpre": "35572.71",
+        "costoart": "16859.1"
     },
     {
         "codpro": "1400027",
@@ -745,7 +824,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "25807.54"
+        "precioimpre": "35572.71",
+        "costoart": "16859.1"
     },
     {
         "codpro": "1400049",
@@ -756,7 +836,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "19472.96"
+        "precioimpre": "26841.22",
+        "costoart": "12720.96"
     },
     {
         "codpro": "1400050",
@@ -767,7 +848,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "30499.82"
+        "precioimpre": "42040.46",
+        "costoart": "19924.39"
     },
     {
         "codpro": "1400053",
@@ -778,7 +860,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "23226.79"
+        "precioimpre": "32015.43",
+        "costoart": "15173.19"
     },
     {
         "codpro": "1400095",
@@ -789,7 +872,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "27403.58"
+        "precioimpre": "37772.68",
+        "costoart": "17901.74"
     },
     {
         "codpro": "1400145",
@@ -800,7 +884,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "32347.55"
+        "precioimpre": "44587.34",
+        "costoart": "21131.44"
     },
     {
         "codpro": "1400268",
@@ -811,7 +896,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "29561.36"
+        "precioimpre": "40746.92",
+        "costoart": "19311.34"
     },
     {
         "codpro": "1400269",
@@ -822,7 +908,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "27827.37"
+        "precioimpre": "38356.79",
+        "costoart": "18178.58"
     },
     {
         "codpro": "1400270",
@@ -833,7 +920,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "29561.36"
+        "precioimpre": "40746.92",
+        "costoart": "19311.34"
     },
     {
         "codpro": "1400279",
@@ -844,7 +932,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "27827.37"
+        "precioimpre": "38356.79",
+        "costoart": "18178.58"
     },
     {
         "codpro": "1400290",
@@ -855,7 +944,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "27215.22"
+        "precioimpre": "37513.02",
+        "costoart": "17778.68"
     },
     {
         "codpro": "1400413",
@@ -866,7 +956,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "33618.84"
+        "precioimpre": "46339.68",
+        "costoart": "21961.94"
     },
     {
         "codpro": "1400414",
@@ -877,7 +968,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "60999.65"
+        "precioimpre": "84080.92",
+        "costoart": "39848.78"
     },
     {
         "codpro": "1400014",
@@ -888,7 +980,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "23589.69"
+        "precioimpre": "32515.64",
+        "costoart": "15410.26"
     },
     {
         "codpro": "1400046/1",
@@ -899,7 +992,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "20611.42"
+        "precioimpre": "28410.44",
+        "costoart": "13464.66"
     },
     {
         "codpro": "1400055",
@@ -910,7 +1004,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "32845.95"
+        "precioimpre": "45274.34",
+        "costoart": "21457.03"
     },
     {
         "codpro": "1400056",
@@ -921,7 +1016,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "15396.86"
+        "precioimpre": "21222.8",
+        "costoart": "10058.2"
     },
     {
         "codpro": "1400058",
@@ -932,7 +1028,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "18218.68"
+        "precioimpre": "25112.34",
+        "costoart": "11901.58"
     },
     {
         "codpro": "1400059",
@@ -943,7 +1040,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "17656.95"
+        "precioimpre": "24338.07",
+        "costoart": "11534.63"
     },
     {
         "codpro": "1400061",
@@ -954,7 +1052,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "18299.87"
+        "precioimpre": "25224.29",
+        "costoart": "11954.64"
     },
     {
         "codpro": "1400086",
@@ -965,7 +1064,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "28153.67"
+        "precioimpre": "38806.58",
+        "costoart": "18391.75"
     },
     {
         "codpro": "1400090",
@@ -976,7 +1076,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "21612.12"
+        "precioimpre": "29789.78",
+        "costoart": "14118.38"
     },
     {
         "codpro": "1400160",
@@ -987,7 +1088,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "44576.66"
+        "precioimpre": "61443.76",
+        "costoart": "29120.27"
     },
     {
         "codpro": "1400289",
@@ -998,7 +1100,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "15114.36"
+        "precioimpre": "20833.39",
+        "costoart": "9873.64"
     },
     {
         "codpro": "1400292",
@@ -1009,7 +1112,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "26132.3"
+        "precioimpre": "36020.34",
+        "costoart": "17071.26"
     },
     {
         "codpro": "1400293",
@@ -1020,7 +1124,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "26132.3"
+        "precioimpre": "36020.34",
+        "costoart": "17071.26"
     },
     {
         "codpro": "1400309",
@@ -1031,7 +1136,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "34748.88"
+        "precioimpre": "47897.31",
+        "costoart": "22700.15"
     },
     {
         "codpro": "1400310",
@@ -1042,7 +1148,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "34748.88"
+        "precioimpre": "47897.31",
+        "costoart": "22700.15"
     },
     {
         "codpro": "1400403",
@@ -1053,7 +1160,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "44576.66"
+        "precioimpre": "61443.76",
+        "costoart": "29120.27"
     },
     {
         "codpro": "1400404",
@@ -1064,7 +1172,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "23226.79"
+        "precioimpre": "32015.43",
+        "costoart": "15173.19"
     },
     {
         "codpro": "1400063",
@@ -1075,7 +1184,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "IKA",
         "porcen1": "21",
-        "precioimpre": "28153.67"
+        "precioimpre": "38806.58",
+        "costoart": "18391.75"
     },
     {
         "codpro": "1400067",
@@ -1086,7 +1196,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "IKA",
         "porcen1": "21",
-        "precioimpre": "35596.42"
+        "precioimpre": "49065.54",
+        "costoart": "23253.81"
     },
     {
         "codpro": "1400069",
@@ -1097,7 +1208,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "IKA",
         "porcen1": "21",
-        "precioimpre": "55134.28"
+        "precioimpre": "75996.23",
+        "costoart": "36017.17"
     },
     {
         "codpro": "1400035",
@@ -1108,7 +1220,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "LADA",
         "porcen1": "21",
-        "precioimpre": "15953.73"
+        "precioimpre": "21990.38",
+        "costoart": "10421.99"
     },
     {
         "codpro": "1400402",
@@ -1119,7 +1232,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "17830.64"
+        "precioimpre": "24577.49",
+        "costoart": "11648.1"
     },
     {
         "codpro": "1400403/1",
@@ -1130,7 +1244,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "35407.08"
+        "precioimpre": "61443.76",
+        "costoart": "29120.27"
     },
     {
         "codpro": "1400082",
@@ -1141,7 +1256,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "PERKINS",
         "porcen1": "21",
-        "precioimpre": "22377.77"
+        "precioimpre": "23496.66",
+        "costoart": "10774.26"
     },
     {
         "codpro": "1400424",
@@ -1152,7 +1268,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "PERKINS",
         "porcen1": "21",
-        "precioimpre": "33531.81"
+        "precioimpre": "46219.73",
+        "costoart": "21905.09"
     },
     {
         "codpro": "1400018",
@@ -1163,7 +1280,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "21188.35"
+        "precioimpre": "29205.67",
+        "costoart": "13841.55"
     },
     {
         "codpro": "1400075",
@@ -1174,7 +1292,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "24861"
+        "precioimpre": "34268",
+        "costoart": "16240.76"
     },
     {
         "codpro": "1400076",
@@ -1185,7 +1304,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "16385.66"
+        "precioimpre": "22585.73",
+        "costoart": "10704.14"
     },
     {
         "codpro": "1400083",
@@ -1196,7 +1316,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "31782.53"
+        "precioimpre": "43808.52",
+        "costoart": "20762.33"
     },
     {
         "codpro": "1400084",
@@ -1207,7 +1328,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "31358.76"
+        "precioimpre": "43224.41",
+        "costoart": "20485.5"
     },
     {
         "codpro": "1400125",
@@ -1218,7 +1340,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "29970.68"
+        "precioimpre": "41315.55",
+        "costoart": "19580.83"
     },
     {
         "codpro": "1400160/1",
@@ -1229,7 +1352,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "44576.66"
+        "precioimpre": "61443.76",
+        "costoart": "29120.27"
     },
     {
         "codpro": "1400226",
@@ -1240,7 +1364,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "31782.53"
+        "precioimpre": "43808.52",
+        "costoart": "20762.33"
     },
     {
         "codpro": "1400227",
@@ -1251,7 +1376,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "35661.32"
+        "precioimpre": "49161.87",
+        "costoart": "23299.47"
     },
     {
         "codpro": "1400295",
@@ -1262,7 +1388,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "28153.67"
+        "precioimpre": "38806.58",
+        "costoart": "18391.75"
     },
     {
         "codpro": "1400296",
@@ -1273,7 +1400,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "28153.67"
+        "precioimpre": "38806.58",
+        "costoart": "18391.75"
     },
     {
         "codpro": "1400307",
@@ -1284,7 +1412,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "PEUGEOT",
         "porcen1": "10.5",
-        "precioimpre": "39675.18"
+        "precioimpre": "54700.66",
+        "costoart": "25924.49"
     },
     {
         "codpro": "1400010",
@@ -1295,7 +1424,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "31076.23"
+        "precioimpre": "42835",
+        "costoart": "20300.95"
     },
     {
         "codpro": "1400039",
@@ -1306,7 +1436,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "31076.23"
+        "precioimpre": "42835",
+        "costoart": "20300.95"
     },
     {
         "codpro": "1400046",
@@ -1317,7 +1448,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "20611.42"
+        "precioimpre": "28410.44",
+        "costoart": "13464.66"
     },
     {
         "codpro": "1400071",
@@ -1328,7 +1460,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "9181.61"
+        "precioimpre": "12655.8",
+        "costoart": "5998.01"
     },
     {
         "codpro": "1400078",
@@ -1339,7 +1472,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "27215.22"
+        "precioimpre": "37513.01",
+        "costoart": "17778.68"
     },
     {
         "codpro": "1400104",
@@ -1350,7 +1484,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "36867.73"
+        "precioimpre": "50817.89",
+        "costoart": "24084.31"
     },
     {
         "codpro": "1400110",
@@ -1361,7 +1496,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "31076.23"
+        "precioimpre": "42835",
+        "costoart": "20300.95"
     },
     {
         "codpro": "1400119",
@@ -1372,7 +1508,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "52371.24"
+        "precioimpre": "72187.68",
+        "costoart": "34212.17"
     },
     {
         "codpro": "1400253",
@@ -1383,7 +1520,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "31076.23"
+        "precioimpre": "42835",
+        "costoart": "20300.95"
     },
     {
         "codpro": "1400254",
@@ -1394,7 +1532,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "31076.23"
+        "precioimpre": "42835",
+        "costoart": "20300.95"
     },
     {
         "codpro": "1400257",
@@ -1405,7 +1544,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "26042.14"
+        "precioimpre": "35896.08",
+        "costoart": "17012.36"
     },
     {
         "codpro": "1400260",
@@ -1416,7 +1556,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "35825.34"
+        "precioimpre": "49381.08",
+        "costoart": "23403.36"
     },
     {
         "codpro": "1400263",
@@ -1427,7 +1568,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "29098.66"
+        "precioimpre": "40109.14",
+        "costoart": "19009.07"
     },
     {
         "codpro": "1400263/1",
@@ -1438,7 +1580,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "29098.66"
+        "precioimpre": "40109.14",
+        "costoart": "19009.07"
     },
     {
         "codpro": "1400264",
@@ -1449,7 +1592,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "23226.79"
+        "precioimpre": "32015.43",
+        "costoart": "15173.19"
     },
     {
         "codpro": "1400266/1ES",
@@ -1460,7 +1604,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "35825.34"
+        "precioimpre": "49381.08",
+        "costoart": "23403.36"
     },
     {
         "codpro": "1400266AD",
@@ -1471,7 +1616,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "102057.09"
+        "precioimpre": "140673.88",
+        "costoart": "66670.09"
     },
     {
         "codpro": "1400416AD",
@@ -1482,7 +1628,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "111590.36"
+        "precioimpre": "153814.41",
+        "costoart": "72897.83"
     },
     {
         "codpro": "1408200548227",
@@ -1493,7 +1640,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "150122.28"
+        "precioimpre": "299092.5",
+        "costoart": "141750"
     },
     {
         "codpro": "1400022",
@@ -1504,7 +1652,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "TOYOTA",
         "porcen1": "21",
-        "precioimpre": "21150.39"
+        "precioimpre": "29153.39",
+        "costoart": "13816.77"
     },
     {
         "codpro": "1400128",
@@ -1515,7 +1664,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "TOYOTA",
         "porcen1": "21",
-        "precioimpre": "46331.85"
+        "precioimpre": "63863.09",
+        "costoart": "30266.87"
     },
     {
         "codpro": "1400246",
@@ -1526,7 +1676,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "TOYOTA",
         "porcen1": "21",
-        "precioimpre": "18428.09"
+        "precioimpre": "25400.97",
+        "costoart": "12038.38"
     },
     {
         "codpro": "1400024",
@@ -1537,7 +1688,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "21584.49"
+        "precioimpre": "29751.7",
+        "costoart": "14100.33"
     },
     {
         "codpro": "1400041",
@@ -1548,7 +1700,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "15484.51"
+        "precioimpre": "21343.61",
+        "costoart": "10115.46"
     },
     {
         "codpro": "1400151",
@@ -1559,7 +1712,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "29795.98"
+        "precioimpre": "41070.29",
+        "costoart": "19464.6"
     },
     {
         "codpro": "1400159",
@@ -1570,7 +1724,8 @@
         "desc_rubro": "ENGRANAJE ARBOL DE LEVAS",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "31358.76"
+        "precioimpre": "43224.41",
+        "costoart": "20485.5"
     },
     {
         "codpro": "1394100",
@@ -1581,7 +1736,8 @@
         "desc_rubro": "ENGRANAJE BOMBA ACEITE /CADENA",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "27544.72"
+        "precioimpre": "35154.82",
+        "costoart": "16661.05"
     },
     {
         "codpro": "1394139",
@@ -1592,7 +1748,8 @@
         "desc_rubro": "ENGRANAJE BOMBA ACEITE /CADENA",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "24558.93"
+        "precioimpre": "31344.14",
+        "costoart": "14855.04"
     },
     {
         "codpro": "1394140",
@@ -1603,7 +1760,8 @@
         "desc_rubro": "ENGRANAJE BOMBA ACEITE /CADENA",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "23930.19"
+        "precioimpre": "30541.67",
+        "costoart": "14474.72"
     },
     {
         "codpro": "1394155",
@@ -1614,7 +1772,8 @@
         "desc_rubro": "ENGRANAJE BOMBA ACEITE /CADENA",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "27459.72"
+        "precioimpre": "35046.32",
+        "costoart": "16609.64"
     },
     {
         "codpro": "1394156",
@@ -1625,7 +1784,8 @@
         "desc_rubro": "ENGRANAJE BOMBA ACEITE /CADENA",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "29865.65"
+        "precioimpre": "38116.98",
+        "costoart": "18064.92"
     },
     {
         "codpro": "1390242",
@@ -1636,7 +1796,8 @@
         "desc_rubro": "ENGRANAJE BOMBA ACEITE /CADENA",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "42362.47"
+        "precioimpre": "54066.43",
+        "costoart": "25623.91"
     },
     {
         "codpro": "1390242/1",
@@ -1647,7 +1808,8 @@
         "desc_rubro": "ENGRANAJE BOMBA ACEITE /CADENA",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "65448.02"
+        "precioimpre": "83530.08",
+        "costoart": "39587.72"
     },
     {
         "codpro": "1394101",
@@ -1658,7 +1820,8 @@
         "desc_rubro": "ENGRANAJE BOMBA ACEITE /CADENA",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "32764.36"
+        "precioimpre": "41816.53",
+        "costoart": "19818.27"
     },
     {
         "codpro": "1394102",
@@ -1669,7 +1832,8 @@
         "desc_rubro": "ENGRANAJE BOMBA ACEITE /CADENA",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "35635.66"
+        "precioimpre": "45481.13",
+        "costoart": "21555.04"
     },
     {
         "codpro": "1394306",
@@ -1680,7 +1844,8 @@
         "desc_rubro": "ENGRANAJE BOMBA ACEITE /CADENA",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "49127.86"
+        "precioimpre": "62700.97",
+        "costoart": "29716.1"
     },
     {
         "codpro": "1410305",
@@ -1691,7 +1856,8 @@
         "desc_rubro": "ENGRANAJE BOMBA DE ACEITE",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "32939.81"
+        "precioimpre": "42040.46",
+        "costoart": "19924.39"
     },
     {
         "codpro": "1410422",
@@ -1702,7 +1868,8 @@
         "desc_rubro": "ENGRANAJE BOMBA DE ACEITE",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "31672.87"
+        "precioimpre": "40423.52",
+        "costoart": "19158.07"
     },
     {
         "codpro": "1410100",
@@ -1713,7 +1880,8 @@
         "desc_rubro": "ENGRANAJE BOMBA DE ACEITE",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "16170.93"
+        "precioimpre": "20638.68",
+        "costoart": "9781.37"
     },
     {
         "codpro": "1410139",
@@ -1724,7 +1892,8 @@
         "desc_rubro": "ENGRANAJE BOMBA DE ACEITE",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "13272.38"
+        "precioimpre": "16939.28",
+        "costoart": "8028.1"
     },
     {
         "codpro": "1410140",
@@ -1735,7 +1904,8 @@
         "desc_rubro": "ENGRANAJE BOMBA DE ACEITE",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "12662.16"
+        "precioimpre": "16160.48",
+        "costoart": "7658.99"
     },
     {
         "codpro": "1410155",
@@ -1746,7 +1916,8 @@
         "desc_rubro": "ENGRANAJE BOMBA DE ACEITE",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "15560.73"
+        "precioimpre": "19859.87",
+        "costoart": "9412.26"
     },
     {
         "codpro": "1410156",
@@ -1757,7 +1928,8 @@
         "desc_rubro": "ENGRANAJE BOMBA DE ACEITE",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "17543.95"
+        "precioimpre": "22391.01",
+        "costoart": "10611.86"
     },
     {
         "codpro": "1410101",
@@ -1768,7 +1940,8 @@
         "desc_rubro": "ENGRANAJE BOMBA DE ACEITE",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "18243.56"
+        "precioimpre": "23283.95",
+        "costoart": "11035.05"
     },
     {
         "codpro": "1410102",
@@ -1779,7 +1952,8 @@
         "desc_rubro": "ENGRANAJE BOMBA DE ACEITE",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "21030.8"
+        "precioimpre": "26841.22",
+        "costoart": "12720.96"
     },
     {
         "codpro": "1410240",
@@ -1790,7 +1964,8 @@
         "desc_rubro": "ENGRANAJE BOMBA DE ACEITE",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "18350.84"
+        "precioimpre": "19268.38",
+        "costoart": "9131.94"
     },
     {
         "codpro": "1410241",
@@ -1801,7 +1976,8 @@
         "desc_rubro": "ENGRANAJE BOMBA DE ACEITE",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "19582.28"
+        "precioimpre": "24992.5",
+        "costoart": "11844.79"
     },
     {
         "codpro": "1410306",
@@ -1812,7 +1988,8 @@
         "desc_rubro": "ENGRANAJE BOMBA DE ACEITE",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "31662.79"
+        "precioimpre": "40410.65",
+        "costoart": "19151.97"
     },
     {
         "codpro": "1420287",
@@ -1823,7 +2000,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "31166.11"
+        "precioimpre": "39776.75",
+        "costoart": "18851.54"
     },
     {
         "codpro": "1420287/1",
@@ -1834,7 +2012,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "53430.97"
+        "precioimpre": "68192.96",
+        "costoart": "32318.95"
     },
     {
         "codpro": "1420304",
@@ -1845,7 +2024,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "35980.4"
+        "precioimpre": "45921.13",
+        "costoart": "21763.57"
     },
     {
         "codpro": "1420412/2",
@@ -1856,7 +2036,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "48142.79"
+        "precioimpre": "61443.76",
+        "costoart": "29120.27"
     },
     {
         "codpro": "1420421",
@@ -1867,7 +2048,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "35698.12"
+        "precioimpre": "45560.87",
+        "costoart": "21592.83"
     },
     {
         "codpro": "1420113",
@@ -1878,7 +2060,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "32036.79"
+        "precioimpre": "40887.96",
+        "costoart": "19378.18"
     },
     {
         "codpro": "1420116",
@@ -1889,7 +2072,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "59545.03"
+        "precioimpre": "75996.23",
+        "costoart": "36017.17"
     },
     {
         "codpro": "1420141",
@@ -1900,7 +2084,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "38139.01"
+        "precioimpre": "48676.12",
+        "costoart": "23069.26"
     },
     {
         "codpro": "1420146",
@@ -1911,7 +2096,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "39512.01"
+        "precioimpre": "6118.48",
+        "costoart": "2899.75"
     },
     {
         "codpro": "1420229",
@@ -1922,7 +2108,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "55744.27"
+        "precioimpre": "71145.4",
+        "costoart": "33718.2"
     },
     {
         "codpro": "1420412",
@@ -1933,7 +2120,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "48142.79"
+        "precioimpre": "61443.76",
+        "costoart": "29120.27"
     },
     {
         "codpro": "1420412/1",
@@ -1944,7 +2132,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "48142.79"
+        "precioimpre": "61443.76",
+        "costoart": "29120.27"
     },
     {
         "codpro": "1420426",
@@ -1955,7 +2144,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "PERKINS",
         "porcen1": "21",
-        "precioimpre": "34109.28"
+        "precioimpre": "43533.06",
+        "costoart": "20631.79"
     },
     {
         "codpro": "1420009",
@@ -1966,7 +2156,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "46529.6"
+        "precioimpre": "59384.88",
+        "costoart": "28144.49"
     },
     {
         "codpro": "1420017",
@@ -1977,7 +2168,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "25781.97"
+        "precioimpre": "32905.05",
+        "costoart": "15594.81"
     },
     {
         "codpro": "1420073",
@@ -1988,7 +2180,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "39781.15"
+        "precioimpre": "50771.94",
+        "costoart": "24062.54"
     },
     {
         "codpro": "1420157",
@@ -1999,7 +2192,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "32939.81"
+        "precioimpre": "42040.46",
+        "costoart": "19924.39"
     },
     {
         "codpro": "1420228",
@@ -2010,7 +2204,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "41808.22"
+        "precioimpre": "53359.05",
+        "costoart": "25288.65"
     },
     {
         "codpro": "1420267",
@@ -2021,7 +2216,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "46875.89"
+        "precioimpre": "59826.81",
+        "costoart": "28353.94"
     },
     {
         "codpro": "1420314",
@@ -2032,7 +2228,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "39781.67"
+        "precioimpre": "50772.58",
+        "costoart": "24062.84"
     },
     {
         "codpro": "1420103",
@@ -2043,7 +2240,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "33104.68"
+        "precioimpre": "42250.89",
+        "costoart": "20024.12"
     },
     {
         "codpro": "1420107",
@@ -2054,7 +2252,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "56445.75"
+        "precioimpre": "72040.68",
+        "costoart": "34142.5"
     },
     {
         "codpro": "1420108",
@@ -2065,7 +2264,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "56445.75"
+        "precioimpre": "72040.68",
+        "costoart": "34142.5"
     },
     {
         "codpro": "1420112",
@@ -2076,7 +2276,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "31166.11"
+        "precioimpre": "39776.75",
+        "costoart": "18851.54"
     },
     {
         "codpro": "1420248",
@@ -2087,7 +2288,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "31166.38"
+        "precioimpre": "39777.06",
+        "costoart": "18851.69"
     },
     {
         "codpro": "1420249",
@@ -2098,7 +2300,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "31166.38"
+        "precioimpre": "39777.06",
+        "costoart": "18851.69"
     },
     {
         "codpro": "1420152",
@@ -2109,7 +2312,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "30511.23"
+        "precioimpre": "38940.91",
+        "costoart": "18455.41"
     },
     {
         "codpro": "1420154",
@@ -2120,7 +2324,8 @@
         "desc_rubro": "ENGRANAJE BOMBA INYECTORA",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "36740.53"
+        "precioimpre": "46891.3",
+        "costoart": "22223.37"
     },
     {
         "codpro": "1430008",
@@ -2131,7 +2336,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "27738.82"
+        "precioimpre": "35707.28",
+        "costoart": "16922.88"
     },
     {
         "codpro": "1430087",
@@ -2142,7 +2348,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "27841.5"
+        "precioimpre": "35533.58",
+        "costoart": "16840.56"
     },
     {
         "codpro": "1430247",
@@ -2153,7 +2360,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "38463.05"
+        "precioimpre": "49089.69",
+        "costoart": "23265.26"
     },
     {
         "codpro": "1430280",
@@ -2164,7 +2372,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "24408.96"
+        "precioimpre": "31152.71",
+        "costoart": "14764.32"
     },
     {
         "codpro": "1430281",
@@ -2175,7 +2384,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "25110.74"
+        "precioimpre": "32048.35",
+        "costoart": "15188.8"
     },
     {
         "codpro": "1430283",
@@ -2186,7 +2396,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "41072.2"
+        "precioimpre": "52419.68",
+        "costoart": "24843.45"
     },
     {
         "codpro": "1430285",
@@ -2197,7 +2408,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "35119.07"
+        "precioimpre": "44821.82",
+        "costoart": "21242.57"
     },
     {
         "codpro": "1430303",
@@ -2208,7 +2420,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "41071.74"
+        "precioimpre": "52419.1",
+        "costoart": "24843.18"
     },
     {
         "codpro": "1430409/2",
@@ -2219,7 +2432,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "48142.79"
+        "precioimpre": "61443.76",
+        "costoart": "29120.27"
     },
     {
         "codpro": "14390354858",
@@ -2230,7 +2444,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "53061.4"
+        "precioimpre": "63141.75",
+        "costoart": "29925"
     },
     {
         "codpro": "1430036",
@@ -2241,7 +2456,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "CHRYSLER",
         "porcen1": "21",
-        "precioimpre": "20143.96"
+        "precioimpre": "25709.37",
+        "costoart": "12184.54"
     },
     {
         "codpro": "1430004",
@@ -2252,7 +2468,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "20686.75"
+        "precioimpre": "26402.11",
+        "costoart": "12512.85"
     },
     {
         "codpro": "1430012",
@@ -2263,7 +2480,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "15329.67"
+        "precioimpre": "19564.99",
+        "costoart": "9272.51"
     },
     {
         "codpro": "1430025",
@@ -2274,7 +2492,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "19763.87"
+        "precioimpre": "25224.29",
+        "costoart": "11954.64"
     },
     {
         "codpro": "1430028",
@@ -2285,7 +2504,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "18243.56"
+        "precioimpre": "23283.95",
+        "costoart": "11035.05"
     },
     {
         "codpro": "1430033",
@@ -2296,7 +2516,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "23234.28"
+        "precioimpre": "29653.51",
+        "costoart": "14053.8"
     },
     {
         "codpro": "1430045",
@@ -2307,7 +2528,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "14442.82"
+        "precioimpre": "18433.13",
+        "costoart": "8736.08"
     },
     {
         "codpro": "1430047",
@@ -2318,7 +2540,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "33699.95"
+        "precioimpre": "43010.63",
+        "costoart": "20384.19"
     },
     {
         "codpro": "1430048",
@@ -2329,7 +2552,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "14696.21"
+        "precioimpre": "18756.51",
+        "costoart": "8889.34"
     },
     {
         "codpro": "1430052",
@@ -2340,7 +2564,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "15709.73"
+        "precioimpre": "20050.08",
+        "costoart": "9502.41"
     },
     {
         "codpro": "1430093",
@@ -2351,7 +2576,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "19878.05"
+        "precioimpre": "25370",
+        "costoart": "12023.7"
     },
     {
         "codpro": "1430126",
@@ -2362,7 +2588,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "3293.61"
+        "precioimpre": "42040.95",
+        "costoart": "19924.62"
     },
     {
         "codpro": "1430144",
@@ -2373,7 +2600,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "39206.92"
+        "precioimpre": "50039.05",
+        "costoart": "23715.2"
     },
     {
         "codpro": "1430271",
@@ -2384,7 +2612,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "24451.46"
+        "precioimpre": "31206.96",
+        "costoart": "14790.03"
     },
     {
         "codpro": "1430272",
@@ -2395,7 +2624,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "24831.54"
+        "precioimpre": "31692.03",
+        "costoart": "15019.92"
     },
     {
         "codpro": "1430275",
@@ -2406,7 +2636,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "43075.13"
+        "precioimpre": "54975.98",
+        "costoart": "26054.97"
     },
     {
         "codpro": "1430276",
@@ -2417,7 +2648,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "45608.96"
+        "precioimpre": "58209.87",
+        "costoart": "27587.62"
     },
     {
         "codpro": "1430277",
@@ -2428,7 +2660,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "32939.81"
+        "precioimpre": "42040.46",
+        "costoart": "19924.39"
     },
     {
         "codpro": "1430407",
@@ -2439,7 +2672,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "45608.96"
+        "precioimpre": "58209.87",
+        "costoart": "27587.62"
     },
     {
         "codpro": "1430411",
@@ -2450,7 +2684,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "41808.22"
+        "precioimpre": "53359.05",
+        "costoart": "25288.65"
     },
     {
         "codpro": "1430013",
@@ -2461,7 +2696,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "19003.72"
+        "precioimpre": "24254.12",
+        "costoart": "11494.84"
     },
     {
         "codpro": "1430054",
@@ -2472,7 +2708,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "21917.64"
+        "precioimpre": "27973.07",
+        "costoart": "13257.38"
     },
     {
         "codpro": "1430057",
@@ -2483,7 +2720,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "13004.38"
+        "precioimpre": "16597.21",
+        "costoart": "7865.98"
     },
     {
         "codpro": "1430060",
@@ -2494,7 +2732,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "17990.19"
+        "precioimpre": "22960.55",
+        "costoart": "10881.78"
     },
     {
         "codpro": "1430072/1",
@@ -2505,7 +2744,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "3813.9"
+        "precioimpre": "4867.6",
+        "costoart": "2306.92"
     },
     {
         "codpro": "1430143",
@@ -2516,7 +2756,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "43075.13"
+        "precioimpre": "54975.98",
+        "costoart": "26054.97"
     },
     {
         "codpro": "1430147",
@@ -2527,7 +2768,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "42061.58"
+        "precioimpre": "53682.45",
+        "costoart": "25441.92"
     },
     {
         "codpro": "1430148",
@@ -2538,7 +2780,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "42061.58"
+        "precioimpre": "53682.45",
+        "costoart": "25441.92"
     },
     {
         "codpro": "1430288",
@@ -2549,7 +2792,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "15202.97"
+        "precioimpre": "19403.28",
+        "costoart": "9195.87"
     },
     {
         "codpro": "1430291",
@@ -2560,7 +2804,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "25845.25"
+        "precioimpre": "32985.6",
+        "costoart": "15632.99"
     },
     {
         "codpro": "1430308",
@@ -2571,7 +2816,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "34782.76"
+        "precioimpre": "44392.64",
+        "costoart": "21039.17"
     },
     {
         "codpro": "1430405",
@@ -2582,7 +2828,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "11148.86"
+        "precioimpre": "14229.06",
+        "costoart": "6743.64"
     },
     {
         "codpro": "1430409",
@@ -2593,7 +2840,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "48142.79"
+        "precioimpre": "61443.76",
+        "costoart": "29120.27"
     },
     {
         "codpro": "1430062",
@@ -2604,7 +2852,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "IKA",
         "porcen1": "21",
-        "precioimpre": "28378.91"
+        "precioimpre": "36219.48",
+        "costoart": "17165.63"
     },
     {
         "codpro": "1430066",
@@ -2615,7 +2864,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "IKA",
         "porcen1": "21",
-        "precioimpre": "31121.44"
+        "precioimpre": "39719.73",
+        "costoart": "18824.52"
     },
     {
         "codpro": "1430068",
@@ -2626,7 +2876,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "IKA",
         "porcen1": "21",
-        "precioimpre": "30405.96"
+        "precioimpre": "38806.58",
+        "costoart": "18391.75"
     },
     {
         "codpro": "1430163",
@@ -2637,7 +2888,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "ISUZU",
         "porcen1": "21",
-        "precioimpre": "51030.02"
+        "precioimpre": "65128.68",
+        "costoart": "30866.67"
     },
     {
         "codpro": "1430115/1",
@@ -2648,7 +2900,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "KIA",
         "porcen1": "21",
-        "precioimpre": "38007.46"
+        "precioimpre": "48508.24",
+        "costoart": "22989.69"
     },
     {
         "codpro": "1430115/2",
@@ -2659,7 +2912,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "KIA",
         "porcen1": "21",
-        "precioimpre": "41808.22"
+        "precioimpre": "53359.05",
+        "costoart": "25288.65"
     },
     {
         "codpro": "1430034",
@@ -2670,7 +2924,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "LADA",
         "porcen1": "21",
-        "precioimpre": "14189.44"
+        "precioimpre": "18109.74",
+        "costoart": "8582.82"
     },
     {
         "codpro": "1430406",
@@ -2681,7 +2936,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "18116.89"
+        "precioimpre": "23122.26",
+        "costoart": "10958.42"
     },
     {
         "codpro": "1430409/1",
@@ -2692,7 +2948,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "48142.79"
+        "precioimpre": "61443.76",
+        "costoart": "29120.27"
     },
     {
         "codpro": "1430301",
@@ -2703,7 +2960,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "MITSUBISHI",
         "porcen1": "21",
-        "precioimpre": "44595.43"
+        "precioimpre": "56916.32",
+        "costoart": "26974.56"
     },
     {
         "codpro": "1430423",
@@ -2714,7 +2972,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "PERKINS",
         "porcen1": "21",
-        "precioimpre": "20777.87"
+        "precioimpre": "26518.4",
+        "costoart": "12567.96"
     },
     {
         "codpro": "1430015",
@@ -2725,7 +2984,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "17736.8"
+        "precioimpre": "22637.18",
+        "costoart": "10728.52"
     },
     {
         "codpro": "1430074",
@@ -2736,7 +2996,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "11823.11"
+        "precioimpre": "15089.59",
+        "costoart": "7151.47"
     },
     {
         "codpro": "1430085",
@@ -2747,7 +3008,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "21510.41"
+        "precioimpre": "27453.34",
+        "costoart": "13011.06"
     },
     {
         "codpro": "1430124",
@@ -2758,7 +3020,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "36684.11"
+        "precioimpre": "46819.27",
+        "costoart": "22189.23"
     },
     {
         "codpro": "1430142",
@@ -2769,7 +3032,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "23188.54"
+        "precioimpre": "29595.09",
+        "costoart": "14026.11"
     },
     {
         "codpro": "1430230",
@@ -2780,7 +3044,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "29139.04"
+        "precioimpre": "37189.65",
+        "costoart": "17625.43"
     },
     {
         "codpro": "1430294",
@@ -2791,7 +3056,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "20017.27"
+        "precioimpre": "25547.66",
+        "costoart": "12107.9"
     },
     {
         "codpro": "1430298",
@@ -2802,7 +3068,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "24256.42"
+        "precioimpre": "30958.02",
+        "costoart": "14672.05"
     },
     {
         "codpro": "1430299",
@@ -2813,7 +3080,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "34206.71"
+        "precioimpre": "43657.39",
+        "costoart": "20690.71"
     },
     {
         "codpro": "1430300",
@@ -2824,18 +3092,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "21537.56"
-    },
-    {
-        "codpro": "1430416",
-        "desc_stock": "engranaje cigueñal partner / 206 1.4 HDI",
-        "rubro": "143",
-        "subrub": "140",
-        "proveed": "1040",
-        "desc_rubro": "ENGRANAJE CIGUEÑAL",
-        "desc_marca": "PEUGEOT",
-        "porcen1": "21",
-        "precioimpre": "0"
+        "precioimpre": "27487.99",
+        "costoart": "13027.49"
     },
     {
         "codpro": "1430032",
@@ -2846,7 +3104,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "15709.73"
+        "precioimpre": "20050.08",
+        "costoart": "9502.41"
     },
     {
         "codpro": "1430038",
@@ -2857,7 +3116,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "14035.14"
+        "precioimpre": "17912.82",
+        "costoart": "8489.49"
     },
     {
         "codpro": "1430070",
@@ -2868,7 +3128,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "10895.47"
+        "precioimpre": "13905.7",
+        "costoart": "6590.38"
     },
     {
         "codpro": "1430072",
@@ -2879,7 +3140,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "3813.9"
+        "precioimpre": "4867.6",
+        "costoart": "2306.92"
     },
     {
         "codpro": "1430099",
@@ -2890,7 +3152,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "29138.22"
+        "precioimpre": "37188.55",
+        "costoart": "17624.91"
     },
     {
         "codpro": "1430109",
@@ -2901,7 +3164,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "14035.14"
+        "precioimpre": "17912.82",
+        "costoart": "8489.49"
     },
     {
         "codpro": "1430250",
@@ -2912,7 +3176,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "24256.51"
+        "precioimpre": "30958.15",
+        "costoart": "14672.11"
     },
     {
         "codpro": "1430251",
@@ -2923,7 +3188,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "26697.31"
+        "precioimpre": "34073.3",
+        "costoart": "16148.49"
     },
     {
         "codpro": "1430252",
@@ -2934,7 +3200,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "24256.42"
+        "precioimpre": "30958.02",
+        "costoart": "14672.05"
     },
     {
         "codpro": "1430256",
@@ -2945,7 +3212,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "18750.32"
+        "precioimpre": "23930.72",
+        "costoart": "11341.58"
     },
     {
         "codpro": "1430259",
@@ -2956,7 +3224,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "22044.34"
+        "precioimpre": "28134.76",
+        "costoart": "13334.01"
     },
     {
         "codpro": "1430261",
@@ -2967,7 +3236,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "25084.93"
+        "precioimpre": "32015.43",
+        "costoart": "15173.19"
     },
     {
         "codpro": "1430262",
@@ -2978,7 +3248,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "33193.18"
+        "precioimpre": "42363.68",
+        "costoart": "20077.58"
     },
     {
         "codpro": "1430265",
@@ -2989,7 +3260,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "27873.73"
+        "precioimpre": "35572.71",
+        "costoart": "16859.1"
     },
     {
         "codpro": "1430265/1",
@@ -3000,7 +3272,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "30210.45"
+        "precioimpre": "38557.03",
+        "costoart": "18273.48"
     },
     {
         "codpro": "1430278",
@@ -3011,7 +3284,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "38007.46"
+        "precioimpre": "48508.24",
+        "costoart": "22989.69"
     },
     {
         "codpro": "1430019",
@@ -3022,7 +3296,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "TOYOTA",
         "porcen1": "21",
-        "precioimpre": "17697.23"
+        "precioimpre": "22586.67",
+        "costoart": "10704.58"
     },
     {
         "codpro": "1430123",
@@ -3033,7 +3308,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "TOYOTA",
         "porcen1": "21",
-        "precioimpre": "40885.05"
+        "precioimpre": "52180.82",
+        "costoart": "24730.25"
     },
     {
         "codpro": "1430311",
@@ -3044,7 +3320,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "TOYOTA",
         "porcen1": "21",
-        "precioimpre": "49135.15"
+        "precioimpre": "62710.27",
+        "costoart": "29720.51"
     },
     {
         "codpro": "1430023",
@@ -3055,7 +3332,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "25019.18"
+        "precioimpre": "31931.53",
+        "costoart": "15133.43"
     },
     {
         "codpro": "1430040",
@@ -3066,7 +3344,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "12542.47"
+        "precioimpre": "16007.71",
+        "costoart": "7586.6"
     },
     {
         "codpro": "1430120",
@@ -3077,7 +3356,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "36308.35"
+        "precioimpre": "46339.68",
+        "costoart": "21961.94"
     },
     {
         "codpro": "1430150",
@@ -3088,7 +3368,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "29595.87"
+        "precioimpre": "37772.68",
+        "costoart": "17901.74"
     },
     {
         "codpro": "1430158",
@@ -3099,7 +3380,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "35698.12"
+        "precioimpre": "45560.87",
+        "costoart": "21592.83"
     },
     {
         "codpro": "1430244",
@@ -3110,7 +3392,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "34935.36"
+        "precioimpre": "44587.34",
+        "costoart": "21131.44"
     },
     {
         "codpro": "1430408",
@@ -3121,7 +3404,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "31426.55"
+        "precioimpre": "40109.14",
+        "costoart": "19009.07"
     },
     {
         "codpro": "1430410",
@@ -3132,7 +3416,8 @@
         "desc_rubro": "ENGRANAJE CIGUEÑAL",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "34935.36"
+        "precioimpre": "44587.34",
+        "costoart": "21131.44"
     },
     {
         "codpro": "1440005",
@@ -3143,7 +3428,8 @@
         "desc_rubro": "ENGRANAJE INTERMEDIO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "20524.04"
+        "precioimpre": "26194.46",
+        "costoart": "12414.43"
     },
     {
         "codpro": "1440029",
@@ -3154,7 +3440,8 @@
         "desc_rubro": "ENGRANAJE INTERMEDIO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "26351.85"
+        "precioimpre": "33632.37",
+        "costoart": "15939.51"
     },
     {
         "codpro": "1440097",
@@ -3165,7 +3452,8 @@
         "desc_rubro": "ENGRANAJE INTERMEDIO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "26351.85"
+        "precioimpre": "33632.37",
+        "costoart": "15939.51"
     },
     {
         "codpro": "1440149",
@@ -3176,7 +3464,8 @@
         "desc_rubro": "ENGRANAJE INTERMEDIO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "25084.93"
+        "precioimpre": "32015.43",
+        "costoart": "15173.19"
     },
     {
         "codpro": "1440273",
@@ -3187,7 +3476,8 @@
         "desc_rubro": "ENGRANAJE INTERMEDIO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "31166.11"
+        "precioimpre": "39776.75",
+        "costoart": "18851.54"
     },
     {
         "codpro": "1440274",
@@ -3198,7 +3488,8 @@
         "desc_rubro": "ENGRANAJE INTERMEDIO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "29900.99"
+        "precioimpre": "38162.09",
+        "costoart": "18086.3"
     },
     {
         "codpro": "1440400",
@@ -3209,7 +3500,8 @@
         "desc_rubro": "ENGRANAJE INTERMEDIO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "22804.49"
+        "precioimpre": "29104.93",
+        "costoart": "13793.81"
     },
     {
         "codpro": "1440401",
@@ -3220,7 +3512,8 @@
         "desc_rubro": "ENGRANAJE INTERMEDIO",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "20270.66"
+        "precioimpre": "25871.06",
+        "costoart": "12261.17"
     },
     {
         "codpro": "1440122",
@@ -3231,7 +3524,8 @@
         "desc_rubro": "ENGRANAJE INTERMEDIO",
         "desc_marca": "MITSUBISHI",
         "porcen1": "21",
-        "precioimpre": "18166.52"
+        "precioimpre": "23185.61",
+        "costoart": "10988.44"
     },
     {
         "codpro": "1440419",
@@ -3242,7 +3536,8 @@
         "desc_rubro": "ENGRANAJE INTERMEDIO",
         "desc_marca": "MITSUBISHI",
         "porcen1": "21",
-        "precioimpre": "24578.25"
+        "precioimpre": "31368.75",
+        "costoart": "14866.71"
     },
     {
         "codpro": "1440425",
@@ -3253,7 +3548,8 @@
         "desc_rubro": "ENGRANAJE INTERMEDIO",
         "desc_marca": "PERKINS",
         "porcen1": "21",
-        "precioimpre": "14248.67"
+        "precioimpre": "18185.31",
+        "costoart": "8618.63"
     },
     {
         "codpro": "1440016",
@@ -3264,7 +3560,8 @@
         "desc_rubro": "ENGRANAJE INTERMEDIO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "29299.48"
+        "precioimpre": "37394.4",
+        "costoart": "17722.47"
     },
     {
         "codpro": "1440003",
@@ -3275,7 +3572,8 @@
         "desc_rubro": "ENGRANAJE INTERMEDIO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "18750.32"
+        "precioimpre": "23930.72",
+        "costoart": "11341.58"
     },
     {
         "codpro": "1440051",
@@ -3286,7 +3584,8 @@
         "desc_rubro": "ENGRANAJE INTERMEDIO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "21790.95"
+        "precioimpre": "27811.39",
+        "costoart": "13180.76"
     },
     {
         "codpro": "1440111",
@@ -3297,7 +3596,8 @@
         "desc_rubro": "ENGRANAJE INTERMEDIO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "21790.95"
+        "precioimpre": "27811.39",
+        "costoart": "13180.76"
     },
     {
         "codpro": "1440255",
@@ -3308,7 +3608,8 @@
         "desc_rubro": "ENGRANAJE INTERMEDIO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "21790.95"
+        "precioimpre": "27811.39",
+        "costoart": "13180.76"
     },
     {
         "codpro": "1440258",
@@ -3319,7 +3620,8 @@
         "desc_rubro": "ENGRANAJE INTERMEDIO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "21790.95"
+        "precioimpre": "27811.39",
+        "costoart": "13180.76"
     },
     {
         "codpro": "1440021",
@@ -3330,7 +3632,8 @@
         "desc_rubro": "ENGRANAJE INTERMEDIO",
         "desc_marca": "TOYOTA",
         "porcen1": "21",
-        "precioimpre": "14361.32"
+        "precioimpre": "18329.12",
+        "costoart": "8686.79"
     },
     {
         "codpro": "1450500",
@@ -3341,7 +3644,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "49493.78"
+        "precioimpre": "63168",
+        "costoart": "29937.44"
     },
     {
         "codpro": "1450501",
@@ -3352,7 +3656,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "141456.56"
+        "precioimpre": "180538.39",
+        "costoart": "85563.22"
     },
     {
         "codpro": "1450502",
@@ -3363,7 +3668,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "162142.72"
+        "precioimpre": "206939.8",
+        "costoart": "98075.73"
     },
     {
         "codpro": "1450503",
@@ -3374,7 +3680,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "70116.19"
+        "precioimpre": "89487.98",
+        "costoart": "42411.37"
     },
     {
         "codpro": "1450504",
@@ -3385,7 +3692,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "95677.45"
+        "precioimpre": "122111.38",
+        "costoart": "57872.69"
     },
     {
         "codpro": "1450505",
@@ -3396,7 +3704,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "217390.83"
+        "precioimpre": "277451.94",
+        "costoart": "131493.81"
     },
     {
         "codpro": "1450861",
@@ -3407,7 +3716,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "CHRYSLER",
         "porcen1": "21",
-        "precioimpre": "56756.98"
+        "precioimpre": "72437.87",
+        "costoart": "34330.75"
     },
     {
         "codpro": "1450559",
@@ -3418,7 +3728,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "76191.11"
+        "precioimpre": "97241.28",
+        "costoart": "46085.92"
     },
     {
         "codpro": "1450564",
@@ -3429,7 +3740,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "71435.94"
+        "precioimpre": "91172.36",
+        "costoart": "43209.65"
     },
     {
         "codpro": "1450568",
@@ -3440,7 +3752,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "75508.16"
+        "precioimpre": "96369.68",
+        "costoart": "45672.84"
     },
     {
         "codpro": "1450569",
@@ -3451,7 +3764,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "72467.57"
+        "precioimpre": "92489.03",
+        "costoart": "43833.67"
     },
     {
         "codpro": "1450571",
@@ -3462,7 +3776,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "75826.49"
+        "precioimpre": "96775.94",
+        "costoart": "45865.38"
     },
     {
         "codpro": "1450573",
@@ -3473,7 +3788,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "113654.31"
+        "precioimpre": "145054.9",
+        "costoart": "68746.4"
     },
     {
         "codpro": "1450608",
@@ -3484,7 +3800,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "108147.03"
+        "precioimpre": "138026.05",
+        "costoart": "65415.19"
     },
     {
         "codpro": "1450609",
@@ -3495,7 +3812,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "107687.81"
+        "precioimpre": "137439.98",
+        "costoart": "65137.43"
     },
     {
         "codpro": "1450610",
@@ -3506,7 +3824,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "111488.58"
+        "precioimpre": "142290.81",
+        "costoart": "67436.41"
     },
     {
         "codpro": "1450611",
@@ -3517,7 +3836,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "35727.01"
+        "precioimpre": "45597.73",
+        "costoart": "21610.3"
     },
     {
         "codpro": "1450612",
@@ -3528,7 +3848,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "35473.63"
+        "precioimpre": "45274.34",
+        "costoart": "21457.03"
     },
     {
         "codpro": "1450613",
@@ -3539,7 +3860,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "56757.8"
+        "precioimpre": "72438.95",
+        "costoart": "34331.26"
     },
     {
         "codpro": "1450614",
@@ -3550,7 +3872,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "35473.63"
+        "precioimpre": "45274.34",
+        "costoart": "21457.03"
     },
     {
         "codpro": "1450615",
@@ -3561,7 +3884,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "35727.01"
+        "precioimpre": "44933.08",
+        "costoart": "21295.3"
     },
     {
         "codpro": "1450620",
@@ -3572,7 +3896,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "40794.68"
+        "precioimpre": "52065.49",
+        "costoart": "24675.59"
     },
     {
         "codpro": "1450621",
@@ -3583,7 +3908,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "84558.79"
+        "precioimpre": "107920.84",
+        "costoart": "51147.32"
     },
     {
         "codpro": "1450565",
@@ -3594,7 +3920,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "57517.96"
+        "precioimpre": "73409.12",
+        "costoart": "34791.06"
     },
     {
         "codpro": "1450570",
@@ -3605,7 +3932,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "69957.64"
+        "precioimpre": "89285.67",
+        "costoart": "42315.48"
     },
     {
         "codpro": "1450643/1",
@@ -3616,7 +3944,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "26074.22"
+        "precioimpre": "33278.05",
+        "costoart": "15771.59"
     },
     {
         "codpro": "1450843",
@@ -3627,7 +3956,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "27777.41"
+        "precioimpre": "35451.8",
+        "costoart": "16801.81"
     },
     {
         "codpro": "1450844",
@@ -3638,7 +3968,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "50140.62"
+        "precioimpre": "63993.54",
+        "costoart": "30328.69"
     },
     {
         "codpro": "1450854",
@@ -3649,7 +3980,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "68160.05"
+        "precioimpre": "86991.43",
+        "costoart": "41228.17"
     },
     {
         "codpro": "1450862",
@@ -3660,7 +3992,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "105730.53"
+        "precioimpre": "134941.94",
+        "costoart": "63953.53"
     },
     {
         "codpro": "1450863",
@@ -3671,7 +4004,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "29526.39"
+        "precioimpre": "37683.99",
+        "costoart": "17859.71"
     },
     {
         "codpro": "1450864",
@@ -3682,7 +4016,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "32680.52"
+        "precioimpre": "41709.55",
+        "costoart": "19767.56"
     },
     {
         "codpro": "1450865",
@@ -3693,7 +4028,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "33410.61"
+        "precioimpre": "42641.33",
+        "costoart": "20209.16"
     },
     {
         "codpro": "1450866",
@@ -3704,7 +4040,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "31527.24"
+        "precioimpre": "40237.64",
+        "costoart": "19069.97"
     },
     {
         "codpro": "1450867",
@@ -3715,7 +4052,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "96792.34"
+        "precioimpre": "123534.29",
+        "costoart": "58547.06"
     },
     {
         "codpro": "1450889/1",
@@ -3726,7 +4064,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "HYUNDAI",
         "porcen1": "21",
-        "precioimpre": "42744.75"
+        "precioimpre": "54554.36",
+        "costoart": "25855.15"
     },
     {
         "codpro": "1450642",
@@ -3737,7 +4076,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "IKA",
         "porcen1": "21",
-        "precioimpre": "58784.87"
+        "precioimpre": "75026.06",
+        "costoart": "35557.38"
     },
     {
         "codpro": "1450858",
@@ -3748,7 +4088,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "IKA",
         "porcen1": "21",
-        "precioimpre": "69565.58"
+        "precioimpre": "88785.27",
+        "costoart": "42078.33"
     },
     {
         "codpro": "1450859",
@@ -3759,7 +4100,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "IKA",
         "porcen1": "21",
-        "precioimpre": "89951"
+        "precioimpre": "114802.82",
+        "costoart": "54408.92"
     },
     {
         "codpro": "1450502/1",
@@ -3770,7 +4112,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "ISUZU",
         "porcen1": "21",
-        "precioimpre": "162142.72"
+        "precioimpre": "170249.86",
+        "costoart": "80687.15"
     },
     {
         "codpro": "1450889/2",
@@ -3781,7 +4124,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "KIA",
         "porcen1": "21",
-        "precioimpre": "42744.75"
+        "precioimpre": "54554.36",
+        "costoart": "25855.15"
     },
     {
         "codpro": "1450645",
@@ -3792,7 +4136,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "LADA",
         "porcen1": "21",
-        "precioimpre": "48649.56"
+        "precioimpre": "62090.53",
+        "costoart": "29426.8"
     },
     {
         "codpro": "1450550",
@@ -3803,7 +4148,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "MAXION",
         "porcen1": "21",
-        "precioimpre": "96285.58"
+        "precioimpre": "122887.51",
+        "costoart": "58240.53"
     },
     {
         "codpro": "1450637",
@@ -3814,7 +4160,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "57644.66"
+        "precioimpre": "73570.81",
+        "costoart": "34867.69"
     },
     {
         "codpro": "1450889",
@@ -3825,7 +4172,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "MITSUBISHI",
         "porcen1": "21",
-        "precioimpre": "42744.75"
+        "precioimpre": "54554.36",
+        "costoart": "25855.15"
     },
     {
         "codpro": "1450623",
@@ -3836,7 +4184,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "PERKINS",
         "porcen1": "21",
-        "precioimpre": "59933.15"
+        "precioimpre": "76491.58",
+        "costoart": "36251.93"
     },
     {
         "codpro": "1450616",
@@ -3847,7 +4196,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "29519.62"
+        "precioimpre": "37675.32",
+        "costoart": "17855.61"
     },
     {
         "codpro": "1450617",
@@ -3858,7 +4208,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "80829.23"
+        "precioimpre": "103160.84",
+        "costoart": "48891.39"
     },
     {
         "codpro": "1450618",
@@ -3869,7 +4220,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "95701.88"
+        "precioimpre": "122142.55",
+        "costoart": "57887.47"
     },
     {
         "codpro": "1450619",
@@ -3880,7 +4232,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "116449.34"
+        "precioimpre": "148622.16",
+        "costoart": "70437.05"
     },
     {
         "codpro": "1450636",
@@ -3891,7 +4244,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "96836.52"
+        "precioimpre": "123590.67",
+        "costoart": "58573.78"
     },
     {
         "codpro": "1450646",
@@ -3902,7 +4256,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "58581.56"
+        "precioimpre": "74766.54",
+        "costoart": "35434.38"
     },
     {
         "codpro": "1450647",
@@ -3913,7 +4268,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "109461.51"
+        "precioimpre": "139703.71",
+        "costoart": "66210.29"
     },
     {
         "codpro": "1450648",
@@ -3924,7 +4280,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "69052.46"
+        "precioimpre": "88130.37",
+        "costoart": "41767.95"
     },
     {
         "codpro": "1450813",
@@ -3935,7 +4292,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "48360.28"
+        "precioimpre": "61721.34",
+        "costoart": "29251.82"
     },
     {
         "codpro": "1450519",
@@ -3946,7 +4304,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "80412.31"
+        "precioimpre": "102628.75",
+        "costoart": "48639.22"
     },
     {
         "codpro": "1450530",
@@ -3957,7 +4316,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "67399.9"
+        "precioimpre": "86021.26",
+        "costoart": "40768.37"
     },
     {
         "codpro": "1450560",
@@ -3968,7 +4328,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "99426.63"
+        "precioimpre": "126896.36",
+        "costoart": "60140.46"
     },
     {
         "codpro": "1450561",
@@ -3979,7 +4340,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "56511.36"
+        "precioimpre": "72124.41",
+        "costoart": "34182.18"
     },
     {
         "codpro": "1450561/1",
@@ -3990,7 +4352,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "56511.36"
+        "precioimpre": "72124.41",
+        "costoart": "34182.18"
     },
     {
         "codpro": "1450561/2",
@@ -4001,7 +4364,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "10.5",
-        "precioimpre": "60564.79"
+        "precioimpre": "77297.7",
+        "costoart": "36633.99"
     },
     {
         "codpro": "1450562",
@@ -4012,7 +4376,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "64619.7"
+        "precioimpre": "82472.95",
+        "costoart": "39086.71"
     },
     {
         "codpro": "1450563",
@@ -4023,7 +4388,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "99188.94"
+        "precioimpre": "126593",
+        "costoart": "59996.69"
     },
     {
         "codpro": "1450566",
@@ -4034,7 +4400,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "69388.62"
+        "precioimpre": "88559.43",
+        "costoart": "41971.29"
     },
     {
         "codpro": "1450572",
@@ -4045,7 +4412,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "69388.62"
+        "precioimpre": "88559.43",
+        "costoart": "41971.29"
     },
     {
         "codpro": "1450575",
@@ -4056,7 +4424,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "136055.65"
+        "precioimpre": "173645.3",
+        "costoart": "82296.35"
     },
     {
         "codpro": "1450576",
@@ -4067,7 +4436,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "136055.65"
+        "precioimpre": "173645.3",
+        "costoart": "82296.35"
     },
     {
         "codpro": "1450577",
@@ -4078,7 +4448,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "68666.83"
+        "precioimpre": "87638.2",
+        "costoart": "41534.69"
     },
     {
         "codpro": "1450579",
@@ -4089,7 +4460,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "37938.8"
+        "precioimpre": "48420.61",
+        "costoart": "22948.16"
     },
     {
         "codpro": "1450580",
@@ -4100,7 +4472,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "52957.07"
+        "precioimpre": "67588.12",
+        "costoart": "32032.29"
     },
     {
         "codpro": "1450631",
@@ -4111,7 +4484,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "127781.99"
+        "precioimpre": "163085.81",
+        "costoart": "77291.85"
     },
     {
         "codpro": "1450640",
@@ -4122,7 +4496,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "19743.81"
+        "precioimpre": "25198.65",
+        "costoart": "11942.49"
     },
     {
         "codpro": "1450641",
@@ -4133,7 +4508,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "13730.05"
+        "precioimpre": "17523.41",
+        "costoart": "8304.93"
     },
     {
         "codpro": "1450643",
@@ -4144,7 +4520,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "26074.22"
+        "precioimpre": "33278.05",
+        "costoart": "15771.59"
     },
     {
         "codpro": "1450644",
@@ -4155,7 +4532,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "78389.44"
+        "precioimpre": "100046.99",
+        "costoart": "47415.64"
     },
     {
         "codpro": "1450604",
@@ -4166,7 +4544,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "TOYOTA",
         "porcen1": "21",
-        "precioimpre": "30249.28"
+        "precioimpre": "38606.59",
+        "costoart": "18296.96"
     },
     {
         "codpro": "1450628",
@@ -4177,7 +4556,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "TOYOTA",
         "porcen1": "21",
-        "precioimpre": "90923.45"
+        "precioimpre": "116043.92",
+        "costoart": "54997.12"
     },
     {
         "codpro": "1450567",
@@ -4188,7 +4568,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "48329.76"
+        "precioimpre": "61682.4",
+        "costoart": "29233.37"
     },
     {
         "codpro": "1450574",
@@ -4199,7 +4580,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "124467.49"
+        "precioimpre": "158855.55",
+        "costoart": "75287"
     },
     {
         "codpro": "1450578",
@@ -4210,7 +4592,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "100346.82"
+        "precioimpre": "128070.81",
+        "costoart": "60697.07"
     },
     {
         "codpro": "1450638",
@@ -4221,7 +4604,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "29265.74"
+        "precioimpre": "37351.34",
+        "costoart": "17702.06"
     },
     {
         "codpro": "1450639",
@@ -4232,7 +4616,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "29265.74"
+        "precioimpre": "37351.34",
+        "costoart": "17702.06"
     },
     {
         "codpro": "1450649",
@@ -4243,7 +4628,8 @@
         "desc_rubro": "JUEGO ENGRANAJE DISTRIBUCION",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "69565.58"
+        "precioimpre": "88785.27",
+        "costoart": "42078.33"
     },
     {
         "codpro": "1502501",
@@ -4254,7 +4640,8 @@
         "desc_rubro": "KIT DISTRIBU CAD/TEN/RET/JUNTA",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "145056.43"
+        "precioimpre": "185132.85",
+        "costoart": "87740.69"
     },
     {
         "codpro": "1502761",
@@ -4265,7 +4652,8 @@
         "desc_rubro": "KIT DISTRIBU CAD/TEN/RET/JUNTA",
         "desc_marca": "DODGE",
         "porcen1": "21",
-        "precioimpre": "143892.69"
+        "precioimpre": "183647.63",
+        "costoart": "87036.79"
     },
     {
         "codpro": "1502745",
@@ -4276,7 +4664,8 @@
         "desc_rubro": "KIT DISTRIBU CAD/TEN/RET/JUNTA",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "161512.02"
+        "precioimpre": "206134.79",
+        "costoart": "97694.22"
     },
     {
         "codpro": "1502762",
@@ -4287,7 +4676,8 @@
         "desc_rubro": "KIT DISTRIBU CAD/TEN/RET/JUNTA",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "110588.3"
+        "precioimpre": "141141.81",
+        "costoart": "66891.86"
     },
     {
         "codpro": "1502716",
@@ -4298,7 +4688,8 @@
         "desc_rubro": "KIT DISTRIBU CAD/TEN/RET/JUNTA",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "112386.74"
+        "precioimpre": "143437.12",
+        "costoart": "67979.68"
     },
     {
         "codpro": "1502716/1",
@@ -4309,7 +4700,8 @@
         "desc_rubro": "KIT DISTRIBU CAD/TEN/RET/JUNTA",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "117090.65"
+        "precioimpre": "149440.65",
+        "costoart": "70824.96"
     },
     {
         "codpro": "1502718",
@@ -4320,7 +4712,8 @@
         "desc_rubro": "KIT DISTRIBU CAD/TEN/RET/JUNTA",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "205471.31"
+        "precioimpre": "262239.24",
+        "costoart": "124284.01"
     },
     {
         "codpro": "1502719",
@@ -4331,7 +4724,8 @@
         "desc_rubro": "KIT DISTRIBU CAD/TEN/RET/JUNTA",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "230134.43"
+        "precioimpre": "293716.34",
+        "costoart": "139202.06"
     },
     {
         "codpro": "1502740",
@@ -4342,7 +4736,8 @@
         "desc_rubro": "KIT DISTRIBU CAD/TEN/RET/JUNTA",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "80632.51"
+        "precioimpre": "102909.8",
+        "costoart": "48772.42"
     },
     {
         "codpro": "1502741",
@@ -4353,7 +4748,8 @@
         "desc_rubro": "KIT DISTRIBU CAD/TEN/RET/JUNTA",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "73576.36"
+        "precioimpre": "93904.11",
+        "costoart": "44504.32"
     },
     {
         "codpro": "1502743",
@@ -4364,7 +4760,8 @@
         "desc_rubro": "KIT DISTRIBU CAD/TEN/RET/JUNTA",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "83376.9"
+        "precioimpre": "106412.37",
+        "costoart": "50432.4"
     },
     {
         "codpro": "1502743/1",
@@ -4375,7 +4772,8 @@
         "desc_rubro": "KIT DISTRIBU CAD/TEN/RET/JUNTA",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "85258.41"
+        "precioimpre": "108813.75",
+        "costoart": "51570.5"
     },
     {
         "codpro": "1502739",
@@ -4386,7 +4784,8 @@
         "desc_rubro": "KIT DISTRIBU CAD/TEN/RET/JUNTA",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "107750.16"
+        "precioimpre": "137519.54",
+        "costoart": "65175.14"
     },
     {
         "codpro": "1481700",
@@ -4397,7 +4796,8 @@
         "desc_rubro": "KIT DISTRIBUCION CADENA/TENSOR",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "66865.98"
+        "precioimpre": "85339.81",
+        "costoart": "40445.41"
     },
     {
         "codpro": "1481743/1",
@@ -4408,7 +4808,8 @@
         "desc_rubro": "KIT DISTRIBUCION CADENA/TENSOR",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "63494.98"
+        "precioimpre": "81037.47",
+        "costoart": "38406.39"
     },
     {
         "codpro": "1481866",
@@ -4419,7 +4820,8 @@
         "desc_rubro": "KIT DISTRIBUCION CADENA/TENSOR",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "189885.92"
+        "precioimpre": "242347.92",
+        "costoart": "114856.83"
     },
     {
         "codpro": "1481716",
@@ -4430,7 +4832,8 @@
         "desc_rubro": "KIT DISTRIBUCION CADENA/TENSOR",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "85749.73"
+        "precioimpre": "109440.8",
+        "costoart": "51867.68"
     },
     {
         "codpro": "1481716/1",
@@ -4441,7 +4844,8 @@
         "desc_rubro": "KIT DISTRIBUCION CADENA/TENSOR",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "90453.85"
+        "precioimpre": "115444.6",
+        "costoart": "54713.09"
     },
     {
         "codpro": "1481718",
@@ -4452,7 +4856,8 @@
         "desc_rubro": "KIT DISTRIBUCION CADENA/TENSOR",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "182318.99"
+        "precioimpre": "232690.35",
+        "costoart": "110279.79"
     },
     {
         "codpro": "1481719",
@@ -4463,7 +4868,8 @@
         "desc_rubro": "KIT DISTRIBUCION CADENA/TENSOR",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "206982.11"
+        "precioimpre": "264167.44",
+        "costoart": "125197.84"
     },
     {
         "codpro": "1481740",
@@ -4474,7 +4880,8 @@
         "desc_rubro": "KIT DISTRIBUCION CADENA/TENSOR",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "58868.94"
+        "precioimpre": "75133.34",
+        "costoart": "35608.22"
     },
     {
         "codpro": "1481741",
@@ -4485,7 +4892,8 @@
         "desc_rubro": "KIT DISTRIBUCION CADENA/TENSOR",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "51812.71"
+        "precioimpre": "66127.61",
+        "costoart": "31340.11"
     },
     {
         "codpro": "1481743",
@@ -4496,7 +4904,8 @@
         "desc_rubro": "KIT DISTRIBUCION CADENA/TENSOR",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "61613.07"
+        "precioimpre": "78635.62",
+        "costoart": "37268.07"
     },
     {
         "codpro": "1481739",
@@ -4507,6 +4916,7 @@
         "desc_rubro": "KIT DISTRIBUCION CADENA/TENSOR",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "87228.16"
+        "precioimpre": "111327.72",
+        "costoart": "52761.95"
     }
 ]

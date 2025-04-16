@@ -19,14 +19,15 @@ export const categoriesAndSubCategories = [
         ]
     },
     {
-        idCategory: [200, 220],
+        idCategory: [200, 355],
         description: "encendido",
         submenu: false,
         subCategories: [
             {
-                ids: [200, 220],
+                idSubcategory: [200, 355],
                 description: "encendido",
-                categories: [ "CONTACTORES DE ARRANQUE", "JUNTA SENSOR NIVEL COMBUSTIBLE", "LLAVES CONMUTADORAS DE LUCES", "LLAVES DE CONTACTO Y ARRANQUE", "LLAVES TECLAS", "SENSORES NIVEL DE COMBUSTIBLE"]
+                categories: [ "CONTACTORES DE ARRANQUE", "JUNTA SENSOR NIVEL COMBUSTIBLE", "LLAVES CONMUTADORAS DE LUCES", "LLAVES DE CONTACTO Y ARRANQUE", "LLAVES TECLAS",
+                        "SENSORES NIVEL DE COMBUSTIBLE", "BOMBA NAFTA ELECTRICA COMPLETA", "TAPAS DE BOMBAS DE NAFTA", "TAPAS ROSCA DE BOMBA DE NAFTA", ""]
             }
         ]
     },
@@ -36,9 +37,9 @@ export const categoriesAndSubCategories = [
         submenu: false,
         subCategories: [
             {
-              ids: [361, 361],
-              description: "sonda lambda",
-              categories: ["SONDA LAMBDAS"]
+                idSubcategory: [361, 361],
+                description: "sonda lambda",
+                categories: ["SONDA LAMBDAS"]
             }
         ]
     }
