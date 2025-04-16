@@ -8,7 +8,8 @@
         "desc_rubro": "TORNILLOS DE BANCADA",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "0"
+        "precioimpre": "9168.16",
+        "costoart": "4345.1"
     },
     {
         "codpro": "101MER08",
@@ -19,7 +20,8 @@
         "desc_rubro": "TORNILLOS DE BANCADA",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "3541.87"
+        "precioimpre": "3274.4",
+        "costoart": "1551.85"
     },
     {
         "codpro": "101VOLK13",
@@ -30,7 +32,8 @@
         "desc_rubro": "TORNILLOS DE BANCADA",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "1824.4"
+        "precioimpre": "1670.27",
+        "costoart": "791.6"
     },
     {
         "codpro": "101VOLK16",
@@ -41,7 +44,8 @@
         "desc_rubro": "TORNILLOS DE BANCADA",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "1202.06"
+        "precioimpre": "1223.55",
+        "costoart": "579.8"
     },
     {
         "codpro": "103CUMM04",
@@ -52,7 +56,8 @@
         "desc_rubro": "TORNILLOS DE BIELA",
         "desc_marca": "CUMMINS",
         "porcen1": "21",
-        "precioimpre": "52524.4"
+        "precioimpre": "49827.96",
+        "costoart": "23615.15"
     },
     {
         "codpro": "103CUMM05",
@@ -63,7 +68,8 @@
         "desc_rubro": "TORNILLOS DE BIELA",
         "desc_marca": "CUMMINS",
         "porcen1": "21",
-        "precioimpre": "78715.21"
+        "precioimpre": "75255.78",
+        "costoart": "35666.25"
     },
     {
         "codpro": "103CUMM06",
@@ -74,7 +80,8 @@
         "desc_rubro": "TORNILLOS DE BIELA",
         "desc_marca": "CUMMINS",
         "porcen1": "21",
-        "precioimpre": "67617.8"
+        "precioimpre": "66898.18",
+        "costoart": "31705.3"
     },
     {
         "codpro": "103CUMM07",
@@ -85,7 +92,8 @@
         "desc_rubro": "TORNILLOS DE BIELA",
         "desc_marca": "CUMMINS",
         "porcen1": "21",
-        "precioimpre": "16651.11"
+        "precioimpre": "16413.9",
+        "costoart": "7779.1"
     },
     {
         "codpro": "103CUMM11",
@@ -96,7 +104,8 @@
         "desc_rubro": "TORNILLOS DE BIELA",
         "desc_marca": "CUMMINS",
         "porcen1": "21",
-        "precioimpre": "19283.41"
+        "precioimpre": "18868.25",
+        "costoart": "8942.3"
     },
     {
         "codpro": "103DEUTZ05",
@@ -107,7 +116,8 @@
         "desc_rubro": "TORNILLOS DE BIELA",
         "desc_marca": "DEUTZ",
         "porcen1": "21",
-        "precioimpre": "7405.75"
+        "precioimpre": "7855.28",
+        "costoart": "3723.06"
     },
     {
         "codpro": "103DEUTZ06",
@@ -118,7 +128,8 @@
         "desc_rubro": "TORNILLOS DE BIELA",
         "desc_marca": "DEUTZ",
         "porcen1": "21",
-        "precioimpre": "2778.98"
+        "precioimpre": "2879.2",
+        "costoart": "1364.55"
     },
     {
         "codpro": "103FOR04",
@@ -129,18 +140,8 @@
         "desc_rubro": "TORNILLOS DE BIELA",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "8543.63"
-    },
-    {
-        "codpro": "103MAXION04",
-        "desc_stock": "torni de biela ranger/ sprinter motor HS2.8 NGD3.0",
-        "rubro": "103",
-        "subrub": "100",
-        "proveed": "1030",
-        "desc_rubro": "TORNILLOS DE BIELA",
-        "desc_marca": "MAXION",
-        "porcen1": "21",
-        "precioimpre": "9161.4"
+        "precioimpre": "8062.73",
+        "costoart": "3821.2"
     },
     {
         "codpro": "103MER05",
@@ -151,7 +152,8 @@
         "desc_rubro": "TORNILLOS DE BIELA",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "21594.83"
+        "precioimpre": "20118.63",
+        "costoart": "9534.9"
     },
     {
         "codpro": "103MER07",
@@ -162,7 +164,8 @@
         "desc_rubro": "TORNILLOS DE BIELA",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "10.5",
-        "precioimpre": "7942.46"
+        "precioimpre": "7511.6",
+        "costoart": "3560"
     },
     {
         "codpro": "103MWM06",
@@ -173,7 +176,8 @@
         "desc_rubro": "TORNILLOS DE BIELA",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "15627.21"
+        "precioimpre": "15826.37",
+        "costoart": "7500.65"
     },
     {
         "codpro": "103MWM07",
@@ -184,7 +188,8 @@
         "desc_rubro": "TORNILLOS DE BIELA",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "23397.89"
+        "precioimpre": "24373.03",
+        "costoart": "11551.2"
     },
     {
         "codpro": "103REN26",
@@ -195,7 +200,8 @@
         "desc_rubro": "TORNILLOS DE BIELA",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "8279.7"
+        "precioimpre": "7987.4",
+        "costoart": "3785.5"
     },
     {
         "codpro": "103VOLK14",
@@ -206,7 +212,8 @@
         "desc_rubro": "TORNILLOS DE BIELA",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "23612.62"
+        "precioimpre": "22516.86",
+        "costoart": "10671.5"
     },
     {
         "codpro": "103VOLK15",
@@ -217,7 +224,8 @@
         "desc_rubro": "TORNILLOS DE BIELA",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "23170.76"
+        "precioimpre": "22056.14",
+        "costoart": "10453.15"
     },
     {
         "codpro": "102ACURA01",
@@ -228,7 +236,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "ACURA",
         "porcen1": "21",
-        "precioimpre": "34152.29"
+        "precioimpre": "34152.29",
+        "costoart": "16185.92"
     },
     {
         "codpro": "102AUDI01",
@@ -239,7 +248,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "AUDI",
         "porcen1": "21",
-        "precioimpre": "33808.86"
+        "precioimpre": "33808.86",
+        "costoart": "16023.22"
     },
     {
         "codpro": "102AUDI02",
@@ -250,7 +260,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "AUDI",
         "porcen1": "21",
-        "precioimpre": "28764.41"
+        "precioimpre": "28764.41",
+        "costoart": "13632.42"
     },
     {
         "codpro": "102BMW01",
@@ -261,7 +272,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "BMW",
         "porcen1": "21",
-        "precioimpre": "30792.12"
+        "precioimpre": "30792.12",
+        "costoart": "14593.39"
     },
     {
         "codpro": "102BMW02",
@@ -272,7 +284,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "BMW",
         "porcen1": "21",
-        "precioimpre": "42897.87"
+        "precioimpre": "42897.87",
+        "costoart": "20330.77"
     },
     {
         "codpro": "102BMW03",
@@ -283,7 +296,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "BMW",
         "porcen1": "21",
-        "precioimpre": "53855.65"
+        "precioimpre": "53855.65",
+        "costoart": "25524.02"
     },
     {
         "codpro": "102BMW04",
@@ -294,7 +308,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "BMW",
         "porcen1": "21",
-        "precioimpre": "23798.06"
+        "precioimpre": "23798.06",
+        "costoart": "11278.77"
     },
     {
         "codpro": "102CHE01",
@@ -305,7 +320,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "32842.92"
+        "precioimpre": "32842.92",
+        "costoart": "15565.33"
     },
     {
         "codpro": "102CHE02",
@@ -316,7 +332,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "31619.27"
+        "precioimpre": "31619.27",
+        "costoart": "14985.54"
     },
     {
         "codpro": "102CHE03",
@@ -327,7 +344,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "47654.41"
+        "precioimpre": "47654.41",
+        "costoart": "22585.01"
     },
     {
         "codpro": "102CHE04",
@@ -338,7 +356,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "22882.68"
+        "precioimpre": "22882.68",
+        "costoart": "10844.88"
     },
     {
         "codpro": "102CHE05",
@@ -349,7 +368,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "24535.66"
+        "precioimpre": "24535.66",
+        "costoart": "11628.28"
     },
     {
         "codpro": "102CHE06",
@@ -360,7 +380,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "26896.74"
+        "precioimpre": "26896.74",
+        "costoart": "12747.46"
     },
     {
         "codpro": "102CHE07",
@@ -371,7 +392,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "26510.44"
+        "precioimpre": "26510.44",
+        "costoart": "12564.17"
     },
     {
         "codpro": "102CHE08",
@@ -382,7 +404,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "26445.89"
+        "precioimpre": "26445.89",
+        "costoart": "12533.58"
     },
     {
         "codpro": "102CHE09",
@@ -393,7 +416,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "32306.23"
+        "precioimpre": "32306.23",
+        "costoart": "15311.17"
     },
     {
         "codpro": "102CHE10",
@@ -404,7 +428,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "44541.8"
+        "precioimpre": "44541.8",
+        "costoart": "21109.96"
     },
     {
         "codpro": "102CHE11",
@@ -415,7 +440,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "61714.64"
+        "precioimpre": "61714.64",
+        "costoart": "29248.64"
     },
     {
         "codpro": "102CHE12",
@@ -426,7 +452,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "22497.26"
+        "precioimpre": "22497.26",
+        "costoart": "10662.36"
     },
     {
         "codpro": "102CHE13DAE01",
@@ -437,7 +464,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "23548.16"
+        "precioimpre": "23548.16",
+        "costoart": "11160.2"
     },
     {
         "codpro": "102CHE14",
@@ -448,7 +476,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "21318.85"
+        "precioimpre": "21318.85",
+        "costoart": "10103.78"
     },
     {
         "codpro": "102CHE17",
@@ -459,7 +488,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "26127.66"
+        "precioimpre": "26127.66",
+        "costoart": "12382.96"
     },
     {
         "codpro": "102CHE19",
@@ -470,7 +500,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "21165.73"
+        "precioimpre": "21165.73",
+        "costoart": "10031.27"
     },
     {
         "codpro": "102CHE20",
@@ -481,7 +512,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "65349.24"
+        "precioimpre": "65349.24",
+        "costoart": "30971.28"
     },
     {
         "codpro": "102CHE21",
@@ -492,7 +524,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "36118.08"
+        "precioimpre": "36118.08",
+        "costoart": "17117.51"
     },
     {
         "codpro": "102CHE22",
@@ -503,7 +536,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "42132.47"
+        "precioimpre": "42132.47",
+        "costoart": "19968.12"
     },
     {
         "codpro": "102CHE24",
@@ -514,7 +548,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "28317.04"
+        "precioimpre": "28317.04",
+        "costoart": "13420.39"
     },
     {
         "codpro": "102CHE25",
@@ -525,7 +560,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "25012.86"
+        "precioimpre": "25012.86",
+        "costoart": "11854.44"
     },
     {
         "codpro": "102CHE26",
@@ -536,7 +572,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "27761.8"
+        "precioimpre": "27761.8",
+        "costoart": "13157.26"
     },
     {
         "codpro": "102CHE27",
@@ -547,7 +584,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "11974.25"
+        "precioimpre": "11974.25",
+        "costoart": "5675"
     },
     {
         "codpro": "102CHE28",
@@ -558,7 +596,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHEVROLET",
         "porcen1": "21",
-        "precioimpre": "11710.5"
+        "precioimpre": "11710.5",
+        "costoart": "5550"
     },
     {
         "codpro": "102CHRY01",
@@ -569,7 +608,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHRYSLER",
         "porcen1": "21",
-        "precioimpre": "29338.21"
+        "precioimpre": "29338.21",
+        "costoart": "13904.37"
     },
     {
         "codpro": "102CHRY02",
@@ -580,7 +620,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHRYSLER",
         "porcen1": "21",
-        "precioimpre": "29123.96"
+        "precioimpre": "29123.96",
+        "costoart": "13802.91"
     },
     {
         "codpro": "102CHRY03",
@@ -591,7 +632,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHRYSLER",
         "porcen1": "21",
-        "precioimpre": "36623"
+        "precioimpre": "36623",
+        "costoart": "17356.99"
     },
     {
         "codpro": "102CHRY04",
@@ -602,7 +644,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CHRYSLER",
         "porcen1": "21",
-        "precioimpre": "20951.38"
+        "precioimpre": "20951.38",
+        "costoart": "9929.65"
     },
     {
         "codpro": "102CUMM01",
@@ -613,7 +656,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CUMMINS",
         "porcen1": "21",
-        "precioimpre": "95802.52"
+        "precioimpre": "95802.52",
+        "costoart": "45404.06"
     },
     {
         "codpro": "102CUMM02",
@@ -624,7 +668,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CUMMINS",
         "porcen1": "21",
-        "precioimpre": "57283.78"
+        "precioimpre": "57283.78",
+        "costoart": "27148.71"
     },
     {
         "codpro": "102CUMM03",
@@ -635,7 +680,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CUMMINS",
         "porcen1": "21",
-        "precioimpre": "82612.52"
+        "precioimpre": "82612.52",
+        "costoart": "39152.88"
     },
     {
         "codpro": "102CUMM08",
@@ -646,7 +692,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CUMMINS",
         "porcen1": "21",
-        "precioimpre": "103337.06"
+        "precioimpre": "103337.06",
+        "costoart": "48974.83"
     },
     {
         "codpro": "102CUMM09",
@@ -657,7 +704,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CUMMINS",
         "porcen1": "21",
-        "precioimpre": "55747.09"
+        "precioimpre": "55747.09",
+        "costoart": "26420.37"
     },
     {
         "codpro": "102CUMM10",
@@ -668,7 +716,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CUMMINS",
         "porcen1": "21",
-        "precioimpre": "80497.33"
+        "precioimpre": "80497.33",
+        "costoart": "38150.36"
     },
     {
         "codpro": "102CUMM12",
@@ -679,7 +728,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "CUMMINS",
         "porcen1": "21",
-        "precioimpre": "77277.45"
+        "precioimpre": "77277.45",
+        "costoart": "36624.32"
     },
     {
         "codpro": "102DAE001",
@@ -690,7 +740,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "DAEWOO",
         "porcen1": "21",
-        "precioimpre": "28206.32"
+        "precioimpre": "28206.32",
+        "costoart": "13367.97"
     },
     {
         "codpro": "102DAE002",
@@ -701,7 +752,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "DAEWOO",
         "porcen1": "21",
-        "precioimpre": "16957.1"
+        "precioimpre": "16957.1",
+        "costoart": "8036.52"
     },
     {
         "codpro": "102DAIHAT01",
@@ -712,7 +764,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "DAEWOO",
         "porcen1": "21",
-        "precioimpre": "40699.41"
+        "precioimpre": "40699.41",
+        "costoart": "19288.76"
     },
     {
         "codpro": "102DEUTZ01",
@@ -723,7 +776,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "DEUTZ",
         "porcen1": "21",
-        "precioimpre": "33723.08"
+        "precioimpre": "33723.08",
+        "costoart": "15982.39"
     },
     {
         "codpro": "102DEUTZ02",
@@ -734,7 +788,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "DEUTZ",
         "porcen1": "21",
-        "precioimpre": "37565.43"
+        "precioimpre": "37565.43",
+        "costoart": "17803.6"
     },
     {
         "codpro": "102DEUTZ03",
@@ -745,7 +800,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "DEUTZ",
         "porcen1": "21",
-        "precioimpre": "76674.3"
+        "precioimpre": "76674.3",
+        "costoart": "36338.61"
     },
     {
         "codpro": "102DEUTZ04",
@@ -756,7 +812,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "DEUTZ",
         "porcen1": "21",
-        "precioimpre": "98498.38"
+        "precioimpre": "98498.38",
+        "costoart": "46681.62"
     },
     {
         "codpro": "102DEUTZ07",
@@ -767,7 +824,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "DEUTZ",
         "porcen1": "21",
-        "precioimpre": "77437"
+        "precioimpre": "77437",
+        "costoart": "36700"
     },
     {
         "codpro": "102DEUTZ09",
@@ -778,7 +836,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "DEUTZ",
         "porcen1": "21",
-        "precioimpre": "0"
+        "precioimpre": "0",
+        "costoart": "0"
     },
     {
         "codpro": "102FIAT01",
@@ -789,7 +848,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "75560.17"
+        "precioimpre": "75560.17",
+        "costoart": "35810.42"
     },
     {
         "codpro": "102FIAT02",
@@ -800,7 +860,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "27261.84"
+        "precioimpre": "27261.84",
+        "costoart": "12920.28"
     },
     {
         "codpro": "102FIAT02ESP",
@@ -811,7 +872,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "1484.54"
+        "precioimpre": "1484.54",
+        "costoart": "703.47"
     },
     {
         "codpro": "102FIAT03",
@@ -822,7 +884,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "28120.41"
+        "precioimpre": "28120.41",
+        "costoart": "13327.18"
     },
     {
         "codpro": "102FIAT04",
@@ -833,7 +896,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "17816.79"
+        "precioimpre": "17816.79",
+        "costoart": "8443.89"
     },
     {
         "codpro": "102FIAT07",
@@ -844,7 +908,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "53029.09"
+        "precioimpre": "53029.09",
+        "costoart": "25132.43"
     },
     {
         "codpro": "102FIAT08",
@@ -855,7 +920,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "18889.99"
+        "precioimpre": "18889.99",
+        "costoart": "8952.68"
     },
     {
         "codpro": "102FIAT09",
@@ -866,7 +932,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "15611.33"
+        "precioimpre": "15611.33",
+        "costoart": "7398.74"
     },
     {
         "codpro": "102FIAT10",
@@ -877,7 +944,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "15457.37"
+        "precioimpre": "15457.37",
+        "costoart": "7325.74"
     },
     {
         "codpro": "102FIAT11",
@@ -888,7 +956,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "76955.47"
+        "precioimpre": "76955.47",
+        "costoart": "36471.81"
     },
     {
         "codpro": "102FIAT13",
@@ -899,7 +968,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "22968.62"
+        "precioimpre": "22968.62",
+        "costoart": "10885.59"
     },
     {
         "codpro": "102FIAT14",
@@ -910,7 +980,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "21318.85"
+        "precioimpre": "21318.85",
+        "costoart": "10103.78"
     },
     {
         "codpro": "102FIAT15",
@@ -921,7 +992,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "21787.92"
+        "precioimpre": "21787.92",
+        "costoart": "10326"
     },
     {
         "codpro": "102FIAT16",
@@ -932,7 +1004,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "23934.48"
+        "precioimpre": "23934.48",
+        "costoart": "11343.51"
     },
     {
         "codpro": "102FIAT17",
@@ -943,7 +1016,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "29622.96"
+        "precioimpre": "29622.96",
+        "costoart": "14039.41"
     },
     {
         "codpro": "102FIAT18",
@@ -954,7 +1028,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "13200.98"
+        "precioimpre": "13200.98",
+        "costoart": "6256.7"
     },
     {
         "codpro": "102FIAT19",
@@ -965,7 +1040,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "75130.93"
+        "precioimpre": "75130.93",
+        "costoart": "35607"
     },
     {
         "codpro": "102FIAT21",
@@ -976,7 +1052,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "15777.53"
+        "precioimpre": "15777.53",
+        "costoart": "7477.61"
     },
     {
         "codpro": "102FIAT22",
@@ -987,7 +1064,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "77062.79"
+        "precioimpre": "77062.79",
+        "costoart": "36522.62"
     },
     {
         "codpro": "102FIAT24",
@@ -998,7 +1076,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "16023.31"
+        "precioimpre": "16023.31",
+        "costoart": "7594.18"
     },
     {
         "codpro": "102FIAT26",
@@ -1009,7 +1088,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "30803.72"
+        "precioimpre": "30803.72",
+        "costoart": "14598.89"
     },
     {
         "codpro": "102FIAT27",
@@ -1020,7 +1100,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "51733"
+        "precioimpre": "51733",
+        "costoart": "24518.02"
     },
     {
         "codpro": "102FIAT28",
@@ -1031,7 +1112,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "60319.35"
+        "precioimpre": "60319.35",
+        "costoart": "28587.35"
     },
     {
         "codpro": "102FIAT29",
@@ -1042,7 +1124,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "17859.92"
+        "precioimpre": "17859.92",
+        "costoart": "8464.48"
     },
     {
         "codpro": "102FIAT30",
@@ -1053,7 +1136,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "15192"
+        "precioimpre": "15192",
+        "costoart": "7200"
     },
     {
         "codpro": "102FIAT31",
@@ -1064,7 +1148,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "19095.5"
+        "precioimpre": "19095.5",
+        "costoart": "9050"
     },
     {
         "codpro": "102FIAT32",
@@ -1075,7 +1160,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FIAT",
         "porcen1": "21",
-        "precioimpre": "43149.5"
+        "precioimpre": "43149.5",
+        "costoart": "20450"
     },
     {
         "codpro": "102FOR01",
@@ -1086,7 +1172,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "29215.27"
+        "precioimpre": "29215.27",
+        "costoart": "13846.06"
     },
     {
         "codpro": "102FOR02",
@@ -1097,7 +1184,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "16679.05"
+        "precioimpre": "16679.05",
+        "costoart": "7904.74"
     },
     {
         "codpro": "102FOR03",
@@ -1108,7 +1196,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "23767.43"
+        "precioimpre": "23767.43",
+        "costoart": "11264.31"
     },
     {
         "codpro": "102FOR05",
@@ -1119,7 +1208,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "43532.93"
+        "precioimpre": "43532.93",
+        "costoart": "20631.71"
     },
     {
         "codpro": "102FOR06",
@@ -1130,7 +1220,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "25608.96"
+        "precioimpre": "25608.96",
+        "costoart": "12136.95"
     },
     {
         "codpro": "102FOR07",
@@ -1141,7 +1232,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "28120.41"
+        "precioimpre": "28120.41",
+        "costoart": "13327.18"
     },
     {
         "codpro": "102FOR08",
@@ -1152,7 +1244,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "34345.52"
+        "precioimpre": "34345.52",
+        "costoart": "16277.5"
     },
     {
         "codpro": "102FOR10",
@@ -1163,7 +1256,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "54480.64"
+        "precioimpre": "54480.64",
+        "costoart": "25820.17"
     },
     {
         "codpro": "102FOR11",
@@ -1174,7 +1268,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "31082.68"
+        "precioimpre": "31082.68",
+        "costoart": "14731.18"
     },
     {
         "codpro": "102FOR12",
@@ -1185,7 +1280,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "25866.48"
+        "precioimpre": "25866.48",
+        "costoart": "12259.02"
     },
     {
         "codpro": "102FOR13",
@@ -1196,7 +1292,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "98528.84"
+        "precioimpre": "98528.84",
+        "costoart": "46696.08"
     },
     {
         "codpro": "102FOR14",
@@ -1207,7 +1304,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "37350.75"
+        "precioimpre": "37350.75",
+        "costoart": "17701.79"
     },
     {
         "codpro": "102FOR15",
@@ -1218,7 +1316,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "15562.78"
+        "precioimpre": "15562.78",
+        "costoart": "7375.78"
     },
     {
         "codpro": "102FOR16",
@@ -1229,7 +1328,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "29258.17"
+        "precioimpre": "29258.17",
+        "costoart": "13866.48"
     },
     {
         "codpro": "102FOR17",
@@ -1240,7 +1340,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "81227.13"
+        "precioimpre": "81227.13",
+        "costoart": "38496.29"
     },
     {
         "codpro": "102FOR18",
@@ -1251,7 +1352,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "22324.57"
+        "precioimpre": "22324.57",
+        "costoart": "10580.36"
     },
     {
         "codpro": "102FOR19",
@@ -1262,7 +1364,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "26553.27"
+        "precioimpre": "26553.27",
+        "costoart": "12584.62"
     },
     {
         "codpro": "102FOR21",
@@ -1273,7 +1376,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "54394.72"
+        "precioimpre": "54394.72",
+        "costoart": "25779.53"
     },
     {
         "codpro": "102FOR22",
@@ -1284,7 +1388,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "45357.45"
+        "precioimpre": "45357.45",
+        "costoart": "21496.47"
     },
     {
         "codpro": "102FOR23",
@@ -1295,7 +1400,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "19855.99"
+        "precioimpre": "19855.99",
+        "costoart": "9410.43"
     },
     {
         "codpro": "102FOR24",
@@ -1306,7 +1412,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "57958"
+        "precioimpre": "57958",
+        "costoart": "27468.26"
     },
     {
         "codpro": "102FOR25",
@@ -1317,7 +1424,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "22217.34"
+        "precioimpre": "22217.34",
+        "costoart": "10529.55"
     },
     {
         "codpro": "102FOR26",
@@ -1328,7 +1436,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "27390.45"
+        "precioimpre": "27390.45",
+        "costoart": "12981.3"
     },
     {
         "codpro": "102FOR27",
@@ -1339,7 +1448,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "24213.68"
+        "precioimpre": "24213.68",
+        "costoart": "11475.67"
     },
     {
         "codpro": "102FOR28",
@@ -1350,7 +1460,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "61125.31"
+        "precioimpre": "61125.31",
+        "costoart": "28969.38"
     },
     {
         "codpro": "102FOR29",
@@ -1361,7 +1472,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "59778.62"
+        "precioimpre": "59778.62",
+        "costoart": "28330.94"
     },
     {
         "codpro": "102FOR30",
@@ -1372,7 +1484,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "78434.46"
+        "precioimpre": "78434.46",
+        "costoart": "37172.88"
     },
     {
         "codpro": "102FOR31",
@@ -1383,7 +1496,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "70837.74"
+        "precioimpre": "70837.74",
+        "costoart": "33572.32"
     },
     {
         "codpro": "102FOR32",
@@ -1394,7 +1508,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "31619.27"
+        "precioimpre": "31619.27",
+        "costoart": "14985.54"
     },
     {
         "codpro": "102FOR36",
@@ -1405,7 +1520,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "31941.28"
+        "precioimpre": "31941.28",
+        "costoart": "15137.98"
     },
     {
         "codpro": "102FOR41",
@@ -1416,7 +1532,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "40184.38"
+        "precioimpre": "40184.38",
+        "costoart": "19044.7"
     },
     {
         "codpro": "102FOR42",
@@ -1427,7 +1544,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "11710.5"
+        "precioimpre": "11710.5",
+        "costoart": "5550"
     },
     {
         "codpro": "102FOR43",
@@ -1438,7 +1556,20 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "FORD",
         "porcen1": "21",
-        "precioimpre": "48846.5"
+        "precioimpre": "48846.5",
+        "costoart": "23150"
+    },
+    {
+        "codpro": "102FOR44",
+        "desc_stock": "Jgo tor ecosport / ka motor dragon 1.5 3 cil 12 V",
+        "rubro": "102",
+        "subrub": "100",
+        "proveed": "1030",
+        "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
+        "desc_marca": "FORD",
+        "porcen1": "21",
+        "precioimpre": "11077.5",
+        "costoart": "5250"
     },
     {
         "codpro": "102HON01",
@@ -1449,7 +1580,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "HONDA",
         "porcen1": "21",
-        "precioimpre": "28571.13"
+        "precioimpre": "28571.13",
+        "costoart": "13540.82"
     },
     {
         "codpro": "102HON02",
@@ -1460,7 +1592,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "HONDA",
         "porcen1": "21",
-        "precioimpre": "25695.86"
+        "precioimpre": "25695.86",
+        "costoart": "12178.3"
     },
     {
         "codpro": "102HON03",
@@ -1471,7 +1604,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "HONDA",
         "porcen1": "21",
-        "precioimpre": "27175.86"
+        "precioimpre": "27175.86",
+        "costoart": "12879.48"
     },
     {
         "codpro": "102HON04",
@@ -1482,7 +1616,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "HONDA",
         "porcen1": "21",
-        "precioimpre": "31597.92"
+        "precioimpre": "31597.92",
+        "costoart": "14975.34"
     },
     {
         "codpro": "102HON05",
@@ -1493,7 +1628,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "HONDA",
         "porcen1": "21",
-        "precioimpre": "38252.21"
+        "precioimpre": "38252.21",
+        "costoart": "18129.07"
     },
     {
         "codpro": "102HON06",
@@ -1504,7 +1640,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "HONDA",
         "porcen1": "21",
-        "precioimpre": "30760.68"
+        "precioimpre": "30760.68",
+        "costoart": "14578.63"
     },
     {
         "codpro": "102HON07",
@@ -1515,7 +1652,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "HONDA",
         "porcen1": "21",
-        "precioimpre": "25608.96"
+        "precioimpre": "25608.96",
+        "costoart": "12136.95"
     },
     {
         "codpro": "102HON08",
@@ -1526,7 +1664,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "HONDA",
         "porcen1": "21",
-        "precioimpre": "50963.36"
+        "precioimpre": "50963.36",
+        "costoart": "24153.23"
     },
     {
         "codpro": "102IKA01",
@@ -1537,7 +1676,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "IKA",
         "porcen1": "21",
-        "precioimpre": "45293.21"
+        "precioimpre": "45293.21",
+        "costoart": "21465.91"
     },
     {
         "codpro": "102IKA02",
@@ -1548,7 +1688,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "IKA",
         "porcen1": "21",
-        "precioimpre": "64440.73"
+        "precioimpre": "64440.73",
+        "costoart": "30540.68"
     },
     {
         "codpro": "102ISUZU01",
@@ -1559,7 +1700,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "ISUZU",
         "porcen1": "21",
-        "precioimpre": "0"
+        "precioimpre": "0",
+        "costoart": "0"
     },
     {
         "codpro": "102ISUZU02",
@@ -1570,7 +1712,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "ISUZU",
         "porcen1": "21",
-        "precioimpre": "0"
+        "precioimpre": "0",
+        "costoart": "0"
     },
     {
         "codpro": "102ISUZU03",
@@ -1581,7 +1724,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "ISUZU",
         "porcen1": "21",
-        "precioimpre": "27149.83"
+        "precioimpre": "27149.83",
+        "costoart": "12867.23"
     },
     {
         "codpro": "102ISUZU07",
@@ -1592,7 +1736,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "ISUZU",
         "porcen1": "21",
-        "precioimpre": "70552.82"
+        "precioimpre": "70552.82",
+        "costoart": "33437.29"
     },
     {
         "codpro": "102ISUZU08",
@@ -1603,7 +1748,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "ISUZU",
         "porcen1": "21",
-        "precioimpre": "48448.68"
+        "precioimpre": "48448.68",
+        "costoart": "22961.41"
     },
     {
         "codpro": "102IVECO01",
@@ -1614,7 +1760,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "IVECO",
         "porcen1": "21",
-        "precioimpre": "364921.19"
+        "precioimpre": "364921.19",
+        "costoart": "172948.31"
     },
     {
         "codpro": "102IVECO02",
@@ -1625,7 +1772,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "IVECO",
         "porcen1": "21",
-        "precioimpre": "61220.95"
+        "precioimpre": "61220.95",
+        "costoart": "29014.61"
     },
     {
         "codpro": "102IVECO16",
@@ -1636,7 +1784,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "IVECO",
         "porcen1": "21",
-        "precioimpre": "0"
+        "precioimpre": "0",
+        "costoart": "0"
     },
     {
         "codpro": "102KIA01",
@@ -1647,7 +1796,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "KIA",
         "porcen1": "21",
-        "precioimpre": "25435.6"
+        "precioimpre": "25435.6",
+        "costoart": "12054.85"
     },
     {
         "codpro": "102KIA02",
@@ -1658,7 +1808,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "KIA",
         "porcen1": "21",
-        "precioimpre": "31281.94"
+        "precioimpre": "31281.94",
+        "costoart": "14825.51"
     },
     {
         "codpro": "102KIA03",
@@ -1669,7 +1820,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "KIA",
         "porcen1": "21",
-        "precioimpre": "27440.58"
+        "precioimpre": "27440.58",
+        "costoart": "13004.9"
     },
     {
         "codpro": "102KIA04",
@@ -1680,7 +1832,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "KIA",
         "porcen1": "21",
-        "precioimpre": "24838.82"
+        "precioimpre": "24838.82",
+        "costoart": "11771.89"
     },
     {
         "codpro": "102KIA06",
@@ -1691,7 +1844,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "KIA",
         "porcen1": "21",
-        "precioimpre": "56240.71"
+        "precioimpre": "56240.71",
+        "costoart": "26654.44"
     },
     {
         "codpro": "102KIA08",
@@ -1702,7 +1856,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "KIA",
         "porcen1": "21",
-        "precioimpre": "70858.72"
+        "precioimpre": "70858.72",
+        "costoart": "33582.44"
     },
     {
         "codpro": "102LANROV01",
@@ -1713,7 +1868,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "LAND ROVER",
         "porcen1": "21",
-        "precioimpre": "47654.41"
+        "precioimpre": "47654.41",
+        "costoart": "22585.01"
     },
     {
         "codpro": "102MAXION01",
@@ -1724,7 +1880,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MAXION",
         "porcen1": "21",
-        "precioimpre": "47654.41"
+        "precioimpre": "47654.41",
+        "costoart": "22585.01"
     },
     {
         "codpro": "102MAXION03",
@@ -1735,7 +1892,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MAXION",
         "porcen1": "21",
-        "precioimpre": "31603.19"
+        "precioimpre": "31603.19",
+        "costoart": "14977.82"
     },
     {
         "codpro": "102MAZDA01",
@@ -1746,7 +1904,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MAZDA",
         "porcen1": "21",
-        "precioimpre": "41171.67"
+        "precioimpre": "41171.67",
+        "costoart": "19512.51"
     },
     {
         "codpro": "102MAZDA02",
@@ -1757,7 +1916,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MAZDA",
         "porcen1": "21",
-        "precioimpre": "35204.18"
+        "precioimpre": "35204.18",
+        "costoart": "16684.53"
     },
     {
         "codpro": "102MAZDA03",
@@ -1768,7 +1928,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MAZDA",
         "porcen1": "21",
-        "precioimpre": "29794.73"
+        "precioimpre": "29794.73",
+        "costoart": "14120.8"
     },
     {
         "codpro": "102MER01",
@@ -1779,7 +1940,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "41772.67"
+        "precioimpre": "41772.67",
+        "costoart": "19797.53"
     },
     {
         "codpro": "102MER02",
@@ -1790,7 +1952,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "60662.91"
+        "precioimpre": "60662.91",
+        "costoart": "28750.02"
     },
     {
         "codpro": "102MER03",
@@ -1801,7 +1964,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "23397.89"
+        "precioimpre": "23397.89",
+        "costoart": "11089.11"
     },
     {
         "codpro": "102MER04",
@@ -1812,7 +1976,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "29644.47"
+        "precioimpre": "29644.47",
+        "costoart": "14049.5"
     },
     {
         "codpro": "102MER06",
@@ -1823,7 +1988,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "47654.41"
+        "precioimpre": "47654.41",
+        "costoart": "22585.01"
     },
     {
         "codpro": "102MER10",
@@ -1834,7 +2000,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "63324.54"
+        "precioimpre": "63324.54",
+        "costoart": "30011.67"
     },
     {
         "codpro": "102MER11",
@@ -1845,7 +2012,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "61757.56"
+        "precioimpre": "61757.56",
+        "costoart": "29268.9"
     },
     {
         "codpro": "102MER12",
@@ -1856,7 +2024,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "24642.91"
+        "precioimpre": "24642.91",
+        "costoart": "11679.11"
     },
     {
         "codpro": "102MER13",
@@ -1867,7 +2036,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "44799.55"
+        "precioimpre": "44799.55",
+        "costoart": "21231.94"
     },
     {
         "codpro": "102MER15",
@@ -1878,7 +2048,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "24492.72"
+        "precioimpre": "24492.72",
+        "costoart": "11607.86"
     },
     {
         "codpro": "102MER16",
@@ -1889,7 +2060,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "29515.71"
+        "precioimpre": "29515.71",
+        "costoart": "13988.56"
     },
     {
         "codpro": "102MER17",
@@ -1900,7 +2072,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "34023.54"
+        "precioimpre": "34023.54",
+        "costoart": "16124.99"
     },
     {
         "codpro": "102MER18",
@@ -1911,7 +2084,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "46151.87"
+        "precioimpre": "46151.87",
+        "costoart": "21872.89"
     },
     {
         "codpro": "102MER19",
@@ -1922,7 +2096,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MERCEDES BENZ",
         "porcen1": "21",
-        "precioimpre": "64827.22"
+        "precioimpre": "64827.22",
+        "costoart": "30723.83"
     },
     {
         "codpro": "102MITSUBI01",
@@ -1933,7 +2108,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MITSUBISHI",
         "porcen1": "21",
-        "precioimpre": "20993.81"
+        "precioimpre": "20993.81",
+        "costoart": "9949.59"
     },
     {
         "codpro": "102MITSUBI02",
@@ -1944,7 +2120,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MITSUBISHI",
         "porcen1": "21",
-        "precioimpre": "20993.81"
+        "precioimpre": "20993.81",
+        "costoart": "9949.59"
     },
     {
         "codpro": "102MITSUBI03",
@@ -1955,7 +2132,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MITSUBISHI",
         "porcen1": "21",
-        "precioimpre": "37178.99"
+        "precioimpre": "37178.99",
+        "costoart": "17620.46"
     },
     {
         "codpro": "102MITSUBI06",
@@ -1966,7 +2144,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MITSUBISHI",
         "porcen1": "21",
-        "precioimpre": "60319.35"
+        "precioimpre": "60319.35",
+        "costoart": "28587.35"
     },
     {
         "codpro": "102MWM03",
@@ -1977,7 +2156,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MVM",
         "porcen1": "21",
-        "precioimpre": "54974.38"
+        "precioimpre": "54974.38",
+        "costoart": "26054.16"
     },
     {
         "codpro": "102MWM04",
@@ -1988,7 +2168,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MVM",
         "porcen1": "21",
-        "precioimpre": "82214.65"
+        "precioimpre": "82214.65",
+        "costoart": "38964.2"
     },
     {
         "codpro": "102MWM05",
@@ -1999,7 +2180,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MVM",
         "porcen1": "21",
-        "precioimpre": "9008.71"
+        "precioimpre": "9008.71",
+        "costoart": "4269.55"
     },
     {
         "codpro": "102MWM10",
@@ -2010,7 +2192,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "MVM",
         "porcen1": "21",
-        "precioimpre": "13436.71"
+        "precioimpre": "13436.71",
+        "costoart": "6368.11"
     },
     {
         "codpro": "102NISSAN01",
@@ -2021,7 +2204,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "NISSAN",
         "porcen1": "21",
-        "precioimpre": "53595.64"
+        "precioimpre": "53595.64",
+        "costoart": "25400.73"
     },
     {
         "codpro": "102NISSAN02",
@@ -2032,7 +2216,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "NISSAN",
         "porcen1": "21",
-        "precioimpre": "32276.51"
+        "precioimpre": "32276.51",
+        "costoart": "15297.07"
     },
     {
         "codpro": "102NISSAN03",
@@ -2043,7 +2228,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "NISSAN",
         "porcen1": "21",
-        "precioimpre": "25022.38"
+        "precioimpre": "25022.38",
+        "costoart": "11858.95"
     },
     {
         "codpro": "102NISSAN04",
@@ -2054,7 +2240,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "NISSAN",
         "porcen1": "21",
-        "precioimpre": "16406.1"
+        "precioimpre": "16406.1",
+        "costoart": "7775.44"
     },
     {
         "codpro": "102NISSAN05",
@@ -2065,7 +2252,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "NISSAN",
         "porcen1": "21",
-        "precioimpre": "24707.2"
+        "precioimpre": "24707.2",
+        "costoart": "11709.68"
     },
     {
         "codpro": "102NISSAN07",
@@ -2076,7 +2264,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "NISSAN",
         "porcen1": "21",
-        "precioimpre": "17988.5"
+        "precioimpre": "17988.5",
+        "costoart": "8525.24"
     },
     {
         "codpro": "102NISSAN09",
@@ -2087,7 +2276,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "NISSAN",
         "porcen1": "21",
-        "precioimpre": "25558.11"
+        "precioimpre": "25558.11",
+        "costoart": "12112.81"
     },
     {
         "codpro": "102NISSAN11",
@@ -2098,7 +2288,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "NISSAN",
         "porcen1": "21",
-        "precioimpre": "41959.19"
+        "precioimpre": "41959.19",
+        "costoart": "19885.87"
     },
     {
         "codpro": "102NISSAN12",
@@ -2109,7 +2300,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "NISSAN",
         "porcen1": "21",
-        "precioimpre": "34752.21"
+        "precioimpre": "34752.21",
+        "costoart": "16470.25"
     },
     {
         "codpro": "102PEU01",
@@ -2120,7 +2312,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "40398.93"
+        "precioimpre": "40398.93",
+        "costoart": "19146.49"
     },
     {
         "codpro": "102PEU02",
@@ -2131,7 +2324,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "40892.57"
+        "precioimpre": "40892.57",
+        "costoart": "19380.49"
     },
     {
         "codpro": "102PEU03",
@@ -2142,7 +2336,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "27369.16"
+        "precioimpre": "27369.16",
+        "costoart": "12971.15"
     },
     {
         "codpro": "102PEU04",
@@ -2153,7 +2348,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "28863.98"
+        "precioimpre": "28863.98",
+        "costoart": "13679.59"
     },
     {
         "codpro": "102PEU05",
@@ -2164,7 +2360,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "57314.15"
+        "precioimpre": "57314.15",
+        "costoart": "27163.08"
     },
     {
         "codpro": "102PEU06",
@@ -2175,7 +2372,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "46688.53"
+        "precioimpre": "46688.53",
+        "costoart": "22127.35"
     },
     {
         "codpro": "102PEU07",
@@ -2186,7 +2384,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "25772.49"
+        "precioimpre": "25772.49",
+        "costoart": "12214.34"
     },
     {
         "codpro": "102PEU08",
@@ -2197,7 +2396,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "28871.61"
+        "precioimpre": "28871.61",
+        "costoart": "13683.34"
     },
     {
         "codpro": "102PEU09",
@@ -2208,7 +2408,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "28802.63"
+        "precioimpre": "28802.63",
+        "costoart": "13650.49"
     },
     {
         "codpro": "102PEU12",
@@ -2219,7 +2420,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "38595.8"
+        "precioimpre": "38595.8",
+        "costoart": "18291.85"
     },
     {
         "codpro": "102PEU14",
@@ -2230,7 +2432,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "40677.97"
+        "precioimpre": "40677.97",
+        "costoart": "19278.68"
     },
     {
         "codpro": "102PEU16",
@@ -2241,7 +2444,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "20033.27"
+        "precioimpre": "20033.27",
+        "costoart": "9494.52"
     },
     {
         "codpro": "102PEU17",
@@ -2252,7 +2456,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "36194.42"
+        "precioimpre": "36194.42",
+        "costoart": "17153.84"
     },
     {
         "codpro": "102PEU19",
@@ -2263,7 +2468,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "29408.38"
+        "precioimpre": "29408.38",
+        "costoart": "13937.56"
     },
     {
         "codpro": "102PEU20",
@@ -2274,7 +2480,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "88010.45"
+        "precioimpre": "88010.45",
+        "costoart": "41711.14"
     },
     {
         "codpro": "102PEU21",
@@ -2285,7 +2492,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "25759.24"
+        "precioimpre": "25759.24",
+        "costoart": "12208.1"
     },
     {
         "codpro": "102PEU22",
@@ -2296,7 +2504,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "21358.69"
+        "precioimpre": "21358.69",
+        "costoart": "10122.65"
     },
     {
         "codpro": "102PEU23",
@@ -2307,7 +2516,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "23999.04"
+        "precioimpre": "23999.04",
+        "costoart": "11373.84"
     },
     {
         "codpro": "102PEU24",
@@ -2318,7 +2528,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "31834.06"
+        "precioimpre": "31834.06",
+        "costoart": "15087.32"
     },
     {
         "codpro": "102PEU25",
@@ -2329,7 +2540,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "27390.45"
+        "precioimpre": "27390.45",
+        "costoart": "12981.3"
     },
     {
         "codpro": "102PEU26",
@@ -2340,7 +2552,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "43683.23"
+        "precioimpre": "43683.23",
+        "costoart": "20703"
     },
     {
         "codpro": "102PEU27",
@@ -2351,7 +2564,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "32027.21"
+        "precioimpre": "32027.21",
+        "costoart": "15178.77"
     },
     {
         "codpro": "102PEU28",
@@ -2362,7 +2576,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "23706.24"
+        "precioimpre": "23706.24",
+        "costoart": "11235.11"
     },
     {
         "codpro": "102PEU29",
@@ -2373,7 +2588,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "26507.13"
+        "precioimpre": "26507.13",
+        "costoart": "12562.59"
     },
     {
         "codpro": "102PEU30",
@@ -2384,7 +2600,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "27256.88"
+        "precioimpre": "27256.88",
+        "costoart": "12918.08"
     },
     {
         "codpro": "102PEU33",
@@ -2395,7 +2612,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "21559.05"
+        "precioimpre": "21559.05",
+        "costoart": "10217.56"
     },
     {
         "codpro": "102PEU40",
@@ -2406,7 +2624,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "PEUGEOT",
         "porcen1": "21",
-        "precioimpre": "0"
+        "precioimpre": "0",
+        "costoart": "0"
     },
     {
         "codpro": "102REN01",
@@ -2417,7 +2636,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "46817.24"
+        "precioimpre": "46817.24",
+        "costoart": "22188.24"
     },
     {
         "codpro": "102REN02",
@@ -2428,7 +2648,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "23526.66"
+        "precioimpre": "23526.66",
+        "costoart": "11149.94"
     },
     {
         "codpro": "102REN03",
@@ -2439,7 +2660,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "23827.35"
+        "precioimpre": "23827.35",
+        "costoart": "11292.49"
     },
     {
         "codpro": "102REN04",
@@ -2450,7 +2672,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "16357.04"
+        "precioimpre": "16357.04",
+        "costoart": "7752.2"
     },
     {
         "codpro": "102REN05",
@@ -2461,7 +2684,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "24256.57"
+        "precioimpre": "24256.57",
+        "costoart": "11496.05"
     },
     {
         "codpro": "102REN06",
@@ -2472,7 +2696,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "18568.13"
+        "precioimpre": "18568.13",
+        "costoart": "8800.06"
     },
     {
         "codpro": "102REN07",
@@ -2483,7 +2708,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "21122.46"
+        "precioimpre": "21122.46",
+        "costoart": "10010.72"
     },
     {
         "codpro": "102REN08",
@@ -2494,7 +2720,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "25129.72"
+        "precioimpre": "25129.72",
+        "costoart": "11909.72"
     },
     {
         "codpro": "102REN09",
@@ -2505,7 +2732,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "55489.4"
+        "precioimpre": "55489.4",
+        "costoart": "26298.42"
     },
     {
         "codpro": "102REN11",
@@ -2516,7 +2744,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "46219.02"
+        "precioimpre": "46219.02",
+        "costoart": "21904.83"
     },
     {
         "codpro": "102REN12",
@@ -2527,7 +2756,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "55489.4"
+        "precioimpre": "55489.4",
+        "costoart": "26298.42"
     },
     {
         "codpro": "102REN14",
@@ -2538,7 +2768,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "18675.44"
+        "precioimpre": "18675.44",
+        "costoart": "8850.92"
     },
     {
         "codpro": "102REN15",
@@ -2549,7 +2780,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "20936.23"
+        "precioimpre": "20936.23",
+        "costoart": "9922.55"
     },
     {
         "codpro": "102REN16",
@@ -2560,7 +2792,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "27241.6"
+        "precioimpre": "27241.6",
+        "costoart": "12910.8"
     },
     {
         "codpro": "102REN17",
@@ -2571,7 +2804,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "75130.93"
+        "precioimpre": "75130.93",
+        "costoart": "35607"
     },
     {
         "codpro": "102REN18",
@@ -2582,7 +2816,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "29384.29"
+        "precioimpre": "29384.29",
+        "costoart": "13926.11"
     },
     {
         "codpro": "102REN20",
@@ -2593,7 +2828,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "28077.45"
+        "precioimpre": "28077.45",
+        "costoart": "13306.85"
     },
     {
         "codpro": "102REN21",
@@ -2604,7 +2840,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "63007.77"
+        "precioimpre": "63007.77",
+        "costoart": "29861.44"
     },
     {
         "codpro": "102REN22",
@@ -2615,7 +2852,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "33079.05"
+        "precioimpre": "33079.05",
+        "costoart": "15677.24"
     },
     {
         "codpro": "102REN23",
@@ -2626,7 +2864,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "26853.78"
+        "precioimpre": "26853.78",
+        "costoart": "12726.97"
     },
     {
         "codpro": "102REN25",
@@ -2637,7 +2876,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "25558.11"
+        "precioimpre": "25558.11",
+        "costoart": "12112.81"
     },
     {
         "codpro": "102REN27",
@@ -2648,7 +2888,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "10.5",
-        "precioimpre": "18441.74"
+        "precioimpre": "18441.74",
+        "costoart": "8740.14"
     },
     {
         "codpro": "102REN29",
@@ -2659,7 +2900,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "12442.36"
+        "precioimpre": "12442.36",
+        "costoart": "5896.74"
     },
     {
         "codpro": "102REN30",
@@ -2670,7 +2912,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "24900.39"
+        "precioimpre": "24900.39",
+        "costoart": "11801.15"
     },
     {
         "codpro": "102REN31",
@@ -2681,7 +2924,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "RENAULT",
         "porcen1": "21",
-        "precioimpre": "18261.72"
+        "precioimpre": "18261.72",
+        "costoart": "8654.83"
     },
     {
         "codpro": "102ROVER02",
@@ -2692,7 +2936,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "ROVER",
         "porcen1": "21",
-        "precioimpre": "175419.76"
+        "precioimpre": "175419.76",
+        "costoart": "83137.32"
     },
     {
         "codpro": "102SCANIA01",
@@ -2703,7 +2948,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "SCANIA",
         "porcen1": "21",
-        "precioimpre": "45250.24"
+        "precioimpre": "45250.24",
+        "costoart": "21445.55"
     },
     {
         "codpro": "102SCANIA02",
@@ -2714,7 +2960,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "SCANIA",
         "porcen1": "21",
-        "precioimpre": "38853.43"
+        "precioimpre": "38853.43",
+        "costoart": "18413.93"
     },
     {
         "codpro": "102SCANIA04",
@@ -2725,7 +2972,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "SCANIA",
         "porcen1": "21",
-        "precioimpre": "119136.06"
+        "precioimpre": "119136.06",
+        "costoart": "56462.6"
     },
     {
         "codpro": "102SCANIA3=5",
@@ -2736,7 +2984,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "SCANIA",
         "porcen1": "21",
-        "precioimpre": "107973.85"
+        "precioimpre": "107973.85",
+        "costoart": "51172.39"
     },
     {
         "codpro": "102SCANIA5=3",
@@ -2747,7 +2996,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "SCANIA",
         "porcen1": "21",
-        "precioimpre": "107973.85"
+        "precioimpre": "107973.85",
+        "costoart": "51172.39"
     },
     {
         "codpro": "102SUBARU01",
@@ -2758,7 +3008,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "SUBARU",
         "porcen1": "21",
-        "precioimpre": "28764.41"
+        "precioimpre": "28764.41",
+        "costoart": "13632.42"
     },
     {
         "codpro": "102SUBARU02",
@@ -2769,7 +3020,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "SUBARU",
         "porcen1": "21",
-        "precioimpre": "23827.35"
+        "precioimpre": "23827.35",
+        "costoart": "11292.49"
     },
     {
         "codpro": "102SUZUKI01",
@@ -2780,7 +3032,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "SUZUKI",
         "porcen1": "21",
-        "precioimpre": "22436.03"
+        "precioimpre": "22436.03",
+        "costoart": "10633.27"
     },
     {
         "codpro": "102SUZUKI03",
@@ -2791,7 +3044,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "SUZUKI",
         "porcen1": "21",
-        "precioimpre": "18472.34"
+        "precioimpre": "18472.34",
+        "costoart": "8754.67"
     },
     {
         "codpro": "102SUZUKI04",
@@ -2802,7 +3056,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "SUZUKI",
         "porcen1": "21",
-        "precioimpre": "20721.92"
+        "precioimpre": "20721.92",
+        "costoart": "9820.82"
     },
     {
         "codpro": "102TOYOTA01",
@@ -2813,7 +3068,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "TOYOTA",
         "porcen1": "21",
-        "precioimpre": "65364.61"
+        "precioimpre": "65364.61",
+        "costoart": "30978.35"
     },
     {
         "codpro": "102TOYOTA02",
@@ -2824,7 +3080,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "TOYOTA",
         "porcen1": "21",
-        "precioimpre": "36771.13"
+        "precioimpre": "36771.13",
+        "costoart": "17427.13"
     },
     {
         "codpro": "102TOYOTA03",
@@ -2835,7 +3092,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "TOYOTA",
         "porcen1": "21",
-        "precioimpre": "41343.39"
+        "precioimpre": "41343.39",
+        "costoart": "19594.05"
     },
     {
         "codpro": "102TOYOTA04",
@@ -2846,7 +3104,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "TOYOTA",
         "porcen1": "21",
-        "precioimpre": "32778.59"
+        "precioimpre": "32778.59",
+        "costoart": "15534.74"
     },
     {
         "codpro": "102TOYOTA05",
@@ -2857,7 +3116,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "TOYOTA",
         "porcen1": "21",
-        "precioimpre": "30929.98"
+        "precioimpre": "30929.98",
+        "costoart": "14658.71"
     },
     {
         "codpro": "102TOYOTA06",
@@ -2868,7 +3128,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "TOYOTA",
         "porcen1": "21",
-        "precioimpre": "24943.46"
+        "precioimpre": "24943.46",
+        "costoart": "11821.51"
     },
     {
         "codpro": "102TOYOTA07",
@@ -2879,7 +3140,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "TOYOTA",
         "porcen1": "21",
-        "precioimpre": "16084.67"
+        "precioimpre": "16084.67",
+        "costoart": "7623.12"
     },
     {
         "codpro": "102TOYOTA08",
@@ -2890,7 +3152,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "TOYOTA",
         "porcen1": "21",
-        "precioimpre": "66114.51"
+        "precioimpre": "66114.51",
+        "costoart": "31333.93"
     },
     {
         "codpro": "102TOYOTA09",
@@ -2901,7 +3164,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "TOYOTA",
         "porcen1": "21",
-        "precioimpre": "20643.67"
+        "precioimpre": "20643.67",
+        "costoart": "9783.73"
     },
     {
         "codpro": "102TOYOTA10",
@@ -2912,7 +3176,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "TOYOTA",
         "porcen1": "21",
-        "precioimpre": "116006.48"
+        "precioimpre": "116006.48",
+        "costoart": "54979.34"
     },
     {
         "codpro": "102TOYOTA11",
@@ -2923,7 +3188,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "TOYOTA",
         "porcen1": "21",
-        "precioimpre": "23354.34"
+        "precioimpre": "23354.34",
+        "costoart": "11068.44"
     },
     {
         "codpro": "102VOLK01",
@@ -2934,7 +3200,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "29843.35"
+        "precioimpre": "29843.35",
+        "costoart": "14143.67"
     },
     {
         "codpro": "102VOLK02",
@@ -2945,7 +3212,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "26789.56"
+        "precioimpre": "26789.56",
+        "costoart": "12696.49"
     },
     {
         "codpro": "102VOLK03",
@@ -2956,7 +3224,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "19497.64"
+        "precioimpre": "19497.64",
+        "costoart": "9240.65"
     },
     {
         "codpro": "102VOLK06",
@@ -2967,7 +3236,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "18911.58"
+        "precioimpre": "18911.58",
+        "costoart": "8962.87"
     },
     {
         "codpro": "102VOLK07",
@@ -2978,7 +3248,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "24750.28"
+        "precioimpre": "24750.28",
+        "costoart": "11730"
     },
     {
         "codpro": "102VOLK08",
@@ -2989,7 +3260,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "25973.81"
+        "precioimpre": "25973.81",
+        "costoart": "12309.89"
     },
     {
         "codpro": "102VOLK10",
@@ -3000,7 +3272,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "18961.99"
+        "precioimpre": "18961.99",
+        "costoart": "8986.71"
     },
     {
         "codpro": "102VOLK11",
@@ -3011,7 +3284,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "23614.42"
+        "precioimpre": "23614.42",
+        "costoart": "11191.71"
     },
     {
         "codpro": "102VOLK17",
@@ -3022,7 +3296,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "29567.84"
+        "precioimpre": "29567.84",
+        "costoart": "14013.1"
     },
     {
         "codpro": "102VOLK18",
@@ -3033,7 +3308,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "49199.98"
+        "precioimpre": "49199.98",
+        "costoart": "23317.56"
     },
     {
         "codpro": "102VOLK20",
@@ -3044,7 +3320,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "23614.42"
+        "precioimpre": "23614.42",
+        "costoart": "11191.71"
     },
     {
         "codpro": "102VOLK21",
@@ -3055,7 +3332,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "30138.26"
+        "precioimpre": "30138.26",
+        "costoart": "14283.57"
     },
     {
         "codpro": "102VOLK22",
@@ -3066,7 +3344,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "19641.43"
+        "precioimpre": "19641.43",
+        "costoart": "9308.8"
     },
     {
         "codpro": "102VOLK23",
@@ -3077,7 +3356,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "20492.47"
+        "precioimpre": "20492.47",
+        "costoart": "9712.15"
     },
     {
         "codpro": "102VOLK24",
@@ -3088,7 +3368,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "24532.72"
+        "precioimpre": "24532.72",
+        "costoart": "11626.97"
     },
     {
         "codpro": "102VOLK25",
@@ -3099,7 +3380,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "26617.76"
+        "precioimpre": "26617.76",
+        "costoart": "12615"
     },
     {
         "codpro": "102VOLK26",
@@ -3110,7 +3392,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "19212.04"
+        "precioimpre": "19212.04",
+        "costoart": "9105.23"
     },
     {
         "codpro": "102VOLK29",
@@ -3121,7 +3404,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "22665.55"
+        "precioimpre": "22665.55",
+        "costoart": "10742.05"
     },
     {
         "codpro": "102VOLK30",
@@ -3132,7 +3416,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "37994.69"
+        "precioimpre": "37994.69",
+        "costoart": "18006.96"
     },
     {
         "codpro": "102VOLK31",
@@ -3143,7 +3428,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "11970.88"
+        "precioimpre": "11970.88",
+        "costoart": "5673.42"
     },
     {
         "codpro": "102VOLK32",
@@ -3154,7 +3440,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "28190.66"
+        "precioimpre": "28190.66",
+        "costoart": "13360.54"
     },
     {
         "codpro": "102VOLK33",
@@ -3165,7 +3452,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLKSWAGEN",
         "porcen1": "21",
-        "precioimpre": "23075.92"
+        "precioimpre": "23075.92",
+        "costoart": "10936.45"
     },
     {
         "codpro": "102VOLVO01",
@@ -3176,7 +3464,8 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLVO",
         "porcen1": "21",
-        "precioimpre": "29200.51"
+        "precioimpre": "29200.51",
+        "costoart": "13839.1"
     },
     {
         "codpro": "102VOLVO03",
@@ -3187,6 +3476,19 @@
         "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
         "desc_marca": "VOLVO",
         "porcen1": "21",
-        "precioimpre": "0"
+        "precioimpre": "0",
+        "costoart": "0"
+    },
+    {
+        "codpro": "102VOLVO05",
+        "desc_stock": "Jgo tornillos trucks DXII2 / DTII3 6 cilin /volvo",
+        "rubro": "102",
+        "subrub": "100",
+        "proveed": "1030",
+        "desc_rubro": "TORNILLOS P/ TAPA DE CILINDRO",
+        "desc_marca": "VOLVO",
+        "porcen1": "21",
+        "precioimpre": "0",
+        "costoart": "0"
     }
 ]

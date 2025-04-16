@@ -8,7 +8,7 @@ import 'animate.css';
 export const Category = ({category, activeCategory, setActiveCategory, activeSubCategory, setActiveSubCategory, categoriesAndSubCategories}) => {
     const [categoryData, setCategoryData] = useState(null)
     const [subCategories, setSubCategories] = useState([]);
-    const [showCategoriesSubmenu, setShowCategoriesSubmenu] = useState(false);
+    /* const [showCategoriesSubmenu, setShowCategoriesSubmenu] = useState(false); */
 
     //renderiza las categorias del rubro principal en caso de que no haya submenu de subrubros
     const showSubCategories = (category) => category ? setActiveCategory(category) : setActiveCategory(null)
@@ -17,16 +17,16 @@ export const Category = ({category, activeCategory, setActiveCategory, activeSub
     const showSubCategoriesSubmenu = (subcategory) => subcategory ? setActiveSubCategory(subcategory) : setActiveSubCategory(null)
 
     const getSubCategories = (subcategoryName) => {             //FUNCION QUE DEVUELVE
-        const categoriesWithSubmenu = categoriesAndSubCategories.filter((category) => category.submenu);
-    
-        for (const category of categoriesWithSubmenu) {
-            const foundSubcategory = category.subCategories.find(subcategory => subcategory.description === subcategoryName);
+        const categoryFound = categoriesAndSubCategories.find(cat => cat.description == category)
 
-            if (foundSubcategory) {
-                return [...foundSubcategory.categories]; // Devuelve un array con la subcategoría encontrada
-            }
+        if (categoryFound.submenu) {        //en caso de que la category tenga un submenu 
+            const foundSubcategory = categoryFound.subCategories.find(subcategory => subcategory.description === subcategoryName);      //en este caso, habra mas de una subcategoria dentro del array de subCategories
+                                                                                                                                        //por eso busca cual es el que coincide con la subcategoria pasada por parametro
+            if (foundSubcategory) return [...foundSubcategory.categories]; // Devuelve un array con la subcategoría encontrada
+        } else {
+            return [...categoryFound.subCategories[0].categories]
         }
-
+    
         return []; // Devuelve un array vacío si no encuentra nada
     };
 
@@ -56,7 +56,7 @@ export const Category = ({category, activeCategory, setActiveCategory, activeSub
 
 
 
-                { activeCategory == category && (
+                { activeCategory == category && (                   //categorias que tengan submenu de categorias
                     categoryData && categoryData.submenu ? (        //EN CASO DE QUE EL SUBRUBRO DEL RUBRO PADRE CONTENGA MAS SUBCATEGORIAS DENTRO
                         <div className="absolute z-20 top-0 left-full py-3 bg-gray border w-40">
                         {
@@ -93,14 +93,14 @@ export const Category = ({category, activeCategory, setActiveCategory, activeSub
                     ) : (
                         <div className="absolute z-20 top-0 left-full bg-gray py-4 border w-72 flex flex-col gap-3 justify-center">
                         {
-                            (                  
-                            subCategories.map((subCategory, index) => (
+                            getSubCategories(activeSubCategory).map((sub, idx) => (
                                 <Link
-                                    to={`/productos/${category}/${encodeURIComponent(subCategory)}`}
-                                    key={`${subCategory}-${index}`}
-                                    className="text-cBlack text-sm block px-4 hover:bg-gray-200 hover:font-bold transition ease-in">
-                                    {subCategory}
-                                </Link> )
+                                key={`${sub}-${idx}`}
+                                to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub)}`}
+                                className="text-cBlack text-sm block px-4 hover:font-bold transition ease-in"
+                                >
+                                {sub}
+                                </Link>
                             ))
                         }
                         </div>
