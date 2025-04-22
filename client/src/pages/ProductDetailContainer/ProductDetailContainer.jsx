@@ -9,6 +9,7 @@ import { API_URL } from "../../utils/api_url.js";
 
 export const ProductDetailContainer = () => {
     const { id } = useParams();
+
     const [prodToRender, setProdToRender] = useState([]);
     const [loading, setLoading] = useState();
 
@@ -16,9 +17,8 @@ export const ProductDetailContainer = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const res = await axios.get(`${API_URL}/api/products`, { withCredentials: true });
-                const prodFound = res.data.products.find(prod => prod.codpro === id);
-                setProdToRender(prodFound);
+                const res = await axios.get(`${API_URL}/api/products/${id}`, { withCredentials: true });
+                setProdToRender(res.data.product);
             } catch (error) {
                 console.error('Error fetching data:', error);
             } finally {
