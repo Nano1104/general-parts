@@ -118,7 +118,35 @@ export const getProducts = async (req, res) => {
             error: err.message,
         });
     }
+}
+
+export const getProductById = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const product = await Producto.findOne({ codpro: id });
+
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: `Producto con ID ${id} no encontrado`,
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: `Success getting product by id: ${id}`,
+            product,
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: "Error al obtener producto",
+            error: err.message,
+        });
+    }
 };
+
 
 export const postProducts = async (req, res) => {
     try {

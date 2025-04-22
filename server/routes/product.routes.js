@@ -1,10 +1,11 @@
 import express from "express";
 import { authenticateJWT } from "../utils/jwt.js"
-import { getProducts, getAllProducts, postProducts, addFieldToProducts, changeProductFieldVal, changeFieldToProducts, changeFieldValueToProducts, deleteFieldFromProducts, updateStock, deleteMongoDBCollection } from "../controllers/product.controller.js";
+import { getProducts, getProductById, getAllProducts, postProducts, addFieldToProducts, changeProductFieldVal, changeFieldToProducts, changeFieldValueToProducts, deleteFieldFromProducts, updateStock, deleteMongoDBCollection } from "../controllers/product.controller.js";
 
 const router = express.Router();
 
 router.get("/", getProducts)
+router.get("/:id", getProductById)
 router.get("/:rubro", getAllProducts)                       //devuelve la cantidad de los productos con cierto rubro mandado por parametro
 router.post('/post-products-in-db', postProducts)
 router.put("/add-field-to-products", authenticateJWT, addFieldToProducts)
