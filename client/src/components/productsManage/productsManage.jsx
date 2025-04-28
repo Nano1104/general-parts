@@ -2,12 +2,44 @@ import axios from "axios";
 import Swal from 'sweetalert2';
 
 import { API_URL } from "../../utils/api_url.js";
+import { useState } from "react";
 
 export const ProductsManage = () => {
+    const [file, setFile] = useState(null)
 
-    /* const handleAddProduct = async () => {
+    const handleUpdateExcel = async (e) => {
+        e.preventDefault();
+        // 1. Obtener el valor del input "Rubro" (name="prodId")
+        const rubroValue = e.target.rubro.value.toUpperCase(); // Accede directamente al input por su name
 
-    } */
+        const formData = new FormData();
+        formData.append('excelFile', file); // El archivo Excel que ya tenías en estado (setFile)
+        formData.append('rubro', rubroValue); // El valor del input Rubro
+    
+        try {
+            // 3. Enviar al backend
+            const response = await axios.post(`${API_URL}/api/products/upload-excel`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data", // Importante para archivos
+                },
+            });
+            const data = response.data
+
+            let mensaje = `Se agregaron ${data.details.nuevosInsertados} productos nuevos 
+                           - Se actualizaron ${data.details.actualizadosConCambios} productos`
+
+            if (data.details.nuevosInsertados === 0 && data.details.actualizadosConCambios === 0) mensaje = "No se agregaron y no se actualizaron productos. Revisar los campos en el Excel";
+            
+            Swal.fire({
+                html: `${mensaje}`,
+                icon: "info",
+                confirmButtonColor: "#DC5F00"
+            });
+            console.log("Respuesta del servidor:", response.data);
+        } catch (err) {
+            console.error("Error al cargar el Excel:", err);
+        }
+    };
 
     const handleChange = async (e) => {
         e.preventDefault();
@@ -24,13 +56,26 @@ export const ProductsManage = () => {
         <div className="px-5 h-full flex overflow-auto pb-10">
             <div className="basis-[50%]">
                 <h2 className="text-4xl font-montserrat tracking-tight font-bold mb-4">PRODUCTOS</h2>
-                <div>
-                    <h3 className="font-semibold">VER PRODUCTOS</h3>
-                    <button className="bg-orange w-[30%] rounded-md py-1 text-sm text-lightGray font-medium font-poppins" type="submit">Ver lista de productos</button>
-                </div>
+                {/***************** CARGAR LISTA DE PRODUCTOS *****************/}
+                <form method="POST" className="flex flex-col" onSubmit={handleUpdateExcel}>
+                    <h3 className="font-semibold">CARGAR LISTA DE PRODUCTOS</h3>
+                    <div className="text-sm">
+                        <span className="font-medium">Nombre de rubro:</span><input type="text" name="rubro" placeholder="Rubro" required className="w-[23%] ml-2 rounded-md py-1 px-2 my-2" />
+                    </div>
+                    <input 
+                            className="w-[50%]"
+                            type="file" 
+                            name="excelFile"
+                            required
+                            accept=".xlsx, .xls" 
+                            onChange={(e) => setFile(e.target.files[0])} 
+                    />
+                    <button className="bg-orange w-[25%] rounded-md py-1 mt-2 text-sm text-lightGray font-medium font-poppins" type="submit">CARGAR LISTA</button>
+                </form>
                 <hr className="my-4 w-[45%] ml-2" />
+                {/***************** AGREGAR PRODUCTO *****************/}
                 <div>
-                    <h3 className="font-semibold">AGREGAR PRODUCTO</h3>       {/*  //AGREGAR PRODUCTO */}
+                    <h3 className="font-semibold">AGREGAR PRODUCTO</h3>      
                     <form action="" className="flex flex-col text-sm">
                         <div>
                             <label className="font-medium">Cargar imagen:</label><input type="file" accept="image/*" className="w-[30%] rounded-md py-1 px-2 my-1 ml-2" />
@@ -69,6 +114,7 @@ export const ProductsManage = () => {
                     <button className="bg-orange w-[30%] rounded-md py-1 text-sm text-lightGray font-medium font-poppins mt-1" type="submit">Agregar producto</button>
                 </div>
                 <hr className="my-4 w-[45%] ml-2" />
+                {/***************** MODIFICAR PRODUCTO *****************/}
                 <div className="flex flex-col">
                     <h3 className="font-semibold">MODIFICAR PRODUCTO</h3>
                     <form action="" onSubmit={handleChange} className="text-sm">
