@@ -2,6 +2,9 @@ import { postProductsInDB } from "../utils/post-products-db.js";
 import Producto from "../models/product.model.js";
 import cache from "memory-cache";
 import { getSubcategory } from "../utils/getSubcategories.js"
+import xlsx from 'xlsx';
+import _ from "lodash";
+
 
 export const getAllProducts = async (req, res) => {
     const { rubro } = req.params
@@ -65,10 +68,10 @@ export const getProducts = async (req, res) => {
                     };
                 }
             } else {
-                filter.desc_subrubro = subcategory.toUpperCase();
+                filter.desc_subrub = subcategory.toUpperCase();
             }
         }
-        if (categories) filter.desc_subrubro = categories.toUpperCase();
+        if (categories) filter.desc_subrub = categories.toUpperCase();
         if (brand) filter.desc_marca = brand.toUpperCase();
         
         if (!isNaN(minPrice) && !isNaN(maxPrice)) {
@@ -107,7 +110,6 @@ export const getProducts = async (req, res) => {
 
         // Cachear por 5 minutos (300000 ms) - Ajusta según tus necesidades
         cache.put(cacheKey, response, 300000);
-        /* console.log('🔍 Consultando DB y cacheando', cacheKey); */
 
         res.status(200).json(response);
 
@@ -147,6 +149,127 @@ export const getProductById = async (req, res) => {
     }
 };
 
+export const uploadExcelProducts = async (req, res) => {
+    try {
+        // 1. Validar archivo
+        if (!req.file) {
+            return res.status(400).json({ message: "No se subió ningún archivo" });
+        }
+
+        // 2. Leer archivo Excel
+        const workbook = xlsx.read(req.file.buffer, { type: "buffer" });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const excelItems = xlsx.utils.sheet_to_json(worksheet);
+
+        // 3. Configuración de campos
+        const REQUIRED_FIELDS = [
+            'codpro', 'desc_stock', 'rubro', 
+            'subrub', 'proveed', 'desc_subrub',
+            'desc_marca', 'porcen1', 'precioimpre'
+        ];
+
+        // 4. Procesamiento de items - versión corregida
+        let productsToUpsert = [];
+        let invalidProducts = [];
+        
+        for (let i = 0; i < excelItems.length; i++) {
+            const item = excelItems[i];
+            const rowNumber = i + 2;
+            
+            // Validación de codpro
+            const codpro = item.codpro?.toString().trim();
+            if (!codpro) {
+                invalidProducts.push(`Fila ${rowNumber}: codpro es requerido`);
+                continue;
+            }
+
+            // Buscar si el producto ya existe en la DB
+            const existingProduct = await Producto.findOne({ codpro });
+
+            // Función mejorada para parseo seguro
+            const safeParseNumber = (value, isInt = true) => {
+                if (value === undefined || value === null || value === "") return undefined;
+                const num = isInt ? parseInt(value) : parseFloat(value);
+                return isNaN(num) ? undefined : num;
+            };
+
+            // Mapeo de campos con validación mejorada
+            const mappedItem = {
+                codpro,
+                ...(item.desc_stock !== undefined && { 
+                    desc_stock: item.desc_stock?.toString().trim() || null 
+                }),
+                rubro: safeParseNumber(item.rubro),
+                subrub: safeParseNumber(item.subrub),
+                proveed: safeParseNumber(item.proveed),
+                desc_rubro: req.body.rubro,
+                ...(item.desc_rubro !== undefined && { 
+                    desc_subrub: item.desc_rubro?.toString().trim() || null 
+                }),
+                ...(item.desc_marca !== undefined && { 
+                    desc_marca: item.desc_marca?.toString().trim() || null 
+                }),
+                porcen1: safeParseNumber(item.porcen1),
+                precioimpre: safeParseNumber(item.precioimpre),
+                stock: existingProduct ? existingProduct.stock : 0,
+                lastUpdated: new Date()
+            };
+
+            // Verificar campos requeridos
+            const missingFields = REQUIRED_FIELDS.filter(field => 
+                mappedItem[field] === undefined || mappedItem[field] === null || mappedItem[field] === ''
+            );
+
+            if (missingFields.length > 0) {
+                invalidProducts.push(
+                    `Fila ${rowNumber}: Faltan campos requeridos (${missingFields.join(', ')})`
+                );
+                continue;
+            }
+
+            productsToUpsert.push(mappedItem);
+        }
+
+        // 5. Preparar operaciones de upsert (actualizar o insertar)
+        const bulkOps = productsToUpsert.map(item => ({
+            updateOne: {
+                filter: { codpro: item.codpro },
+                update: {
+                    $set: _.omit(item, ['codpro']),
+                    $setOnInsert: { createdAt: new Date() }
+                },
+                upsert: true
+            }
+        }));
+
+        // 6. Ejecutar operaciones
+        const result = await Producto.bulkWrite(bulkOps);
+
+        // 7. Obtener estadísticas reales
+        const existingCount = productsToUpsert.length - result.upsertedCount;
+        
+        res.json({
+            message: 'Proceso completado',
+            details: {
+                totalProcesados: excelItems.length,
+                nuevosInsertados: result.upsertedCount,
+                existentesActualizados: existingCount - result.modifiedCount,
+                actualizadosConCambios: result.modifiedCount,
+                productosInvalidos: invalidProducts.length,
+                errores: invalidProducts
+            }
+        });
+
+    } catch (err) {
+        console.error("Error en upload-excel:", err);
+        res.status(500).json({ 
+            message: "Error procesando el archivo",
+            error: process.env.NODE_ENV === 'development' ? err.message : undefined,
+            stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+        });
+    }
+}
 
 export const postProducts = async (req, res) => {
     try {
