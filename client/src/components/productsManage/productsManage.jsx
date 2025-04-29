@@ -7,36 +7,54 @@ import { useState } from "react";
 export const ProductsManage = () => {
     const [file, setFile] = useState(null)
 
+    /* FUNCION PARA CARGA DE EXCEL */
     const handleUpdateExcel = async (e) => {
         e.preventDefault();
-        // 1. Obtener el valor del input "Rubro" (name="prodId")
-        const rubroValue = e.target.rubro.value.toUpperCase(); // Accede directamente al input por su name
-
-        const formData = new FormData();
-        formData.append('excelFile', file); // El archivo Excel que ya tenías en estado (setFile)
-        formData.append('rubro', rubroValue); // El valor del input Rubro
+        
+        // Mostrar loading
+        Swal.fire({
+            title: "Procesando Excel...",
+            html: "Por favor espera, esto puede tomar unos momentos.",
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading(); // Muestra el spinner
+            }
+        });
     
         try {
-            // 3. Enviar al backend
+            const rubroValue = e.target.rubro.value.toUpperCase();
+            const formData = new FormData();
+            formData.append('excelFile', file);
+            formData.append('rubro', rubroValue);
+    
             const response = await axios.post(`${API_URL}/api/products/upload-excel`, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data", // Importante para archivos
-                },
+                headers: { "Content-Type": "multipart/form-data" },
             });
-            const data = response.data
-
-            let mensaje = `Se agregaron ${data.details.nuevosInsertados} productos nuevos 
-                           - Se actualizaron ${data.details.actualizadosConCambios} productos`
-
-            if (data.details.nuevosInsertados === 0 && data.details.actualizadosConCambios === 0) mensaje = "No se agregaron y no se actualizaron productos. Revisar los campos en el Excel";
-            
+    
+            // Cerrar loading y mostrar resultados
+            Swal.close();
+    
+            const data = response.data;
+            let mensaje = `Se agregaron ${data.details.nuevosInsertados} productos nuevos <br>
+                          Se actualizaron ${data.details.actualizados} productos`;
+    
+            if (data.details.nuevosInsertados === 0 && data.details.actualizados === 0) {
+                mensaje = "No se realizaron cambios. Verifica el archivo Excel.";
+            }
+    
             Swal.fire({
-                html: `${mensaje}`,
+                html: mensaje,
                 icon: "info",
                 confirmButtonColor: "#DC5F00"
             });
-            console.log("Respuesta del servidor:", response.data);
+    
         } catch (err) {
+            Swal.close(); // Cierra el loading en caso de error
+            Swal.fire({
+                title: "Error",
+                text: "No se pudo cargar el archivo. Intenta nuevamente.",
+                icon: "error"
+            });
             console.error("Error al cargar el Excel:", err);
         }
     };
@@ -75,7 +93,7 @@ export const ProductsManage = () => {
                 <hr className="my-4 w-[45%] ml-2" />
                 {/***************** AGREGAR PRODUCTO *****************/}
                 <div>
-                    <h3 className="font-semibold">AGREGAR PRODUCTO</h3>      
+                    <h3 className="font-semibold">AGREGAR PRODUCTO DESTACADO</h3>      
                     <form action="" className="flex flex-col text-sm">
                         <div>
                             <label className="font-medium">Cargar imagen:</label><input type="file" accept="image/*" className="w-[30%] rounded-md py-1 px-2 my-1 ml-2" />

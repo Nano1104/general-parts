@@ -1,9 +1,10 @@
 import { postProductsInDB } from "../utils/post-products-db.js";
-import Producto from "../models/product.model.js";
+/* import Producto from "../models/product.model.js"; */
 import cache from "memory-cache";
 import { getSubcategory } from "../utils/getSubcategories.js"
 import xlsx from 'xlsx';
 import _ from "lodash";
+import Product from "../models/product.model.js";
 
 
 export const getAllProducts = async (req, res) => {
@@ -14,7 +15,7 @@ export const getAllProducts = async (req, res) => {
     }
 
     try {
-        const products = await Producto.find({ desc_rubro: rubro })
+        const products = await Product.find({ desc_rubro: rubro })
         res.status(200).json({message: "Success getting all products from db", productsQuantity: products.length});
     } catch (err) {
         res.status(400).json({message: "Error getting all products from db", err});
@@ -91,13 +92,13 @@ export const getProducts = async (req, res) => {
         }
 
         // 4. Consulta a MongoDB
-        let query = Producto.find(filter);
+        let query = Product.find(filter);
         if (lastId) {
             query = query.where('_id').gt(lastId);
         }
         
         const products = await query.sort({ _id: 1 }).limit(limit);
-        const total = await Producto.countDocuments(filter);
+        const total = await Product.countDocuments(filter);
         const hasMore = products.length === limit;
 
         // 5. Preparar respuesta y guardar en cache
@@ -126,7 +127,7 @@ export const getProductById = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const product = await Producto.findOne({ codpro: id });
+        const product = await Product.findOne({ codpro: id });
 
         if (!product) {
             return res.status(404).json({
@@ -149,30 +150,69 @@ export const getProductById = async (req, res) => {
     }
 };
 
-export const uploadExcelProducts = async (req, res) => {
+export const getHighlightedProducts = async (req, res) => {
     try {
+        const products = await Product.find({ destacado: true })
+        res.status(200).json({ success: true, message: `Success getting highlighted products`, products });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: "Error getting highlighted products",
+        });
+    }
+}
+
+export const uploadExcelProducts = async (req, res) => {
+    // Objeto para manejar los timers
+    const timers = {
+        total: 'TiempoTotalCarga',
+        lectura: 'LecturaExcel',
+        consulta: 'ConsultaExistente',
+        procesamiento: 'ProcesamientoDatos',
+        operaciones: 'OperacionesDB'
+    };
+
+    try {
+        console.time(timers.total); // Medición de tiempo total
+
         // 1. Validar archivo
         if (!req.file) {
             return res.status(400).json({ message: "No se subió ningún archivo" });
         }
 
-        // 2. Leer archivo Excel
-        const workbook = xlsx.read(req.file.buffer, { type: "buffer" });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const excelItems = xlsx.utils.sheet_to_json(worksheet);
+        console.time(timers.lectura);
+        // 2. Leer archivo Excel optimizado
+        const workbook = xlsx.read(req.file.buffer, { type: "array" }); // Más rápido que 'buffer'
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const excelItems = xlsx.utils.sheet_to_json(worksheet, {
+            defval: undefined, // Mejor que null para nuestro caso
+            raw: false,       // Conversión automática de valores
+            dateNF: 'yyyy-mm-dd'
+        });
+        console.timeEnd(timers.lectura);
 
-        // 3. Configuración de campos
+        // 3. Configuración
         const REQUIRED_FIELDS = [
             'codpro', 'desc_stock', 'rubro', 
             'subrub', 'proveed', 'desc_subrub',
             'desc_marca', 'porcen1', 'precioimpre'
         ];
 
-        // 4. Procesamiento de items - versión corregida
+        // 4. Obtener todos los códigos existentes en una sola consulta
+        console.time(timers.consulta);
+        const allCodpros = excelItems.map(item => item.codpro?.toString().trim()).filter(Boolean);
+        const existingProducts = await Product.find({ 
+            codpro: { $in: allCodpros } 
+        }).lean();
+        const existingProductsMap = new Map(existingProducts.map(p => [p.codpro, p]));
+        console.timeEnd(timers.consulta);
+
+        // 5. Procesamiento optimizado por lotes
+        const BATCH_SIZE = 1000; // Ajustar según necesidad
         let productsToUpsert = [];
         let invalidProducts = [];
-        
+
+        console.time(timers.procesamiento);
         for (let i = 0; i < excelItems.length; i++) {
             const item = excelItems[i];
             const rowNumber = i + 2;
@@ -184,89 +224,130 @@ export const uploadExcelProducts = async (req, res) => {
                 continue;
             }
 
-            // Buscar si el producto ya existe en la DB
-            const existingProduct = await Producto.findOne({ codpro });
+            // Obtener producto existente del mapa
+            const existingProduct = existingProductsMap.get(codpro);
 
-            // Función mejorada para parseo seguro
-            const safeParseNumber = (value, isInt = true) => {
-                if (value === undefined || value === null || value === "") return undefined;
-                const num = isInt ? parseInt(value) : parseFloat(value);
-                return isNaN(num) ? undefined : num;
-            };
-
-            // Mapeo de campos con validación mejorada
+            // Mapeo optimizado de campos
             const mappedItem = {
                 codpro,
-                ...(item.desc_stock !== undefined && { 
-                    desc_stock: item.desc_stock?.toString().trim() || null 
-                }),
-                rubro: safeParseNumber(item.rubro),
-                subrub: safeParseNumber(item.subrub),
-                proveed: safeParseNumber(item.proveed),
+                desc_stock: item.desc_stock?.toString().trim(),
+                rubro: item.rubro !== undefined ? parseInt(item.rubro) : undefined,
+                subrub: item.subrub !== undefined ? parseInt(item.subrub) : undefined,
+                proveed: item.proveed !== undefined ? parseInt(item.proveed) : undefined,
                 desc_rubro: req.body.rubro,
-                ...(item.desc_rubro !== undefined && { 
-                    desc_subrub: item.desc_rubro?.toString().trim() || null 
-                }),
-                ...(item.desc_marca !== undefined && { 
-                    desc_marca: item.desc_marca?.toString().trim() || null 
-                }),
-                porcen1: safeParseNumber(item.porcen1),
-                precioimpre: safeParseNumber(item.precioimpre),
-                stock: existingProduct ? existingProduct.stock : 0,
+                desc_subrub: item.desc_rubro?.toString().trim(),
+                desc_marca: item.desc_marca?.toString().trim(),
+                porcen1: item.porcen1 !== undefined ? parseInt(item.porcen1) : undefined,
+                precioimpre: item.precioimpre !== undefined ? parseInt(item.precioimpre) : undefined,
+                destacado: existingProduct?.destacado || false,
+                stock: existingProduct?.stock || 0,
                 lastUpdated: new Date()
             };
 
-            // Verificar campos requeridos
-            const missingFields = REQUIRED_FIELDS.filter(field => 
-                mappedItem[field] === undefined || mappedItem[field] === null || mappedItem[field] === ''
-            );
+            // Verificación de campos requeridos optimizada
+            const isComplete = REQUIRED_FIELDS.every(field => {
+                const val = mappedItem[field];
+                return val !== undefined && val !== null && val !== '';
+            });
 
-            if (missingFields.length > 0) {
-                invalidProducts.push(
-                    `Fila ${rowNumber}: Faltan campos requeridos (${missingFields.join(', ')})`
+            if (!isComplete) {
+                const missingFields = REQUIRED_FIELDS.filter(f => 
+                    !mappedItem[f] && mappedItem[f] !== 0
                 );
+                invalidProducts.push(`Fila ${rowNumber}: Faltan campos (${missingFields.join(', ')})`);
                 continue;
             }
 
             productsToUpsert.push(mappedItem);
         }
+        console.timeEnd(timers.procesamiento);
 
-        // 5. Preparar operaciones de upsert (actualizar o insertar)
-        const bulkOps = productsToUpsert.map(item => ({
-            updateOne: {
-                filter: { codpro: item.codpro },
-                update: {
-                    $set: _.omit(item, ['codpro']),
-                    $setOnInsert: { createdAt: new Date() }
-                },
-                upsert: true
-            }
-        }));
+        // 6. Procesamiento por lotes para operaciones de BD
+        console.time(timers.operaciones);
+        const results = {
+            insertedCount: 0,
+            modifiedCount: 0,
+            unchangedCount: 0
+        };
 
-        // 6. Ejecutar operaciones
-        const result = await Producto.bulkWrite(bulkOps);
+        for (let i = 0; i < productsToUpsert.length; i += BATCH_SIZE) {
+            const batch = productsToUpsert.slice(i, i + BATCH_SIZE);
+            
+            const bulkOps = batch.map(item => ({
+                updateOne: {
+                    filter: { codpro: item.codpro },
+                    update: {
+                        $set: _.omit(item, ['codpro']),
+                        $setOnInsert: { createdAt: new Date() }
+                    },
+                    upsert: true
+                }
+            }));
 
-        // 7. Obtener estadísticas reales
-        const existingCount = productsToUpsert.length - result.upsertedCount;
-        
+            const batchResult = await Product.bulkWrite(bulkOps, {
+                ordered: false,
+                writeConcern: { w: 1 } // Balance entre velocidad y confirmación
+            });
+
+            results.insertedCount += batchResult.upsertedCount;
+            results.modifiedCount += batchResult.modifiedCount;
+            results.unchangedCount += (batch.length - batchResult.modifiedCount - batchResult.upsertedCount);
+        }
+        console.timeEnd(timers.operaciones);
+
+        console.timeEnd(timers.total); // Fin medición tiempo total
+
         res.json({
-            message: 'Proceso completado',
+            message: 'Carga completada',
             details: {
-                totalProcesados: excelItems.length,
-                nuevosInsertados: result.upsertedCount,
-                existentesActualizados: existingCount - result.modifiedCount,
-                actualizadosConCambios: result.modifiedCount,
-                productosInvalidos: invalidProducts.length,
-                errores: invalidProducts
-            }
+                totalRegistros: excelItems.length,
+                registrosValidos: productsToUpsert.length,
+                nuevosInsertados: results.insertedCount,
+                actualizados: results.modifiedCount,
+                sinCambios: results.unchangedCount,
+                errores: invalidProducts.length,
+            },
+            ...(invalidProducts.length > 0 && { erroresDetallados: invalidProducts.slice(0, 50) }) // Limitar salida
         });
 
     } catch (err) {
         console.error("Error en upload-excel:", err);
         res.status(500).json({ 
-            message: "Error procesando el archivo",
-            error: process.env.NODE_ENV === 'development' ? err.message : undefined,
-            stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+            message: "Error en carga",
+            ...(process.env.NODE_ENV === 'development' && {
+                error: err.message,
+                stack: err.stack
+            })
+        });
+    }
+}
+
+export const highlightProduct = async (req, res) => {
+    const { id } = req.params; // Cambia "id" por "codigo"
+
+    try {
+        const productUpdated = await Product.findOneAndUpdate(
+            { codpro: id }, // Busca por el campo "codigo"
+            { destacado: true, fechaDestacado: new Date() },
+            { new: true }
+        );
+
+        if (!productUpdated) {
+            return res.status(404).json({
+                success: false,
+                message: `Producto con código ${id} no encontrado`,
+            });
+        }
+
+        res.status(200).json({
+            message: "Producto destacado exitosamente",
+            productUpdated
+        });
+    } catch (err) {
+        console.error("Error al destacar producto:", err);
+        res.status(500).json({
+            message: "Error al destacar producto",
+            error: err.message
         });
     }
 }
@@ -274,7 +355,7 @@ export const uploadExcelProducts = async (req, res) => {
 export const postProducts = async (req, res) => {
     try {
         const dataToPost = await postProductsInDB("./utils/json/inyeccion-sondas.json");
-        const result = await Producto.insertMany(dataToPost);
+        const result = await Product.insertMany(dataToPost);
         
         console.log("Productos insertados correctamente");
         res.status(201).json({  // 201 Created es más apropiado para POST
@@ -306,7 +387,7 @@ export const addFieldToProducts = async (req, res) => {
         );  */
 
         //agrega el campo a todos los prods de la collection
-        const updatedProducts = await Producto.updateMany(
+        const updatedProducts = await Product.updateMany(
             {},  // Selecciona TODOS los productos
             { $set: update }  // Añade/modifica el campo
           );
@@ -327,15 +408,15 @@ export const changeProductFieldVal = async (req, res) => {
         const { field, value } = req.body
         if(!field || !value) throw new Error("Field does not exists")  
 
-        const prodFound = await Producto.findById(prodId);      //busca si existe el producto en la db
+        const prodFound = await Product.findById(prodId);      //busca si existe el producto en la db
         if (!prodFound) return res.status(404).json({ message: "Product not found in db" });
 
-        const fieldExists = await Producto.findOne({ _id: prodId, [field]: { $exists: true } });    //busca si existe el campo del producto en la db
+        const fieldExists = await Product.findOne({ _id: prodId, [field]: { $exists: true } });    //busca si existe el campo del producto en la db
         if (!fieldExists) return res.status(400).json({ message: `Field '${field}' does not exist in the document` });
 
         const updateData = { [field]: value };
 
-        const updatedProduct = await Producto.findByIdAndUpdate(
+        const updatedProduct = await Product.findByIdAndUpdate(
             prodId,
             updateData,
             { new: true }
@@ -354,12 +435,12 @@ export const changeFieldValueToProducts = async (req, res) => {
         const { field, value } = req.body
         if(!field || !value) throw new Error("Field does not exists")  
 
-        const missingFieldCount = await Producto.countDocuments({ [field]: { $exists: false } });
+        const missingFieldCount = await Product.countDocuments({ [field]: { $exists: false } });
         if (missingFieldCount > 0) throw new Error(`The field "${field}" is missing in ${missingFieldCount} documents`);
         
         const updateObject = { [field]: value };
 
-        const updatedProducts = await Producto.updateMany({}, { $set: updateObject });
+        const updatedProducts = await Product.updateMany({}, { $set: updateObject });
 
         res.status(200).json({message: "Success changing field name and its value", updatedProducts});
     } catch (err) {
@@ -375,7 +456,7 @@ export const changeFieldToProducts = async (req, res) => {
         const renameObject = {};
         renameObject[field] = newField;
 
-        const updatedProducts = await Producto.updateMany({}, { $rename: renameObject });
+        const updatedProducts = await Product.updateMany({}, { $rename: renameObject });
 
         res.status(200).json({message: "Success changing field to products in DB", updatedProducts});
     } catch (err) {
@@ -385,7 +466,7 @@ export const changeFieldToProducts = async (req, res) => {
 
 export const deleteMongoDBCollection = async (req, res) => {
     try {
-        await Producto.deleteMany({})
+        await Product.deleteMany({})
         res.status(200).json({message: "Success deleting mongo DB collection"});
     } catch (err) {
         res.status(400).json({message: "Error deleting mongo DB collection", err});
@@ -397,10 +478,10 @@ export const updateStock = async (req, res) => {
         const { productId } = req.params
         const { newStock } = req.body
 
-        const prodFound = await Producto.findById(productId);
+        const prodFound = await Product.findById(productId);
         if (!prodFound) return res.status(404).json({ message: "Product not found in db" });
 
-        const updatedProduct = await Producto.findByIdAndUpdate(
+        const updatedProduct = await Product.findByIdAndUpdate(
             productId,
             { stock: prodFound.stock + Number(newStock) },
             { new: true } // Esto devuelve el documento actualizado
@@ -420,9 +501,9 @@ export const deleteFieldFromProducts = async (req, res) => {
         const update = {};
         update[field] = ""; 
 
-        const updatedProducts = await Producto.updateMany({}, { $unset: update })
+        const updatedProducts = await Product.updateMany({}, { $unset: update })
 
-        res.status(200).json({message: "Success deleting field from products"});
+        res.status(200).json({message: "Success deleting field from products", updatedProducts});
     } catch (err) {
         res.status(400).json({message: "Error deleting field from products", err});
     }
