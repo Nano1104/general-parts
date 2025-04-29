@@ -42,6 +42,15 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    stock: {
+        type: Number,
+        required: true
+    },
+    destacado: {
+        type: Boolean,
+        required: true
+    },
+    fechaDestacado: Date
 }, { strict: false })
 
 const Product = mongoose.model("Product", productSchema);

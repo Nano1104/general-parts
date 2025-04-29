@@ -4,6 +4,7 @@ import { IoTrashOutline } from "react-icons/io5";
 import prodImg from "../../images/tornillos.png"
 
 export const ProdsInCart = ({cartId, prods}) => {
+    console.log("🚀 ~ ProdsInCart ~ prods:", prods)
     const { handleDeleteProdFromCart } = useCartContext()
  
     return(

@@ -4,8 +4,8 @@ import { useIsMobile } from "../../hooks/isMobile.js";      //hook para renderiz
 
 import imgProduct from "../../images/bulones.png"
 
-export const Product = ({data, params, featured}) => {
-    const { codpro, desc_stock, rubro, subrub, proveed, desc_rubro, desc_marca, porcen1, precioimpre } = data;
+export const Product = ({data, params}) => {
+    const { codpro, desc_stock, rubro, subrub, proveed, desc_rubro, desc_marca, porcen1, precioimpre, destacado } = data;
     const isMobile = useIsMobile(1280); // Puedes cambiar el breakpoint si lo necesitas
     const componentRef = useRef(null)
 
@@ -18,8 +18,10 @@ export const Product = ({data, params, featured}) => {
 
     return(
         <>
-        <div ref={componentRef} onMouseEnter={() => handleMouseEnter()} key={`key_${codpro}`} id="product" className="w-[85%] h-[65vh] mobile:h-[60vh] lg:w-[19em] xl:w-[22em] 2xl:w-[25em] 2xl:h-[55vh] bg-gray font-poppins rounded-xl relative my-3">
-            { featured ? <span className="absolute m-3 text-sm font-bold tracking-tight bg-orange py-0.5 px-1 rounded-md">DESTACADO</span> : <></> }
+        <div ref={componentRef} onMouseEnter={() => handleMouseEnter()} key={`key_${codpro}`}
+            className={`w-[85%] h-[65vh] mobile:h-[60vh] lg:w-[19em] xl:w-[22em] 2xl:w-[25em] 2xl:h-[55vh] bg-gray font-poppins rounded-xl relative my-3`}
+            id="product">
+            { destacado ? <span className="absolute m-3 text-sm font-bold tracking-tight bg-orange py-0.5 px-1 rounded-md">DESTACADO</span> : <></> }
             <div className="w-full h-[65%]">
                 <img src={imgProduct} alt="" className="rounded-t-xl object-contain h-full" />
             </div>

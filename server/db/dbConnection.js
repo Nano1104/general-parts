@@ -7,9 +7,6 @@ const connectionOptions = {
             ? `mongodb+srv://${DB_USER_NAME}:${DB_USER_PASSWORD}@cluster-repuestos.kloz1gg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-Repuestos`
             : `mongodb://${DB_HOST}:${DB_PORT}/${DB_USER_NAME}`,
     options: {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        // --- Nuevas opciones para evitar cold starts ---
         serverSelectionTimeoutMS: 5000,    // Timeout de 5 segundos para seleccionar servidor
         socketTimeoutMS: 45000,           // Cierra sockets inactivos después de 45s
         maxPoolSize: 10,                  // Máximo de conexiones simultáneas
