@@ -5,24 +5,101 @@ import { getSubcategory } from "../utils/getSubcategories.js"
 import xlsx from 'xlsx';
 import _ from "lodash";
 import Product from "../models/product.model.js";
+import agendaModule from '../agenda.js'
 
-
-export const getAllProducts = async (req, res) => {
-    const { rubro } = req.params
-
-    if (!rubro) {
-        return res.status(400).json({ message: "El parámetro 'desc_rubro' es requerido" });
-    }
-
+export const getProducts = async (req, res) => {
     try {
-        const products = await Product.find({ desc_rubro: rubro })
-        res.status(200).json({message: "Success getting all products from db", productsQuantity: products.length});
+        const { 
+            limit = 10, 
+            lastId, 
+            category, 
+            subcategory, 
+            categories, 
+            brand, 
+            minPrice, 
+            maxPrice, 
+            search 
+        } = req.query;
+
+        const cacheKey = JSON.stringify(req.query);
+        const cachedData = cache.get(cacheKey);
+        if (cachedData) return res.json(cachedData);
+
+        // Construir filtro
+        const filter = {};
+        
+        // Filtros exactos
+        if (category) filter.desc_rubro = category.toUpperCase();
+        if (brand) filter.desc_marca = brand.toUpperCase();
+        
+        // Manejo mejorado de subcategorías
+        if (subcategory || categories) {
+            const subcat = subcategory || categories;
+            if (["bulones", "engranaje"].includes(subcat)) {
+                const range = getSubcategory(category, subcat);
+                if (range) filter.subrub = { $gte: range[0], $lte: range[1] };
+            } else {
+                filter.desc_subrub = subcat.toUpperCase();
+            }
+        }
+        
+        // Rango de precios
+        if (!isNaN(minPrice) || !isNaN(maxPrice)) {
+            filter.precioimpre = {};
+            if (!isNaN(minPrice)) filter.precioimpre.$gte = parseFloat(minPrice);
+            if (!isNaN(maxPrice)) filter.precioimpre.$lte = parseFloat(maxPrice);
+        }
+        
+        // Búsqueda de texto (usando el índice)
+        if (search) {
+            const decodedSearch = decodeURIComponent(search);
+            
+            // Opción 1: Búsqueda con índice de texto (mejor para relevancia)
+            filter.$text = { $search: decodedSearch };
+        }
+            
+         // Consulta modificada
+         let query = Product.find(filter)
+            .sort({ _id: 1 }) // Orden consistente siempre
+            .limit(parseInt(limit) + 1); // Pide 1 más
+        
+        if (lastId) {
+            query = query.where('_id').gt(lastId);
+        }
+
+        // Si usas búsqueda de texto, añade scoring
+        if (search && filter.$text) {
+            query.sort({ 
+              score: { $meta: "textScore" },
+              _id: 1 // Mantener orden consistente
+            });
+          }
+
+          const products = await query.exec();
+          const hasMore = products.length > parseInt(limit);
+          const productsToSend = hasMore ? products.slice(0, -1) : products;
+
+          const response = {
+            success: true,
+            products: productsToSend,
+            hasMore,
+            total: await Product.countDocuments(filter)
+        };
+
+        cache.put(cacheKey, response, 300000); // 5 minutos
+        res.json(response);
+
     } catch (err) {
-        res.status(400).json({message: "Error getting all products from db", err});
+        console.error('Error en getProducts:', err);
+        res.status(500).json({
+            success: false,
+            message: "Error al obtener productos",
+            error: process.env.NODE_ENV === 'development' ? err.message : undefined
+        });
     }
 }
 
-export const getProducts = async (req, res) => {
+/* export const getProducts = async (req, res) => {
     try {
         const limit = parseInt(req.query.limit) || 10;
         const lastId = req.query.lastId;
@@ -50,7 +127,6 @@ export const getProducts = async (req, res) => {
         // 2. Verificar si existe respuesta en cache
         const cachedData = cache.get(cacheKey);
         if (cachedData) {
-            /* console.log('📦 Sirviendo desde cache', cacheKey); */
             return res.status(200).json(cachedData);
         }
 
@@ -120,6 +196,51 @@ export const getProducts = async (req, res) => {
             message: "Error al obtener productos",
             error: err.message,
         });
+    }
+} */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export const getAllProducts = async (req, res) => {
+    const { rubro } = req.params
+
+    if (!rubro) {
+        return res.status(400).json({ message: "El parámetro 'desc_rubro' es requerido" });
+    }
+
+    try {
+        const products = await Product.find({ desc_rubro: rubro })
+        res.status(200).json({message: "Success getting all products from db", productsQuantity: products.length});
+    } catch (err) {
+        res.status(400).json({message: "Error getting all products from db", err});
+    }
+}
+
+export const getCategories = async (req, res) => {
+    try {
+        const categories = (await Product.distinct("desc_rubro")).sort();
+
+        res.status(200).json({ success: true, message: `Success getting categories from db`, categories});
+    } catch (err) {
+        res.status(500).json({ success: false, message: "Error getting categories from db", error: err.message,});   
     }
 }
 
@@ -239,7 +360,7 @@ export const uploadExcelProducts = async (req, res) => {
                 desc_marca: item.desc_marca?.toString().trim(),
                 porcen1: item.porcen1 !== undefined ? parseInt(item.porcen1) : undefined,
                 precioimpre: item.precioimpre !== undefined ? parseInt(item.precioimpre) : undefined,
-                destacado: existingProduct?.destacado || false,
+                /* destacado: existingProduct?.destacado || false, */
                 stock: existingProduct?.stock || 0,
                 lastUpdated: new Date()
             };
@@ -324,24 +445,64 @@ export const uploadExcelProducts = async (req, res) => {
 
 export const highlightProduct = async (req, res) => {
     const { id } = req.params; // Cambia "id" por "codigo"
+    const { days } = req.body
+    const { agenda } = agendaModule;
 
     try {
-        const productUpdated = await Product.findOneAndUpdate(
-            { codpro: id }, // Busca por el campo "codigo"
-            { destacado: true, fechaDestacado: new Date() },
-            { new: true }
-        );
+        const product = await Product.findOne({ codpro: id });
+        if (!product) return res.status(404).json({ success: false, message: `Producto con código ${id} no encontrado`});
 
-        if (!productUpdated) {
-            return res.status(404).json({
+        // Si ya está destacado y no ha expirado
+        if (product.destacado && product.fechaFinDestacado > new Date()) {
+            return res.status(409).json({
                 success: false,
-                message: `Producto con código ${id} no encontrado`,
+                message: `El producto ya está destacado hasta ${product.fechaFinDestacado.toLocaleDateString()}`,
+                product,
+                isAlreadyHighlighted: true
             });
         }
 
-        res.status(200).json({
-            message: "Producto destacado exitosamente",
-            productUpdated
+        // Cancelar job anterior si existe
+        if (product.highlightJobId) {
+            await agenda.cancel({ _id: product.highlightJobId });
+        }
+
+        // Calcular fechas
+        const ahora = new Date();
+        const fechaFin = new Date();
+        fechaFin.setDate(ahora.getDate() + days);
+
+        // Crear job en Agenda
+        const job = await agenda.schedule(
+            fechaFin,
+            'unhighlight-product', 
+            { productId: id }
+        );
+
+        // Actualizar producto
+        const productUpdated = await Product.findOneAndUpdate(
+            { codpro: id },
+            { 
+                destacado: true,
+                fechaDestacado: ahora,
+                fechaFinDestacado: fechaFin,
+                highlightJobId: job.attrs._id // Guardar referencia al job
+            },
+            { new: true }
+        );
+
+        // Programar desactivación automática (solo para demostración)
+        /* setTimeout(async () => {
+            await Product.updateOne(
+                { codpro: id },
+                { destacado: false }
+            );
+        }, days * 24 * 60 * 60 * 1000); */
+
+        res.status(200).json({ 
+            success: true,
+            message: `Producto destacado hasta ${fechaFin.toLocaleDateString()}`,
+            product: productUpdated
         });
     } catch (err) {
         console.error("Error al destacar producto:", err);
@@ -349,6 +510,45 @@ export const highlightProduct = async (req, res) => {
             message: "Error al destacar producto",
             error: err.message
         });
+    }
+}
+
+export const unhighlightProduct = async (req, res) => {
+    const { id } = req.params
+    const { agenda } = agendaModule;
+
+    try {
+        // Verificar si el producto existe
+        const product = await Product.findOne({ codpro: id });
+        if (!product) return res.status(404).json({ success: false, message: `Producto con código ${id} no encontrado` });
+
+        // Cancelar el job programado si existe
+        if (product.highlightJobId) {
+            await agenda.cancel({ _id: product.highlightJobId });
+        }
+
+        // Actualizar producto
+        const productUpdated = await Product.findOneAndUpdate(
+            { codpro: id },
+            { 
+                $set: { destacado: false },
+                $unset: { fechaFinDestacado: 1, highlightJobId: 1 }
+            },
+            { new: true }
+        );
+
+        res.status(200).json({ 
+            success: true,
+            message: `Producto dejó de estar destacado manualmente`,
+            product: productUpdated
+        });
+    } catch (err) {
+        console.error("Error al quitar destacado:", err);
+        res.status(500).json({
+            success: false,
+            message: "Error interno al quitar destacado",
+            error: err.message
+        })
     }
 }
 

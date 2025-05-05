@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useRef } from "react";
 import { useAuthContext } from "../../context/AuthContext.jsx"
 //icons
 import { BsSearch } from "react-icons/bs";
@@ -9,8 +10,10 @@ import { UserIcon } from "../UserIcon/UserIcon.jsx";
 
 export const ProductsContainerNav = ({ searchValue, setSearchValue }) => {
     const { authUser } = useAuthContext();
+    const searchInputRef = useRef(null)
 
     const handleSearch = (e) => {
+        const searchValue = searchInputRef.current?.value;
         setSearchValue(searchValue)
     }
 
@@ -42,11 +45,12 @@ export const ProductsContainerNav = ({ searchValue, setSearchValue }) => {
                         }
                     </div>
                     <div className="flex font-roboto items-center col-span-2 sm:col-span-1">
-                        <input type="text"
-                                placeholder="Buscar..."
-                                className="h-[30px] rounded-tl-2xl rounded-bl-2xl rounded-tr-none rounded-br-none py-2 px-3 flex-grow basis-[80%] focus:outline-none"
-                                value={searchValue}
-                                onChange={(e) => setSearchValue(e.target.value)}
+                        <input  
+                            ref={searchInputRef}
+                            type="text"
+                            placeholder="Buscar..."
+                            className="h-[30px] rounded-tl-2xl rounded-bl-2xl rounded-tr-none rounded-br-none py-2 px-3 flex-grow basis-[80%] focus:outline-none"
+                                /* onChange={(e) => setSearchValue(e.target.value)} */
                             />
                         <BsSearch className="h-[30px] text-deepGray bg-white p-1 cursor-pointer rounded-tr-2xl rounded-br-2xl flex-grow basis-0" onClick={handleSearch}/>
                     </div>

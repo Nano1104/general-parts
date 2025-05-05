@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { NODE_ENV, PORT, CLIENT_URL } from "./config/envConfig.js";
 import { connectToDB } from "./db/dbConnection.js";
+import agendaModule from "./agenda.js"
 
 //routes
 import productRouter from "./routes/product.routes.js"
@@ -42,9 +43,22 @@ app.use("/api/user", userRouter)
 app.use("/api/cart", cartRouter)
 app.use("/api/order", orderRouter)
 
-app.listen(PORT, () => {
-    console.log("🚀 ~ allowedOrigins:", allowedOrigins)
-    console.log(`App listening on port ${PORT} ${NODE_ENV}`);
-    connectToDB()
-})
 
+const startServer = async () => {
+  const { agenda, startAgenda } = agendaModule
+
+  try {
+    await connectToDB(); // Asegura conexión con MongoDB
+    await startAgenda(); // Inicia Agenda una vez conectado a Mongo
+    await agenda.cancel({ 'data.productId': { $exists: true } }); // Limpia jobs antiguos si querés
+
+    app.listen(PORT, () => {
+      console.log("🚀 ~ allowedOrigins:", allowedOrigins);
+      console.log(`App listening on port ${PORT} ${NODE_ENV}`);
+    });
+  } catch (err) {
+    console.error("❌ Error al iniciar el servidor o Agenda:", err);
+  }
+};
+
+startServer();

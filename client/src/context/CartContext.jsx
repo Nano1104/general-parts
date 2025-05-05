@@ -1,10 +1,10 @@
 import axios from "axios";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import Swal from 'sweetalert2';
+import { API_URL } from "../utils/api_url.js";
+import { useAuthContext } from "./AuthContext.jsx";
 
 export const CartContext = createContext();
-
-const API_URL = import.meta.env.VITE_PROD_SERVER_URL;
 
 export const useCartContext = () => {
     return useContext(CartContext);
@@ -12,26 +12,43 @@ export const useCartContext = () => {
 
 export const CartContextProvider = ({children}) => {
     const [cart, setCart] = useState([]);
+    const { authUser } = useAuthContext()
 
     const addProductToCart = async (productId, cartId, amountToAdd) => {
         try {
-            const res = await axios.post(`${API_URL}/api/cart/${cartId}/products/${productId}`, { amountToAdd }, { withCredentials: true });
-            console.log("🚀 ~ addProductToCart ~ res:", res)
-            if(res.status == 200) {
-                Swal.fire({
-                    icon: "success",
-                    title: "Producto agregado",
-                    showConfirmButton: true,
-                    confirmButtonColor: "#DC5F00"
-                }).then((result) => {
-                    if (result.isConfirmed) {   // Recargar la página cuando se confirme
-                        window.location.reload();
-                    }
-                });
-            }
+            const response = await axios.post(`${API_URL}/api/cart/${cartId}/products/${productId}`, { amountToAdd }, { withCredentials: true } );
+            const data = response.data
+
+            // Actualizar estado local en lugar de recargar
+            setCart(prev => {
+                // Lógica para actualizar el carrito localmente
+                const existingItem = prev.find(item => item.product._id === productId);
+                if(existingItem) {
+                    return prev.map(item => 
+                        item.product._id === productId 
+                            ? {...item, quantity: item.quantity + amountToAdd} 
+                            : item
+                    );
+                }
+                return [...prev, {product: data.prodFound, quantity: amountToAdd}];
+            });
+
+            console.log("🚀 ~ CartContextProvider ~ cart:", cart)
+
+            Swal.fire({
+                icon: "success",
+                title: "Producto agregado",
+                showConfirmButton: true,
+                confirmButtonColor: "#DC5F00"
+            });
         } catch (err) {
-            console.error(`Error: ${err.response.data.message}`);
-            return `Error: ${err.response.data.message || 'Ocurrió un error al agregar el producto al carrito.'}`;
+            console.error("Error:", err);
+            Swal.fire({
+                icon: "error",
+                text: err.response?.data?.message || 'Error al agregar producto',
+                confirmButtonColor: "#DC5F00"
+            });
+            throw err; // Permite manejar el error en el componente si es necesario
         }
     }
 
@@ -74,6 +91,22 @@ export const CartContextProvider = ({children}) => {
             alert("Hubo un problema al crear la orden")
         }
     }
+
+    useEffect(() => {
+        const loadCart = async () => {
+            try {
+                const response = await axios.get(`${API_URL}/api/cart/${authUser.cart._id}`)
+                const data = response.data
+                console.log("🚀 ~ loadCart ~ data:", data)
+
+                setCart(data.cart.products)
+            } catch (err) {
+                console.log("🚀 ~ loadCart ~ err:", err)
+            }
+        }
+
+        loadCart()
+    }, [])
 
     return (
         <CartContext.Provider value={{ cart, setCart, addProductToCart, handleDeleteProdFromCart, finishPurchase }}>

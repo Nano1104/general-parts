@@ -17,8 +17,9 @@ export const ProductDetailContainer = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const res = await axios.get(`${API_URL}/api/products/${id}`, { withCredentials: true });
+                const res = await axios.get(`${API_URL}/api/products/id/${id}`, { withCredentials: true });
                 setProdToRender(res.data.product);
+                console.log("🚀 ~ fetchData ~ res:", res)
             } catch (error) {
                 console.error('Error fetching data:', error);
             } finally {
