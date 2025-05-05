@@ -1,9 +1,9 @@
 import axios from "axios";
 import { useEffect, useState, useRef, useCallback } from "react";
-
+import { useProductSearch } from "../../hooks/useProductSearch.js";
 import { useParams, Link } from "react-router-dom";
-import { categoriesAndSubCategories } from "../../utils/categories&SubCategories.js";
-import { getSubcategory } from "../../utils/getSubcategory"
+/* import { categoriesAndSubCategories } from "../../utils/categories&SubCategories.js";
+import { getSubcategory } from "../../utils/getSubcategory" */
 
 //components
 import { Product } from "../Product/Product.jsx";
@@ -23,8 +23,8 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
     const encodedSubcategory = encodeURIComponent(subcategory);
 
     const [prodsToRender, setProdsToRender] = useState([]);             //productos que renderiza la pagina
-    const [loading, setLoading] = useState(false);                          
-    const [hasMore, setHasMore] = useState(true);                       // <-- Controlador de fin de datos (productos)
+    /* const [loading, setLoading] = useState(false);                          
+    const [hasMore, setHasMore] = useState(true);                       // <-- Controlador de fin de datos (productos) */
     const productsPerPage = 10
 
     const [brand, setBrand] = useState(null);               //marcas del menu para filtrar
@@ -34,16 +34,67 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
     const handleFilter = () => setShowFilter(showFilters => !showFilters);
 
     const observerTarget = useRef(null);
-    const loadingRef = useRef(false); // Referencia para acceso en callbacks
+    /* const loadingRef = useRef(false); */
 
+    const { products, hasMore, loading, error, searchProducts } = useProductSearch( { /* initial params */ }, { productsPerPage: 15 } );
 
+    // Elimina el efecto de carga inicial (ya lo maneja el hook)
     useEffect(() => {
+        // Solo maneja cambios de filtros (no carga inicial)
+        if (!category && !subcategory && !brand && !searchValue) return;
+        
+        const baseParams = {
+            limit: productsPerPage,
+            ...(category && { category }),
+            ...(subcategory && { subcategory }),
+            ...(brand && { brand }),
+            ...(searchValue && { search: searchValue })
+        };
+        
+        searchProducts(baseParams, true); // Siempre resetear con filtros nuevos
+        
+    }, [category, subcategory, brand, searchValue]);
+
+    // Observer (mantén igual)
+    useEffect(() => {
+        if (!hasMore || loading) return;
+        
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    searchProducts({
+                        limit: productsPerPage,
+                        search: searchValue,
+                        category,
+                        brand,
+                        minPrice: price[0],
+                        maxPrice: price[1],
+                        lastId: products[products.length - 1]?._id // Añade cursor
+                    }, false);
+                }
+            },
+            { threshold: 0.1 }
+        );
+        
+        if (observerTarget.current) observer.observe(observerTarget.current);
+        
+        return () => observer.disconnect();
+    }, [searchProducts, hasMore, loading, products]);
+
+    
+
+    /* hasMore: true,
+    lastId: undefined,
+    loading: true,
+    productsCount: 0 */
+
+    /* useEffect(() => {
         setProdsToRender([]);
         setHasMore(true);
-    }, [searchValue, category, subcategory, categories, brand, price]);
+    }, [searchValue, category, subcategory, categories, brand, price]); */
 
     ///////load more products
-    const loadMoreProducts = useCallback(async () => {
+    /* const loadMoreProducts = useCallback(async () => {
         if (!hasMore || loadingRef.current) return;
         
         loadingRef.current = true;
@@ -80,7 +131,7 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
                     'Cache-Strategy': 'stale-while-revalidate' // Opcional
                 }
             });
-            /* console.log("🚀 ~ loadMoreProducts ~ response:", response) */
+
             const { products, hasMore } = response.data;
 
             if (products.length > 0) {
@@ -97,9 +148,9 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
           setLoading(false);
         }
       }, [prodsToRender, hasMore, productsPerPage, 
-        category, encodedSubcategory, categories, searchValue, brand, price])
+        category, encodedSubcategory, categories, searchValue, brand, price]) */
 
-      useEffect(() => {
+     /*  useEffect(() => {
         const observer = new IntersectionObserver(
           (entries) => {
             if (entries[0].isIntersecting) {
@@ -116,50 +167,61 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
           if (currentTarget) observer.unobserve(currentTarget);
           observer.disconnect();
         };
-      }, [loadMoreProducts]); // Dependencia estable
+      }, [loadMoreProducts]); // Dependencia estable */
 
     return(
         <>
-        {/*  LINK DE CATEGOIRAS Y SUBCATEGORIAS JUNTO CON MOSTRAR Y OCULTAR PRODUCTOS */} 
+        {/* LINK DE CATEGORIAS Y SUBCATEGORIAS (igual) */}
         <div className="text-white text-xs font-poppins mt-[6rem] text-end flex justify-between w-[95%] m-auto">
-            <div className="ml-4 text-sm xl:text-base italic font-normal uppercase">
-                { category ? <Link className="" to={`/productos/${category}`} >{category}<MdKeyboardArrowRight className="inline-block" /></Link> : "" }
-                { subcategory ? <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`} >{subcategory}</Link> : "" }
-                { categories ? <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`} ><MdKeyboardArrowRight className="inline-block" />{categories}</Link> : ""  }
-            </div>
+          <div className="ml-4 text-sm xl:text-base italic font-normal uppercase">
+            {category && <Link to={`/productos/${category}`}>{category}<MdKeyboardArrowRight className="inline-block" /></Link>}
+            {subcategory && <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`}>{subcategory}</Link>}
+            {categories && <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`}><MdKeyboardArrowRight className="inline-block" />{categories}</Link>}
+          </div>
+          <div>
+            <button className="mr-4 sm:mr-8 text-sm xl:text-base">
+              <span onClick={handleFilter}>{!showFilters ? "Mostrar Filtros" : "Ocultar Filtros"}</span><BsFilterLeft className="inline-block"/>
+            </button>
+          </div>
+        </div>
+      
+        {/* CONTAINER DE PRODUCTOS (cambios en la parte de renderizado) */}
+        <div id="products-container" className={`grid grid-cols-1 ${showFilters ? 'md:grid-cols-[30%_1fr] 2xl:grid-cols-[15%_1fr]' : 'md:grid-cols-1'} w-full mt-10`}>
+          {showFilters && (
             <div>
-                <button className="mr-4 sm:mr-8 text-sm xl:text-base">
-                    <span onClick={handleFilter}>{!showFilters ? "Mostrar Filtros" : "Ocultar Filtros"}</span><BsFilterLeft className="inline-block"/>
-                </button>
+              <Filters filtered={{ setBrand, price, setPrice, setShowFilter }} />
             </div>
-        </div>
-
-        {/* CONTAINER DE PRODUCTOS JUNTO CON FILTERS */}
-        <div id="products-container" className={`grid grid-cols-1 ${ showFilters ? `md:grid-cols-[30%_1fr] 2xl:grid-cols-[15%_1fr]` : `md:grid-cols-1` } w-full mt-10`}>
-            {showFilters && (
-                <div>
-                    <Filters filtered={{ setBrand, price, setPrice, setShowFilter }} />
-                </div>
-            )}
-
-            {/* Columna de productos */}
-            <div ref={observerTarget} className={`grid gap-3 justify-items-center grid-cols-1 ${!showFilters ? "md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4" : "md:grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3"}`}>
-                {
-                    prodsToRender.map((prod, index) => (
-                        <Product key={`${prod.codpro}-${index}`} data={prod} params={[category, subcategory]} featured={false} />
-                    ))
-                }
-                {/* <span className="col-span-full italic text-xl px-4 py-2 text-gray">No hay productos que cumplan con los filtros</span> */}
+          )}
+      
+          {/* Columna de productos - Cambios aquí */}
+          <div className={`grid gap-3 justify-items-center grid-cols-1 ${!showFilters ? "md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4" : "md:grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3"}`}>
+            {products.map((prod, index) => (
+              <Product 
+                key={`${prod.codpro}-${index}`} 
+                data={prod} 
+                params={[category, subcategory]} 
+                featured={false} 
+              />
+            ))}
+          </div>
+      
+          {/* Elemento observer y mensajes - Cambios aquí */}
+          <div ref={observerTarget} style={{ height: '1px' }} />
+          
+          {loading && <Loading />}
+          
+          {!hasMore && !loading && products.length > 0 && (
+            <div className="col-span-full text-center text-xl mt-8 py-4 text-gray-500 text-gray italic">
+              No hay más productos por cargar
             </div>
-            <div ref={observerTarget} style={{ height: '1px' }}> </div> 
-
-            {loading && <Loading />}
-            {!hasMore && !loading && prodsToRender.length > 0 && (
-                <div className="col-span-full text-center text-xl mt-8 py-4 text-gray-500 text-gray italic">
-                    No hay más productos por cargar
-                </div>
-            )}
+          )}
+          
+          {!loading && products.length === 0 && (
+            <div className="col-span-full text-center text-xl mt-8 py-4 text-gray-500 text-gray italic">
+              No se encontraron productos con los filtros seleccionados
+            </div>
+          )}
         </div>
-        </>
+      </>
     )
 }

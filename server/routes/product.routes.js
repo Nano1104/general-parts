@@ -1,6 +1,6 @@
 import express from "express";
 import { authenticateJWT } from "../utils/jwt.js"
-import { getProducts, getProductById, getAllProducts, getHighlightedProducts, postProducts, uploadExcelProducts, highlightProduct, addFieldToProducts,
+import { getProducts, getProductById, getAllProducts, getCategories, getHighlightedProducts, postProducts, uploadExcelProducts, highlightProduct, unhighlightProduct, addFieldToProducts,
     changeProductFieldVal, changeFieldToProducts, changeFieldValueToProducts, deleteFieldFromProducts, updateStock, deleteMongoDBCollection } from "../controllers/product.controller.js";
 
 import multer from "multer"
@@ -13,12 +13,14 @@ const upload = multer({
 const router = express.Router();
 
 router.get("/", getProducts)
-router.get("/:rubro", getAllProducts)                       //devuelve la cantidad de los productos con cierto rubro mandado por parametro
-router.get("/:id", getProductById)
+router.get("/id/:id", getProductById)
+router.get("/rubro/:rubro", getAllProducts)                       //devuelve la cantidad de los productos con cierto rubro mandado por parametro
+router.get("/rubro/get-categories", getCategories)
 router.get("/highlight/products", getHighlightedProducts)
 router.post('/post-products-in-db', postProducts)
 router.post("/upload-excel", upload.single("excelFile"), uploadExcelProducts)
 router.put("/highlight-product/:id", highlightProduct)
+router.put("/highlight/unHighlight-product/:id", unhighlightProduct)
 router.put("/add-field-to-products", authenticateJWT, addFieldToProducts)
 router.put("/change-product-fieldValue/:prodId", authenticateJWT, changeProductFieldVal)
 router.put("/change-field-value-to-products", changeFieldValueToProducts)                 //cambia el valor de un campo de los productos

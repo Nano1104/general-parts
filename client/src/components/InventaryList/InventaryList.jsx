@@ -1,5 +1,7 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { categoriesAndSubCategories } from "../../utils/categories&SubCategories.js";
+import { API_URL } from "../../utils/api_url.js"
 //components
 import { Category } from "../Category/Category.jsx";
 
@@ -12,6 +14,18 @@ export const InventaryList = ({ stateNews }) => {
     const [activeSubCategory, setActiveSubCategory] = useState(null)
 
     useEffect(() => {
+        /* const fetCategories = async () => {
+            try {
+                const response = await axios.get(`${API_URL}/api/products/rubro/get-categories`)
+                const data = response.data
+                console.log("🚀 ~ fetCategories ~ response:", response)
+                setCategories(data.categories)
+            } catch (err) {
+                
+            }
+        }
+        fetCategories() */
+
         setCategories(categoriesAndSubCategories)    
         console.log(categories)
     }, [])
@@ -22,7 +36,7 @@ export const InventaryList = ({ stateNews }) => {
                 <span className="flex items-center italic mobile:text-sm xl:text-base px-4 h-full bg-black text-lightGray uppercase font-montserrat font-bold tracking-tight cursor-pointer" onClick={() => {
                     setShowCategories(showCategories => !showCategories)
                     setShowNews(false)
-                }}>CATEGORIAS</span>
+                }}>RUBROS</span>
                 <span className="flex items-center italic mobile:text-sm xl:text-base ml-4 px-4 text-black  bg-orange h-full uppercase font-montserrat font-bold tracking-tight cursor-pointer" onClick={() => {
                     setShowCategories(false)
                     setShowNews(true)

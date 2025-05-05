@@ -48,10 +48,37 @@ const productSchema = new mongoose.Schema({
     },
     destacado: {
         type: Boolean,
-        required: true
+        default: false
     },
-    fechaDestacado: Date
+    fechaDestacado: {
+        type: Date,
+        default: null
+    },
+    fechaFinDestacado: {  // ✨ Nuevo campo necesario
+        type: Date,
+        default: null
+    },
+    highlightJobId: {
+        type: mongoose.Schema.Types.ObjectId, // Tipo compatible con Agenda
+        default: null
+    }
 }, { strict: false })
+
+// Definición del índice de texto (ANTES de crear el modelo)
+productSchema.index({
+    codpro: "text",
+    desc_stock: "text", 
+    desc_rubro: "text",
+    desc_marca: "text"
+  }, {
+    weights: {
+      codpro: 10,       // Mayor peso para código de producto
+      desc_stock: 5,    // Peso medio para descripción
+      desc_marca: 3,    // Menor peso para marca
+      desc_rubro: 2     // Peso mínimo para rubro
+    },
+    name: "product_text_search" // Nombre personalizado para el índice
+});
 
 const Product = mongoose.model("Product", productSchema);
 export default Product;

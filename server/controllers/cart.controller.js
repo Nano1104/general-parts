@@ -1,6 +1,25 @@
 import Cart from "../models/cart.model.js";
 import Product from "../models/product.model.js";
 
+export const getCart = async (req, res) => {
+    const { cartId } = req.params
+    try {
+        const cart = await Cart.findOne({ _id: cartId }).populate({
+            path: "products.product", // popular el campo product dentro de products[]
+            model: "Product"
+          });
+
+        if (!cart) return res.status(404).json({ message: `Cart not found with id: ${cartId}` })
+
+        res.status(200).json({ message: "Success getting cart", cart });
+    } catch (err) {
+        res.status(500).json({
+            message: "Error getting cart",
+            error: err.message
+        });
+    }
+}
+
 export const postProductInCertainCart = async (req, res) => {
     try {
         const { productId, cartId } = req.params

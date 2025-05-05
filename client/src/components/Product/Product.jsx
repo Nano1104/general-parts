@@ -1,16 +1,41 @@
+import axios from "axios";
 import { Link } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { useIsMobile } from "../../hooks/isMobile.js";      //hook para renderizar breakpoints
+import { useAuthContext } from "../../context/AuthContext.jsx";
+import Swal from 'sweetalert2';
 
 import imgProduct from "../../images/bulones.png"
+import { API_URL } from "../../utils/api_url.js";
 
 export const Product = ({data, params}) => {
     const { codpro, desc_stock, rubro, subrub, proveed, desc_rubro, desc_marca, porcen1, precioimpre, destacado } = data;
     const isMobile = useIsMobile(1280); // Puedes cambiar el breakpoint si lo necesitas
     const componentRef = useRef(null)
+    const { isAdmin } = useAuthContext()
 
     const [category, subcategory] = params;
     const [hover, setShowHover] = useState(false)
+    
+    const handleUnHighlightProduct = async () => {
+        try {
+          const result = await Swal.fire({
+            text: '¿Deseas quitar este producto de destacados?',
+            showCancelButton: true,
+            confirmButtonText: 'SÍ',
+            confirmButtonColor: '#DC5F00',
+            cancelButtonText: 'CANCELAR',
+            cancelButtonColor: '#61677A',
+          });
+      
+          if (result.isConfirmed) {
+            const response = await axios.put(`${API_URL}/api/products/highlight/unHighlight-product/${codpro}`);
+            console.log('Producto quitado de destacados:', response.data);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      };
 
     const handleMouseEnter = () => setShowHover(true)
 
@@ -19,9 +44,9 @@ export const Product = ({data, params}) => {
     return(
         <>
         <div ref={componentRef} onMouseEnter={() => handleMouseEnter()} key={`key_${codpro}`}
-            className={`w-[85%] h-[65vh] mobile:h-[60vh] lg:w-[19em] xl:w-[22em] 2xl:w-[25em] 2xl:h-[55vh] bg-gray font-poppins rounded-xl relative my-3`}
+            className={`w-[85%] h-[65vh] mobile:h-[60vh] lg:w-[19em] xl:w-[22em] 2xl:w-[25em] 2xl:h-[55vh] ${destacado ? "bg-orange text-cBlack border border-white" : "bg-gray"} font-poppins rounded-xl relative my-3`}
             id="product">
-            { destacado ? <span className="absolute m-3 text-sm font-bold tracking-tight bg-orange py-0.5 px-1 rounded-md">DESTACADO</span> : <></> }
+            { destacado ? <span className="absolute m-3 text-sm font-bold tracking-tight bg-cBlack text-white py-0.5 px-2 rounded-md">DESTACADO</span> : <></> }
             <div className="w-full h-[65%]">
                 <img src={imgProduct} alt="" className="rounded-t-xl object-contain h-full" />
             </div>
@@ -37,18 +62,27 @@ export const Product = ({data, params}) => {
                   <span>PRECIO: <span className="font-bold">{precioimpre} ARG</span></span>
                 </div>
             </div>
-            {
+            
+            {       
                 !isMobile
                 ?
-                <div onMouseLeave={() => handleMouseLeave()} className={`border h-full absolute top-0 w-full rounded-xl flex justify-center items-center bg-custom-gradient ${ hover ? "block" : "hidden" }`}>
+                <div onMouseLeave={() => handleMouseLeave()} className={`border h-full absolute top-0 w-full rounded-xl flex flex-col justify-center items-center bg-custom-gradient ${ hover ? "block" : "hidden" }`}>
                     <Link to={`/producto/detail/${codpro}?category=${category}&subCategory=${subcategory}`}
                         className="py-2 px-4 text-center text-black rounded-2xl border hover:bg-deepGray hover:border-transparent hover:text-white transition duration-200"
                         id="btn-see-prod">
                         Ver Repuesto
                     </Link>
+                    
+                    { isAdmin
+                        ? <button className="p-2 mt-4 text-sm text-center text-black rounded-xl border hover:bg-deepGray hover:border-transparent hover:text-white transition duration-200"
+                                    onClick={handleUnHighlightProduct}>
+                            QUITAR PRODUCTO DE DESTACADOS
+                        </button>
+                        : <></>
+                    }
                 </div>
                 :
-                <>
+                <>      {/* RESOLUCION MOBILE DEL HOVER */}
                 <Link id="btn-see-prod" to={`/producto/detail/${codpro}?category=${category}&subCategory=${subcategory}`}
                     className="py-2 px-4 text-xs flex justify-center bg-deepGray text-white text-center absolute w-full bottom-[10px]"
                 >

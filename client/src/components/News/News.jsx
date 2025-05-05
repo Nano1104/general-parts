@@ -12,37 +12,63 @@ export const News = () => {
 
     const [prodsDestacados, setProdsDestacados] = useState([])
     const [loading, setLoading] = useState(false)
+    
 
     const pedirCodigoProducto = async () => {
-      const { value: codigo } = await Swal.fire({
-        title: 'Ingrese el código del producto',
-        input: 'text',
-        inputPlaceholder: 'Código',
+      const { value: formValues } = await Swal.fire({
+        title: 'Destacar producto',
+        html:
+          '<input id="swal-input1" class="swal2-input" placeholder="Código del producto" required>' +
+          '<input id="swal-input2" class="swal2-input" placeholder="Días a destacar" type="number" min="1" required>',
+        focusConfirm: false,
+        confirmButtonColor: "#DC5F00",
         showCancelButton: true,
-        inputValidator: (value) => {
-          if (!value) {
-            return '¡Debes ingresar un código!';
+        preConfirm: () => {
+          const codigo = document.getElementById('swal-input1').value;
+          const dias = document.getElementById('swal-input2').value;
+          
+          if (!codigo.trim() || !dias.trim()) {
+            Swal.showValidationMessage('Ambos campos son obligatorios');
+            return false;
           }
-        }
+          
+          if (isNaN(dias) || parseInt(dias) <= 0) {
+            Swal.showValidationMessage('Los días deben ser un número positivo');
+            return false;
+          }
+          
+          return [codigo, parseInt(dias)];
+        },
+        allowOutsideClick: () => !Swal.isLoading()
       });
     
-      if (codigo) {
-        console.log('Código ingresado:', codigo);
-        // Aquí puedes llamar una función para buscar el producto, etc.
+      if (formValues) {         //manejo de repuestas en el front, realizacion de la solicitud
+        const [codigo, dias] = formValues;
+                
         try {
-          const response = await axios.put(`${API_URL}/api/products/highlight-product/${codigo}`) 
-          console.log("🚀 ~ pedirCodigoProducto ~ response:", response)
+          const response = await axios.put(`${API_URL}/api/products/highlight-product/${codigo}`, { days: dias });
           const data = response.data
-          setProdsDestacados(prev => [...prev, data.productUpdated]);
+          console.log("🚀 ~ pedirCodigoProducto ~ response:", response)
+
+          setProdsDestacados(prev => [...prev, data.product]);     //agrega el producto destacdo a la lista de destacados para ser renderizado
+          Swal.fire({ text: `Producto destcado por ${dias} días`, icon: "success", confirmButtonColor: "#DC5F00" });
+
         } catch (err) {
-          if (err.response && err.response.status === 404) {
-            Swal.fire("No existe el producto con el código ingresado");
+          if (err.response?.status === 404) {     //En caso de que no exista el producto con el codigo ingresado
+            Swal.fire({ text: "No existe el producto con el código ingresado", icon: "info", confirmButtonColor: "#DC5F00" });
+          } 
+          else if (err.response?.status === 409) {    //En caso de que ya se encuentre destacado
+            Swal.fire({ text: "El producto ya se encuentra destacado", icon: "info", confirmButtonColor: "#DC5F00" });
           }
-          console.log("Error al querer destacar producto: ", err)
+          else {
+            console.error("Error al destacar producto:", err);
+            Swal.fire("Error", "Ocurrió un error al procesar la solicitud", "error");
+          }
         }
       }
     };
-    
+
+
     const agregarOCrear = () => {
         Swal.fire({
           text: 'Puedes agregar un producto existente o crear uno nuevo',
@@ -88,10 +114,13 @@ export const News = () => {
         <>
         <div className="mt-6">
             <div className="grid justify-items-center gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 mt-8">
-                {
-                  prodsDestacados.map(prod => <Product key={prod.codpro} data={prod} params={[prod.desc_rubro, prod.desc_subrub]} />)
+              {
+                  prodsDestacados && prodsDestacados.length > 0
+                    ? prodsDestacados.map(prod => (
+                        <Product key={prod.codpro} data={prod} params={[prod.desc_rubro, prod.desc_subrub]} />
+                      ))
+                    : <span className="col-span-full italic text-2xl px-4 py-2 text-gray">No hay productos destacados</span>
                 }
-
                 {
                   isAdmin
                   ?

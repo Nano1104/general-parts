@@ -39,7 +39,7 @@ export const categoriesAndSubCategories = [
             {
                 idSubcategory: [361, 361],
                 description: "sonda lambda",
-                categories: ["SONDA LAMBDAS"]
+                categories: ["SONDA LAMBDAS", "MOTOR PASO A PASO"]
             }
         ]
     }

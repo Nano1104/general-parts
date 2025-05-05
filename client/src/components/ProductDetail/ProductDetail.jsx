@@ -18,7 +18,7 @@ import imgDetail from "../../images/bulones.png"
 import { API_URL } from "../../utils/api_url.js";
 
 export const ProductDetail = ({prod}) => {
-    const { _id, codpro, desc_stock, proveed, desc_rubro, desc_subrubro, desc_marca, precioimpre, stock, prod_details } = prod;
+    const { _id, codpro, desc_stock, proveed, desc_rubro, desc_subrub, desc_marca, precioimpre, stock, prod_details } = prod;
     const { authUser, isAdmin } = useAuthContext();
     const { addProductToCart } = useCartContext();
     const { id } = useParams();
@@ -28,7 +28,7 @@ export const ProductDetail = ({prod}) => {
     const [isFocus, setIsFocus] = useState(false);
 
     const encodedCategory = desc_rubro ? desc_rubro.toLowerCase() : "";
-    const encodedSubcategory = desc_subrubro ? encodeURIComponent(desc_subrubro).toLowerCase() : ""
+    const encodedSubcategory = desc_subrub ? encodeURIComponent(desc_subrub).toLowerCase() : ""
 
     const textareaRef = useRef(null);
     const handleFocus = () => {
@@ -82,7 +82,7 @@ export const ProductDetail = ({prod}) => {
                         <Link className="first-letter:uppercase" to={`/productos/${encodedCategory}`}>{desc_rubro}</Link><MdKeyboardArrowRight />
                     </div>
                     <div className="flex items-center mx-2 my-1 lg:mx-0">
-                        <Link className="first-letter:uppercase" to={`/productos/${encodedCategory}/${encodedSubcategory}`}>{desc_subrubro}</Link><MdKeyboardArrowRight />
+                        <Link className="first-letter:uppercase" to={`/productos/${encodedCategory}/${encodedSubcategory}`}>{desc_subrub}</Link><MdKeyboardArrowRight />
                     </div>
                     <span className="cursor-pointer mx-2 my-1 lg:mx-0">{id}</span>
                 </div>
