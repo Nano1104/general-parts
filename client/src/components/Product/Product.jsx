@@ -5,11 +5,15 @@ import { useIsMobile } from "../../hooks/isMobile.js";      //hook para renderiz
 import { useAuthContext } from "../../context/AuthContext.jsx";
 import Swal from 'sweetalert2';
 
-import imgProduct from "../../images/bulones.png"
+//images
+import bulonesImg from "../../images/bulones.png"
+import sondaImg from "../../images/sondaVerde1.png"
+import pasoApasoImg from "../../images/motor-pasoapaso.png"
+
 import { API_URL } from "../../utils/api_url.js";
 
 export const Product = ({data, params}) => {
-    const { codpro, desc_stock, rubro, subrub, proveed, desc_rubro, desc_marca, porcen1, precioimpre, destacado } = data;
+    const { codpro, desc_stock, rubro, subrub, proveed, desc_rubro, desc_subrub, desc_marca, porcen1, precioimpre, destacado } = data;
     const isMobile = useIsMobile(1280); // Puedes cambiar el breakpoint si lo necesitas
     const componentRef = useRef(null)
     const { isAdmin } = useAuthContext()
@@ -35,7 +39,13 @@ export const Product = ({data, params}) => {
         } catch (err) {
           console.error(err);
         }
-      };
+    };
+
+    const getImage = () => {
+      if (desc_subrub == "SONDA LAMBDAS") return sondaImg
+      else if (desc_subrub == "MOTOR PASO A PASO") return pasoApasoImg
+      return bulonesImg
+    }
 
     const handleMouseEnter = () => setShowHover(true)
 
@@ -48,7 +58,7 @@ export const Product = ({data, params}) => {
             id="product">
             { destacado ? <span className="absolute m-3 text-sm font-bold tracking-tight bg-cBlack text-white py-0.5 px-2 rounded-md">DESTACADO</span> : <></> }
             <div className="w-full h-[65%]">
-                <img src={imgProduct} alt="" className="rounded-t-xl object-contain h-full" />
+                <img src={getImage()} alt="" className="rounded-t-xl object-contain h-full" />
             </div>
             <div className="flex flex-col text-xs mobile:text-sm 2xl:text-base items-start px-4">
                 <div className="text-sm">
