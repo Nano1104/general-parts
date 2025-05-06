@@ -234,15 +234,85 @@ export const getAllProducts = async (req, res) => {
     }
 }
 
-export const getCategories = async (req, res) => {
+export const getCategoriesAndSubcategories = async (req, res) => {
     try {
-        const categories = (await Product.distinct("desc_rubro")).sort();
+        const result = await Product.aggregate([
+            // Primero agrupamos para obtener combinaciones únicas de rubro/subrubro
+            {
+                $group: {
+                    _id: {
+                        rubro: "$desc_rubro",
+                        subrubro: "$desc_subrub",
+                        codigo: "$subrub"
+                    }
+                }
+            },
+            // Luego agrupamos por rubro para juntar todos sus subrubros
+            {
+                $group: {
+                    _id: "$_id.rubro",
+                    subrubros: {
+                        $push: {
+                            nombre: "$_id.subrubro",
+                            codigo: "$_id.codigo"
+                        }
+                    }
+                }
+            },
+            // Eliminamos duplicados de subrubros (por si acaso)
+            {
+                $addFields: {
+                    subrubros: {
+                        $reduce: {
+                            input: "$subrubros",
+                            initialValue: [],
+                            in: {
+                                $cond: [
+                                    { $in: ["$$this", "$$value"] },
+                                    "$$value",
+                                    { $concatArrays: ["$$value", ["$$this"]] }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            // Formateamos la salida como necesitas
+            {
+                $project: {
+                    _id: 0,
+                    rubro: "$_id",
+                    subrubros: {
+                        $map: {
+                            input: "$subrubros",
+                            as: "sub",
+                            in: [
+                                "$$sub.nombre", // Nombre del subrubro
+                                "$$sub.codigo"  // Código del subrubro
+                            ]
+                        }
+                    }
+                }
+            },
+            // Ordenamos alfabéticamente por rubro
+            {
+                $sort: { rubro: 1 }
+            }
+        ]);
 
-        res.status(200).json({ success: true, message: `Success getting categories from db`, categories});
+        res.status(200).json({
+            success: true,
+            message: "Success getting categories with subrubros and codes",
+            categories: result
+        });
     } catch (err) {
-        res.status(500).json({ success: false, message: "Error getting categories from db", error: err.message,});   
+        res.status(500).json({
+            success: false,
+            message: "Error getting categories with subrubros and codes",
+            error: err.message
+        });
     }
-}
+};
 
 export const getProductById = async (req, res) => {
     const { id } = req.params;

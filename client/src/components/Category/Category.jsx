@@ -6,6 +6,7 @@ import { IoIosArrowForward } from "react-icons/io"; //flecha mirando derecha
 import 'animate.css';
 
 export const Category = ({category, activeCategory, setActiveCategory, activeSubCategory, setActiveSubCategory, categoriesAndSubCategories}) => {
+    console.log("🚀 ~ Category ~ category:", category)
     const [categoryData, setCategoryData] = useState(null)
     const [subCategories, setSubCategories] = useState([]);
     /* const [showCategoriesSubmenu, setShowCategoriesSubmenu] = useState(false); */
@@ -43,7 +44,8 @@ export const Category = ({category, activeCategory, setActiveCategory, activeSub
         <>
         <div className="text-xs 2xl:text-sm font-montserrat">
             <div className="flex items-center gap-1 relative">
-                <div className="flex w-32 justify-between items-center">            {/*RENDERIZA UN PARA UN RUBRO */}
+
+                <div className="flex w-32 justify-between items-center">       {/* RENDERIZA UN RUBRO */}
                     <Link
                         id={`category-${category}-link`}
                         className={`category-link gap-1 text-black text-md mb-1 uppercase`}
@@ -53,8 +55,6 @@ export const Category = ({category, activeCategory, setActiveCategory, activeSub
                     </Link>
                     { activeCategory != category ? <IoIosArrowUp onClick={() => showSubCategories(category)} className="text-base mb-1 cursor-pointer" /> : <IoIosArrowForward onClick={() => showSubCategories(null)} className="text-base mb-1 cursor-pointer" /> }
                 </div>
-
-
 
                 { activeCategory == category && (                   //categorias que tengan submenu de categorias
                     categoryData && categoryData.submenu ? (        //EN CASO DE QUE EL SUBRUBRO DEL RUBRO PADRE CONTENGA MAS SUBCATEGORIAS DENTRO
@@ -106,6 +106,7 @@ export const Category = ({category, activeCategory, setActiveCategory, activeSub
                         </div>
                     )
                 )}
+
             </div>
             { activeCategory == category ? <hr/> : <></> }
 
@@ -113,3 +114,5 @@ export const Category = ({category, activeCategory, setActiveCategory, activeSub
         </>
     )
 }
+
+

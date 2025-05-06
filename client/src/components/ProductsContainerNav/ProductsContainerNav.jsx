@@ -13,8 +13,8 @@ export const ProductsContainerNav = ({ searchValue, setSearchValue }) => {
     const searchInputRef = useRef(null)
 
     const handleSearch = (e) => {
-        const searchValue = searchInputRef.current?.value;
-        setSearchValue(searchValue)
+        const value = searchInputRef.current?.value;
+        setSearchValue(value || ''); // Asegura que sea string vacío si es undefined/null
     }
 
     return(

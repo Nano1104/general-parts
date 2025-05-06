@@ -38,22 +38,32 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
 
     const { products, hasMore, loading, error, searchProducts } = useProductSearch( { /* initial params */ }, { productsPerPage: 15 } );
 
-    // Elimina el efecto de carga inicial (ya lo maneja el hook)
+    // Efecto para resetear otros filtros cuando hay búsqueda
     useEffect(() => {
-        // Solo maneja cambios de filtros (no carga inicial)
-        if (!category && !subcategory && !brand && !searchValue) return;
+        if (searchValue) {
+            setBrand(null);
+            setPrice([]);
+        }
+    }, [searchValue]);
+
+    // Efecto principal de búsqueda/filtrado
+    useEffect(() => {
+        const isPureSearch = !!searchValue;
         
         const baseParams = {
             limit: productsPerPage,
-            ...(category && { category }),
-            ...(subcategory && { subcategory }),
-            ...(brand && { brand }),
-            ...(searchValue && { search: searchValue })
+            ...(searchValue && { search: searchValue }),
+            ...(!isPureSearch && {
+                ...(category && { category }),
+                ...(subcategory && { subcategory }),
+                ...(brand && { brand }),
+                ...(price.length > 0 && { minPrice: price[0], maxPrice: price[1] }) // Asumiendo que price es un array
+            })
         };
         
-        searchProducts(baseParams, true); // Siempre resetear con filtros nuevos
+        searchProducts(baseParams, true);
         
-    }, [category, subcategory, brand, searchValue]);
+    }, [category, subcategory, brand, price, searchValue, productsPerPage]);
 
     // Observer (mantén igual)
     useEffect(() => {
