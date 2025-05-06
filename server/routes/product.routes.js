@@ -1,6 +1,6 @@
 import express from "express";
 import { authenticateJWT } from "../utils/jwt.js"
-import { getProducts, getProductById, getAllProducts, getCategories, getHighlightedProducts, postProducts, uploadExcelProducts, highlightProduct, unhighlightProduct, addFieldToProducts,
+import { getProducts, getProductById, getAllProducts, getCategoriesAndSubcategories, getHighlightedProducts, postProducts, uploadExcelProducts, highlightProduct, unhighlightProduct, addFieldToProducts,
     changeProductFieldVal, changeFieldToProducts, changeFieldValueToProducts, deleteFieldFromProducts, updateStock, deleteMongoDBCollection } from "../controllers/product.controller.js";
 
 import multer from "multer"
@@ -14,8 +14,8 @@ const router = express.Router();
 
 router.get("/", getProducts)
 router.get("/id/:id", getProductById)
+router.get("/rubro/get-categories-and-subcategories", getCategoriesAndSubcategories)
 router.get("/rubro/:rubro", getAllProducts)                       //devuelve la cantidad de los productos con cierto rubro mandado por parametro
-router.get("/rubro/get-categories", getCategories)
 router.get("/highlight/products", getHighlightedProducts)
 router.post('/post-products-in-db', postProducts)
 router.post("/upload-excel", upload.single("excelFile"), uploadExcelProducts)

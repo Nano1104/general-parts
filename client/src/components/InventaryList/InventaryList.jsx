@@ -16,9 +16,10 @@ export const InventaryList = ({ stateNews }) => {
     useEffect(() => {
         /* const fetCategories = async () => {
             try {
-                const response = await axios.get(`${API_URL}/api/products/rubro/get-categories`)
+                const response = await axios.get(`${API_URL}/api/products/rubro/get-categories-and-subcategories`)
                 const data = response.data
-                console.log("🚀 ~ fetCategories ~ response:", response)
+                console.log("🚀 ~ fetCategories ~ response:", data)
+                
                 setCategories(data.categories)
             } catch (err) {
                 
@@ -56,6 +57,17 @@ export const InventaryList = ({ stateNews }) => {
                                                                 categoriesAndSubCategories={categoriesAndSubCategories}
                                                             /> )
                     }
+                    {/* {
+                        categories.map((category, index) => <Category
+                                                                key={`category-${category.rubro}-${index}`}
+                                                                category={category.rubro}
+                                                                activeCategory={activeCategory}
+                                                                setActiveCategory={setActiveCategory}
+                                                                activeSubCategory={activeSubCategory}
+                                                                setActiveSubCategory={setActiveSubCategory}
+                                                                categoriesAndSubCategories={categoriesAndSubCategories}
+                                                            /> )
+                    } */}
                     </ul>
                     : <></>
                 }

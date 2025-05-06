@@ -13,7 +13,9 @@ import { Loading } from "../Loading/Loading.jsx";
 //icons
 import { FaPencil } from "react-icons/fa6";
 //image
-import imgDetail from "../../images/bulones.png"
+import buloneImg from "../../images/bulones.png"
+import sondaImg from "../../images/sondaVerde1.png"
+import pasoApasoImg from "../../images/motor-pasoapaso.png"
 
 import { API_URL } from "../../utils/api_url.js";
 
@@ -50,6 +52,12 @@ export const ProductDetail = ({prod}) => {
         }
     }
 
+    const getImage = () => {
+          if (desc_subrub == "SONDA LAMBDAS") return sondaImg
+          else if (desc_subrub == "MOTOR PASO A PASO") return pasoApasoImg
+          return buloneImg
+    }
+
     ////////////////// AÑADIR AL CARRITO
     const handleAddToCart = () => {
         if(!authUser) {
@@ -76,7 +84,7 @@ export const ProductDetail = ({prod}) => {
 
             {/* PRIMERA PARTE DEL PRODUCT DESCRIPTION */}
             <div className="basis-[58%] text-xs lg:text-sm 2xl:text-base">
-                <img src={imgDetail} className="w-full object-contain h-full my-28 mobile:my-14 lg:my-3" alt={`prod-${codpro}-img`} />
+                <img src={getImage()} className="w-full object-contain h-full my-28 mobile:my-14 lg:my-3" alt={`prod-${codpro}-img`} />
                 <div className="font-roboto font-semibold italic flex flex-col mobile:flex-row items-start mobile:justify-center lg:justify-start w-full mt-5 absolute top-0">
                     <div className="flex items-center mx-2 my-1 lg:mx-0">
                         <Link className="first-letter:uppercase" to={`/productos/${encodedCategory}`}>{desc_rubro}</Link><MdKeyboardArrowRight />

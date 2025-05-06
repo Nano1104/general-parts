@@ -5,7 +5,7 @@ import { API_URL } from "../utils/api_url.js";
 
 export const useProductSearch = (initialParams = {}, initialOptions = {}) => {  // Añade parámetros iniciales
     const productsPerPage = initialOptions.productsPerPage || 10;
-      
+    
     const [state, setState] = useState({
         products: [],
         hasMore: true,
@@ -17,6 +17,7 @@ export const useProductSearch = (initialParams = {}, initialOptions = {}) => {  
     const abortControllerRef = useRef(null);
 
     const searchProducts = useCallback(async (params, reset = false) => {
+        console.log("🚀 ~ searchProducts ~ params:", params)
         if (loadingRef.current) return;
         
         loadingRef.current = true;
