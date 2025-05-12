@@ -96,7 +96,7 @@ export const ProductDetail = ({prod}) => {
                 </div>
             </div>
             
-            <div className="border mx-8 mb-6"></div>
+            <div className="border mx-8 mb-6"></div>    
 
             {/* SEGUNDA PARTE DEL CARD */}
             <div className="basis-[42%] font-poppins">

@@ -19,3 +19,13 @@ export const getSubcategory = (category, subcategory) => {
     // Toma en cuenta que puede llamarse idSubcategory o ids
     return subcategoryFound.idSubcategory || null;
 };
+
+export const getSubcategoryIdsForGroup = (groupName) => {
+    // Definimos los IDs para cada grupo
+    const GROUP_IDS = {
+        engranaje: [149, 147, 146, 151, 140, 139, 141, 142, 143, 144, 145, 150, 148],
+        bulones: [101, 102, 103]
+    };
+    
+    return GROUP_IDS[groupName] || null;
+};
