@@ -14,7 +14,7 @@ export const InventaryList = ({ stateNews }) => {
     const [activeSubCategory, setActiveSubCategory] = useState(null)
 
     useEffect(() => {
-        /* const fetCategories = async () => {
+        const fetCategories = async () => {
             try {
                 const response = await axios.get(`${API_URL}/api/products/rubro/get-categories-and-subcategories`)
                 const data = response.data
@@ -25,10 +25,10 @@ export const InventaryList = ({ stateNews }) => {
                 
             }
         }
-        fetCategories() */
+        fetCategories()
 
-        setCategories(categoriesAndSubCategories)    
-        console.log(categories)
+        /* setCategories(categoriesAndSubCategories)    
+        console.log(categories) */
     }, [])
 
     return(
@@ -46,7 +46,7 @@ export const InventaryList = ({ stateNews }) => {
                     showCategories
                     ?
                     <ul className="flex flex-col mt-8 absolute top-0 left-0 gap-2 bg-gray px-10 py-2">
-                    {
+                    {/* {
                         categories.map((category, index) => <Category
                                                                 key={`category-${category.description}-${index}`}
                                                                 category={category.description}
@@ -56,8 +56,8 @@ export const InventaryList = ({ stateNews }) => {
                                                                 setActiveSubCategory={setActiveSubCategory}
                                                                 categoriesAndSubCategories={categoriesAndSubCategories}
                                                             /> )
-                    }
-                    {/* {
+                    } */}
+                    {
                         categories.map((category, index) => <Category
                                                                 key={`category-${category.rubro}-${index}`}
                                                                 category={category.rubro}
@@ -65,9 +65,10 @@ export const InventaryList = ({ stateNews }) => {
                                                                 setActiveCategory={setActiveCategory}
                                                                 activeSubCategory={activeSubCategory}
                                                                 setActiveSubCategory={setActiveSubCategory}
-                                                                categoriesAndSubCategories={categoriesAndSubCategories}
+                                                                categoryData={category}
+                                                                /* categoriesAndSubCategories={categoriesAndSubCategories} */
                                                             /> )
-                    } */}
+                    }
                     </ul>
                     : <></>
                 }

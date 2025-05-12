@@ -5,10 +5,15 @@ import { IoIosArrowForward } from "react-icons/io"; //flecha mirando derecha
 
 import 'animate.css';
 
-export const Category = ({category, activeCategory, setActiveCategory, activeSubCategory, setActiveSubCategory, categoriesAndSubCategories}) => {
-    console.log("🚀 ~ Category ~ category:", category)
-    const [categoryData, setCategoryData] = useState(null)
-    const [subCategories, setSubCategories] = useState([]);
+export const Category = ({category, activeCategory, setActiveCategory, activeSubCategory, setActiveSubCategory, categoryData, /* categoriesAndSubCategories */}) => {    
+    const [activeMotorSubCategory, setActiveMotorSubCategory] = useState(null);
+    const MOTOR_GROUPS = {
+        engranaje: [149, 147, 146, 151, 140, 139, 141, 142, 143, 144, 145, 150, 148],
+        bulones: [101, 102, 103]
+    };
+
+    /* const [categoryData, setCategoryData] = useState(null) */
+    /* const [subCategories, setSubCategories] = useState([]); */
     /* const [showCategoriesSubmenu, setShowCategoriesSubmenu] = useState(false); */
 
     //renderiza las categorias del rubro principal en caso de que no haya submenu de subrubros
@@ -31,21 +36,11 @@ export const Category = ({category, activeCategory, setActiveCategory, activeSub
         return []; // Devuelve un array vacío si no encuentra nada
     };
 
-    useEffect(() => {
-        const categoryFound = categoriesAndSubCategories.find(elem => elem.description === category)
-        if (categoryFound) {
-            setCategoryData(categoryFound)
-            setSubCategories(categoryFound.subCategories)
-        }
-
-    }, [category, categoriesAndSubCategories])
-
     return(
         <>
         <div className="text-xs 2xl:text-sm font-montserrat">
             <div className="flex items-center gap-1 relative">
-
-                <div className="flex w-32 justify-between items-center">       {/* RENDERIZA UN RUBRO */}
+                <div className="flex w-32 justify-between items-center">  
                     <Link
                         id={`category-${category}-link`}
                         className={`category-link gap-1 text-black text-md mb-1 uppercase`}
@@ -53,63 +48,91 @@ export const Category = ({category, activeCategory, setActiveCategory, activeSub
                     >
                         {category}
                     </Link>
-                    { activeCategory != category ? <IoIosArrowUp onClick={() => showSubCategories(category)} className="text-base mb-1 cursor-pointer" /> : <IoIosArrowForward onClick={() => showSubCategories(null)} className="text-base mb-1 cursor-pointer" /> }
+                    {activeCategory !== category 
+                        ? <IoIosArrowUp onClick={() => showSubCategories(category)} className="text-base mb-1 cursor-pointer" />
+                        : <IoIosArrowForward onClick={() => showSubCategories(null)} className="text-base mb-1 cursor-pointer" />
+                    }
                 </div>
 
-                { activeCategory == category && (                   //categorias que tengan submenu de categorias
-                    categoryData && categoryData.submenu ? (        //EN CASO DE QUE EL SUBRUBRO DEL RUBRO PADRE CONTENGA MAS SUBCATEGORIAS DENTRO
-                        <div className="absolute z-20 top-0 left-full py-3 bg-gray border w-40">
-                        {
-                            subCategories.map((subCategory, index) => (
-                                <div key={`sub-${subCategory}-${index}`} className="flex items-center relative">
-                                    <Link
-                                        to={`/productos/${category}/${encodeURIComponent(subCategory.description)}`}
-                                        className="text-cBlack text-sm block px-4 transition ease-in duration-300 uppercase">
-                                        {subCategory.description}
-                                    </Link>
-                                    { activeSubCategory != subCategory.description              // CAMBIA LA FLECHA DE CUANDO SE ABRE O CIERRA UN SUBRUBRO
-                                        ? <IoIosArrowUp onClick={() => showSubCategoriesSubmenu(subCategory.description)} className="text-base mb-1 cursor-pointer" />
-                                        : <IoIosArrowForward  onClick={() => showSubCategoriesSubmenu(null)} className="text-base mb-1 cursor-pointer" /> }
+                {/* RENDERIZADO DE SUBRUBROS */}
+                {activeCategory === category && (
+                    category === "MOTOR" ? (
+                        <div className="absolute z-20 top-0 left-full py-3 bg-gray border w-40 flex flex-col gap-2">
+                            {/* Grupo ENGRANAJE */}
+                            <div className="flex items-center justify-between px-4">
+                                <Link to={`/productos/${category}/engranaje`} className="text-cBlack text-sm transition ease-in duration-300 uppercase">
+                                    ENGRANAJE
+                                </Link>
+                                {activeMotorSubCategory === "engranaje"
+                                    ? <IoIosArrowUp onClick={() => setActiveMotorSubCategory(null)} className="text-base cursor-pointer" />
+                                    : <IoIosArrowForward onClick={() => setActiveMotorSubCategory("engranaje")} className="text-base cursor-pointer" />
+                                }
+                            </div>
 
-                                    { activeSubCategory == subCategory.description && (         //RENDERIZA LAS SUBCATEROGIRAS DEL SUBRUBRO CORRESPONDIENTE
-                                        <div key={`subcategory-${subCategory.description}`} className="absolute z-20 top-0 left-full bg-gray py-4 border w-72 flex flex-col gap-3 justify-center">
-                                            {
-                                                getSubCategories(subCategory.description).map((sub, index) => (
-                                                    <Link
-                                                        key={`${sub.idSubcategory}-${index}`} // Agrega una clave única para cada subcategoría
-                                                        to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(subCategory.description)}/${encodeURIComponent(sub)}`}
-                                                        className="text-cBlack text-sm block px-4 hover:font-bold transition ease-in"
-                                                    >
-                                                        {sub}
-                                                    </Link>
-                                                ))
-                                            }
-                                        </div>
-                                    )}
+                            {/* Submenu de ENGRANAJE */}
+                            {activeMotorSubCategory === "engranaje" && (
+                                <div className="absolute left-full top-0 bg-gray border w-72 py-3 ml-1">
+                                    {categoryData.subrubros
+                                        .filter(sub => MOTOR_GROUPS.engranaje.includes(sub[1]))
+                                        .map((sub, index) => (
+                                            <Link
+                                                key={`engranaje-${sub[1]}-${index}`}
+                                                to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub[0])}`}
+                                                className="text-cBlack text-sm block px-4 py-1 hover:font-bold transition ease-in"
+                                            >
+                                                {sub[0]}
+                                            </Link>
+                                        ))
+                                    }
                                 </div>
-                            ))
-                        }
+                            )}
+
+                            {/* Grupo BULONES/TORNILLOS */}
+                            <div className="flex items-center justify-between px-4">
+                                <Link to={`/productos/${category}/bulones`} className="text-cBlack text-sm transition ease-in duration-300 uppercase">
+                                    BULONES
+                                </Link>
+                                {activeMotorSubCategory === "bulones"
+                                    ? <IoIosArrowUp onClick={() => setActiveMotorSubCategory(null)} className="text-base cursor-pointer" />
+                                    : <IoIosArrowForward onClick={() => setActiveMotorSubCategory("bulones")} className="text-base cursor-pointer" />
+                                }
+                            </div>
+
+                            {/* Submenu de BULONES */}
+                            {activeMotorSubCategory === "bulones" && (
+                                <div className="absolute left-full top-0 bg-gray border w-72 py-3 ml-1">
+                                    {categoryData.subrubros
+                                        .filter(sub => MOTOR_GROUPS.bulones.includes(sub[1]))
+                                        .map((sub, index) => (
+                                            <Link
+                                                key={`bulones-${sub[1]}-${index}`}
+                                                to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub[0])}`}
+                                                className="text-cBlack text-sm block px-4 py-1 hover:font-bold transition ease-in"
+                                            >
+                                                {sub[0]}
+                                            </Link>
+                                        ))
+                                    }
+                                </div>
+                            )}
                         </div>
                     ) : (
+                        // Renderizado normal para otros rubros
                         <div className="absolute z-20 top-0 left-full bg-gray py-4 border w-72 flex flex-col gap-3 justify-center">
-                        {
-                            getSubCategories(activeSubCategory).map((sub, idx) => (
+                            {categoryData.subrubros.map((sub, index) => (
                                 <Link
-                                key={`${sub}-${idx}`}
-                                to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub)}`}
-                                className="text-cBlack text-sm block px-4 hover:font-bold transition ease-in"
+                                    key={`${sub[1]}-${index}`}
+                                    to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub[0])}`}
+                                    className="text-cBlack text-sm block px-4 hover:font-bold transition ease-in"
                                 >
-                                {sub}
+                                    {sub[0]}
                                 </Link>
-                            ))
-                        }
+                            ))}
                         </div>
                     )
                 )}
-
             </div>
-            { activeCategory == category ? <hr/> : <></> }
-
+            {activeCategory === category && <hr/>}
         </div>
         </>
     )

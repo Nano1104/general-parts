@@ -1,7 +1,7 @@
 import { postProductsInDB } from "../utils/post-products-db.js";
 /* import Producto from "../models/product.model.js"; */
 import cache from "memory-cache";
-import { getSubcategory } from "../utils/getSubcategories.js"
+import { getSubcategory, getSubcategoryIdsForGroup } from "../utils/getSubcategories.js"
 import xlsx from 'xlsx';
 import _ from "lodash";
 import Product from "../models/product.model.js";
@@ -32,7 +32,7 @@ export const getProducts = async (req, res) => {
         if (category) filter.desc_rubro = category.toUpperCase();
         if (brand) filter.desc_marca = brand.toUpperCase();
         
-        // Manejo mejorado de subcategorías
+        /* // Manejo mejorado de subcategorías
         if (subcategory || categories) {
             const subcat = subcategory || categories;
             if (["bulones", "engranaje"].includes(subcat)) {
@@ -41,8 +41,23 @@ export const getProducts = async (req, res) => {
             } else {
                 filter.desc_subrub = subcat.toUpperCase();
             }
-        }
+        } */
         
+        // Manejo mejorado de subcategorías
+        if (subcategory || categories) {
+            const subcat = subcategory || categories;
+            
+            if (["bulones", "engranaje"].includes(subcat)) {
+                const subrubrosIds = getSubcategoryIdsForGroup(subcat);
+                if (subrubrosIds && subrubrosIds.length > 0) {
+                    filter.rubro = { $in: subrubrosIds };
+                }
+            } else {
+                // Caso normal para subcategorías directas
+                filter.desc_subrub = subcat.toUpperCase();
+            }
+        }
+
         // Rango de precios
         if (!isNaN(minPrice) || !isNaN(maxPrice)) {
             filter.precioimpre = {};
@@ -199,26 +214,6 @@ export const getProducts = async (req, res) => {
     }
 } */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 export const getAllProducts = async (req, res) => {
     const { rubro } = req.params
 
@@ -243,7 +238,7 @@ export const getCategoriesAndSubcategories = async (req, res) => {
                     _id: {
                         rubro: "$desc_rubro",
                         subrubro: "$desc_subrub",
-                        codigo: "$subrub"
+                        codigo: "$rubro"
                     }
                 }
             },
