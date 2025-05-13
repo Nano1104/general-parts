@@ -7,7 +7,7 @@ import _ from "lodash";
 import Product from "../models/product.model.js";
 import agendaModule from '../agenda.js'
 
-export const getProducts = async (req, res) => {
+/* export const getProducts = async (req, res) => {
     try {
         const { 
             limit = 10, 
@@ -31,17 +31,6 @@ export const getProducts = async (req, res) => {
         // Filtros exactos
         if (category) filter.desc_rubro = category.toUpperCase();
         if (brand) filter.desc_marca = brand.toUpperCase();
-        
-        /* // Manejo mejorado de subcategorías
-        if (subcategory || categories) {
-            const subcat = subcategory || categories;
-            if (["bulones", "engranaje"].includes(subcat)) {
-                const range = getSubcategory(category, subcat);
-                if (range) filter.subrub = { $gte: range[0], $lte: range[1] };
-            } else {
-                filter.desc_subrub = subcat.toUpperCase();
-            }
-        } */
         
         // Manejo mejorado de subcategorías
         if (subcategory || categories) {
@@ -112,107 +101,123 @@ export const getProducts = async (req, res) => {
             error: process.env.NODE_ENV === 'development' ? err.message : undefined
         });
     }
-}
+} */
 
-/* export const getProducts = async (req, res) => {
+export const getProducts = async (req, res) => {
     try {
-        const limit = parseInt(req.query.limit) || 10;
-        const lastId = req.query.lastId;
-        const category = req.query.category;
-        const subcategory = req.query.subcategory;
-        const categories = req.query.categories;
-        const brand = req.query.brand;
-        const minPrice = parseFloat(req.query.minPrice);
-        const maxPrice = parseFloat(req.query.maxPrice);
-        const search = req.query.search;
+        const { 
+            limit = 10, 
+            lastId, 
+            category, 
+            subcategory, 
+            categories, 
+            brand, 
+            minPrice, 
+            maxPrice, 
+            search 
+        } = req.query;
 
-        // 1. Crear una clave única para el cache basada en todos los parámetros
-        const cacheKey = JSON.stringify({
-            limit,
-            lastId,
-            category,
-            subcategory,
-            categories,
-            brand,
-            minPrice,
-            maxPrice,
-            search
-        });
-
-        // 2. Verificar si existe respuesta en cache
+        const cacheKey = JSON.stringify(req.query);
         const cachedData = cache.get(cacheKey);
-        if (cachedData) {
-            return res.status(200).json(cachedData);
-        }
+        if (cachedData) return res.json(cachedData);
 
-        // 3. Construir filtro (tu lógica original)
+        // Construir filtro base
         const filter = {};
+        
+        // Filtros exactos
         if (category) filter.desc_rubro = category.toUpperCase();
-        if (subcategory) {
-            if (subcategory == "bulones" || subcategory == "engranaje") {
-                const arrayIdsSubcategory = getSubcategory(category, subcategory)
-                console.log("🚀 ~ getProducts ~ arrayIdsSubcategory:", arrayIdsSubcategory)
-
-                if (arrayIdsSubcategory?.length === 2) {
-                    filter.subrub = {
-                        $gte: arrayIdsSubcategory[0],
-                        $lte: arrayIdsSubcategory[1]
-                    };
-                }
-            } else {
-                filter.desc_subrub = subcategory.toUpperCase();
-            }
-        }
-        if (categories) filter.desc_subrub = categories.toUpperCase();
         if (brand) filter.desc_marca = brand.toUpperCase();
         
-        if (!isNaN(minPrice) && !isNaN(maxPrice)) {
-            filter.precioimpre = { $gte: minPrice, $lte: maxPrice };
-        } else if (!isNaN(minPrice)) {
-            filter.precioimpre = { $gte: minPrice };
-        } else if (!isNaN(maxPrice)) {
-            filter.precioimpre = { $lte: maxPrice };
+        // Manejo de subcategorías
+        if (subcategory || categories) {
+            const subcat = subcategory || categories;
+            
+            if (["bulones", "engranaje"].includes(subcat)) {
+                const subrubrosIds = getSubcategoryIdsForGroup(subcat);
+                if (subrubrosIds && subrubrosIds.length > 0) {
+                    filter.rubro = { $in: subrubrosIds };
+                }
+            } else {
+                filter.desc_subrub = subcat.toUpperCase();
+            }
+        }
+
+        // Rango de precios
+        if (!isNaN(minPrice) || !isNaN(maxPrice)) {
+            filter.precioimpre = {};
+            if (!isNaN(minPrice)) filter.precioimpre.$gte = parseFloat(minPrice);
+            if (!isNaN(maxPrice)) filter.precioimpre.$lte = parseFloat(maxPrice);
         }
         
+        // BÚSQUEDA MEJORADA (parte nueva)
         if (search) {
             const decodedSearch = decodeURIComponent(search);
-            filter.$or = [
-                { codpro: { $regex: decodedSearch, $options: 'i' } },
-                { desc_stock: { $regex: decodedSearch, $options: 'i' } }
-            ];
-        }
-
-        // 4. Consulta a MongoDB
-        let query = Product.find(filter);
-        if (lastId) {
-            query = query.where('_id').gt(lastId);
+            const searchParts = decodedSearch.split(' ').filter(part => part.length > 0);
+            
+            // Si hay múltiples términos (ej: "tornillos ford")
+            if (searchParts.length > 1) {
+                // Estrategia 1: Búsqueda exacta de frase
+                const exactPhraseFilter = { ...filter, $text: { $search: `"${decodedSearch}"` } };
+                let exactResults = await executeProductQuery(exactPhraseFilter, limit, lastId, true);
+                
+                // Si no hay resultados con frase exacta, probar con AND de términos
+                if (exactResults.length === 0) {
+                    const andTermsFilter = { ...filter, $text: { $search: searchParts.map(p => `"${p}"`).join(' ') } };
+                    exactResults = await executeProductQuery(andTermsFilter, limit, lastId, true);
+                }
+                
+                // Si encontramos resultados con las estrategias exactas, los devolvemos
+                if (exactResults.length > 0) {
+                    return prepareResponse(exactResults, limit, filter, cacheKey, res);
+                }
+            }
+            
+            // Estrategia por defecto (OR de términos o búsqueda simple)
+            filter.$text = { $search: decodedSearch };
         }
         
-        const products = await query.sort({ _id: 1 }).limit(limit);
-        const total = await Product.countDocuments(filter);
-        const hasMore = products.length === limit;
-
-        // 5. Preparar respuesta y guardar en cache
-        const response = {
-            success: true,
-            products,
-            total,
-            hasMore
-        };
-
-        // Cachear por 5 minutos (300000 ms) - Ajusta según tus necesidades
-        cache.put(cacheKey, response, 300000);
-
-        res.status(200).json(response);
+        // Consulta final con todos los filtros
+        const products = await executeProductQuery(filter, limit, lastId, !!search);
+        return prepareResponse(products, limit, filter, cacheKey, res);
 
     } catch (err) {
+        console.error('Error en getProducts:', err);
         res.status(500).json({
             success: false,
             message: "Error al obtener productos",
-            error: err.message,
+            error: process.env.NODE_ENV === 'development' ? err.message : undefined
         });
     }
-} */
+}
+
+// Funciones auxiliares nuevas:
+
+async function executeProductQuery(filter, limit, lastId, isTextSearch = false) {
+    let query = Product.find(filter)
+        .sort(isTextSearch ? { score: { $meta: "textScore" }, _id: 1 } : { _id: 1 })
+        .limit(parseInt(limit) + 1);
+    
+    if (lastId) {
+        query = query.where('_id').gt(lastId);
+    }
+    
+    return await query.exec();
+}
+
+async function prepareResponse(products, limit, filter, cacheKey, res) {
+    const hasMore = products.length > parseInt(limit);
+    const productsToSend = hasMore ? products.slice(0, -1) : products;
+    
+    const response = {
+        success: true,
+        products: productsToSend,
+        hasMore,
+        total: await Product.countDocuments(filter)
+    };
+    
+    cache.put(cacheKey, response, 300000); // 5 minutos
+    return res.json(response);
+}
 
 export const getAllProducts = async (req, res) => {
     const { rubro } = req.params
