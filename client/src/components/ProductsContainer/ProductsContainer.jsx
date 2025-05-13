@@ -49,7 +49,7 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
     // Efecto principal de búsqueda/filtrado
     useEffect(() => {
         const isPureSearch = !!searchValue;
-        
+        console.log("🚀 ~ useEffect ~ searchValue:", searchValue)
         const baseParams = {
             limit: productsPerPage,
             ...(searchValue && { search: searchValue }),
@@ -64,6 +64,7 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
         searchProducts(baseParams, true);
         
     }, [category, subcategory, brand, price, searchValue, productsPerPage]);
+        
 
     // Observer (mantén igual)
     useEffect(() => {
