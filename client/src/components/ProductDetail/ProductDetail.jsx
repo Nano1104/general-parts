@@ -112,7 +112,12 @@ export const ProductDetail = ({prod}) => {
                             <span>Código producto: <span className="font-bold">{id}</span></span>
                         }
                         <span>Marca: <span className="font-bold">{desc_marca}</span></span>
-                        <span>Stock: <span className="italic text-red">{quantity ? quantity : "No Disponible!"}</span></span>
+                       <span>
+                            Stock:{" "}
+                            <span className={`italic inline-block ${stock === "disponible" ? "text-orange" : "text-red"} first-letter:uppercase`}>
+                                {stock}
+                            </span>
+                        </span>
                         <span className="text-2xl">${precioimpre}</span>
                     </div>
                     <div className="flex flex-col items-start mt-2">

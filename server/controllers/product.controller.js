@@ -500,7 +500,7 @@ export const uploadExcelProducts = async (req, res) => {
                 desc_subrub: item.desc_rubro?.toString().trim(),
                 desc_marca: item.desc_marca?.toString().trim(),
                 porcen1: item.porcen1 !== undefined ? parseInt(item.porcen1) : undefined,
-                precioimpre: item.precioimpre !== undefined ? parseInt(item.precioimpre) : undefined,
+                precioimpre: item.precioimpre !== undefined ? item.precioimpre : undefined,
                 /* destacado: existingProduct?.destacado || false, */
                 stock: existingProduct?.stock || 0,
                 lastUpdated: new Date()
