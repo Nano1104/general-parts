@@ -13,14 +13,15 @@ import { Loading } from "../Loading/Loading.jsx";
 //icons
 import { FaPencil } from "react-icons/fa6";
 //image
-import buloneImg from "../../images/bulones.png"
+import bulonesImg from "../../images/bulones.png"
 import sondaImg from "../../images/sondaVerde1.png"
 import pasoApasoImg from "../../images/motor-pasoapaso.png"
+import swpartsIcon from "/vite.svg"
 
 import { API_URL } from "../../utils/api_url.js";
 
 export const ProductDetail = ({prod}) => {
-    const { _id, codpro, desc_stock, proveed, desc_rubro, desc_subrub, desc_marca, precioimpre, stock, prod_details } = prod;
+    const { _id, codpro, desc_stock, proveed, desc_rubro, desc_subrub, desc_marca, precioimpre, stock, prod_details, destacado } = prod;
     const { authUser, isAdmin } = useAuthContext();
     const { addProductToCart } = useCartContext();
     const { id } = useParams();
@@ -53,10 +54,14 @@ export const ProductDetail = ({prod}) => {
     }
 
     const getImage = () => {
-          if (desc_subrub == "SONDA LAMBDAS") return sondaImg
-          else if (desc_subrub == "MOTOR PASO A PASO") return pasoApasoImg
-          return buloneImg
-    }
+          const subrub = desc_subrub?.toUpperCase() || "";
+    
+          if (subrub === "SONDA LAMBDAS") return sondaImg;
+          if (subrub === "MOTOR PASO A PASO") return pasoApasoImg;
+          if (subrub.includes("TORNILLOS")) return bulonesImg;
+    
+          return swpartsIcon;
+    };
 
     ////////////////// AÑADIR AL CARRITO
     const handleAddToCart = () => {
@@ -80,7 +85,11 @@ export const ProductDetail = ({prod}) => {
 
     return(
         <>
-        <div className="w-full lg:h-[90vh] lg:w-[85%] xl:w-[75%] lg:py-[50px] lg:px-[65px] text-center bg-[#EEEEEE] flex flex-col lg:m-auto lg:mt-10 lg:flex-row lg:rounded-xl relative">
+        <div
+            className={`w-full lg:h-[90vh] lg:w-[85%] xl:w-[75%] lg:py-[50px] lg:px-[65px] text-center flex flex-col lg:m-auto lg:mt-10 lg:flex-row lg:rounded-xl relative ${
+                destacado ? "bg-[#DC5F00]" : "bg-[#EEEEEE]"
+            }`}
+        >
 
             {/* PRIMERA PARTE DEL PRODUCT DESCRIPTION */}
             <div className="basis-[58%] text-xs lg:text-sm 2xl:text-base">
@@ -114,7 +123,7 @@ export const ProductDetail = ({prod}) => {
                         <span>Marca: <span className="font-bold">{desc_marca}</span></span>
                        <span>
                             Stock:{" "}
-                            <span className={`italic inline-block ${stock === "disponible" ? "text-orange" : "text-red"} first-letter:uppercase`}>
+                            <span className={`italic inline-block font-bold ${stock === "disponible" ? "text-orange" : "text-red"} ${destacado ? "text-white" : ""} first-letter:uppercase`}>
                                 {stock}
                             </span>
                         </span>
@@ -125,7 +134,7 @@ export const ProductDetail = ({prod}) => {
                         <ItemCount handleQuantity={{ quantity, amount, setAmount }} />
                     </div>
                     <div className="flex justify-center mt-4 gap-2">      
-                        <button className="rounded-md py-2 px-4 bg-orange text-black flex justify-center items-center gap-1 lg:text-xs 2xl:text-base" onClick={handleAddToCart}>
+                        <button className={`rounded-md py-2 px-4 ${destacado ? "bg-white" : "bg-orange"} text-black flex justify-center items-center gap-1 lg:text-xs 2xl:text-base`} onClick={handleAddToCart}>
                             <IoCartOutline className="inline-block text-xl lg:text-sm" />Agregar
                         </button>
                     </div>

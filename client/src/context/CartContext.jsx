@@ -18,7 +18,8 @@ export const CartContextProvider = ({children}) => {
         try {
             const response = await axios.post(`${API_URL}/api/cart/${cartId}/products/${productId}`, { amountToAdd }, { withCredentials: true } );
             const data = response.data
-
+            console.log("🚀 ~ addProductToCart ~ data:", data)
+            console.log(cart)
             // Actualizar estado local en lugar de recargar
             setCart(prev => {
                 // Lógica para actualizar el carrito localmente

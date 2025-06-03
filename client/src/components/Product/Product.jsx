@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 import bulonesImg from "../../images/bulones.png"
 import sondaImg from "../../images/sondaVerde1.png"
 import pasoApasoImg from "../../images/motor-pasoapaso.png"
-import swpartsIcon from "../../../public/vite.svg"
+import swpartsIcon from "/vite.svg"
 
 import { API_URL } from "../../utils/api_url.js";
 
