@@ -21,15 +21,15 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/productos" element={<ProductosPage />} />
-        <Route path="/productos/:category" element={<ProductosPage />} />
-        <Route path="/productos/:category/:subcategory" element={<ProductosPage />} />
-        <Route path="/productos/:category/:subcategory/:categories" element={<ProductosPage />} />    {/* RUTA PARA LOS CATEGORIAS DE LOS SUBRUBROS DEL RUBRO PRINCIPAL */}
+        <Route path="/productos" element={ authUser ? <ProductosPage /> : <AuthPage /> } />
+        <Route path="/productos/:category" element={ authUser ? <ProductosPage /> : <AuthPage /> } />
+        <Route path="/productos/:category/:subcategory" element={ authUser ? <ProductosPage /> : <AuthPage /> } />
+        <Route path="/productos/:category/:subcategory/:categories" element={ authUser ? <ProductosPage /> : <AuthPage /> } />    {/* RUTA PARA LOS CATEGORIAS DE LOS SUBRUBROS DEL RUBRO PRINCIPAL */}
         <Route path="/producto/detail/:id" element={<ProductDetailContainer />} />
         <Route path="/admin" element={ authUser ? <AdminPage /> : <Navigate to="/" /> } />
         <Route path="/admin/:manage" element={ authUser ? <AdminPage /> : <Navigate to="/" /> } />
         <Route path="/reservas" element={ authUser ? <Orders /> : <Navigate to="/" /> } />
-        <Route path="/authPage" element={ !authUser ? <AuthPage /> : <Navigate to="/" /> } />
+        <Route path="/authPage/:session" element={ !authUser ? <AuthPage /> : <Navigate to="/" /> } />
         <Route path="/contact" element={<Contact />} />
         <Route path="/cart-v" element={ authUser ? <Cart /> : <Navigate to="/" /> } />
         <Route path="*" element={<NoMatchRoute />} />

@@ -64,20 +64,51 @@ const productSchema = new mongoose.Schema({
     }
 }, { strict: false })
 
-// Definición del índice de texto (ANTES de crear el modelo)
+
+// --------------------------------------------------
+// ÍNDICES PARA BÚSQUEDA INTELIGENTE (ANTES del modelo)
+// --------------------------------------------------
+
+// 1. Índice de texto principal (ya lo tenías)
 productSchema.index({
     codpro: "text",
     desc_stock: "text", 
     desc_rubro: "text",
-    desc_marca: "text"
-  }, {
+    desc_marca: "text",
+    desc_subrub: "text"  // Añadido para búsqueda en subrubros
+}, {
     weights: {
-      codpro: 10,       // Mayor peso para código de producto
-      desc_stock: 5,    // Peso medio para descripción
-      desc_marca: 3,    // Menor peso para marca
-      desc_rubro: 2     // Peso mínimo para rubro
+        codpro: 10,
+        desc_stock: 5,
+        desc_marca: 3,
+        desc_rubro: 2,
+        desc_subrub: 4  // Peso intermedio para subrubros
     },
-    name: "product_text_search" // Nombre personalizado para el índice
+    name: "product_text_search"
+});
+
+// 2. Índices individuales para búsquedas exactas
+productSchema.index({ codpro: 1 });          // Búsqueda rápida por código
+productSchema.index({ desc_marca: 1 });      // Filtrado por marca exacta
+productSchema.index({ desc_rubro: 1 });      // Filtrado por rubro exacto
+productSchema.index({ desc_subrub: 1 });     // Búsqueda por subrubro exacto
+productSchema.index({ precioimpre: 1 });     // Para filtrado por precio
+productSchema.index({ destacado: 1 });       // Para productos destacados
+productSchema.index({ stock: 1 });           // Para filtrado por disponibilidad
+
+// 3. Índice compuesto para búsquedas frecuentes
+productSchema.index({ 
+    desc_marca: 1,
+    desc_rubro: 1,
+    precioimpre: 1 
+});
+
+// 4. Índice para búsqueda por prefijo de código
+productSchema.index({ 
+    codpro: 1,
+    desc_stock: 1 
+}, { 
+    collation: { locale: 'es', strength: 2 }  // Para búsqueda case-insensitive
 });
 
 const Product = mongoose.model("Product", productSchema);

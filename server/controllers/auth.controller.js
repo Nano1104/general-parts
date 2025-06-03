@@ -60,7 +60,7 @@ export const register = async (req, res) => {
             role: role || "user"
         }
 
-        if(email == "swrepuestos@yahoo.com.ar") userToCreate.role = "admin" 
+        if(email == "swrepuestos@yahoo.com.ar" || email == "ajp_81@hotmail.com") userToCreate.role = "admin" 
 
         const userFound = await User.findOne({ email: email });
         if(userFound) return res.status(404).json({message: "user already exists"})
