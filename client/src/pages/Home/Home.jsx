@@ -1,11 +1,14 @@
 import { NavBar } from "../../components/NavBar/NavBar.jsx"
 import { Logo } from "../../components/Logo/Logo.jsx"
 import { Link } from "react-router-dom";
+import { useAuthContext } from "../../context/AuthContext.jsx";
 
 //icons
 import { FaWhatsapp } from "react-icons/fa";
 
 export const Home = () => {
+    const { authUser } = useAuthContext()
+
     return(
         <>
         <div className="h-[100vh] w-full relative overflow-hidden">
@@ -25,9 +28,94 @@ export const Home = () => {
                         <FaWhatsapp /><span className="ml-2">11 6335-8220</span>
                     </div>
                 </div> 
-                <Link to="/productos" className="font-roboto font-medium text-lightGray [text-shadow:_0_2px_4px_rgb(0_0_0/_0.5)] mt-[3rem] text-3xl sm:text-4xl lg:mt-24 lg:mx-auto lg:block">
-                    VER REPUESTOS
-                </Link>
+                {
+                    authUser 
+                    ?
+                    <Link to="/productos" className="font-roboto font-medium text-lightGray [text-shadow:_0_2px_4px_rgb(0_0_0/_0.5)] mt-[3rem] text-3xl sm:text-4xl lg:mt-24 lg:mx-auto lg:block">
+                        Ver repuestos
+                    </Link>
+                    : 
+                    <div className="w-full flex flex-col items-center gap-6 text-xl lg:mt-24 lg:mx-auto font-montserrat text-cBlack">
+                        <Link to="/authPage/login" className="relative            
+                                                    px-[7px] py-[3px]    
+                                                    rounded-lg           
+                                                    border            
+                                                    border-white         
+                                                    z-10              
+                                                    text-white       
+                                                    inline-flex       
+                                                    justify-center   
+                                                    items-center      
+                                                    gap-[5px]     
+                                                    transition-all  
+                                                    duration-300   
+                                                    hover:text-black 
+                                                    hover:border-black 
+                                                    before:content-['']
+                                                    before:absolute
+                                                    before:inset-0    
+                                                    before:rounded-lg 
+                                                    before:-z-10    
+                                                    before:bg-[var(--lightGray)] 
+                                                    before:transition-transform
+                                                    before:duration-300
+                                                    before:origin-left
+                                                    before:scale-x-0
+                                                    hover:before:scale-x-100
+                                                    after:content-[''] 
+                                                    after:border
+                                                    after:border-white
+                                                    after:rounded-full 
+                                                    after:w-[10px]
+                                                    after:h-[10px]
+                                                    after:transition-colors
+                                                    after:duration-300
+                                                    hover:after:bg-[var(--cBlack)]
+                                                    hover:after:border-transparent
+                            ">
+                            Iniciar Sesión
+                        </Link>
+                        <Link to="/authPage/register" className="relative            
+                                                    px-[7px] py-[3px]    
+                                                    rounded-lg           
+                                                    border            
+                                                    border-white         
+                                                    z-10              
+                                                    text-white       
+                                                    inline-flex       
+                                                    justify-center   
+                                                    items-center      
+                                                    gap-[5px]     
+                                                    transition-all  
+                                                    duration-300   
+                                                    hover:text-black 
+                                                    hover:border-black 
+                                                    before:content-['']
+                                                    before:absolute
+                                                    before:inset-0    
+                                                    before:rounded-lg 
+                                                    before:-z-10    
+                                                    before:bg-[var(--lightGray)] 
+                                                    before:transition-transform
+                                                    before:duration-300
+                                                    before:origin-left
+                                                    before:scale-x-0
+                                                    hover:before:scale-x-100
+                                                    after:content-[''] 
+                                                    after:border
+                                                    after:border-white
+                                                    after:rounded-full 
+                                                    after:w-[10px]
+                                                    after:h-[10px]
+                                                    after:transition-colors
+                                                    after:duration-300
+                                                    hover:after:bg-[var(--cBlack)]
+                                                    hover:after:border-transparent
+                            ">
+                            Registrarse
+                        </Link>
+                    </div>
+                }
             </div>
 
             <FaWhatsapp className="absolute cursor-pointer bottom-0 right-0 text-[3.5em] p-1 mr-8 mb-8 border bg-orange text-white rounded-full" />

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 //hooks
 import { useForm } from "react-hook-form"
 import useSignup from "../../hooks/useSigup.js"
@@ -8,6 +8,8 @@ import useSignin from "../../hooks/useSingin.js"
 import { FaArrowRight } from "react-icons/fa6";     //icons
 
 export const AuthPage = () => {
+    const { session } = useParams()
+    console.log("🚀 ~ AuthPage ~ session:", session)
     const { signIn } = useSignin()
     const { signUp } = useSignup()
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
@@ -39,7 +41,9 @@ export const AuthPage = () => {
             {/* FONDO DE AUTHPAGE */}
             <div className="bg-authPageBg hidden lg:block relative w-full h-screen bg-cover bg-center filter brightness-50 blur-[3px] grayscale"></div>
             {/* LOGO SWPARTS */}
-            <Link to="/" className="relative flex flex-col items-center lg:flex-row top-4 lg:absolute lg:top-0 lg:my-7 lg:left-[7%] font-roboto font-bold">
+            <Link to="/"
+                className="relative flex flex-col items-center lg:flex-row top-4 lg:absolute lg:top-0 lg:my-7 lg:left-[7%] font-roboto font-bold"
+                translate="no">
                 <span className="text-orange tracking-tighter italic text-[4.4em] md:text-[6.4em] lg:text-[8em] 2xl:text-[9em]">SW</span>
                 <span className="text-white tracking-tight italic absolute lg:static top-12 md:top-16 text-[4.4em] md:text-[6.4em] lg:text-[8em] 2xl:text-[9em]">Parts</span>
             </Link>
@@ -58,7 +62,7 @@ export const AuthPage = () => {
                 </h3>
 
                 <div className="w-full flex flex-col gap-2 2xl:mt-10">
-                { login 
+                { session == "login" 
                     ?   ///////////////////////////////////LOGIN INPUTSS 
                     <>
                         <div className="w-full flex flex-col xl:flex-row items-center lg:items-start relative">

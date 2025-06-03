@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import bulonesImg from "../../images/bulones.png"
 import sondaImg from "../../images/sondaVerde1.png"
 import pasoApasoImg from "../../images/motor-pasoapaso.png"
+import swpartsIcon from "../../../public/vite.svg"
 
 import { API_URL } from "../../utils/api_url.js";
 
@@ -42,10 +43,14 @@ export const Product = ({data, params}) => {
     };
 
     const getImage = () => {
-      if (desc_subrub == "SONDA LAMBDAS") return sondaImg
-      else if (desc_subrub == "MOTOR PASO A PASO") return pasoApasoImg
-      return bulonesImg
-    }
+      const subrub = desc_subrub?.toUpperCase() || "";
+
+      if (subrub === "SONDA LAMBDAS") return sondaImg;
+      if (subrub === "MOTOR PASO A PASO") return pasoApasoImg;
+      if (subrub.includes("TORNILLOS")) return bulonesImg;
+
+      return swpartsIcon;
+    };
 
     const handleMouseEnter = () => setShowHover(true)
 
@@ -57,9 +62,15 @@ export const Product = ({data, params}) => {
             className={`w-[85%] h-[65vh] mobile:h-[60vh] lg:w-[19em] xl:w-[22em] 2xl:w-[25em] 2xl:h-[55vh] ${destacado ? "bg-orange text-cBlack border border-white" : "bg-gray"} font-poppins rounded-xl relative my-3`}
             id="product">
             { destacado ? <span className="absolute m-3 text-sm font-bold tracking-tight bg-cBlack text-white py-0.5 px-2 rounded-md">DESTACADO</span> : <></> }
-            <div className="w-full h-[65%]">
-                <img src={getImage()} alt="" className="rounded-t-xl object-contain h-full" />
+
+            <div className="w-full h-[65%] relative">
+              {getImage() === swpartsIcon && (
+                <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center z-10 text-red font-bold italic font-montserrat text-xl">IMAGEN EN DESARROLLO</span>
+              )}
+              <img src={getImage()} alt={`img ilustrativa del producto: ${codpro}`} className={`rounded-t-xl object-contain ${getImage() === swpartsIcon ? "opacity-50" : ""} h-full w-full`}
+              />
             </div>
+
             <div className="flex flex-col text-xs mobile:text-sm 2xl:text-base items-start px-4">
                 <div className="text-sm">
                   <span>Código producto: </span><span className="font-bold">{codpro}</span>
@@ -83,7 +94,7 @@ export const Product = ({data, params}) => {
                         Ver Repuesto
                     </Link>
                     
-                    { isAdmin
+                    { isAdmin && destacado
                         ? <button className="p-2 mt-4 text-sm text-center text-black rounded-xl border hover:bg-deepGray hover:border-transparent hover:text-white transition duration-200"
                                     onClick={handleUnHighlightProduct}>
                             QUITAR PRODUCTO DE DESTACADOS

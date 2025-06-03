@@ -18,7 +18,7 @@ import "../../pages/ProductosPage/productospage.css"
 import { API_URL } from "../../utils/api_url.js";
 
 
-export const ProductsContainer = ({ searchValue }) => {                 //valor de la barra de busqueda
+export const ProductsContainer = ({ searchValue, setSearchValue }) => {                 //valor de la barra de busqueda
     const { category, subcategory, categories } = useParams();
     const encodedSubcategory = encodeURIComponent(subcategory);
 
@@ -40,11 +40,10 @@ export const ProductsContainer = ({ searchValue }) => {                 //valor 
 
     // Efecto para resetear otros filtros cuando hay búsqueda
     useEffect(() => {
-        if (searchValue) {
-            setBrand(null);
-            setPrice([]);
-        }
-    }, [searchValue]);
+      if (category || subcategory || categories) {
+        setSearchValue("")
+      }
+    }, [category, subcategory, categories]);
 
     // Efecto principal de búsqueda/filtrado
     useEffect(() => {

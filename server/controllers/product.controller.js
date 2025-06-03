@@ -103,82 +103,43 @@ import agendaModule from '../agenda.js'
     }
 } */
 
+
+// Búsqueda combinada para texto y números
+
+// Función principal del controlador
 export const getProducts = async (req, res) => {
     try {
-        const { 
-            limit = 10, 
-            lastId, 
-            category, 
-            subcategory, 
-            categories, 
-            brand, 
-            minPrice, 
-            maxPrice, 
-            search 
-        } = req.query;
-
+        const { search, limit = 10, lastId, ...otherParams } = req.query;
         const cacheKey = JSON.stringify(req.query);
-        const cachedData = cache.get(cacheKey);
-        if (cachedData) return res.json(cachedData);
+        
+        // Limpiar caché si hay búsqueda nueva
+        if (search) cache.del(cacheKey);
+        else if (cache.get(cacheKey)) return res.json(cache.get(cacheKey));
 
         // Construir filtro base
-        const filter = {};
+        const baseFilter = buildBaseFilter(otherParams);
         
-        // Filtros exactos
-        if (category) filter.desc_rubro = category.toUpperCase();
-        if (brand) filter.desc_marca = brand.toUpperCase();
-        
-        // Manejo de subcategorías
-        if (subcategory || categories) {
-            const subcat = subcategory || categories;
-            
-            if (["bulones", "engranaje"].includes(subcat)) {
-                const subrubrosIds = getSubcategoryIdsForGroup(subcat);
-                if (subrubrosIds && subrubrosIds.length > 0) {
-                    filter.rubro = { $in: subrubrosIds };
-                }
-            } else {
-                filter.desc_subrub = subcat.toUpperCase();
-            }
-        }
-
-        // Rango de precios
-        if (!isNaN(minPrice) || !isNaN(maxPrice)) {
-            filter.precioimpre = {};
-            if (!isNaN(minPrice)) filter.precioimpre.$gte = parseFloat(minPrice);
-            if (!isNaN(maxPrice)) filter.precioimpre.$lte = parseFloat(maxPrice);
-        }
-        
-        // BÚSQUEDA MEJORADA (parte nueva)
+        // Búsqueda inteligente
+        let products = [];
         if (search) {
-            const decodedSearch = decodeURIComponent(search);
-            const searchParts = decodedSearch.split(' ').filter(part => part.length > 0);
-            
-            // Si hay múltiples términos (ej: "tornillos ford")
-            if (searchParts.length > 1) {
-                // Estrategia 1: Búsqueda exacta de frase
-                const exactPhraseFilter = { ...filter, $text: { $search: `"${decodedSearch}"` } };
-                let exactResults = await executeProductQuery(exactPhraseFilter, limit, lastId, true);
-                
-                // Si no hay resultados con frase exacta, probar con AND de términos
-                if (exactResults.length === 0) {
-                    const andTermsFilter = { ...filter, $text: { $search: searchParts.map(p => `"${p}"`).join(' ') } };
-                    exactResults = await executeProductQuery(andTermsFilter, limit, lastId, true);
-                }
-                
-                // Si encontramos resultados con las estrategias exactas, los devolvemos
-                if (exactResults.length > 0) {
-                    return prepareResponse(exactResults, limit, filter, cacheKey, res);
-                }
-            }
-            
-            // Estrategia por defecto (OR de términos o búsqueda simple)
-            filter.$text = { $search: decodedSearch };
+            const decodedSearch = decodeURIComponent(search).trim();
+            const { textParts, numericParts } = analyzeSearchTerm(decodedSearch);
+            products = await combinedSearch(baseFilter, textParts, numericParts, { limit, lastId });
+        } else {
+            products = await executeProductQuery(baseFilter, limit, lastId, false);
         }
         
-        // Consulta final con todos los filtros
-        const products = await executeProductQuery(filter, limit, lastId, !!search);
-        return prepareResponse(products, limit, filter, cacheKey, res);
+        // Preparar respuesta
+        const hasMore = products.length > parseInt(limit);
+        const response = {
+            success: true,
+            products: hasMore ? products.slice(0, -1) : products,
+            hasMore,
+            total: await Product.countDocuments(baseFilter)
+        };
+        
+        cache.put(cacheKey, response, 300000); // 5 minutos de caché
+        return res.json(response);
 
     } catch (err) {
         console.error('Error en getProducts:', err);
@@ -188,14 +149,135 @@ export const getProducts = async (req, res) => {
             error: process.env.NODE_ENV === 'development' ? err.message : undefined
         });
     }
+};
+
+// FUNCIONES AUXILIARES - getProducts
+function buildBaseFilter(params) {
+    const filter = {};
+    
+    // Filtros exactos
+    if (params.category) filter.desc_rubro = params.category.toUpperCase();
+    if (params.brand) filter.desc_marca = params.brand.toUpperCase();
+    
+    // Manejo de subcategorías
+    if (params.subcategory || params.categories) {
+        const subcat = params.subcategory || params.categories;
+        
+        if (["bulones", "engranaje"].includes(subcat)) {
+            const subrubrosIds = getSubcategoryIdsForGroup(subcat);
+            if (subrubrosIds?.length > 0) {
+                filter.rubro = { $in: subrubrosIds };
+            }
+        } else {
+            filter.desc_subrub = subcat.toUpperCase();
+        }
+    }
+
+    // Rango de precios
+    if (!isNaN(params.minPrice) || !isNaN(params.maxPrice)) {
+        filter.precioimpre = {};
+        if (!isNaN(params.minPrice)) filter.precioimpre.$gte = parseFloat(params.minPrice);
+        if (!isNaN(params.maxPrice)) filter.precioimpre.$lte = parseFloat(params.maxPrice);
+    }
+    
+    return filter;
 }
 
-// Funciones auxiliares nuevas:
+async function combinedSearch(baseFilter, textParts, numericParts, params) {
+    const filters = [];
+    
+    // Estrategia 1: Búsqueda por código exacto o parcial
+    if (numericParts.length > 0) {
+        filters.push({
+            ...baseFilter,
+            codpro: { $regex: `^${numericParts.join('|^')}`, $options: 'i' }
+        });
+    }
+    
+    // Estrategia 2: Búsqueda textual
+    if (textParts.length > 0) {
+        const textSearch = textParts.join(' ');
+        
+        // 2a. Búsqueda exacta de frase
+        filters.push({
+            ...baseFilter,
+            $text: { $search: `"${textSearch}"` }
+        });
+        
+        // 2b. Búsqueda AND de términos
+        filters.push({
+            ...baseFilter,
+            $text: { $search: textParts.map(p => `"${p}"`).join(' ') }
+        });
+        
+        // 2c. Búsqueda OR estándar
+        filters.push({
+            ...baseFilter,
+            $text: { $search: textSearch }
+        });
+    }
+    
+    // Probar todas las estrategias en orden
+    for (const filter of filters) {
+        const results = await executeProductQuery(filter, params.limit, params.lastId, !!filter.$text);
+        if (results.length > 0) return results;
+    }
+    
+    // Fallback final: búsqueda por campos individuales
+    const regexConditions = [];
+    
+    if (numericParts.length > 0) {
+        regexConditions.push({
+            $or: [
+                { codpro: { $regex: numericParts.join('|'), $options: 'i' } },
+                { desc_stock: { $regex: numericParts.join('|'), $options: 'i' } }
+            ]
+        });
+    }
+    
+    if (textParts.length > 0) {
+        regexConditions.push({
+            $or: [
+                { desc_stock: { $regex: textParts.join('|'), $options: 'i' } },
+                { desc_marca: { $regex: textParts.join('|'), $options: 'i' } },
+                { desc_rubro: { $regex: textParts.join('|'), $options: 'i' } },
+                { desc_subrub: { $regex: textParts.join('|'), $options: 'i' } }
+            ]
+        });
+    }
+    
+    const finalFilter = {
+        ...baseFilter,
+        $and: regexConditions
+    };
+    
+    return await executeProductQuery(finalFilter, params.limit, params.lastId, false);
+}
 
-async function executeProductQuery(filter, limit, lastId, isTextSearch = false) {
-    let query = Product.find(filter)
-        .sort(isTextSearch ? { score: { $meta: "textScore" }, _id: 1 } : { _id: 1 })
-        .limit(parseInt(limit) + 1);
+function analyzeSearchTerm(term) { // Función para analizar el término de búsqueda
+    const parts = term.split(/\s+/);
+    const textParts = [];
+    const numericParts = [];
+    
+    parts.forEach(part => {
+        // Verificamos si la parte es numérica (aunque codpro sea String)
+        /^\d+$/.test(part) ? numericParts.push(part) : textParts.push(part);
+    });
+    
+    return { textParts, numericParts };
+}
+
+async function executeProductQuery(filter, limit, lastId, isTextSearch) {
+    let query = Product.find(filter);
+    
+    if (isTextSearch) {
+        query = query.sort({ score: { $meta: "textScore" }, _id: 1 })
+                    .select({ score: { $meta: "textScore" } });
+    } else {
+        query = query.sort({ _id: 1 });
+    }
+    
+    query = query.limit(parseInt(limit) + 1);
     
     if (lastId) {
         query = query.where('_id').gt(lastId);
@@ -204,20 +286,9 @@ async function executeProductQuery(filter, limit, lastId, isTextSearch = false) 
     return await query.exec();
 }
 
-async function prepareResponse(products, limit, filter, cacheKey, res) {
-    const hasMore = products.length > parseInt(limit);
-    const productsToSend = hasMore ? products.slice(0, -1) : products;
-    
-    const response = {
-        success: true,
-        products: productsToSend,
-        hasMore,
-        total: await Product.countDocuments(filter)
-    };
-    
-    cache.put(cacheKey, response, 300000); // 5 minutos
-    return res.json(response);
-}
+
+
+
 
 export const getAllProducts = async (req, res) => {
     const { rubro } = req.params

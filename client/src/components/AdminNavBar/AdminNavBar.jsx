@@ -45,10 +45,19 @@ export const AdminNavBar = () => {
                         </Link>
                     </ul>
                 </div>
-                <button
-                    type="submit"
-                    className="bg-orange text-black w-[50%] border border-black rounded-md py-1 font-medium font-poppins mb-5" 
-                    onClick={handleLogOut}>CERRAR SESIÓN</button>
+
+                <div className="flex flex-col w-full items-center">
+                    {/*  BACK TO HOME BUTTON */}
+                    <Link to={"/productos"} className="bg-orange text-black w-[50%] border text-center border-black rounded-md py-1 font-medium font-poppins mb-5">
+                        VOLVER A PRODUCTOS
+                    </Link>
+                    {/* LOGOUT BUTTON */}
+                    <button 
+                        type="submit"
+                        className="bg-orange text-black w-[50%] border border-black rounded-md py-1 font-medium font-poppins mb-5" 
+                        onClick={handleLogOut}>CERRAR SESIÓN
+                    </button>
+                </div>
             </nav>
         </>
     )

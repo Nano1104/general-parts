@@ -21,7 +21,7 @@ export const ProductsContainerNav = ({ searchValue, setSearchValue }) => {
         <>
             <nav className="p-2 bg-[#272829]">
                 <ul className="px-4 grid sm:grid-cols-[1fr_45%_1fr] 2xl:grid-cols-[1fr_30%_1fr]">
-                    <Link to="/" className="mobile:text-[2rem] italic font-roboto xl:text-[3em] w-0">
+                    <Link to="/" translate="no" className="mobile:text-[2rem] italic font-roboto xl:text-[3em] w-0">
                         <span className="font-extrabold text-orange tracking-tighter">SW</span>
                         <span className="font-bold text-white tracking-tight">Parts</span>
                     </Link>
@@ -49,8 +49,9 @@ export const ProductsContainerNav = ({ searchValue, setSearchValue }) => {
                             ref={searchInputRef}
                             type="text"
                             placeholder="Buscar..."
+                            value={searchValue}
                             className="h-[30px] rounded-tl-2xl rounded-bl-2xl rounded-tr-none rounded-br-none py-2 px-3 flex-grow basis-[80%] focus:outline-none"
-                                /* onChange={(e) => setSearchValue(e.target.value)} */
+                            onChange={(e) => setSearchValue(e.target.value)}
                             />
                         <BsSearch className="h-[30px] text-deepGray bg-white p-1 cursor-pointer rounded-tr-2xl rounded-br-2xl flex-grow basis-0" onClick={handleSearch}/>
                     </div>
