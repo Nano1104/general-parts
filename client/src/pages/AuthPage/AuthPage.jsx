@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, Navigate } from "react-router-dom";
 //hooks
 import { useForm } from "react-hook-form"
 import useSignup from "../../hooks/useSigup.js"
@@ -8,8 +8,6 @@ import useSignin from "../../hooks/useSingin.js"
 import { FaArrowRight } from "react-icons/fa6";     //icons
 
 export const AuthPage = () => {
-    const { session } = useParams()
-    console.log("🚀 ~ AuthPage ~ session:", session)
     const { signIn } = useSignin()
     const { signUp } = useSignup()
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
@@ -62,8 +60,7 @@ export const AuthPage = () => {
                 </h3>
 
                 <div className="w-full flex flex-col gap-2 2xl:mt-10">
-                { session == "login" 
-                    ?   ///////////////////////////////////LOGIN INPUTSS 
+                { login ? (
                     <>
                         <div className="w-full flex flex-col xl:flex-row items-center lg:items-start relative">
                             <input 
@@ -98,7 +95,8 @@ export const AuthPage = () => {
                             {loginError === "password incorrect" ? <span className="text-orange font-custom font-medium text-xs mt-2 lg:ml-12 xl:absolute xl:left-[47%] xl:bottom-[4px]">Contraseña Incorrecta</span> : <></>}
                         </div>
                     </>
-                    :   ///////////////////////////////////REGISTER INPUTSS 
+                )
+                : (
                     <>
                         <div className="w-full flex flex-col xl:flex-row items-center lg:items-start relative">
                             <input 
@@ -218,6 +216,7 @@ export const AuthPage = () => {
                             {errors.confirmPassword?.type && <span className="text-orange font-custom font-medium text-xs mt-2 lg:ml-12 xl:absolute xl:left-[47%] xl:bottom-[4px]">{errors.confirmPassword.message}</span>}
                         </div>
                     </>
+                )
                 }
                 </div>
                 
@@ -232,6 +231,7 @@ export const AuthPage = () => {
 
                 <div className="w-full flex flex-col justify-center items-center 2xl:flex 2xl:flex-col 2xl:items-center xl:absolute xl:bottom-[10%]">  
                     <hr className="border-white mt-6 w-[75%] mx-auto" />
+                    
                     <div className="w-[80%] my-8 xl:my-2 flex flex-col">     {/* //FOOTER FORM  */}
                         <div className="flex flex-col xl:flex-row items-center xl:justify-between mt-4 gap-2">
                             <span className="text-white ml-3 2xl:ml-5">

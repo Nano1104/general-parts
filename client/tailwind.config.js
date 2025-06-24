@@ -16,12 +16,12 @@ export default {
   },
   theme: {
     screens: {
-      "mobile": "375px",
-      'sm': '640px',
-      'md': '768px',
-      'lg': '1024px',
-      'xl': '1280px',
-      '2xl': '1536px',
+      "mobile": "375px",  // Celular pequeño (iPhone SE, etc.)
+      'sm': '640px',      // Celulares grandes / phablets
+      'md': '768px',      // Tablets en vertical
+      'lg': '1024px',     // Tablets en horizontal / notebooks pequeñas
+      'xl': '1280px',     // Notebooks estándar
+      '2xl': '1536px',    // Monitores medianos
     },
     extend: {
       fontFamily: {

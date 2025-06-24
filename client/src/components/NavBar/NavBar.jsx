@@ -52,7 +52,7 @@ export const NavBar = () => {
                         </>
                         : <></>
                     }
-                    <Link to="/contact" className="hover:text-lightGray hover:scale-110 transition duration-200">Contáctanos</Link>
+                    {/* <Link to="/contact" className="hover:text-lightGray hover:scale-110 transition duration-200">Contáctanos</Link> */}
                     {/* {
                         authUser
                         ? <UserIcon />

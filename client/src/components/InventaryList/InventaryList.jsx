@@ -1,14 +1,104 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { categoriesAndSubCategories } from "../../utils/categories&SubCategories.js";
+import { useEffect, useState, useRef } from "react";
 import { API_URL } from "../../utils/api_url.js"
 //components
 import { Category } from "../Category/Category.jsx";
 
 export const InventaryList = ({ stateNews }) => {
+    const { setShowNews } = stateNews;
+    const [categories, setCategories] = useState([]);
+    const menuRef = useRef(null);
+    
+    // Estados separados
+    const [isRubrosOpen, setIsRubrosOpen] = useState(false); // Para el menú principal
+    const [activeSubCategory, setActiveSubCategory] = useState(null); // Para subcategorías
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await axios.get(`${API_URL}/api/products/rubro/get-categories-and-subcategories`);
+                setCategories(response.data.categories);
+            } catch (err) {
+                console.error("Error fetching categories:", err);
+            }
+        };
+        fetchCategories();
+
+        const handleClickOutside = (event) => {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setIsRubrosOpen(false);
+                setActiveSubCategory(null);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const handleRubrosClick = () => {
+        setShowNews(false);
+        setIsRubrosOpen(!isRubrosOpen);
+        if (!isRubrosOpen) setActiveSubCategory(null); // Reset al abrir
+    };
+
+    const handleDestacadoClick = () => {
+        setShowNews(true);
+        setIsRubrosOpen(false);
+        setActiveSubCategory(null);
+    };
+
+    return (
+        <nav className="bg-gray flex h-8 relative px-7 text-xs lg:text-sm"> 
+            <div ref={menuRef} className="flex">
+                <span
+                    className="flex items-center italic px-4 h-full bg-black text-lightGray uppercase font-montserrat font-bold tracking-tight cursor-pointer"
+                    onClick={handleRubrosClick}
+                >
+                    RUBROS
+                </span>
+                
+                <span
+                    className="flex items-center italic ml-4 px-4 h-full bg-orange text-black uppercase font-montserrat font-bold tracking-tight cursor-pointer"
+                    onClick={handleDestacadoClick}
+                >
+                    DESTACADO
+                </span>
+                
+                {isRubrosOpen && (
+                    <ul className="flex flex-col mt-8 absolute top-0 left-0 gap-2 bg-gray px-10 py-2 z-50">
+                        {categories.map((category, index) => (
+                            <Category
+                                key={`category-${category.rubro}-${index}`}
+                                category={category.rubro}
+                                isActive={activeSubCategory === category.rubro}
+                                onClick={() => setActiveSubCategory(
+                                    activeSubCategory === category.rubro ? null : category.rubro
+                                )}
+                                categoryData={category}
+                            />
+                        ))}
+                    </ul>
+                )}
+            </div>
+        </nav>
+    );
+};
+
+
+
+
+
+
+
+
+
+/* export const InventaryList = ({ stateNews }) => {
     const { setShowNews } = stateNews
     const [categories, setCategories] = useState([])
     const [showCategories, setShowCategories] = useState(false)
+
+    const [openMenu, setOpenMenu] = useState(null);
+    const menuRef = useRef(null);
 
     const [activeCategory, setActiveCategory] = useState(null);
     const [activeSubCategory, setActiveSubCategory] = useState(null)
@@ -27,36 +117,47 @@ export const InventaryList = ({ stateNews }) => {
         }
         fetCategories()
 
-        /* setCategories(categoriesAndSubCategories)    
-        console.log(categories) */
+        const handleClickOutside = (event) => {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setOpenMenu(null);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
     }, [])
 
     return(
         <>
-            <nav className="bg-gray flex h-8 relative px-7"> 
-                <span className="flex items-center italic mobile:text-sm xl:text-base px-4 h-full bg-black text-lightGray uppercase font-montserrat font-bold tracking-tight cursor-pointer" onClick={() => {
-                    setShowCategories(showCategories => !showCategories)
-                    setShowNews(false)
-                }}>RUBROS</span>
-                <span className="flex items-center italic mobile:text-sm xl:text-base ml-4 px-4 text-black  bg-orange h-full uppercase font-montserrat font-bold tracking-tight cursor-pointer" onClick={() => {
-                    setShowCategories(false)
-                    setShowNews(true)
-                }}>DESTACADO</span>
+            <nav className="bg-gray flex h-8 relative px-7 text-xs lg:text-sm"> 
+                <span
+                    ref={menuRef}
+                    className="flex items-center italic px-4
+                    h-full bg-black text-lightGray uppercase font-montserrat font-bold tracking-tight cursor-pointer"
+                    onClick={() => {
+                        setShowCategories(showCategories => !showCategories)
+                        setShowNews(false)
+                        setOpenMenu(openMenu === 'main' ? null : 'main')
+                    }}
+                >
+                RUBROS
+                </span>
+                <span
+                    className="flex items-center italic ml-4 px-4
+                    h-full bg-orange text-black uppercase font-montserrat font-bold tracking-tight cursor-pointer"
+                    onClick={() => {
+                        setShowCategories(false)
+                        setShowNews(true)
+                    }}
+                >
+                DESTACADO
+                </span>
                 {
                     showCategories
                     ?
                     <ul className="flex flex-col mt-8 absolute top-0 left-0 gap-2 bg-gray px-10 py-2">
-                    {/* {
-                        categories.map((category, index) => <Category
-                                                                key={`category-${category.description}-${index}`}
-                                                                category={category.description}
-                                                                activeCategory={activeCategory}
-                                                                setActiveCategory={setActiveCategory}
-                                                                activeSubCategory={activeSubCategory}
-                                                                setActiveSubCategory={setActiveSubCategory}
-                                                                categoriesAndSubCategories={categoriesAndSubCategories}
-                                                            /> )
-                    } */}
                     {
                         categories.map((category, index) => <Category
                                                                 key={`category-${category.rubro}-${index}`}
@@ -66,7 +167,6 @@ export const InventaryList = ({ stateNews }) => {
                                                                 activeSubCategory={activeSubCategory}
                                                                 setActiveSubCategory={setActiveSubCategory}
                                                                 categoryData={category}
-                                                                /* categoriesAndSubCategories={categoriesAndSubCategories} */
                                                             /> )
                     }
                     </ul>
@@ -75,4 +175,4 @@ export const InventaryList = ({ stateNews }) => {
             </nav>
         </>
     )
-}
+} */
