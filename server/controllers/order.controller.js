@@ -1,4 +1,5 @@
 import Order from "../models/order.model.js"
+import User from "../models/user.model.js";
 
 export const getOrders = async (req, res) => {
     try {
@@ -15,6 +16,9 @@ export const getOrders = async (req, res) => {
 export const createNewOrder = async (req, res) => {
     try {
         const { userId, prods, totalPrice } = req.body
+
+        const userFound = await User.findById(userId);
+        if(!userFound) return res.status(404).json({ message: "User not found in db" });
 
         const products = prods.map(prod => ({
             product: prod.product._id,   
