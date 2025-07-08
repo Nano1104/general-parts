@@ -22,17 +22,28 @@ export const CartContextProvider = ({children}) => {
             console.log(cart)
             // Actualizar estado local en lugar de recargar
             setCart(prev => {
-                // Lógica para actualizar el carrito localmente
-                const existingItem = prev.find(item => item.product._id === productId);
-                if(existingItem) {
-                    return prev.map(item => 
-                        item.product._id === productId 
-                            ? {...item, quantity: item.quantity + amountToAdd} 
-                            : item
-                    );
+                console.log("🚀 ~ addProductToCart ~ prev:", prev);
+                
+                // Asegúrate de que prev.products existe y es un array
+                const existingItem = prev.products.find(item => item.product._id === productId);
+                
+                if (existingItem) {
+                    return {
+                        ...prev, // Mantén todas las otras propiedades del carrito
+                        products: prev.products.map(item => 
+                            item.product._id === productId 
+                                ? {...item, quantity: item.quantity + amountToAdd} 
+                                : item
+                        )
+                    };
                 }
-                return [...prev, {product: data.prodFound, quantity: amountToAdd}];
+                
+                return {
+                    ...prev,
+                    products: [...prev.products, {product: data.prodFound, quantity: amountToAdd}]
+                };
             });
+            
 
             console.log("🚀 ~ CartContextProvider ~ cart:", cart)
 
