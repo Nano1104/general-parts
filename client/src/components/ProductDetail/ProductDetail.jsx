@@ -77,8 +77,6 @@ export const ProductDetail = ({prod}) => {
                 backdrop: true  
               });
         } else {
-            /* const cartId = authUser.cart ? authUser.cart._id : null;
-            console.log(authUser.cart); */
             addProductToCart(_id, authUser.cart._id || null, amount)
         }
     }
@@ -123,8 +121,8 @@ export const ProductDetail = ({prod}) => {
                         <span>Marca: <span className="font-bold">{desc_marca}</span></span>
                        <span>
                             Stock:{" "}
-                            <span className={`italic inline-block font-bold ${stock === "disponible" ? "text-orange" : "text-red"} ${destacado ? "text-white" : ""} first-letter:uppercase`}>
-                                {stock}
+                            <span className={`italic inline-block font-bold ${stock > 0 ? "text-orange" : "text-red"} ${destacado ? "text-white" : ""} first-letter:uppercase`}>
+                                {stock > 0 ? "Disponible" : "Sin stock"}
                             </span>
                         </span>
                         <span className="text-2xl">${precioimpre}</span>
@@ -133,11 +131,18 @@ export const ProductDetail = ({prod}) => {
                         <span className="font-semibold ml-1">Cantidad.</span>
                         <ItemCount handleQuantity={{ quantity, amount, setAmount }} />
                     </div>
+
+                    {/* AGREGAR PRODUCTO */}
                     <div className="flex justify-center mt-4 gap-2">      
-                        <button className={`rounded-md py-2 px-4 ${destacado ? "bg-white" : "bg-orange"} text-black flex justify-center items-center gap-1 lg:text-xs 2xl:text-base`} onClick={handleAddToCart}>
-                            <IoCartOutline className="inline-block text-xl lg:text-sm" />Agregar
+                        <button
+                            className={`rounded-md py-2 px-4 ${destacado ? "bg-white" : "bg-orange"} text-black flex justify-center items-center gap-1 lg:text-xs 2xl:text-base`}
+                            onClick={handleAddToCart}>
+                                <IoCartOutline className="inline-block text-xl lg:text-sm" />
+                                <span>Agregar</span>
                         </button>
                     </div>
+
+                    {/* CAMBIAR O AGREGAR DESCRIPCION DEL PRODUCTO (disponible para admin)_ */}
                     <div className="text-left w-full">
                         <div className="flex justify-between items-end">
                             <h2 className="font-semibold mt-16 lg:mt-4 text-2xl lg:text-2xl 2xl:mt-12">DESCRIPCIÓN</h2>

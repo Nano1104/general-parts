@@ -38,6 +38,8 @@ export const postProductInCertainCart = async (req, res) => {
         } else {
             cartFound.products.push({ product: prodFound, quantity: amountToAdd })      //agrega el prod al carrito 
         }
+        prodFound.stock = Math.max(prodFound.stock - amountToAdd, 0); //actualiza el stock del producto, asegurando que no sea negativo
+        await prodFound.save(); // Guarda los cambios en el producto
         await cartFound.save();
         
         res.status(200).json({message: "Success adding product in cart", prodFound});

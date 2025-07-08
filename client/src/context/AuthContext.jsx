@@ -29,31 +29,34 @@ export const AuthContextProvider = ({children}) => {
                     cancelToken: source.token
                 });
 
-                if(res.data) {
-                    setState({
-                        authUser: res.data,
-                        isAdmin: res.data.role === "admin",
-                        loading: false,
-                        error: null
-                    });
-                } else {
-                    setState(prev => ({
-                        ...prev,
-                        authUser: null,
-                        isAdmin: false,
-                        loading: false
-                    }));
-                } 
+                setState({
+                    authUser: res.data,
+                    isAdmin: res.data?.role === "admin",
+                    loading: false,
+                    error: null
+                });
             }
             catch (err) {
                 if (axios.isCancel(err)) {
                     console.log('Request canceled:', err.message);
-                } else {
-                    console.error('Auth error:', err.response?.data?.message || err.message);
+                    return;
+                }
+                
+                // Manejo diferenciado de errores
+                if (err.response?.status === 401 || err.response?.status === 403) {
+                    // No autenticado - comportamiento esperado
                     setState(prev => ({
                         ...prev,
                         authUser: null,
                         isAdmin: false,
+                        loading: false,
+                        error: null // No es realmente un error
+                    }));
+                } else {
+                    // Error real (red, servidor, etc)
+                    console.error('Auth error:', err);
+                    setState(prev => ({
+                        ...prev,
                         loading: false,
                         error: err.response?.data?.message || 'Authentication error'
                     }));
