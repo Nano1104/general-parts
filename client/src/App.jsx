@@ -1,4 +1,3 @@
-import axios from "axios"
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuthContext } from "./context/AuthContext.jsx";
 
@@ -22,16 +21,17 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
 
-        <Route path="/productos" element={<ProductosPage />} />
+        {/* <Route path="/productos" element={<ProductosPage />} />
         <Route path="/productos/:category" element={<ProductosPage />} />
         <Route path="/productos/:category/:subcategory" element={<ProductosPage />} />
-        <Route path="/productos/:category/:subcategory/:categories" element={<ProductosPage />} /> 
+        <Route path="/productos/:category/:subcategory/:categories" element={<ProductosPage />} />  */}
 
-        {/* <Route path="/productos" element={ authUser ? <ProductosPage /> : <AuthPage /> } />
+        <Route path="/productos" element={ authUser ? <ProductosPage /> : <AuthPage /> } />
         <Route path="/productos/:category" element={ authUser ? <ProductosPage /> : <AuthPage /> } />
         <Route path="/productos/:category/:subcategory" element={ authUser ? <ProductosPage /> : <AuthPage /> } />
-        <Route path="/productos/:category/:subcategory/:categories" element={ authUser ? <ProductosPage /> : <AuthPage /> } />  */}    RUTA PARA LOS CATEGORIAS DE LOS SUBRUBROS DEL RUBRO PRINCIPAL 
-        <Route path="/producto/detail/:id" element={<ProductDetailContainer />} />
+        <Route path="/productos/:category/:subcategory/:categories" element={ authUser ? <ProductosPage /> : <AuthPage /> } />     
+        <Route path="/producto/detail/:id" element={ authUser ? <ProductDetailContainer /> : <AuthPage /> } />
+
         <Route path="/admin" element={ authUser ? <AdminPage /> : <Navigate to="/" /> } />
         <Route path="/admin/:manage" element={ authUser ? <AdminPage /> : <Navigate to="/" /> } />
         <Route path="/reservas" element={ authUser ? <Orders /> : <Navigate to="/" /> } />

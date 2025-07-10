@@ -28,6 +28,10 @@ const userSchema = new mongoose.Schema({
         enum: ["user", "admin", "premium"],
         required: true
     },
+    accepted: {
+        type: Boolean,
+        default: false
+    },
     cart: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Cart"

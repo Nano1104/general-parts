@@ -13,6 +13,7 @@ export const Cart = () => {
     const { authUser } = useAuthContext()
     const { cart } = useCartContext()
     console.log("🚀 ~ Cart ~ cart:", cart)
+    console.log("🚀 ~ Cart ~ cart:", cart.length)
     const { finishPurchase } = useCartContext()
 
     /* const cart = authUser?.cart || { products: [] }; */
@@ -21,7 +22,7 @@ export const Cart = () => {
     const navigate = useNavigate();
     const handleNavigate = () => navigate(-1);
 
-    if (!cart || cart.length === 0) {
+    if (!cart?.products?.length) {
         return <EmptyCart />;
     }
 

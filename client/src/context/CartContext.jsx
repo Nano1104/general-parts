@@ -14,7 +14,19 @@ export const CartContextProvider = ({children}) => {
     const [cart, setCart] = useState([]);
     const { authUser } = useAuthContext()
 
+    //ADD PRODUCT TO CART
     const addProductToCart = async (productId, cartId, amountToAdd) => {
+        // Validación para amountToAdd igual a 0
+        if (amountToAdd === 0) {
+            Swal.fire({
+                icon: "warning",
+                title: "Operación no válida",
+                text: "No se puede agregar un producto con cantidad 0",
+                confirmButtonColor: "#DC5F00"
+            });
+            return; // Salimos de la función temprano
+        }
+
         try {
             const response = await axios.post(`${API_URL}/api/cart/${cartId}/products/${productId}`, { amountToAdd }, { withCredentials: true } );
             const data = response.data
@@ -64,6 +76,7 @@ export const CartContextProvider = ({children}) => {
         }
     }
 
+    //DELETE PRODUCT FROM CART
     const handleDeleteProdFromCart = async (cartId, prodId, quantity) => {
         try {
             Swal.fire({
@@ -74,11 +87,26 @@ export const CartContextProvider = ({children}) => {
                 cancelButtonColor: "#D8D9DA",
                 confirmButtonText: "Si, eliminar!"
             }).then(async (result) => {             // Añadir async aquí
-                if (result.isConfirmed) {
-                    const res = await axios.delete(`${API_URL}/api/cart/${cartId}/products/${prodId}`, { withCredentials: true });
-                    await axios.put(`${API_URL}/api/products/update-stock/${prodId}`, { newStock: quantity }, { withCredentials: true })
-                    console.log("🚀 ~ handleDeleteProdFromCart ~ res:", res);
-                    window.location.reload();
+                if (result.isConfirmed) {           // Verificar si el usuario confirmó la acción
+                    const res = await axios.delete(`${API_URL}/api/cart/${cartId}/products/${prodId}`, { data: { quantity } }, { withCredentials: true });
+                    console.log("🚀 ~ handleDeleteProdFromCart ~ res:", res)
+                    // Verificar si la respuesta es exitosa
+                    if (res.status === 200) {
+                        // Actualizar el estado local del carrito
+                        setCart(prevCart => ({
+                            ...prevCart,
+                            products: prevCart.products.filter(prod => prod.product._id !== prodId)
+                        }));
+                        
+                        Swal.fire({
+                            icon: "success",
+                            title: "Producto eliminado",
+                            text: "El producto ha sido eliminado del carrito",
+                            confirmButtonColor: "#DC5F00"
+                        });
+                    } else {
+                        throw new Error("Error al eliminar el producto del carrito");
+                    }
                 }
             });
         } catch (err) {

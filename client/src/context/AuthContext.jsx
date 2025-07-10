@@ -15,9 +15,11 @@ export const AuthContextProvider = ({children}) => {
     const [state, setState] = useState({
         authUser: null,
         isAdmin: false,
+        accepted: false,
         loading: true,
         error: null
     });
+    
 
     useEffect(() => {
         const source = axios.CancelToken.source();
@@ -32,9 +34,12 @@ export const AuthContextProvider = ({children}) => {
                 setState({
                     authUser: res.data,
                     isAdmin: res.data?.role === "admin",
+                    accepted: res.data?.accepted || false,
                     loading: false,
                     error: null
                 });
+
+                console.log("🚀 ~ AuthContextProvider ~ state:", state)
             }
             catch (err) {
                 if (axios.isCancel(err)) {

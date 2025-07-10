@@ -50,6 +50,36 @@ export const emptyCartFromUser = async (req, res) => {
     }
 }
 
+export const acceptUser = async (req, res) => {
+    try {
+        const { userId } = req.params
+        const userFound = await User.findById(userId);
+        if(!userFound) throw new Error("User not found with given Id");
+
+        userFound.accepted = true;
+        await userFound.save();
+
+        res.status(200).json({ message: "Success accepting user", userFound });
+    } catch (err) {
+        res.status(404).json({ message: "Error accepting user", error: err.message });
+    }
+}
+
+export const deniedUser = async (req, res) => {
+    try {
+        const { userId } = req.params
+        const userFound = await User.findById(userId);
+        if(!userFound) throw new Error("User not found with given Id");
+
+        userFound.accepted = false;
+        await userFound.save();
+
+        res.status(200).json({ message: "Success denying user", userFound });
+    } catch (error) {
+        res.status(404).json({ message: "Error accepting user", error: err.message });
+    }
+}
+
 export const deleteUser = async (req, res) => {
     try {
         const { userId } = req.params

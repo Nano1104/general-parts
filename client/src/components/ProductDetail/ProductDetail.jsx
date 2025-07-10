@@ -18,6 +18,8 @@ import sondaImg from "../../images/sondaVerde1.png"
 import pasoApasoImg from "../../images/motor-pasoapaso.png"
 import swpartsIcon from "/vite.svg"
 
+import { formatCurrency } from "../../utils/formatCurrency.js";
+
 import { API_URL } from "../../utils/api_url.js";
 
 export const ProductDetail = ({prod}) => {
@@ -25,6 +27,7 @@ export const ProductDetail = ({prod}) => {
     const { authUser, isAdmin } = useAuthContext();
     const { addProductToCart } = useCartContext();
     const { id } = useParams();
+    const formatedPrice = formatCurrency(precioimpre);
 
     const [quantity, setQuantity] = useState(stock);
     const [amount, setAmount] = useState(0);
@@ -125,7 +128,7 @@ export const ProductDetail = ({prod}) => {
                                 {stock > 0 ? "Disponible" : "Sin stock"}
                             </span>
                         </span>
-                        <span className="text-2xl">${precioimpre}</span>
+                        <span className="text-2xl">{formatedPrice}</span>
                     </div>
                     <div className="flex flex-col items-start mt-2">
                         <span className="font-semibold ml-1">Cantidad.</span>
