@@ -12,10 +12,12 @@ export const EmptyCart = () => {
                     <CiWarning className="text-[8rem] text-orange absolute top-0 right-0 z-50" />
                 </div>
             </div>
-            <div className="h-[50%] text-lightGray">
-                <h1 className="text-[4rem] font-semibold tracking-tighter font-montserrat">Tu carrito se encuentra vacio!</h1>
-                <span className="block text-xl">Debes agregar productos antes de continuar con la compra</span>
-                <Link to="/productos" className="mt-5">Ver repuestos</Link>
+            <div className="h-[50%] text-lightGray mt-16 font-montserrat">
+                <h1 className="text-6xl font-semibold tracking-tighter">Tu carrito se encuentra vacio!</h1>
+                <div className="flex flex-col items-center mt-5">
+                    <span className="block text-xl">Debes agregar productos antes de continuar con la compra</span>
+                    <Link to="/productos" className="bg-orange w-[25%] rounded-md py-1 px-2 mt-2 text-cBlack font-semibold">Ver repuestos</Link>
+                </div>
             </div>
         </div>
         </>

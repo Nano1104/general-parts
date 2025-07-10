@@ -50,14 +50,27 @@ export const postProductInCertainCart = async (req, res) => {
 
 export const deleteProdFromCart = async (req, res) => {
     const { cartId, productId } = req.params
+    const { quantity } = req.body;
+    console.log("🚀 ~ deleteProdFromCart ~ quantity:", quantity, typeof quantity)
     if(!cartId || !productId) return res.status(400).json({message: "cartId or productId are required", err});
 
     try {
         const cartFound = await Cart.findById(cartId)
+        const productFound = await Product.findById(productId)
+        if (!cartFound) return res.status(404).json({ message: `Cart not found with id: ${cartId}` });
+        if (!productFound) return res.status(404).json({ message: `Product not found with id: ${productId}` });
+
+        productFound.stock += quantity; // Aumenta el stock del producto eliminado
+        await productFound.save(); // Guarda los cambios en el producto
+
         cartFound.products = cartFound.products.filter(prod => prod.product.toString() !== productId);
         await cartFound.save();
         
-        return res.status(200).json({ message: "Product removed from cart", cart: cartFound });
+        return res.status(200).json({
+            message: "Product removed from cart",
+            cart: cartFound,
+            productDeleted: productFound
+        });
     } catch (err) {
         return res.status(500).json({ message: "Server error", error: err.message });
     }

@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { useIsMobile } from "../../hooks/isMobile.js";      //hook para renderizar breakpoints
 import { useAuthContext } from "../../context/AuthContext.jsx";
 import Swal from 'sweetalert2';
+import { formatCurrency } from "../../utils/formatCurrency.js";
 
 //images
 import bulonesImg from "../../images/bulones.png"
@@ -17,10 +18,12 @@ export const Product = ({data, params}) => {
     const { codpro, desc_stock, rubro, subrub, proveed, desc_rubro, desc_subrub, desc_marca, porcen1, precioimpre, destacado } = data;
     const isMobile = useIsMobile(1280); // Puedes cambiar el breakpoint si lo necesitas
     const componentRef = useRef(null)
-    const { isAdmin } = useAuthContext()
+    const { isAdmin, accepted } = useAuthContext()
 
     const [category, subcategory] = params;
     const [hover, setShowHover] = useState(false)
+
+    const formatedPrice = formatCurrency(precioimpre);
     
     const handleUnHighlightProduct = async () => {
         try {
@@ -80,12 +83,12 @@ export const Product = ({data, params}) => {
                     <span>{desc_rubro} </span><span>- {desc_marca}</span>
                 </div>
                 <div className="mt-2">
-                  <span>PRECIO: <span className="font-bold">{precioimpre} ARG</span></span>
+                  <span className={`${accepted ? "block" : "hidden"}`}>PRECIO: <span className="font-bold">{formatedPrice} ARG</span></span>  
                 </div>
             </div>
             
             {       
-                !isMobile
+                !isMobile && accepted   //RESOLUCION DESKTOP DEL HOVER
                 ?
                 <div onMouseLeave={() => handleMouseLeave()} className={`border h-full absolute top-0 w-full rounded-xl flex flex-col justify-center items-center bg-custom-gradient ${ hover ? "block" : "hidden" }`}>
                     <Link to={`/producto/detail/${codpro}?category=${category}&subCategory=${subcategory}`}
@@ -94,7 +97,7 @@ export const Product = ({data, params}) => {
                         Ver Repuesto
                     </Link>
                     
-                    { isAdmin && destacado
+                    { isAdmin && destacado    //CASO ADMINISTRADOR
                         ? <button className="p-2 mt-4 text-sm text-center text-black rounded-xl border hover:bg-deepGray hover:border-transparent hover:text-white transition duration-200"
                                     onClick={handleUnHighlightProduct}>
                             QUITAR PRODUCTO DE DESTACADOS
@@ -104,8 +107,10 @@ export const Product = ({data, params}) => {
                 </div>
                 :
                 <>      {/* RESOLUCION MOBILE DEL HOVER */}
-                <Link id="btn-see-prod" to={`/producto/detail/${codpro}?category=${category}&subCategory=${subcategory}`}
-                    className="py-2 px-4 text-xs flex justify-center bg-deepGray text-white text-center absolute w-full bottom-[10px]"
+                <Link
+                    id="btn-see-prod"
+                    to={`/producto/detail/${codpro}?category=${category}&subCategory=${subcategory}`}
+                    className={`py-2 px-4 text-xs flex justify-center bg-deepGray text-white text-center absolute w-full bottom-[10px] ${accepted ? "block" : "hidden"} rounded-2xl border hover:bg-cBlack hover:border-transparent hover:text-white transition duration-200`}
                 >
                     Ver Repuesto
                 </Link>
