@@ -6,9 +6,9 @@ import { API_URL } from "../utils/api_url.js";
 
 const useSignup = () => {
 
-    const signUp = async ({ first_name, last_name, email, phone, password }) => {
+    const signUp = async ({ first_name, last_name, email, phone, password, location, city, cuit }) => {
         try {
-            await axios.post(`${API_URL}/api/auth/register`, { first_name, last_name, email, phone: Number(phone), password }, { withCredentials: true })
+            await axios.post(`${API_URL}/api/auth/register`, { first_name, last_name, email, phone: Number(phone), password, location, city, cuit }, { withCredentials: true })
                 .then(res => {
                     Swal.fire({
                         title: 'Te has registrado',

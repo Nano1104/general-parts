@@ -188,14 +188,16 @@ export const ProductsContainer = ({ searchValue, setSearchValue }) => {         
             {subcategory && <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`}>{subcategory}</Link>}
             {categories && <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`}><MdKeyboardArrowRight className="inline-block" />{categories}</Link>}
           </div>
+          
           <div>
             <button className="mr-4 sm:mr-8 text-sm xl:text-base">
-              <span onClick={handleFilter}>{!showFilters ? "Mostrar Filtros" : "Ocultar Filtros"}</span><BsFilterLeft className="inline-block"/>
+              <span onClick={handleFilter}>{!showFilters ? "Mostrar Filtros" : "Ocultar Filtros"}</span>
+              <BsFilterLeft className="inline-block"/>
             </button>
           </div>
         </div>
       
-        {/* CONTAINER DE PRODUCTOS (cambios en la parte de renderizado) */}
+        {/* FILTROS DE PRODUCTOS (cambios en la parte de renderizado) */}
         <div id="products-container" className={`grid grid-cols-1 ${showFilters ? 'md:grid-cols-[30%_1fr] 2xl:grid-cols-[15%_1fr]' : 'md:grid-cols-1'} w-full mt-10`}>
           {showFilters && (
             <div>
@@ -203,7 +205,7 @@ export const ProductsContainer = ({ searchValue, setSearchValue }) => {         
             </div>
           )}
       
-          {/* Columna de productos - Cambios aquí */}
+          {/* CATALOGO de productos - Cambios aquí */}
           <div className={`grid gap-3 justify-items-center grid-cols-1 ${!showFilters ? "md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4" : "md:grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3"}`}>
             {products.map((prod, index) => (
               <Product 

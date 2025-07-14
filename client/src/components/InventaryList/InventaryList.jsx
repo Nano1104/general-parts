@@ -1,12 +1,15 @@
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import { API_URL } from "../../utils/api_url.js"
+import { useAuthContext } from "../../context/AuthContext.jsx";
 //components
 import { Category } from "../Category/Category.jsx";
+import { Link } from "react-router-dom";
 
 export const InventaryList = ({ stateNews }) => {
     const { setShowNews } = stateNews;
     const [categories, setCategories] = useState([]);
+    const { isAdmin } = useAuthContext();
     const menuRef = useRef(null);
     
     // Estados separados
@@ -63,6 +66,17 @@ export const InventaryList = ({ stateNews }) => {
                 >
                     DESTACADO
                 </span>
+
+                {
+                    isAdmin && (
+                        <Link 
+                            to="/"
+                            className="flex items-center italic ml-4 px-4 h-full bg-black text-lightGray uppercase font-montserrat font-bold tracking-tight cursor-pointer"
+                        >
+                            VOLVER A INICIO
+                        </Link>
+                    )
+                }
                 
                 {isRubrosOpen && (
                     <ul className="flex flex-col mt-8 absolute top-0 left-0 gap-2 bg-gray px-10 py-2 z-50">

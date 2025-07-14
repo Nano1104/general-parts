@@ -4,6 +4,7 @@ import Swal from 'sweetalert2'
 import { API_URL } from "../../utils/api_url.js";
 
 export const Order = ({order}) => {
+    console.log("🚀 ~ Order ~ order:", order)
     const { _id: orderId, userId, products, totalOrder } = order
 
     const handleDeleteOrder = async () => {

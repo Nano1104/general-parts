@@ -4,7 +4,7 @@ export const User = ({userData}) => {
 
     return(
         <>
-            <div className="p-3 flex flex-col">
+            <div key={`user-div-${_id}`} className="p-3 flex flex-col">
                 <span className="font-bold">Id Usuario: <span className="ml-2 font-normal">{_id}</span></span>
                 <span className="font-bold">Nombre: <span className="ml-2 font-normal">{first_name}</span></span>
                 <span className="font-bold">Apellido: <span className="ml-2 font-normal">{last_name}</span></span>

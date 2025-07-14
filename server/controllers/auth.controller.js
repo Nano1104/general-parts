@@ -50,9 +50,9 @@ export const login = async (req, res) => {
 
 export const register = async (req, res) => {
     try {
-        const { first_name, email, phone, password, role } = req.body
+        const { first_name, email, phone, password, role, location, city, cuit } = req.body
         
-        if(!first_name || !email || !phone || !password) throw new Error("some fields may be empty");
+        if(!first_name || !email || !phone || !password || !location || !city || !cuit) throw new Error("some fields may be empty");
 
         const userToCreate = {
             ...req.body,
