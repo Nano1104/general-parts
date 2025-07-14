@@ -52,15 +52,10 @@ export const NavBar = () => {
                         </>
                         : <></>
                     }
-                    {/* <Link to="/contact" className="hover:text-lightGray hover:scale-110 transition duration-200">Contáctanos</Link> */}
-                    {/* {
-                        authUser
-                        ? <UserIcon />
-                        : 
-                        <>
-                            <Link to="/authPage" className="relative btn-logs">Iniciar Sesión<div></div></Link>
-                        </>
-                    }     */}                
+                    { authUser && (
+                            <UserIcon />
+                        )
+                    }             
                 </div>
             </ul>
         </nav>

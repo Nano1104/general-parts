@@ -1,6 +1,8 @@
 import { useCartContext } from "../../context/CartContext";
 import { IoTrashOutline } from "react-icons/io5";
 
+import { formatCurrency } from "../../utils/formatCurrency";
+
 import bulonesImg from "../../images/bulones.png"
 import sondaImg from "../../images/sondaVerde1.png"
 import pasoApasoImg from "../../images/motor-pasoapaso.png"
@@ -36,7 +38,7 @@ export const ProdsInCart = ({cartId, prods}) => {
                     <span>
                     x<span className="font-bold">{prod.quantity}</span>
                     </span>
-                    <span>${prod.quantity * prod.product.precioimpre}ARS</span>
+                    <span>{formatCurrency(prod.quantity * prod.product.precioimpre)}</span>
                 </div>
                 </div>
                 <IoTrashOutline

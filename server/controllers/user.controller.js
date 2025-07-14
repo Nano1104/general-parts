@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 import Cart from "../models/cart.model.js"
+import Order from "../models/order.model.js";
 
 export const getUserById = async (req, res) => {
     try {
@@ -69,6 +70,7 @@ export const deniedUser = async (req, res) => {
     try {
         const { userId } = req.params
         const userFound = await User.findById(userId);
+        console.log("🚀 ~ deniedUser ~ userFound:", userFound)
         if(!userFound) throw new Error("User not found with given Id");
 
         userFound.accepted = false;
@@ -76,20 +78,34 @@ export const deniedUser = async (req, res) => {
 
         res.status(200).json({ message: "Success denying user", userFound });
     } catch (error) {
-        res.status(404).json({ message: "Error accepting user", error: err.message });
+        res.status(404).json({ message: "Error accepting user", error: error.message });
     }
 }
 
 export const deleteUser = async (req, res) => {
     try {
-        const { userId } = req.params
-        const userFound = await User.findById(userId);
-        if(!userFound) throw new Error("User not found with given Id");
-        
-        const deletedUser = await User.findByIdAndDelete(userId)
+        const { userId } = req.params;
 
-        res.status(200).json({ message: "Success deleting user", deletedUser });
+        // 1. Buscar y eliminar usuario
+        const deletedUser = await User.findByIdAndDelete(userId);
+        if (!deletedUser) {
+            return res.status(404).json({ message: "Usuario no encontrado" });
+        }
+
+        // 2. Eliminar carrito si existe
+        await Cart.deleteOne({ _id: deletedUser.cart });
+
+        // 3. Eliminar órdenes asociadas al usuario
+        await Order.deleteMany({ user: userId });
+
+        res.status(200).json({
+            message: "Usuario, carrito y órdenes eliminados con éxito",
+            deletedUser,
+        });
     } catch (err) {
-        res.status(404).json({ message: "Error deleting user", error: err.message });
+        res.status(500).json({
+            message: "Error al eliminar usuario y datos asociados",
+            error: err.message,
+        });
     }
-}
+};

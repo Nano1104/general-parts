@@ -1,0 +1,402 @@
+[
+    {
+        "id": "060280",
+        "nombre": "General Alvarado"
+    },
+    {
+        "id": "060721",
+        "nombre": "Salliqueló"
+    },
+    {
+        "id": "060343",
+        "nombre": "General Paz"
+    },
+    {
+        "id": "060091",
+        "nombre": "Berazategui"
+    },
+    {
+        "id": "060028",
+        "nombre": "Almirante Brown"
+    },
+    {
+        "id": "060351",
+        "nombre": "General Pinto"
+    },
+    {
+        "id": "060742",
+        "nombre": "San Cayetano"
+    },
+    {
+        "id": "060833",
+        "nombre": "Tres Arroyos"
+    },
+    {
+        "id": "060189",
+        "nombre": "Coronel Dorrego"
+    },
+    {
+        "id": "060581",
+        "nombre": "Necochea"
+    },
+    {
+        "id": "060466",
+        "nombre": "Lezama"
+    },
+    {
+        "id": "060218",
+        "nombre": "Chascomús"
+    },
+    {
+        "id": "060655",
+        "nombre": "Punta Indio"
+    },
+    {
+        "id": "060126",
+        "nombre": "Campana"
+    },
+    {
+        "id": "060007",
+        "nombre": "Adolfo Alsina"
+    },
+    {
+        "id": "060651",
+        "nombre": "Puán"
+    },
+    {
+        "id": "060392",
+        "nombre": "General Villegas"
+    },
+    {
+        "id": "060648",
+        "nombre": "Presidente Perón"
+    },
+    {
+        "id": "060441",
+        "nombre": "La Plata"
+    },
+    {
+        "id": "060413",
+        "nombre": "Junín"
+    },
+    {
+        "id": "060119",
+        "nombre": "Brandsen"
+    },
+    {
+        "id": "060021",
+        "nombre": "Alberti"
+    },
+    {
+        "id": "060112",
+        "nombre": "Bragado"
+    },
+    {
+        "id": "060154",
+        "nombre": "Carlos Tejedor"
+    },
+    {
+        "id": "060854",
+        "nombre": "25 de Mayo"
+    },
+    {
+        "id": "060826",
+        "nombre": "Trenque Lauquen"
+    },
+    {
+        "id": "060260",
+        "nombre": "Esteban Echeverría"
+    },
+    {
+        "id": "060161",
+        "nombre": "Carmen de Areco"
+    },
+    {
+        "id": "060532",
+        "nombre": "Mercedes"
+    },
+    {
+        "id": "060408",
+        "nombre": "Hurlingham"
+    },
+    {
+        "id": "060568",
+        "nombre": "Morón"
+    },
+    {
+        "id": "060210",
+        "nombre": "Chacabuco"
+    },
+    {
+        "id": "060434",
+        "nombre": "Lanús"
+    },
+    {
+        "id": "060515",
+        "nombre": "Malvinas Argentinas"
+    },
+    {
+        "id": "060329",
+        "nombre": "General Las Heras"
+    },
+    {
+        "id": "060525",
+        "nombre": "Marcos Paz"
+    },
+    {
+        "id": "060847",
+        "nombre": "Tres Lomas"
+    },
+    {
+        "id": "060371",
+        "nombre": "General San Martín"
+    },
+    {
+        "id": "060469",
+        "nombre": "Lincoln"
+    },
+    {
+        "id": "060410",
+        "nombre": "Ituzaingó"
+    },
+    {
+        "id": "060364",
+        "nombre": "General Rodríguez"
+    },
+    {
+        "id": "060784",
+        "nombre": "Suipacha"
+    },
+    {
+        "id": "060840",
+        "nombre": "Tres de Febrero"
+    },
+    {
+        "id": "060224",
+        "nombre": "Chivilcoy"
+    },
+    {
+        "id": "060490",
+        "nombre": "Lomas de Zamora"
+    },
+    {
+        "id": "060385",
+        "nombre": "General Viamonte"
+    },
+    {
+        "id": "060175",
+        "nombre": "Colón"
+    },
+    {
+        "id": "060700",
+        "nombre": "Saavedra"
+    },
+    {
+        "id": "060553",
+        "nombre": "Monte Hermoso"
+    },
+    {
+        "id": "060476",
+        "nombre": "Lobería"
+    },
+    {
+        "id": "060098",
+        "nombre": "Berisso"
+    },
+    {
+        "id": "060812",
+        "nombre": "Tordillo"
+    },
+    {
+        "id": "060749",
+        "nombre": "San Fernando"
+    },
+    {
+        "id": "060882",
+        "nombre": "Zárate"
+    },
+    {
+        "id": "060763",
+        "nombre": "San Nicolás"
+    },
+    {
+        "id": "060274",
+        "nombre": "Florencio Varela"
+    },
+    {
+        "id": "060574",
+        "nombre": "Navarro"
+    },
+    {
+        "id": "060134",
+        "nombre": "Cañuelas"
+    },
+    {
+        "id": "060778",
+        "nombre": "San Vicente"
+    },
+    {
+        "id": "060287",
+        "nombre": "General Alvear"
+    },
+    {
+        "id": "060658",
+        "nombre": "Quilmes"
+    },
+    {
+        "id": "060630",
+        "nombre": "Pila"
+    },
+    {
+        "id": "060322",
+        "nombre": "General La Madrid"
+    },
+    {
+        "id": "060105",
+        "nombre": "Bolívar"
+    },
+    {
+        "id": "060063",
+        "nombre": "Balcarce"
+    },
+    {
+        "id": "060406",
+        "nombre": "Hipólito Yrigoyen"
+    },
+    {
+        "id": "060049",
+        "nombre": "Azul"
+    },
+    {
+        "id": "060238",
+        "nombre": "Dolores"
+    },
+    {
+        "id": "060231",
+        "nombre": "Daireaux"
+    },
+    {
+        "id": "060042",
+        "nombre": "Ayacucho"
+    },
+    {
+        "id": "060399",
+        "nombre": "Guaminí"
+    },
+    {
+        "id": "060448",
+        "nombre": "Laprida"
+    },
+    {
+        "id": "060756",
+        "nombre": "San Isidro"
+    },
+    {
+        "id": "060462",
+        "nombre": "Leandro N. Alem"
+    },
+    {
+        "id": "060602",
+        "nombre": "Patagones"
+    },
+    {
+        "id": "060182",
+        "nombre": "Coronel de Marina Leonardo Rosales"
+    },
+    {
+        "id": "060070",
+        "nombre": "Baradero"
+    },
+    {
+        "id": "060770",
+        "nombre": "San Pedro"
+    },
+    {
+        "id": "060679",
+        "nombre": "Rivadavia"
+    },
+    {
+        "id": "060277",
+        "nombre": "Florentino Ameghino"
+    },
+    {
+        "id": "060147",
+        "nombre": "Carlos Casares"
+    },
+    {
+        "id": "060084",
+        "nombre": "Benito Juárez"
+    },
+    {
+        "id": "060035",
+        "nombre": "Avellaneda"
+    },
+    {
+        "id": "060616",
+        "nombre": "Pellegrini"
+    },
+    {
+        "id": "060455",
+        "nombre": "Las Flores"
+    },
+    {
+        "id": "060686",
+        "nombre": "Rojas"
+    },
+    {
+        "id": "060252",
+        "nombre": "Escobar"
+    },
+    {
+        "id": "060412",
+        "nombre": "José C. Paz"
+    },
+    {
+        "id": "060735",
+        "nombre": "San Antonio de Areco"
+    },
+    {
+        "id": "060511",
+        "nombre": "Maipú"
+    },
+    {
+        "id": "060644",
+        "nombre": "Pinamar"
+    },
+    {
+        "id": "060336",
+        "nombre": "General Lavalle"
+    },
+    {
+        "id": "060420",
+        "nombre": "La Costa"
+    },
+    {
+        "id": "060505",
+        "nombre": "Magdalena"
+    },
+    {
+        "id": "060861",
+        "nombre": "Vicente López"
+    },
+    {
+        "id": "060623",
+        "nombre": "Pergamino"
+    },
+    {
+        "id": "060672",
+        "nombre": "Rauch"
+    },
+    {
+        "id": "060791",
+        "nombre": "Tandil"
+    },
+    {
+        "id": "060203",
+        "nombre": "Coronel Suárez"
+    },
+    {
+        "id": "060014",
+        "nombre": "Adolfo Gonzales Chaves"
+    }
+]

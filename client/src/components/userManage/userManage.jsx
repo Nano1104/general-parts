@@ -3,6 +3,7 @@ import Swal from 'sweetalert2';
 import { useEffect, useState } from "react"
 import { User } from "../User/User.jsx";
 import { API_URL } from "../../utils/api_url.js";
+import { Loading } from "../Loading/Loading.jsx";
 
 const showErrorAlert = (message) => {
     Swal.fire({
@@ -15,13 +16,19 @@ const showErrorAlert = (message) => {
 
 export const UserManage = () => {
     const [users, setUsers] = useState([])
+    const [loading, setLoading] = useState(false)
 
     const handleGetUsers = async () => {
         try {
+            setLoading(true);
+            await new Promise((resolve) => setTimeout(resolve, 5000));
+
             const res = await axios.get(`${API_URL}/api/user`, { withCredentials: true })
             setUsers([...res.data.users])
         } catch (err) {
             console.log(err.message)
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -29,7 +36,6 @@ export const UserManage = () => {
         e.preventDefault()
         try {
             const res = await axios.delete(`${API_URL}/api/user/${e.target.prodId.value}`, { withCredentials: true })
-            console.log(res)
             await handleGetUsers()
 
             if(res.status == 200) {
@@ -139,13 +145,14 @@ export const UserManage = () => {
         <div className="px-5 h-full flex">
             <div className="basis-[50%]">
                 <h2 className="text-4xl font-montserrat tracking-tight font-bold mb-3">USUARIOS</h2>
+                {/* // VER USUARIOS */}
                 <div>
                     <h3 className="font-semibold">VER USUARIOS</h3>
                     <button className="bg-orange w-[30%] rounded-md py-1 text-sm text-white font-medium font-poppins" type="submit" onClick={handleGetUsers}>Ver lista de usuarios</button>
                 </div>
-
                 <hr className="my-4 w-[45%] ml-2" />
 
+                {/* // BORRAR USUARIO DE LA BASE DE DATOS */}
                 <div className="flex flex-col">
                     <h3 className="font-semibold">BORRAR USUARIO DE LA BASE DE DATOS</h3>
                     <form action="" className="flex flex-col text-sm" onSubmit={handleDeleteUser}>
@@ -153,10 +160,10 @@ export const UserManage = () => {
                         <button className="bg-orange w-[30%] rounded-md py-1 text-sm text-white font-medium font-poppins" type="submit">Borrar usuario</button>
                     </form>
                 </div>
-
                 <hr className="my-4 w-[45%] ml-2" />
 
-                <div className="flex flex-col"> {/* space-y-4 */}
+                {/* // ACCESO DEL USUARIO - accepted - denied */}
+                <div className="flex flex-col">
                     <h3 className="font-semibold">ACCESO DEL USUARIO</h3>
                     
                     {/* Formulario de Alta */}
@@ -193,9 +200,9 @@ export const UserManage = () => {
                         </button>
                     </form>
                 </div>
-
                 <hr className="my-4 w-[45%] ml-2" />
 
+                {/* // MODIFICAR USUARIO */}
                 <div className="flex flex-col">
                     <h3 className="font-semibold">MODIFICAR USUARIO</h3>
                     <form action="" className="flex flex-col text-sm" onSubmit={handleUpdateUser}>
@@ -218,12 +225,20 @@ export const UserManage = () => {
            </div>
 
            <div className="basis-[50%] overflow-y-auto border-l">
-                <div>
-                    {
-                        users.map(user => <User userData={user} />)
-                    }
-                </div>
-           </div>
+                {
+                    loading ? (
+                        <div className="flex justify-center items-center h-full">
+                            <span className="text-xl">Cargando Usuarios...</span>
+                        </div>
+                    ) : users.length > 0 ? (
+                        users.map(user => <User key={user.id} userData={user} />)
+                    ) : (
+                        <div className="flex justify-center items-center h-full">
+                            <span className="text-xl">Lista de usuarios</span>
+                        </div>
+                    )
+                }
+            </div>
         </div>
         </>
     )

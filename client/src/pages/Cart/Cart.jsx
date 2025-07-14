@@ -7,6 +7,7 @@ import { ProdsInCart } from "../../components/ProdsInCart/ProdsInCart.jsx"
 import { EmptyCart } from "../../components/EmptyCart/EmptyCart.jsx"
 
 import useCartTotal from "../../hooks/useCartTotal.js"
+import { formatCurrency } from "../../utils/formatCurrency.js"
 
 export const Cart = () => {
 
@@ -41,7 +42,7 @@ export const Cart = () => {
                     <ProdsInCart cartId={cart._id} prods={cart.products} />
                 </div>
                 <div className="ml-14 mt-16 h-28 text-lightGray relative">
-                    <h3 className="text-[1.7rem] font-montserrat font-medium">Total de la reserva: <span className="ml-2">${totalPrice}ARS</span></h3>
+                    <h3 className="text-[1.7rem] font-montserrat font-medium">Total de la reserva: <span className="ml-2">{formatCurrency(totalPrice)}</span></h3>
                     <span className="italic absolute top-[50px]">El carrito se vaciará en el plazo de 1 día en caso de no haber sido confirmada la reserva.</span>
                 </div>
             </div>

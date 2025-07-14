@@ -38,8 +38,6 @@ export const AuthContextProvider = ({children}) => {
                     loading: false,
                     error: null
                 });
-
-                console.log("🚀 ~ AuthContextProvider ~ state:", state)
             }
             catch (err) {
                 if (axios.isCancel(err)) {
@@ -92,6 +90,8 @@ export const AuthContextProvider = ({children}) => {
             authUser: state.authUser, 
             setAuthUser, 
             isAdmin: state.isAdmin,
+            accepted: state.accepted,
+            loading: state.loading,
             error: state.error
         }}>
             {children}
