@@ -46,6 +46,10 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    imageUrl: {
+        type: String,
+        default: null
+    },
     destacado: {
         type: Boolean,
         default: false

@@ -7,15 +7,12 @@ import Swal from 'sweetalert2';
 import { formatCurrency } from "../../utils/formatCurrency.js";
 
 //images
-import bulonesImg from "../../images/bulones.png"
-import sondaImg from "../../images/sondaVerde1.png"
-import pasoApasoImg from "../../images/motor-pasoapaso.png"
-import swpartsIcon from "/vite.svg"
+const imgHover = "https://res.cloudinary.com/dq7dwhqhh/image/upload/f_auto,q_auto/v1754438575/swparts-icon_rkw0nq.png"
 
 import { API_URL } from "../../utils/api_url.js";
 
 export const Product = ({data, params}) => {
-    const { codpro, desc_stock, rubro, subrub, proveed, desc_rubro, desc_subrub, desc_marca, porcen1, precioimpre, destacado } = data;
+    const { codpro, desc_stock, rubro, subrub, proveed, desc_rubro, desc_subrub, desc_marca, imageUrl, precioimpre, destacado } = data;
     const isMobile = useIsMobile(1280); // Puedes cambiar el breakpoint si lo necesitas
     const componentRef = useRef(null)
     const { isAdmin, accepted } = useAuthContext()
@@ -45,7 +42,7 @@ export const Product = ({data, params}) => {
         }
     };
 
-    const getImage = () => {
+    /* const getImage = () => {
       const subrub = desc_subrub?.toUpperCase() || "";
 
       if (subrub === "SONDA LAMBDAS") return sondaImg;
@@ -53,7 +50,15 @@ export const Product = ({data, params}) => {
       if (subrub.includes("TORNILLOS")) return bulonesImg;
 
       return swpartsIcon;
-    };
+    }; */
+
+    const getImage = () => {
+      if (imageUrl) {
+        return imageUrl
+      } else {
+        return imgHover
+      }
+    }
 
     const handleMouseEnter = () => setShowHover(true)
 
@@ -67,11 +72,15 @@ export const Product = ({data, params}) => {
             { destacado ? <span className="absolute m-3 text-sm font-bold tracking-tight bg-cBlack text-white py-0.5 px-2 rounded-md">DESTACADO</span> : <></> }
 
             <div className="w-full h-[65%] relative">
-              {getImage() === swpartsIcon && (
+              {/* {getImage() === swpartsIcon && (
                 <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center z-10 text-red font-bold italic font-montserrat text-xl">IMAGEN EN DESARROLLO</span>
               )}
               <img src={getImage()} alt={`img ilustrativa del producto: ${codpro}`} className={`rounded-t-xl object-contain ${getImage() === swpartsIcon ? "opacity-50" : ""} h-full w-full`}
-              />
+              /> */}
+              {getImage() === imgHover && (
+                <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center z-10 text-red font-bold italic font-montserrat text-xl">IMAGEN EN DESARROLLO</span>
+              )}
+              <img src={getImage()} alt={`img ilustrativa del producto: ${codpro}`} className={`rounded-t-xl object-contain ${getImage() === imgHover ? "opacity-50" : ""} h-full w-full`} />
             </div>
 
             <div className="flex flex-col text-xs mobile:text-sm 2xl:text-base items-start px-4">

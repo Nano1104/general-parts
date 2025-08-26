@@ -12,7 +12,7 @@ export const NavBar = () => {
 
     const handleMenuBurger = () => setShowMenu(showMenu => !showMenu)
  
-    return(
+    return (
         <>
         <div className="text-[2rem] sm:text-[3em] absolute top-0 text-white lg:hidden">
             <HiBars3 onClick={handleMenuBurger} className="m-2" />

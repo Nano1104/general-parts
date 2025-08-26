@@ -111,14 +111,14 @@ export const getProducts = async (req, res) => {
     try {
         const { search, limit = 10, lastId, ...otherParams } = req.query;
         const cacheKey = JSON.stringify(req.query);
-        
+
         // Limpiar caché si hay búsqueda nueva
         if (search) cache.del(cacheKey);
         else if (cache.get(cacheKey)) return res.json(cache.get(cacheKey));
 
         // Construir filtro base
         const baseFilter = buildBaseFilter(otherParams);
-        
+
         // Búsqueda inteligente
         let products = [];
         if (search) {
@@ -128,7 +128,7 @@ export const getProducts = async (req, res) => {
         } else {
             products = await executeProductQuery(baseFilter, limit, lastId, false);
         }
-        
+
         // Preparar respuesta
         const hasMore = products.length > parseInt(limit);
         const response = {
@@ -137,7 +137,7 @@ export const getProducts = async (req, res) => {
             hasMore,
             total: await Product.countDocuments(baseFilter)
         };
-        
+
         cache.put(cacheKey, response, 300000); // 5 minutos de caché
         return res.json(response);
 
@@ -154,15 +154,15 @@ export const getProducts = async (req, res) => {
 // FUNCIONES AUXILIARES - getProducts
 function buildBaseFilter(params) {
     const filter = {};
-    
+
     // Filtros exactos
     if (params.category) filter.desc_rubro = params.category.toUpperCase();
     if (params.brand) filter.desc_marca = params.brand.toUpperCase();
-    
+
     // Manejo de subcategorías
     if (params.subcategory || params.categories) {
         const subcat = params.subcategory || params.categories;
-        
+
         if (["bulones", "engranaje"].includes(subcat)) {
             const subrubrosIds = getSubcategoryIdsForGroup(subcat);
             if (subrubrosIds?.length > 0) {
@@ -179,13 +179,13 @@ function buildBaseFilter(params) {
         if (!isNaN(params.minPrice)) filter.precioimpre.$gte = parseFloat(params.minPrice);
         if (!isNaN(params.maxPrice)) filter.precioimpre.$lte = parseFloat(params.maxPrice);
     }
-    
+
     return filter;
 }
 
 async function combinedSearch(baseFilter, textParts, numericParts, params) {
     const filters = [];
-    
+
     // Estrategia 1: Búsqueda por código exacto o parcial
     if (numericParts.length > 0) {
         filters.push({
@@ -193,39 +193,39 @@ async function combinedSearch(baseFilter, textParts, numericParts, params) {
             codpro: { $regex: `^${numericParts.join('|^')}`, $options: 'i' }
         });
     }
-    
+
     // Estrategia 2: Búsqueda textual
     if (textParts.length > 0) {
         const textSearch = textParts.join(' ');
-        
+
         // 2a. Búsqueda exacta de frase
         filters.push({
             ...baseFilter,
             $text: { $search: `"${textSearch}"` }
         });
-        
+
         // 2b. Búsqueda AND de términos
         filters.push({
             ...baseFilter,
             $text: { $search: textParts.map(p => `"${p}"`).join(' ') }
         });
-        
+
         // 2c. Búsqueda OR estándar
         filters.push({
             ...baseFilter,
             $text: { $search: textSearch }
         });
     }
-    
+
     // Probar todas las estrategias en orden
     for (const filter of filters) {
         const results = await executeProductQuery(filter, params.limit, params.lastId, !!filter.$text);
         if (results.length > 0) return results;
     }
-    
+
     // Fallback final: búsqueda por campos individuales
     const regexConditions = [];
-    
+
     if (numericParts.length > 0) {
         regexConditions.push({
             $or: [
@@ -234,7 +234,7 @@ async function combinedSearch(baseFilter, textParts, numericParts, params) {
             ]
         });
     }
-    
+
     if (textParts.length > 0) {
         regexConditions.push({
             $or: [
@@ -245,12 +245,12 @@ async function combinedSearch(baseFilter, textParts, numericParts, params) {
             ]
         });
     }
-    
+
     const finalFilter = {
         ...baseFilter,
         $and: regexConditions
     };
-    
+
     return await executeProductQuery(finalFilter, params.limit, params.lastId, false);
 }
 
@@ -258,31 +258,31 @@ function analyzeSearchTerm(term) { // Función para analizar el término de bús
     const parts = term.split(/\s+/);
     const textParts = [];
     const numericParts = [];
-    
+
     parts.forEach(part => {
         // Verificamos si la parte es numérica (aunque codpro sea String)
         /^\d+$/.test(part) ? numericParts.push(part) : textParts.push(part);
     });
-    
+
     return { textParts, numericParts };
 }
 
 async function executeProductQuery(filter, limit, lastId, isTextSearch) {
     let query = Product.find(filter);
-    
+
     if (isTextSearch) {
         query = query.sort({ score: { $meta: "textScore" }, _id: 1 })
-                    .select({ score: { $meta: "textScore" } });
+            .select({ score: { $meta: "textScore" } });
     } else {
         query = query.sort({ _id: 1 });
     }
-    
+
     query = query.limit(parseInt(limit) + 1);
-    
+
     if (lastId) {
         query = query.where('_id').gt(lastId);
     }
-    
+
     return await query.exec();
 }
 
@@ -299,9 +299,9 @@ export const getAllProducts = async (req, res) => {
 
     try {
         const products = await Product.find({ desc_rubro: rubro })
-        res.status(200).json({message: "Success getting all products from db", productsQuantity: products.length});
+        res.status(200).json({ message: "Success getting all products from db", productsQuantity: products.length });
     } catch (err) {
-        res.status(400).json({message: "Error getting all products from db", err});
+        res.status(400).json({ message: "Error getting all products from db", err });
     }
 }
 
@@ -455,7 +455,7 @@ export const uploadExcelProducts = async (req, res) => {
 
         // 3. Configuración
         const REQUIRED_FIELDS = [
-            'codpro', 'desc_stock', 'rubro', 
+            'codpro', 'desc_stock', 'rubro',
             'subrub', 'proveed', 'desc_subrub',
             'desc_marca', 'porcen1', 'precioimpre'
         ];
@@ -463,8 +463,8 @@ export const uploadExcelProducts = async (req, res) => {
         // 4. Obtener todos los códigos existentes en una sola consulta
         console.time(timers.consulta);
         const allCodpros = excelItems.map(item => item.codpro?.toString().trim()).filter(Boolean);
-        const existingProducts = await Product.find({ 
-            codpro: { $in: allCodpros } 
+        const existingProducts = await Product.find({
+            codpro: { $in: allCodpros }
         }).lean();
         const existingProductsMap = new Map(existingProducts.map(p => [p.codpro, p]));
         console.timeEnd(timers.consulta);
@@ -478,7 +478,7 @@ export const uploadExcelProducts = async (req, res) => {
         for (let i = 0; i < excelItems.length; i++) {
             const item = excelItems[i];
             const rowNumber = i + 2;
-            
+
             // Validación de codpro
             const codpro = item.codpro?.toString().trim();
             if (!codpro) {
@@ -513,7 +513,7 @@ export const uploadExcelProducts = async (req, res) => {
             });
 
             if (!isComplete) {
-                const missingFields = REQUIRED_FIELDS.filter(f => 
+                const missingFields = REQUIRED_FIELDS.filter(f =>
                     !mappedItem[f] && mappedItem[f] !== 0
                 );
                 invalidProducts.push(`Fila ${rowNumber}: Faltan campos (${missingFields.join(', ')})`);
@@ -534,7 +534,7 @@ export const uploadExcelProducts = async (req, res) => {
 
         for (let i = 0; i < productsToUpsert.length; i += BATCH_SIZE) {
             const batch = productsToUpsert.slice(i, i + BATCH_SIZE);
-            
+
             const bulkOps = batch.map(item => ({
                 updateOne: {
                     filter: { codpro: item.codpro },
@@ -574,7 +574,7 @@ export const uploadExcelProducts = async (req, res) => {
 
     } catch (err) {
         console.error("Error en upload-excel:", err);
-        res.status(500).json({ 
+        res.status(500).json({
             message: "Error en carga",
             ...(process.env.NODE_ENV === 'development' && {
                 error: err.message,
@@ -591,7 +591,7 @@ export const highlightProduct = async (req, res) => {
 
     try {
         const product = await Product.findOne({ codpro: id });
-        if (!product) return res.status(404).json({ success: false, message: `Producto con código ${id} no encontrado`});
+        if (!product) return res.status(404).json({ success: false, message: `Producto con código ${id} no encontrado` });
 
         // Si ya está destacado y no ha expirado
         if (product.destacado && product.fechaFinDestacado > new Date()) {
@@ -616,14 +616,14 @@ export const highlightProduct = async (req, res) => {
         // Crear job en Agenda
         const job = await agenda.schedule(
             fechaFin,
-            'unhighlight-product', 
+            'unhighlight-product',
             { productId: id }
         );
 
         // Actualizar producto
         const productUpdated = await Product.findOneAndUpdate(
             { codpro: id },
-            { 
+            {
                 destacado: true,
                 fechaDestacado: ahora,
                 fechaFinDestacado: fechaFin,
@@ -640,7 +640,7 @@ export const highlightProduct = async (req, res) => {
             );
         }, days * 24 * 60 * 60 * 1000); */
 
-        res.status(200).json({ 
+        res.status(200).json({
             success: true,
             message: `Producto destacado hasta ${fechaFin.toLocaleDateString()}`,
             product: productUpdated
@@ -671,14 +671,14 @@ export const unhighlightProduct = async (req, res) => {
         // Actualizar producto
         const productUpdated = await Product.findOneAndUpdate(
             { codpro: id },
-            { 
+            {
                 $set: { destacado: false },
                 $unset: { fechaFinDestacado: 1, highlightJobId: 1 }
             },
             { new: true }
         );
 
-        res.status(200).json({ 
+        res.status(200).json({
             success: true,
             message: `Producto dejó de estar destacado manualmente`,
             product: productUpdated
@@ -697,7 +697,7 @@ export const postProducts = async (req, res) => {
     try {
         const dataToPost = await postProductsInDB("./utils/json/inyeccion-sondas.json");
         const result = await Product.insertMany(dataToPost);
-        
+
         console.log("Productos insertados correctamente");
         res.status(201).json({  // 201 Created es más apropiado para POST
             message: "Success posting products in MongoDB",
@@ -716,30 +716,24 @@ export const postProducts = async (req, res) => {
 export const addFieldToProducts = async (req, res) => {
     try {
         const { field, value } = req.body
-        if (!field || !value) throw new Error("Campos 'field' y 'newField' son requeridos en el cuerpo de la solicitud.");
+        if (!field) throw new Error("Campos 'field' y 'newField' son requeridos en el cuerpo de la solicitud.");
 
         const update = {};
         update[field] = value;
-        
-        //agrega el campo solo a los prods que cumplan con la condicion
-        /* const updatedProducts = await Producto.updateMany(
-            { rubro: { $gte: 361, $lte: 361 } }, 
-            { $set: update }
-        );  */
 
         //agrega el campo a todos los prods de la collection
         const updatedProducts = await Product.updateMany(
             {},  // Selecciona TODOS los productos
             { $set: update }  // Añade/modifica el campo
-          );
-       
+        );
+
         if (updatedProducts.acknowledged && updatedProducts.modifiedCount > 0) {
-            res.status(200).json({message: "Success adding field to all products in DB", updatedProducts});
+            res.status(200).json({ message: "Success adding field to all products in DB", updatedProducts });
         } else {
-            res.status(200).json({message: "No products were updated", updatedProducts});
+            res.status(200).json({ message: "No products were updated", updatedProducts });
         }
     } catch (err) {
-        res.status(400).json({message: "Error adding field to products in DB", err});
+        res.status(400).json({ message: "Error adding field to products in DB", err });
     }
 }
 
@@ -747,7 +741,7 @@ export const changeProductFieldVal = async (req, res) => {
     try {
         const { prodId } = req.params
         const { field, value } = req.body
-        if(!field || !value) throw new Error("Field does not exists")  
+        if (!field || !value) throw new Error("Field does not exists")
 
         const prodFound = await Product.findById(prodId);      //busca si existe el producto en la db
         if (!prodFound) return res.status(404).json({ message: "Product not found in db" });
@@ -765,52 +759,52 @@ export const changeProductFieldVal = async (req, res) => {
 
         if (!updatedProduct) return res.status(500).json({ message: "Error renaming field in DB" });
 
-        res.status(200).json({message: "Success changing product field", updatedProduct});
+        res.status(200).json({ message: "Success changing product field", updatedProduct });
     } catch (err) {
-        res.status(400).json({message: "Error changing field to product in DB", err});
+        res.status(400).json({ message: "Error changing field to product in DB", err });
     }
 }
 
 export const changeFieldValueToProducts = async (req, res) => {
     try {
         const { field, value } = req.body
-        if(!field || !value) throw new Error("Field does not exists")  
+        if (!field || !value) throw new Error("Field does not exists")
 
         const missingFieldCount = await Product.countDocuments({ [field]: { $exists: false } });
         if (missingFieldCount > 0) throw new Error(`The field "${field}" is missing in ${missingFieldCount} documents`);
-        
+
         const updateObject = { [field]: value };
 
         const updatedProducts = await Product.updateMany({}, { $set: updateObject });
 
-        res.status(200).json({message: "Success changing field name and its value", updatedProducts});
+        res.status(200).json({ message: "Success changing field name and its value", updatedProducts });
     } catch (err) {
-        res.status(400).json({message: "Error changing field name and its value", err});
+        res.status(400).json({ message: "Error changing field name and its value", err });
     }
 }
 
 export const changeFieldToProducts = async (req, res) => {
     try {
         const { field, newField } = req.body
-        if(!field) throw new Error("Field does not exists")
+        if (!field) throw new Error("Field does not exists")
 
         const renameObject = {};
         renameObject[field] = newField;
 
         const updatedProducts = await Product.updateMany({}, { $rename: renameObject });
 
-        res.status(200).json({message: "Success changing field to products in DB", updatedProducts});
+        res.status(200).json({ message: "Success changing field to products in DB", updatedProducts });
     } catch (err) {
-        res.status(400).json({message: "Error changing field to products in DB", err});
+        res.status(400).json({ message: "Error changing field to products in DB", err });
     }
 }
 
 export const deleteMongoDBCollection = async (req, res) => {
     try {
         await Product.deleteMany({})
-        res.status(200).json({message: "Success deleting mongo DB collection"});
+        res.status(200).json({ message: "Success deleting mongo DB collection" });
     } catch (err) {
-        res.status(400).json({message: "Error deleting mongo DB collection", err});
+        res.status(400).json({ message: "Error deleting mongo DB collection", err });
     }
 }
 
@@ -828,24 +822,130 @@ export const updateStock = async (req, res) => {
             { new: true } // Esto devuelve el documento actualizado
         );
 
-        res.status(200).json({message: "Success updating stock from product", updatedProduct });
+        res.status(200).json({ message: "Success updating stock from product", updatedProduct });
     } catch (err) {
-        res.status(400).json({message: "Error deleting mongo DB collection", err});
+        res.status(400).json({ message: "Error deleting mongo DB collection", err });
+    }
+}
+
+export const deleteProdsWithSubrub = async (req, res) => {
+    const { subrub } = req.body;
+
+    try {
+        if (!subrub) {
+            throw new Error("Subrub parameter is required");
+        }
+
+        const result = await Product.deleteMany({ desc_subrub: subrub });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({
+                message: `No products found with subrub: ${subrub}`
+            });
+        }
+
+        res.status(200).json({
+            message: `Successfully deleted ${result.deletedCount} products with subrub: ${subrub}`
+        });
+
+    } catch (err) {
+        res.status(400).json({
+            message: `Error deleting products with subrub: ${subrub}`,
+            error: err.message
+        });
     }
 }
 
 export const deleteFieldFromProducts = async (req, res) => {
     try {
         const { field } = req.body
-        if(!field) throw new Error("Field does not exists")
+        if (!field) throw new Error("Field does not exists")
 
         const update = {};
-        update[field] = ""; 
+        update[field] = "";
 
         const updatedProducts = await Product.updateMany({}, { $unset: update })
 
-        res.status(200).json({message: "Success deleting field from products", updatedProducts});
+        res.status(200).json({ message: "Success deleting field from products", updatedProducts });
     } catch (err) {
-        res.status(400).json({message: "Error deleting field from products", err});
+        res.status(400).json({ message: "Error deleting field from products", err });
+    }
+}
+
+
+
+//funcion para agregar la imagen de tornillos a todos los productos tornillos (bulones)
+export const addImageToTornillos = async (req, res) => {
+    try {
+        const result = await Product.updateMany(
+            { rubro: { $gte: 101, $lte: 103 } }, // filtro por rango
+            { $set: { imageUrl: "https://res.cloudinary.com/dq7dwhqhh/image/upload/f_auto,q_auto/v1755061135/bulones_by0zgv.png" } } // nuevo valor
+        );
+
+        res.status(200).json({
+            message: "Imagen agregada a los productos con rubro entre 101 y 103",
+            matchedCount: result.matchedCount,
+            modifiedCount: result.modifiedCount
+        });
+
+    } catch (err) {
+        res.status(400).json({ message: "Error trying to add image", error: err.message });
+    }
+};
+
+export const changeImageurlProd = async (req, res) => {
+    try {
+        const { prodId } = req.params; // ID del producto desde la URL
+        const { url } = req.body
+
+        if (!prodId || !url) return res.status(400).json({ message: "Some paremeters may be empty" });
+
+        const updatedProduct = await Product.findByIdAndUpdate(
+            prodId, // filtro por _id
+            { $set: { imageUrl: url } }, // cambio de valor
+            { new: true } // devuelve el documento actualizado
+        );
+
+        if (!updatedProduct) {
+            return res.status(404).json({ message: "Producto no encontrado" });
+        }
+
+        res.status(200).json({
+            message: "Imagen actualizada correctamente",
+            product: updatedProduct
+        });
+
+    } catch (err) {
+        res.status(400).json({ message: "Error to change image field", error: err.message });
+    }
+};
+
+export const addImageUrlToSubrub = async (req, res) => {
+    const { subrub, url } = req.body; // También necesitas recibir la URL
+
+    try {
+        if (!subrub || !url) return res.status(400).json({ message: "Some paremeters may be empty" });
+
+        // Actualizar múltiples productos que coincidan con el subrubro
+        const result = await Product.updateMany(
+            { desc_subrub: subrub }, // Criterio de búsqueda
+            { $set: { imageUrl: url } } // Campo a actualizar
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ 
+                message: `No products found with subrub: ${subrub}` 
+            });
+        }
+
+        res.status(200).json({
+            message: `Successfully added image URL to ${result.modifiedCount} products with subrub: ${subrub}`,
+            details: result
+        });
+    } catch (err) {
+        res.status(500).json({ 
+            message: `Error adding image url to subrub: ${subrub}`, 
+            error: err.message 
+        });
     }
 }
