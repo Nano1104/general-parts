@@ -10,7 +10,7 @@ export const Category = ({
   isActive,
   onClick,
   categoryData
-}) => {    
+}) => {
   const [activeMotorSubCategory, setActiveMotorSubCategory] = useState(null);
   const MOTOR_GROUPS = {
     engranaje: [149, 147, 146, 151, 140, 139, 141, 142, 143, 144, 145, 150, 148],
@@ -31,16 +31,16 @@ export const Category = ({
   return (
     <div className="text-xs 2xl:text-sm font-montserrat">
       <div className="flex items-center gap-1 relative">
-        <div className="flex w-32 justify-between items-center">  
+        <div className="flex w-32 justify-between items-center">
           <Link
             id={`category-${category}-link`}
-            className={`category-link gap-1 text-black mb-1 uppercase`}
+            className={`category-link gap-1 text-white mb-1 uppercase`}
             to={`/productos/${category}`}
             onClick={(e) => e.stopPropagation()}
           >
             {category}
           </Link>
-          {!isActive 
+          {!isActive
             ? <IoIosArrowUp onClick={handleCategoryClick} className="text-base mb-1 cursor-pointer" />
             : <IoIosArrowForward onClick={handleCategoryClick} className="text-base mb-1 cursor-pointer" />
           }
@@ -49,23 +49,22 @@ export const Category = ({
         {/* SUBRUBROS */}
         {isActive && (
           category === "MOTOR" ? (
-            <div 
+            <div
               className="absolute z-20 top-0 left-full py-3 bg-gray border w-40 flex flex-col gap-2"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Grupo ENGRANAJE */}
               <div className="flex items-center justify-between px-4">
-                <Link 
-                  to={`/productos/${category}/engranaje`} 
-                  className="text-cBlack transition ease-in duration-300 uppercase"
+                <Link
+                  to={`/productos/${category}/engranaje`}
+                  className="text-white transition ease-in duration-300 uppercase"
                 >
                   ENGRANAJE
                 </Link>
-                <IoIosArrowForward 
+                <IoIosArrowForward
                   onClick={(e) => handleMotorSubCategoryClick("engranaje", e)}
-                  className={`text-base cursor-pointer ${
-                    activeMotorSubCategory === "engranaje" ? 'rotate-90' : ''
-                  }`}
+                  className={`text-base cursor-pointer ${activeMotorSubCategory === "engranaje" ? 'rotate-90' : ''
+                    }`}
                 />
               </div>
 
@@ -77,7 +76,7 @@ export const Category = ({
                       <Link
                         key={`engranaje-${sub[1]}-${index}`}
                         to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub[0])}`}
-                        className="text-cBlack block px-4 py-1 hover:font-bold transition ease-in"
+                        className="text-white block px-4 py-1 hover:font-bold transition ease-in"
                       >
                         {sub[0]}
                       </Link>
@@ -88,17 +87,16 @@ export const Category = ({
 
               {/* Grupo BULONES/TORNILLOS */}
               <div className="flex items-center justify-between px-4">
-                <Link 
-                  to={`/productos/${category}/bulones`} 
-                  className="text-cBlack transition ease-in duration-300 uppercase"
+                <Link
+                  to={`/productos/${category}/bulones`}
+                  className="text-white transition ease-in duration-300 uppercase"
                 >
                   BULONES
                 </Link>
-                <IoIosArrowForward 
+                <IoIosArrowForward
                   onClick={(e) => handleMotorSubCategoryClick("bulones", e)}
-                  className={`text-base cursor-pointer ${
-                    activeMotorSubCategory === "bulones" ? 'rotate-90' : ''
-                  }`}
+                  className={`text-base cursor-pointer ${activeMotorSubCategory === "bulones" ? 'rotate-90' : ''
+                    }`}
                 />
               </div>
 
@@ -110,7 +108,7 @@ export const Category = ({
                       <Link
                         key={`bulones-${sub[1]}-${index}`}
                         to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub[0])}`}
-                        className="text-cBlack block px-4 py-1 hover:font-bold transition ease-in"
+                        className="text-white block px-4 py-1 hover:font-bold transition ease-in"
                       >
                         {sub[0]}
                       </Link>
@@ -121,7 +119,7 @@ export const Category = ({
             </div>
           ) : (
             // Renderizado normal para otros rubros
-            <div 
+            <div
               className="absolute z-20 top-0 left-full bg-gray py-4 border w-72 flex flex-col gap-3 justify-center"
               onClick={(e) => e.stopPropagation()}
             >
@@ -129,7 +127,7 @@ export const Category = ({
                 <Link
                   key={`${sub[1]}-${index}`}
                   to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub[0])}`}
-                  className="text-cBlack block px-4 hover:font-bold transition ease-in"
+                  className="text-white block px-4 hover:font-bold transition ease-in"
                 >
                   {sub[0]}
                 </Link>
@@ -138,7 +136,7 @@ export const Category = ({
           )
         )}
       </div>
-      {isActive && <hr/>}
+      {isActive && <hr />}
     </div>
   );
 };

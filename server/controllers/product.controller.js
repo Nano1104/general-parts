@@ -872,6 +872,25 @@ export const deleteFieldFromProducts = async (req, res) => {
     }
 }
 
+export const deleteProdsByRubro = async (req, res) => {
+  try {
+    const { rubro } = req.params;
+    if (!rubro) throw new Error("Field rubro is required");
+
+    const result = await Product.deleteMany({ desc_rubro: rubro });
+    
+    res.status(200).json({ 
+      message: `Deleted ${result.deletedCount} products with rubro ${rubro}`, 
+      deletedCount: result.deletedCount 
+    });
+  } catch (err) {
+    res.status(400).json({ 
+      message: `Error deleting products`, 
+      error: err.message 
+    });
+  }
+};
+
 
 
 //funcion para agregar la imagen de tornillos a todos los productos tornillos (bulones)
@@ -879,7 +898,7 @@ export const addImageToTornillos = async (req, res) => {
     try {
         const result = await Product.updateMany(
             { rubro: { $gte: 101, $lte: 103 } }, // filtro por rango
-            { $set: { imageUrl: "https://res.cloudinary.com/dq7dwhqhh/image/upload/f_auto,q_auto/v1755061135/bulones_by0zgv.png" } } // nuevo valor
+            { $set: { imageUrl: "https://res.cloudinary.com/dq7dwhqhh/image/upload/f_auto,q_auto,c_scale/v1755061135/bulones_by0zgv.png" } } // nuevo valor
         );
 
         res.status(200).json({

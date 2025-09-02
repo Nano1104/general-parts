@@ -61,8 +61,8 @@ export const CUITInput = ({ register, errors, name = "cuit" }) => {
                 type="text"
                 autoComplete="off"
                 /* onChange={handleChange} */
-                className="p-2 bg-transparent w-full outline-0 text-white
-                        border-[1px] border-white rounded-xl
+                className="p-2 bg-transparent w-full outline-0 text-cBlack
+                        border-[1px] border-cBlack rounded-xl
                         focus:border-dotted"
                 placeholder="Ingrese su CUIT"
                 {...register(name, {
@@ -76,7 +76,7 @@ export const CUITInput = ({ register, errors, name = "cuit" }) => {
 
             {/* Mensajes de estado */}
             {errors?.[name]?.message && (
-                <span className="text-orange font-custom font-medium text-xs mt-2 lg:ml-12">
+                <span className="text-red font-custom font-medium text-xs mt-2 lg:ml-12">
                     {errors[name].message}
                 </span>
             )}

@@ -85,6 +85,9 @@
   --gray: #BDC3C7;
   --lightGray: #D8D9DA;
   --white: #ECF0F1;
+
+  --deepBlue: #1C1C1C;
+  --coral: #FF6F61;
 }
 
 ::-webkit-scrollbar {
@@ -111,7 +114,7 @@
 }
 
 body {
-  background-color: var(--cBlack);
+  background-color: var(--white);
   overflow: auto;
 }
 

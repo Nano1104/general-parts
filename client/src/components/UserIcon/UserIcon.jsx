@@ -34,7 +34,7 @@ export const UserIcon = () => {
                     {/* Botón de cerrar sesión */}
                     <button onClick={handleLogout}
                             className="text-xs font-medium py-1 w-full absolute bottom-0 left-0 rounded-bl-2xl rounded-br-2xl
-                                hover:bg-amber-600 hover:border-transparent transition duration-200">
+                                hover:bg-coral hover:border-transparent transition duration-200">
                         CERRAR SESIÓN
                     </button>
                 </div>

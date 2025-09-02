@@ -76,9 +76,9 @@ export const AuthPage = () => {
                     onSubmit={onSubmit}
                     className="flex flex-col items-center mt-10 gap-4
                     lg:absolute lg:top-1/2 lg:left-1/2 lg:transform lg:-translate-x-1/2 lg:-translate-y-1/2 
-                    bg-cBlack lg:w-[45%] lg:rounded-2xl lg:p-10 w-full"
+                    bg-gray lg:w-[45%] lg:rounded-2xl lg:p-10 w-full"
                 >
-                    <h3 className="text-white text-center text-[2.5em] mt-6 font-roboto">
+                    <h3 className="text-cBlack text-center text-[2.5em] mt-6 font-roboto">
                         {login ? "INCIAR SESIÓN" : "REGISTRATE"}
                     </h3>
 
@@ -90,15 +90,15 @@ export const AuthPage = () => {
                                         type="email"
                                         autoComplete="off"
                                         onFocus={() => setLoginError(" ")}
-                                        className="p-2 bg-transparent w-[65%] sm:w-[50%] md:w-[45%] outline-0 text-white
-                                                border-[1px] border-white rounded-xl focus:border-dotted lg:ml-12"
+                                        className="p-2 bg-transparent w-[65%] sm:w-[50%] md:w-[45%] outline-0 text-cBlack
+                                                border-[1px] border-cBlack rounded-xl focus:border-dotted lg:ml-12"
                                         placeholder="Ingrese su email"
                                         {...register("emailLogin", {
                                             required: "Campo incompleto"
                                         })}
                                     />
-                                    {errors.emailLogin?.type && <span className="text-orange font-custom font-medium text-xs mt-2 lg:ml-12">{errors.emailLogin.message}</span>}
-                                    {loginError === "User does not exist" ? <span className="text-orange font-custom font-medium text-xs mt-2 lg:ml-12 xl:absolute xl:left-[47%] xl:bottom-[4px]">No existe usuario con este mail</span> : <></>}
+                                    {errors.emailLogin?.type && <span className="text-red font-custom font-medium text-xs mt-2 lg:ml-12">{errors.emailLogin.message}</span>}
+                                    {loginError === "User does not exist" ? <span className="text-red font-custom font-medium text-xs mt-2 lg:ml-12 xl:absolute xl:left-[47%] xl:bottom-[4px]">No existe usuario con este mail</span> : <></>}
                                 </div>
 
                                 <div className="w-full flex flex-col items-center relative">
@@ -106,16 +106,16 @@ export const AuthPage = () => {
                                         type="password"
                                         autoComplete="off"
                                         onFocus={() => setLoginError("")}
-                                        className="p-2 bg-transparent w-[65%] sm:w-[50%] md:w-[45%] outline-0 text-white
-                                                border-[1px] border-white rounded-xl
+                                        className="p-2 bg-transparent w-[65%] sm:w-[50%] md:w-[45%] outline-0 text-cBlack
+                                                border-[1px] border-cBlack rounded-xl
                                                 focus:border-dotted lg:ml-12"
                                         placeholder="Ingrese su contraseña"
                                         {...register("passwordLogin", {
                                             required: "Campo incompleto"
                                         })}
                                     />
-                                    {errors.passwordLogin?.type && <span className="text-orange font-custom font-medium text-xs mt-2 lg:ml-12">{errors.passwordLogin.message}</span>}
-                                    {loginError === "password incorrect" ? <span className="text-orange font-custom font-medium text-xs mt-2 lg:ml-12">Contraseña Incorrecta</span> : <></>}
+                                    {errors.passwordLogin?.type && <span className="text-red font-custom font-medium text-xs mt-2 lg:ml-12">{errors.passwordLogin.message}</span>}
+                                    {loginError === "password incorrect" ? <span className="text-red font-custom font-medium text-xs mt-2 lg:ml-12">Contraseña Incorrecta</span> : <></>}
                                 </div>
                             </>
                         )
@@ -128,8 +128,8 @@ export const AuthPage = () => {
                                                 type="text"
                                                 autoComplete="off"
                                                 onFocus={() => setLoginError("")}
-                                                className="p-2 bg-transparent w-full outline-0 text-white
-                                                    border-[1px] border-white rounded-xl
+                                                className="p-2 bg-transparent w-full outline-0 textblack
+                                                    border-[1px] border-black rounded-xl
                                                     focus:border-dotted"
                                                 placeholder="Ingrese su nombre"
                                                 {...register("nombre", {
@@ -140,7 +140,7 @@ export const AuthPage = () => {
                                                     }
                                                 })}
                                             />
-                                            {errors.nombre?.type && <span className="text-orange font-custom font-medium text-xs mt-2">{errors.nombre.message}</span>}
+                                            {errors.nombre?.type && <span className="text-red font-custom font-medium text-xs mt-2">{errors.nombre.message}</span>}
                                         </div>
 
                                         <div className="flex-1 flex flex-col items-center relative mt-4 lg:mt-0">
@@ -148,8 +148,8 @@ export const AuthPage = () => {
                                                 type="text"
                                                 autoComplete="off"
                                                 onFocus={() => setLoginError("")}
-                                                className="p-2 bg-transparent w-full outline-0 text-white
-                                                        border-[1px] border-white rounded-xl
+                                                className="p-2 bg-transparent w-full outline-0 text-cBlack
+                                                        border-[1px] border-cBlack rounded-xl
                                                         focus:border-dotted"
                                                 placeholder="Ingrese su apellido"
                                                 {...register("apellido", {
@@ -160,7 +160,7 @@ export const AuthPage = () => {
                                                     }
                                                 })}
                                             />
-                                            {errors.apellido?.type && <span className="text-orange font-custom font-medium text-xs mt-2">{errors.apellido.message}</span>}
+                                            {errors.apellido?.type && <span className="text-red font-custom font-medium text-xs mt-2">{errors.apellido.message}</span>}
                                         </div>
                                     </div>
 
@@ -171,8 +171,8 @@ export const AuthPage = () => {
                                                 type="email"
                                                 autoComplete="off"
                                                 onFocus={() => setLoginError("")}
-                                                className="p-2 bg-transparent w-full outline-0 text-white
-                                                    border-[1px] border-white rounded-xl
+                                                className="p-2 bg-transparent w-full outline-0 text-cBlack
+                                                    border-[1px] border-cBlack rounded-xl
                                                     focus:border-dotted"
                                                 placeholder="Ingrese su email"
                                                 {...register("email", {
@@ -183,7 +183,7 @@ export const AuthPage = () => {
                                                     }
                                                 })}
                                             />
-                                            {errors.email?.type && <span className="text-orange font-custom font-medium text-xs mt-2">{errors.email.message}</span>}
+                                            {errors.email?.type && <span className="text-red font-custom font-medium text-xs mt-2">{errors.email.message}</span>}
                                         </div>
 
                                         <div className="flex-1 flex flex-col items-center relative">
@@ -191,8 +191,8 @@ export const AuthPage = () => {
                                                 type="text"
                                                 autoComplete="off"
                                                 onFocus={() => setLoginError("")}
-                                                className="p-2 bg-transparent w-full outline-0 text-white
-                                                    border-[1px] border-white rounded-xl
+                                                className="p-2 bg-transparent w-full outline-0 text-cBlack
+                                                    border-[1px] border-cBlack rounded-xl
                                                     focus:border-dotted"
                                                 placeholder="Ingrese su número de celular"
                                                 {...register("phone", {
@@ -202,7 +202,7 @@ export const AuthPage = () => {
                                                     }
                                                 })}
                                             />
-                                            {errors.phone?.type && <span className="text-orange font-custom font-medium text-xs mt-2">{errors.phone.message}</span>}
+                                            {errors.phone?.type && <span className="text-red font-custom font-medium text-xs mt-2">{errors.phone.message}</span>}
                                         </div>
                                     </div>
 
@@ -213,15 +213,15 @@ export const AuthPage = () => {
                                                 type="text"
                                                 autoComplete="off"
                                                 onFocus={() => setLoginError("")}
-                                                className="p-2 bg-transparent w-full outline-0 text-white
-                                                    border-[1px] border-white rounded-xl
+                                                className="p-2 bg-transparent w-full outline-0 text-cBlack
+                                                    border-[1px] border-cBlack rounded-xl
                                                     focus:border-dotted"
                                                 placeholder="Ingrese su dirección. Ej: Calle San Martín 567"
                                                 {...register("location", {
                                                     required: "Campo incompleto",
                                                 })}
                                             />
-                                            {errors.location?.type && <span className="text-orange font-custom font-medium text-xs mt-2">{errors.location.message}</span>}
+                                            {errors.location?.type && <span className="text-red font-custom font-medium text-xs mt-2">{errors.location.message}</span>}
                                         </div>
 
                                         <FormLocalidades
@@ -245,8 +245,8 @@ export const AuthPage = () => {
                                                 type="password"
                                                 autoComplete="off"
                                                 onFocus={() => setLoginError("")}
-                                                className="p-2 bg-transparent w-full outline-0 text-white
-                                                    border-[1px] border-white rounded-xl
+                                                className="p-2 bg-transparent w-full outline-0 text-cBlack
+                                                    border-[1px] border-cBlack rounded-xl
                                                     focus:border-dotted"
                                                 placeholder="Ingrese su contraseña"
                                                 {...register("password", {
@@ -257,7 +257,7 @@ export const AuthPage = () => {
                                                     }
                                                 })}
                                             />
-                                            {errors.password?.type && <span className="text-orange font-custom font-medium text-xs mt-2">{errors.password.message}</span>}
+                                            {errors.password?.type && <span className="text-red font-custom font-medium text-xs mt-2">{errors.password.message}</span>}
                                         </div>
                                     </div>
 
@@ -266,8 +266,8 @@ export const AuthPage = () => {
                                             type="password"
                                             autoComplete="off"
                                             onFocus={() => setLoginError("")}
-                                            className="p-2 bg-transparent w-[65%] md:w-[45%] outline-0 text-white
-                                                border-[1px] border-white rounded-xl
+                                            className="p-2 bg-transparent w-[65%] md:w-[45%] outline-0 text-cBlack
+                                                border-[1px] border-cBlack rounded-xl
                                                 focus:border-dotted lg:ml-12"
                                             placeholder="Confirmar contraseña"
                                             {...register("confirmPassword", {
@@ -277,7 +277,7 @@ export const AuthPage = () => {
                                                 }
                                             })}
                                         />
-                                        {errors.confirmPassword?.type && <span className="text-orange font-custom font-medium text-xs mt-2">{errors.confirmPassword.message}</span>}
+                                        {errors.confirmPassword?.type && <span className="text-red font-custom font-medium text-xs mt-2">{errors.confirmPassword.message}</span>}
                                     </div>
                                 </>
                             )
@@ -287,7 +287,7 @@ export const AuthPage = () => {
                     {/* BUTTON SUBMIT  */}
                     <div className="w-full flex justify-center">
                         <button type="submit"
-                            className="bg-orange w-[30%] sm:w-[20%] md:w-[15%] lg:w-[25%] 2xl:w-[20%] rounded-md py-1 text-black font-montserrat lg:ml-12">
+                            className="bg-coral w-[30%] sm:w-[20%] md:w-[15%] lg:w-[25%] 2xl:w-[20%] rounded-md py-1 text-black font-montserrat lg:ml-12">
                             {loading ? (
                                 <>Procesando...</>
                             ) : (
@@ -300,15 +300,15 @@ export const AuthPage = () => {
                     </div>
 
                     {/* //FORM FOOTER */}
-                    <div className="w-full flex flex-col justify-center items-center">
-                        <hr className="border-white mt-6 w-[75%] mx-auto" />
+                    <div className="w-full text-cBlack flex flex-col justify-center items-center">
+                        <hr className="border-cBlack mt-6 w-[75%] mx-auto" />
 
                         <div className="w-[80%] my-8 xl:my-2 flex flex-col">     {/* //FOOTER FORM  */}
                             <div className="flex flex-col xl:flex-row items-center xl:justify-between mt-4 gap-2">
-                                <span className="text-white ml-3 2xl:ml-5">
+                                <span className="ml-3 2xl:ml-5">
                                     {login ? "NO TIENES UNA CUENTA?" : "YA TIENES UNA CUENTA?"}
                                 </span>
-                                <div className="text-white mr-3 2xl:mr-5">
+                                <div className="mr-3 2xl:mr-5">
                                     <button onClick={handleAuth}>
                                         {login ? "REGISTRAR" : "LOGIN"}
                                         <FaArrowRight className="inline-block" id="icon-back" />
@@ -325,20 +325,3 @@ export const AuthPage = () => {
 
 
 
-
-
-
-/* 2xl:flex 2xl:flex-col 2xl:items-center xl:absolute xl:bottom-[10%] *//*  --> footer */
-
-
-
-
-
-
-{/* <Link to="/"
-    className="relative flex flex-col items-center lg:flex-row top-4 lg:absolute lg:top-0 lg:my-7 lg:left-[7%] font-roboto font-bold"
-    translate="no">
-    <span className="text-orange tracking-tighter italic text-[4.4em] md:text-[6.4em] lg:text-[8em] 2xl:text-[9em]">SW</span>
-    <span className="text-white tracking-tight italic absolute lg:static top-12 md:top-16 text-[4.4em] md:text-[6.4em] lg:text-[8em] 2xl:text-[9em]">Parts</span>
-</Link>
-<hr className="border-white mt-[20%] w-[75%] mx-auto lg:hidden" /> */}

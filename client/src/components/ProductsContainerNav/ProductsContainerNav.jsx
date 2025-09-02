@@ -19,11 +19,11 @@ export const ProductsContainerNav = ({ searchValue, setSearchValue }) => {
 
     return(
         <>
-            <nav className="p-2 bg-[#272829]">
+            <nav className="p-2 bg-deepGray">
                 <ul className="px-4 grid sm:grid-cols-[1fr_45%_1fr] 2xl:grid-cols-[1fr_30%_1fr]">
                     {/* LOGO */}
                     <Link to="/" translate="no" className="text-3xl italic font-roboto lg:text-4xl 2xl:text-5xl 2xl:my-2 w-0">
-                        <span className="font-extrabold text-orange tracking-tighter">SW</span>
+                        <span className="font-extrabold text-coral tracking-tighter">SW</span>
                         <span className="font-bold text-white tracking-tight">Parts</span>
                     </Link>
 

@@ -30,7 +30,7 @@ export const AdminNavBar = () => {
             <nav className="bg-deepGray basis-[15%] rounded-tl-3xl rounded-bl-3xl flex flex-col justify-between items-center">
                 <div className="mt-1">
                     <Link to="/" className="text-[2.7rem]">
-                        <span className="font-extrabold text-orange font-poppins tracking-tighter italic">SW</span>
+                        <span className="font-extrabold text-coral font-poppins tracking-tighter italic">SW</span>
                         <span className="font-bold text-white font-poppins tracking-tight italic">Parts</span>
                     </Link>
                     <ul className="font-poppins text-lg">
@@ -48,13 +48,13 @@ export const AdminNavBar = () => {
 
                 <div className="flex flex-col w-full items-center">
                     {/*  BACK TO HOME BUTTON */}
-                    <Link to={"/productos"} className="bg-orange text-black w-[50%] border text-center border-black rounded-md py-1 font-medium font-poppins mb-5">
-                        VOLVER A PRODUCTOS
+                    <Link to={"/productos"} className="bg-coral text-black w-[50%] border text-center border-black rounded-md py-1 font-medium font-poppins mb-5">
+                        Volver a productos
                     </Link>
                     {/* LOGOUT BUTTON */}
                     <button 
                         type="submit"
-                        className="bg-orange text-black w-[50%] border border-black rounded-md py-1 font-medium font-poppins mb-5" 
+                        className="bg-coral text-black w-[50%] border border-black rounded-md py-1 font-medium font-poppins mb-5" 
                         onClick={handleLogOut}>CERRAR SESIÓN
                     </button>
                 </div>
