@@ -8,8 +8,8 @@ export const FormLocalidades = ({
         <div className="w-full flex flex-col items-center relative">
             <select
                 id="localidades"
-                className="p-2 bg-transparent w-full outline-0 text-[#C0C0C0] focus:text-black
-                        border-[1px] border-white rounded-xl
+                className="p-2 bg-transparent w-full outline-0 text-cBlack focus:text-black
+                        border-[1px] border-cBlack rounded-xl
                         focus:border-dotted"
                 {...register(name, {
                     required: "Debe seleccionar una localidad"
@@ -23,10 +23,13 @@ export const FormLocalidades = ({
                 ))}
             </select>
             {errors?.[name]?.message && (
-                <span className="text-orange font-custom font-medium text-xs mt-2">
+                <span className="text-red font-custom font-medium text-xs mt-2">
                     {errors[name].message}
                 </span>
             )}
         </div>
     );
 }
+
+
+/* text-[#C0C0C0]  - color de texto que estaba antes de hacer el cambio de paleta de colores */

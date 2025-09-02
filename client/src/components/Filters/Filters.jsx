@@ -80,7 +80,7 @@ export const Filters = ({ filtered }) => {
         </div>
         //////////////////// RESOLUCION PARA DESKTOP
         :               
-        <div id="filter" className="bg-cBlack col-start-1 col-span-1 p-4 justify-self-center font-poppins text-white w-[20vw] md:w-full md:ml-6 top-0 hidden md:block">
+        <div id="filter" className="bg-cWhite col-start-1 col-span-1 p-4 justify-self-center font-poppins text-cBlack w-[20vw] md:w-full md:ml-6 top-0 hidden md:block">
             <h4 className="text-2xl sm:text-xl font-bold">Filtrar</h4><hr className="w-[60%] my-3"/>
             <label htmlFor="price-sort" className="text-xl font-bold">Marca:</label>
             <div className="h-[300px] overflow-auto font-poppins">

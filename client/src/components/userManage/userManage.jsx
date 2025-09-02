@@ -38,14 +38,14 @@ export const UserManage = () => {
             const res = await axios.delete(`${API_URL}/api/user/${e.target.prodId.value}`, { withCredentials: true })
             await handleGetUsers()
 
-            if(res.status == 200) {
+            if (res.status == 200) {
                 Swal.fire({
                     title: "Usuario Eliminado!",
                     icon: "success",
                     confirmButtonColor: "#DC5F00",
                     backdrop: true
                 });
-            } 
+            }
         } catch (err) {
             Swal.fire({
                 title: "Error",
@@ -60,7 +60,7 @@ export const UserManage = () => {
 
     const handleUpdateUser = async (e) => {
         try {
-            
+
         } catch (err) {
             console.log(err)
         }
@@ -101,7 +101,7 @@ export const UserManage = () => {
             });
 
             // Realizar la petición
-            const endpoint = action === 'accept' 
+            const endpoint = action === 'accept'
                 ? `${API_URL}/api/user/accept/${userId}`
                 : `${API_URL}/api/user/denied/${userId}`;
 
@@ -117,7 +117,7 @@ export const UserManage = () => {
 
         } catch (err) {
             console.error("Error en handleUserAction:", err);
-            
+
             if (err.response?.status === 404) {
                 // Caso específico: Usuario no encontrado
                 Swal.fire({
@@ -137,109 +137,88 @@ export const UserManage = () => {
             }
         }
     };
-        
+
     useEffect(() => { }, [users])
 
-    return(
+    return (
         <>
-        <div className="px-5 h-full flex">
-            <div className="basis-[50%]">
-                <h2 className="text-4xl font-montserrat tracking-tight font-bold mb-3">USUARIOS</h2>
-                {/* // VER USUARIOS */}
-                <div>
-                    <h3 className="font-semibold">VER USUARIOS</h3>
-                    <button className="bg-orange w-[30%] rounded-md py-1 text-sm text-white font-medium font-poppins" type="submit" onClick={handleGetUsers}>Ver lista de usuarios</button>
+            <div className="px-5 h-full flex">
+                <div className="basis-[50%]">
+                    <h2 className="text-4xl font-montserrat tracking-tight font-bold mb-3">USUARIOS</h2>
+                    {/* // VER USUARIOS */}
+                    <div>
+                        <h3 className="font-semibold">VER USUARIOS</h3>
+                        <button className="bg-coral w-[30%] rounded-md py-1 text-sm text-cBlack font-medium font-poppins" type="submit" onClick={handleGetUsers}>Ver lista de usuarios</button>
+                    </div>
+                    <hr className="my-4 w-[45%] ml-2" />
+
+                    {/* // BORRAR USUARIO DE LA BASE DE DATOS */}
+                    <div className="flex flex-col">
+                        <h3 className="font-semibold">BORRAR USUARIO DE LA BASE DE DATOS</h3>
+                        <form action="" className="flex flex-col text-sm" onSubmit={handleDeleteUser}>
+                            <input type="text" name="prodId" placeholder="Ingresar ID del usuario" className="w-[30%] rounded-md py-1 px-2 my-2" />
+                            <button className="bg-coral w-[30%] rounded-md py-1 text-sm text-cBlack font-medium font-poppins" type="submit">Borrar usuario</button>
+                        </form>
+                    </div>
+                    <hr className="my-4 w-[45%] ml-2" />
+
+                    {/* // ACCESO DEL USUARIO - accepted - denied */}
+                    <div className="flex flex-col">
+                        <h3 className="font-semibold">ACCESO DEL USUARIO</h3>
+
+                        {/* Formulario de Alta */}
+                        <form className="flex items-center gap-2 text-sm" onSubmit={(e) => handleUserAction(e, "accept")}>
+                            <input
+                                type="text"
+                                name="userId"
+                                placeholder="Ingresar ID del usuario"
+                                className="w-[35%] h-7 rounded-md py-1 px-2 my-2"
+                                required
+                            />
+                            <button
+                                className="w-[25%] h-7 bg-coral rounded-md py-1 text-sm text-cBlack font-medium font-poppins"
+                                type="submit"
+                            >
+                                Dar de ALTA al usuario
+                            </button>
+                        </form>
+
+                        {/* Formulario de Baja */}
+                        <form className="flex items-center gap-2 text-sm" onSubmit={(e) => handleUserAction(e, "denied")}>
+                            <input
+                                type="text"
+                                name="userId"
+                                placeholder="Ingresar ID del usuario"
+                                className="w-[35%] h-7 rounded-md py-1 px-2 my-2"
+                                required
+                            />
+                            <button
+                                className="w-[25%] h-7 bg-red rounded-md py-1 text-sm text-cWhite font-medium font-poppins"
+                                type="submit"
+                            >
+                                Dar de BAJA al usuario
+                            </button>
+                        </form>
+                    </div>
+                    <hr className="my-4 w-[45%] ml-2" />
                 </div>
-                <hr className="my-4 w-[45%] ml-2" />
 
-                {/* // BORRAR USUARIO DE LA BASE DE DATOS */}
-                <div className="flex flex-col">
-                    <h3 className="font-semibold">BORRAR USUARIO DE LA BASE DE DATOS</h3>
-                    <form action="" className="flex flex-col text-sm" onSubmit={handleDeleteUser}>
-                        <input type="text" name="prodId" placeholder="Ingresar ID del usuario" className="w-[30%] rounded-md py-1 px-2 my-2" />
-                        <button className="bg-orange w-[30%] rounded-md py-1 text-sm text-white font-medium font-poppins" type="submit">Borrar usuario</button>
-                    </form>
+                <div className="basis-[50%] overflow-y-auto border-l">
+                    {
+                        loading ? (
+                            <div className="flex justify-center items-center h-full">
+                                <span className="text-xl">Cargando Usuarios...</span>
+                            </div>
+                        ) : users.length > 0 ? (
+                            users.map(user => <User key={user.id} userData={user} />)
+                        ) : (
+                            <div className="flex justify-center items-center h-full">
+                                <span className="text-xl">Lista de usuarios</span>
+                            </div>
+                        )
+                    }
                 </div>
-                <hr className="my-4 w-[45%] ml-2" />
-
-                {/* // ACCESO DEL USUARIO - accepted - denied */}
-                <div className="flex flex-col">
-                    <h3 className="font-semibold">ACCESO DEL USUARIO</h3>
-                    
-                    {/* Formulario de Alta */}
-                    <form className="flex items-center gap-2 text-sm" onSubmit={(e) => handleUserAction(e, "accept")}>
-                        <input 
-                            type="text" 
-                            name="userId" 
-                            placeholder="Ingresar ID del usuario" 
-                            className="w-[35%] h-7 rounded-md py-1 px-2 my-2" 
-                            required
-                        />
-                        <button 
-                            className="w-[25%] h-7 bg-orange rounded-md py-1 text-sm text-white font-medium font-poppins" 
-                            type="submit"
-                        >
-                            Dar de ALTA al usuario
-                        </button>
-                    </form>
-
-                    {/* Formulario de Baja */}
-                    <form className="flex items-center gap-2 text-sm" onSubmit={(e) => handleUserAction(e, "denied")}>
-                        <input 
-                            type="text" 
-                            name="userId" 
-                            placeholder="Ingresar ID del usuario" 
-                            className="w-[35%] h-7 rounded-md py-1 px-2 my-2" 
-                            required
-                        />
-                        <button 
-                            className="w-[25%] h-7 bg-red rounded-md py-1 text-sm text-white font-medium font-poppins" 
-                            type="submit"
-                        >
-                            Dar de BAJA al usuario
-                        </button>
-                    </form>
-                </div>
-                <hr className="my-4 w-[45%] ml-2" />
-
-                {/* // MODIFICAR USUARIO */}
-                <div className="flex flex-col">
-                    <h3 className="font-semibold">MODIFICAR USUARIO</h3>
-                    <form action="" className="flex flex-col text-sm" onSubmit={handleUpdateUser}>
-                        <div>
-                            <label className="font-medium">Id del producto:</label><input type="text" placeholder="Ingresar ID del usuario" className="w-[30%] rounded-md py-1 px-2 my-1 ml-2" />
-                        </div>
-                        <div>
-                            <label className="font-medium">Email:</label><input type="text" placeholder="Nuevo email" className="w-[30%] rounded-md py-1 px-2 my-1 ml-2" />
-                        </div>
-                        <div>
-                            <label className="font-medium">Telofono/celular</label><input type="text" placeholder="Nuevo Telofono/celular" className="w-[30%] rounded-md py-1 px-2 my-1 ml-2" />
-                        </div>
-                        <div>
-                            <label className="font-medium">Rol</label><input type="text" placeholder="Nuevo rol" className="w-[30%] rounded-md py-1 px-2 my-1 ml-2" />
-                        </div>
-                        <button className="bg-orange w-[30%] rounded-md py-1 text-sm text-white font-medium font-poppins mt-1" type="submit">Modificar usuario</button>
-                    </form>
-                </div>
-                <hr className="my-4 w-[45%] ml-2" />
-           </div>
-
-           <div className="basis-[50%] overflow-y-auto border-l">
-                {
-                    loading ? (
-                        <div className="flex justify-center items-center h-full">
-                            <span className="text-xl">Cargando Usuarios...</span>
-                        </div>
-                    ) : users.length > 0 ? (
-                        users.map(user => <User key={user.id} userData={user} />)
-                    ) : (
-                        <div className="flex justify-center items-center h-full">
-                            <span className="text-xl">Lista de usuarios</span>
-                        </div>
-                    )
-                }
             </div>
-        </div>
         </>
     )
 }

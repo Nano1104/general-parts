@@ -11,7 +11,7 @@ const useLogout = () => {
         try {
             const result = await Swal.fire({
                                 title: 'Se ha cerrado la sesión!',
-                                confirmButtonColor: "#DC5F00",
+                                confirmButtonColor: "#ffb3a5",
                             });
     
             if (result.isConfirmed) {

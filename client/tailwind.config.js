@@ -35,9 +35,12 @@ export default {
         red: "#66212a",
         cBlack: "#272829",
         deepGray: "#61677A",
-        gray: "#BDC3C7",
+        gray: "#A6A9AD",
         lightGray: "#D8D9DA",
-        cWhite: "#ECF0F1"
+        cWhite: "#ECF0F1",
+
+        deepBlue: "#1C1C1C",
+        coral: "#ffb3a5"
       },
       backgroundImage: {
         'homeBg': "url('/bg-home.avif')",

@@ -54,14 +54,14 @@ export const InventaryList = ({ stateNews }) => {
         <nav className="bg-gray flex h-8 relative px-7 text-xs lg:text-sm"> 
             <div ref={menuRef} className="flex">
                 <span
-                    className="flex items-center italic px-4 h-full bg-black text-lightGray uppercase font-montserrat font-bold tracking-tight cursor-pointer"
+                    className="flex items-center italic px-4 h-full bg-cWhite text-black uppercase font-montserrat font-bold tracking-tight cursor-pointer"
                     onClick={handleRubrosClick}
                 >
                     RUBROS
                 </span>
                 
                 <span
-                    className="flex items-center italic ml-4 px-4 h-full bg-orange text-black uppercase font-montserrat font-bold tracking-tight cursor-pointer"
+                    className="flex items-center italic ml-4 px-4 h-full bg-coral text-black uppercase font-montserrat font-bold tracking-tight cursor-pointer"
                     onClick={handleDestacadoClick}
                 >
                     DESTACADO
@@ -71,7 +71,7 @@ export const InventaryList = ({ stateNews }) => {
                     isAdmin && (
                         <Link 
                             to="/"
-                            className="flex items-center italic ml-4 px-4 h-full bg-black text-lightGray uppercase font-montserrat font-bold tracking-tight cursor-pointer"
+                            className="flex items-center italic ml-4 px-4 h-full bg-cWhite text-black uppercase font-montserrat font-bold tracking-tight cursor-pointer"
                         >
                             VOLVER A INICIO
                         </Link>

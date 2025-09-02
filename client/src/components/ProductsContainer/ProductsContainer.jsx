@@ -190,7 +190,7 @@ export const ProductsContainer = ({ searchValue, setSearchValue }) => {         
           </div>
           
           <div>
-            <button className="mr-4 sm:mr-8 text-sm xl:text-base">
+            <button className="mr-4 sm:mr-8 text-sm xl:text-base text-cBlack">
               <span onClick={handleFilter}>{!showFilters ? "Mostrar Filtros" : "Ocultar Filtros"}</span>
               <BsFilterLeft className="inline-block"/>
             </button>
@@ -223,13 +223,13 @@ export const ProductsContainer = ({ searchValue, setSearchValue }) => {         
           {loading && <Loading />}
           
           {!hasMore && !loading && products.length > 0 && (
-            <div className="col-span-full text-center text-xl mt-8 py-4 text-gray-500 text-gray italic">
+            <div className="col-span-full text-center text-xl mt-8 py-4 text-gray-500 text-cBlack italic">
               No hay más productos por cargar
             </div>
           )}
           
           {!loading && products.length === 0 && (
-            <div className="col-span-full text-center text-xl mt-8 py-4 text-gray-500 text-gray italic">
+            <div className="col-span-full text-center text-xl mt-8 py-4 text-gray-500 text-cBlack italic">
               No se encontraron productos con los filtros seleccionados
             </div>
           )}

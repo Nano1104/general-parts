@@ -3,7 +3,7 @@ import { authenticateJWT } from "../utils/jwt.js"
 import {
     getProducts, getProductById, getAllProducts, getCategoriesAndSubcategories, getHighlightedProducts, postProducts, uploadExcelProducts, highlightProduct, unhighlightProduct, addFieldToProducts,
     changeProductFieldVal, changeFieldToProducts, changeFieldValueToProducts, deleteFieldFromProducts, updateStock, deleteProdsWithSubrub, deleteMongoDBCollection, addImageToTornillos, changeImageurlProd,
-    addImageUrlToSubrub
+    addImageUrlToSubrub, deleteProdsByRubro
 } from "../controllers/product.controller.js";
 
 import multer from "multer"
@@ -32,12 +32,12 @@ router.put("/delete-products-field", deleteFieldFromProducts)
 router.put("/update-stock/:productId", updateStock)                 //cambia el stock de un producto
 router.delete("/delete/dlt-prods-subrubs", deleteProdsWithSubrub)                          //elimina los productos con el subrubro especificado en el body
 router.delete("/delete-mongo-db", deleteMongoDBCollection)
-
+router.delete("/delete/prods/rubro/:rubro", deleteProdsByRubro)
 
 
 // Rutas estáticas primero
-/* router.put("/put/add-image-to-tornillos", addImageToTornillos) */
-router.put("/put/add-imageUrl-toSubrub", addImageUrlToSubrub)
+router.put("/put/add-image-to-tornillos", addImageToTornillos)
+/* router.put("/put/add-imageUrl-toSubrub", addImageUrlToSubrub) */
 
 // Rutas dinámicas después
 router.put("/put/change-imageUrl-prod/:prodId", changeImageurlProd)
