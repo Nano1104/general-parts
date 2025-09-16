@@ -46,9 +46,9 @@ export const AuthPage = () => {
                     email: data.email,
                     phone: data.phone,
                     password: data.password,
-                    location: data.location,
                     city: data.city,
-                    cuit: data.cuit
+                    cuit: data.cuit,
+                    ...(data.location && { location: data.location }) // se agrega solo si existe
                 });
             }
         } catch (err) {
@@ -130,7 +130,7 @@ export const AuthPage = () => {
                                                 onFocus={() => setLoginError("")}
                                                 className="p-2 bg-transparent w-full outline-0 textblack
                                                     border-[1px] border-black rounded-xl
-                                                    focus:border-dotted"
+                                                    focus:border-dotted placeholder-cBlack"
                                                 placeholder="Ingrese su nombre"
                                                 {...register("nombre", {
                                                     required: "Campo incompleto",
@@ -150,7 +150,7 @@ export const AuthPage = () => {
                                                 onFocus={() => setLoginError("")}
                                                 className="p-2 bg-transparent w-full outline-0 text-cBlack
                                                         border-[1px] border-cBlack rounded-xl
-                                                        focus:border-dotted"
+                                                        focus:border-dotted placeholder-cBlack"
                                                 placeholder="Ingrese su apellido"
                                                 {...register("apellido", {
                                                     required: "Campo incompleto",
@@ -173,7 +173,7 @@ export const AuthPage = () => {
                                                 onFocus={() => setLoginError("")}
                                                 className="p-2 bg-transparent w-full outline-0 text-cBlack
                                                     border-[1px] border-cBlack rounded-xl
-                                                    focus:border-dotted"
+                                                    focus:border-dotted placeholder-cBlack"
                                                 placeholder="Ingrese su email"
                                                 {...register("email", {
                                                     required: "Campo incompleto",
@@ -193,7 +193,7 @@ export const AuthPage = () => {
                                                 onFocus={() => setLoginError("")}
                                                 className="p-2 bg-transparent w-full outline-0 text-cBlack
                                                     border-[1px] border-cBlack rounded-xl
-                                                    focus:border-dotted"
+                                                    focus:border-dotted placeholder-cBlack"
                                                 placeholder="Ingrese su número de celular"
                                                 {...register("phone", {
                                                     required: "Campo incompleto",
@@ -215,13 +215,12 @@ export const AuthPage = () => {
                                                 onFocus={() => setLoginError("")}
                                                 className="p-2 bg-transparent w-full outline-0 text-cBlack
                                                     border-[1px] border-cBlack rounded-xl
-                                                    focus:border-dotted"
+                                                    focus:border-dotted placeholder-cBlack"
                                                 placeholder="Ingrese su dirección. Ej: Calle San Martín 567"
-                                                {...register("location", {
+                                                /* {...register("location", {
                                                     required: "Campo incompleto",
-                                                })}
+                                                })} */
                                             />
-                                            {errors.location?.type && <span className="text-red font-custom font-medium text-xs mt-2">{errors.location.message}</span>}
                                         </div>
 
                                         <FormLocalidades
@@ -247,7 +246,7 @@ export const AuthPage = () => {
                                                 onFocus={() => setLoginError("")}
                                                 className="p-2 bg-transparent w-full outline-0 text-cBlack
                                                     border-[1px] border-cBlack rounded-xl
-                                                    focus:border-dotted"
+                                                    focus:border-dotted placeholder-cBlack"
                                                 placeholder="Ingrese su contraseña"
                                                 {...register("password", {
                                                     required: "Campo incompleto",
@@ -268,7 +267,7 @@ export const AuthPage = () => {
                                             onFocus={() => setLoginError("")}
                                             className="p-2 bg-transparent w-[65%] md:w-[45%] outline-0 text-cBlack
                                                 border-[1px] border-cBlack rounded-xl
-                                                focus:border-dotted lg:ml-12"
+                                                focus:border-dotted lg:ml-12 placeholder-cBlack"
                                             placeholder="Confirmar contraseña"
                                             {...register("confirmPassword", {
                                                 required: "Campo incompleto",

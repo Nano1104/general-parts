@@ -63,7 +63,7 @@ export const CUITInput = ({ register, errors, name = "cuit" }) => {
                 /* onChange={handleChange} */
                 className="p-2 bg-transparent w-full outline-0 text-cBlack
                         border-[1px] border-cBlack rounded-xl
-                        focus:border-dotted"
+                        focus:border-dotted placeholder-cBlack"
                 placeholder="Ingrese su CUIT"
                 {...register(name, {
                     required: "El CUIT es obligatorio",

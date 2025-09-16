@@ -26,7 +26,7 @@ export const getAuthUser = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        if(!email || !password) return res.status(400).json({ message: "Some fields may be empty" });
+        if (!email || !password) return res.status(400).json({ message: "Some fields may be empty" });
 
         const user = await User.findOne({ email: email }).populate({
             path: 'cart',
@@ -35,10 +35,10 @@ export const login = async (req, res) => {
                 model: 'Product'    // Asegúrate de que este es el nombre correcto de tu modelo de producto
             }
         }).exec();
-        
-        if(!user) return res.status(404).json({ message: "User does not exist" })   //si no se encuentra el user
 
-        if(!isValidPassword(password, user)) return res.status(401).json({message: "password incorrect"})        //o si la contraseña es incorrecta 
+        if (!user) return res.status(404).json({ message: "User does not exist" })   //si no se encuentra el user
+
+        if (!isValidPassword(password, user)) return res.status(401).json({ message: "password incorrect" })        //o si la contraseña es incorrecta 
 
         generateTokenAndSetCookie(user._id, res)
 
@@ -50,9 +50,13 @@ export const login = async (req, res) => {
 
 export const register = async (req, res) => {
     try {
-        const { first_name, email, phone, password, role, location, city, cuit } = req.body
-        
-        if(!first_name || !email || !phone || !password || !location || !city || !cuit) throw new Error("some fields may be empty");
+        const { first_name, email, phone, password, role, city, cuit } = req.body
+
+        if (!first_name || !email || !phone || !password || !city || !cuit) {
+            return res.status(400).json({
+                message: "Faltan campos requeridos en el registro"
+            });
+        }
 
         const userToCreate = {
             ...req.body,
@@ -60,10 +64,10 @@ export const register = async (req, res) => {
             role: role || "user"
         }
 
-        if(email == "swrepuestos@yahoo.com.ar" || email == "ajp_81@hotmail.com") userToCreate.role = "admin" 
+        if (email == "swrepuestos@yahoo.com.ar") userToCreate.role = "admin"
 
         const userFound = await User.findOne({ email: email });
-        if(userFound) return res.status(404).json({message: "user already exists"})
+        if (userFound) return res.status(404).json({ message: "user already exists" })
 
         const user = await User.create({ ...userToCreate })     //user create 
         const cart = await Cart.create({ userId: user._id })    //cart create

@@ -18,222 +18,227 @@ import "../../pages/ProductosPage/productospage.css"
 import { API_URL } from "../../utils/api_url.js";
 
 
-export const ProductsContainer = ({ searchValue, setSearchValue }) => {                 //valor de la barra de busqueda
-    const { category, subcategory, categories } = useParams();
-    const encodedSubcategory = encodeURIComponent(subcategory);
 
-    const [prodsToRender, setProdsToRender] = useState([]);             //productos que renderiza la pagina
-    /* const [loading, setLoading] = useState(false);                          
-    const [hasMore, setHasMore] = useState(true);                       // <-- Controlador de fin de datos (productos) */
-    const productsPerPage = 10
+export const ProductsContainer = ({ searchValue, setSearchValue }) => {
+  const { category, subcategory, categories } = useParams();
+  const encodedSubcategory = encodeURIComponent(subcategory);
 
-    const [brand, setBrand] = useState(null);               //marcas del menu para filtrar
-    const [price, setPrice] = useState([]);                             //precios del menu para filtrar
-    const [showFilters, setShowFilter] = useState(false);               //ocultar o mostrar los filtros de busqueda
+  const productsPerPage = 10;
 
-    const handleFilter = () => setShowFilter(showFilters => !showFilters);
+  const [brand, setBrand] = useState(null);
+  const [price, setPrice] = useState([]);
+  const [showFilters, setShowFilter] = useState(false);
 
-    const observerTarget = useRef(null);
-    /* const loadingRef = useRef(false); */
+  // Estados para manejar productos y paginación
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [error, setError] = useState(null);
+  const [initialized, setInitialized] = useState(false);
 
-    const { products, hasMore, loading, error, searchProducts } = useProductSearch( { /* initial params */ }, { productsPerPage: 15 } );
+  // Referencias
+  const observerTarget = useRef(null);
 
-    // Efecto para resetear otros filtros cuando hay búsqueda
-    useEffect(() => {
-      if (category || subcategory || categories) {
-        setSearchValue("")
+  const handleFilter = () => setShowFilter(showFilters => !showFilters);
+
+  // Función para construir filtros actuales
+  const getCurrentFilters = () => {
+    const isPureSearch = !!searchValue;
+
+    const filters = {
+      ...(searchValue && { search: searchValue }),
+      ...(!isPureSearch && {
+        ...(category && { category }),
+        ...(subcategory && { subcategory }),
+        ...(brand && { brand }),
+        ...(price.length > 0 && { minPrice: price[0], maxPrice: price[1] })
+      })
+    };
+
+    // Limpiar valores undefined/null/empty
+    return Object.fromEntries(
+      Object.entries(filters).filter(([_, value]) =>
+        value !== undefined && value !== null && value !== ""
+      )
+    );
+  };
+
+  // Función para cargar productos
+  const loadProducts = async (filters, reset = true) => {
+    if (loading) return;
+
+    setLoading(true);
+    if (reset) {
+      setProducts([]);
+      setError(null);
+    }
+
+    try {
+      const params = {
+        ...filters,
+        limit: productsPerPage,
+        // Solo incluir lastId si NO es reset y tenemos productos
+        ...(!reset && products.length > 0 && {
+          lastId: products[products.length - 1]?._id
+        })
+      };
+
+      console.log("🔍 Loading products:", { params, reset });
+
+      const response = await axios.get(`${API_URL}/api/products`, {
+        params,
+        withCredentials: true
+      });
+
+      const newProducts = response.data.products || [];
+
+      console.log("📦 Received:", {
+        count: newProducts.length,
+        hasMore: response.data.hasMore
+      });
+
+      if (reset) {
+        setProducts(newProducts);
+      } else {
+        setProducts(prev => [...prev, ...newProducts]);
       }
-    }, [category, subcategory, categories]);
 
-    // Efecto principal de búsqueda/filtrado
-    useEffect(() => {
-        const isPureSearch = !!searchValue;
-        console.log("🚀 ~ useEffect ~ searchValue:", searchValue)
-        const baseParams = {
-            limit: productsPerPage,
-            ...(searchValue && { search: searchValue }),
-            ...(!isPureSearch && {
-                ...(category && { category }),
-                ...(subcategory && { subcategory }),
-                ...(brand && { brand }),
-                ...(price.length > 0 && { minPrice: price[0], maxPrice: price[1] }) // Asumiendo que price es un array
-            })
-        };
-        
-        searchProducts(baseParams, true);
-        
-    }, [category, subcategory, brand, price, searchValue, productsPerPage]);
-        
+      setHasMore(response.data.hasMore || false);
 
-    // Observer (mantén igual)
-    useEffect(() => {
-        if (!hasMore || loading) return;
-        
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    searchProducts({
-                        limit: productsPerPage,
-                        search: searchValue,
-                        category,
-                        brand,
-                        minPrice: price[0],
-                        maxPrice: price[1],
-                        lastId: products[products.length - 1]?._id // Añade cursor
-                    }, false);
-                }
-            },
-            { threshold: 0.1 }
-        );
-        
-        if (observerTarget.current) observer.observe(observerTarget.current);
-        
-        return () => observer.disconnect();
-    }, [searchProducts, hasMore, loading, products]);
+    } catch (err) {
+      console.error("❌ Error loading products:", err);
+      setError(err.response?.data?.message || 'Error al cargar productos');
+      setHasMore(false);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    
+  // Efecto para resetear búsqueda cuando cambien las rutas
+  useEffect(() => {
+    if (category || subcategory || categories) {
+      setSearchValue("");
+    }
+  }, [category, subcategory, categories, setSearchValue]);
 
-    /* hasMore: true,
-    lastId: undefined,
-    loading: true,
-    productsCount: 0 */
+  // Efecto ÚNICO que maneja toda la lógica de carga
+  useEffect(() => {
+    const filters = getCurrentFilters();
 
-    /* useEffect(() => {
-        setProdsToRender([]);
-        setHasMore(true);
-    }, [searchValue, category, subcategory, categories, brand, price]); */
+    console.log("🎯 Effect triggered:", {
+      filters,
+      initialized,
+      category,
+      subcategory,
+      searchValue,
+      brand,
+      price
+    });
 
-    ///////load more products
-    /* const loadMoreProducts = useCallback(async () => {
-        if (!hasMore || loadingRef.current) return;
-        
-        loadingRef.current = true;
-        setLoading(true);
-        
-        try {
-            // Pequeño delay para evitar saturación
-            await new Promise(resolve => setTimeout(resolve, 300));
+    // Siempre cargar (inicial o por cambio de filtros)
+    loadProducts(filters, true);
 
-            const lastId = prodsToRender?.length > 0 
-                ? prodsToRender[prodsToRender.length - 1]._id 
-                : null;
+    if (!initialized) {
+      setInitialized(true);
+    }
 
-        
-            //parametros para los filtros
-            const params = {
-                limit: productsPerPage,
-                ...(lastId && { lastId }), // Solo si existe
-                ...(category && { category }),
-                ...(subcategory && { subcategory: subcategory }),
-                ...(categories && { categories: categories }),
-                ...(searchValue && { search: encodeURIComponent(searchValue) }),
-                ...(brand && { brand }),
-                ...(price.length === 2 && { 
-                    minPrice: price[0], 
-                    maxPrice: price[1] 
-                })
-            };
+  }, [category, subcategory, brand, price, searchValue]); // Solo dependencias de filtros
 
-            const response = await axios.get(`${API_URL}/api/products`, { 
-                withCredentials: true,
-                params,
-                headers: {
-                    'Cache-Strategy': 'stale-while-revalidate' // Opcional
-                }
-            });
+  // Efecto separado SOLO para el observer
+  useEffect(() => {
+    if (!hasMore || loading || !initialized) return;
 
-            const { products, hasMore } = response.data;
-
-            if (products.length > 0) {
-                setProdsToRender(prev => [...prev, ...products]);
-                setHasMore(products.length >= productsPerPage);
-            } else {
-                setHasMore(false);
-            }
-        } catch (err) {
-          console.error("Error:", err);
-          setHasMore(false); // Asumimos fin de los datos en caso de error
-        } finally {
-          loadingRef.current = false;
-          setLoading(false);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !loading && hasMore && products.length > 0) {
+          console.log("👀 Loading more products");
+          const filters = getCurrentFilters();
+          loadProducts(filters, false);
         }
-      }, [prodsToRender, hasMore, productsPerPage, 
-        category, encodedSubcategory, categories, searchValue, brand, price]) */
+      },
+      { threshold: 0.1 }
+    );
 
-     /*  useEffect(() => {
-        const observer = new IntersectionObserver(
-          (entries) => {
-            if (entries[0].isIntersecting) {
-                loadMoreProducts();
-            }
-          },
-          { threshold: 0.1 }
-        );
-    
-        const currentTarget = observerTarget.current;
-        if (currentTarget) observer.observe(currentTarget);
-    
-        return () => {
-          if (currentTarget) observer.unobserve(currentTarget);
-          observer.disconnect();
-        };
-      }, [loadMoreProducts]); // Dependencia estable */
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
 
-    return(
-        <>
-        {/* LINK DE CATEGORIAS Y SUBCATEGORIAS (igual) */}
-        <div className="text-white text-xs font-poppins mt-[6rem] text-end flex justify-between w-[95%] m-auto">
-          <div className="ml-4 text-sm xl:text-base italic font-normal uppercase">
-            {category && <Link to={`/productos/${category}`}>{category}<MdKeyboardArrowRight className="inline-block" /></Link>}
-            {subcategory && <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`}>{subcategory}</Link>}
-            {categories && <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`}><MdKeyboardArrowRight className="inline-block" />{categories}</Link>}
-          </div>
-          
+    return () => observer.disconnect();
+  }, [hasMore, loading, products.length, initialized]);
+
+
+
+
+  return (
+    <>
+      {/* LINK DE CATEGORIAS Y SUBCATEGORIAS */}
+      <div className="text-cBlack text-xs font-poppins mt-[6rem] text-end flex justify-between w-[95%] m-auto">
+        <div className="ml-4 text-sm xl:text-base italic font-normal uppercase">
+          {category && <Link to={`/productos/${category}`}>{category}<MdKeyboardArrowRight className="inline-block" /></Link>}
+          {subcategory && <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`}>{subcategory}</Link>}
+          {categories && <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`}><MdKeyboardArrowRight className="inline-block" />{categories}</Link>}
+        </div>
+
+        <div>
+          <button className="mr-4 sm:mr-8 text-sm xl:text-base text-cBlack">
+            <span onClick={handleFilter}>{!showFilters ? "Mostrar Filtros" : "Ocultar Filtros"}</span>
+            <BsFilterLeft className="inline-block" />
+          </button>
+        </div>
+      </div>
+
+      {/* Debug info - quitar en producción */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="w-[95%] m-auto text-xs text-gray-500 mb-2">
+          Productos: {products.length} | Loading: {loading.toString()} | HasMore: {hasMore.toString()} | Initialized: {initialized.toString()}
+        </div>
+      )}
+
+      {/* FILTROS DE PRODUCTOS */}
+      <div id="products-container" className={`grid grid-cols-1 ${showFilters ? 'md:grid-cols-[30%_1fr] 2xl:grid-cols-[15%_1fr]' : 'md:grid-cols-1'} w-full mt-10`}>
+        {showFilters && (
           <div>
-            <button className="mr-4 sm:mr-8 text-sm xl:text-base text-cBlack">
-              <span onClick={handleFilter}>{!showFilters ? "Mostrar Filtros" : "Ocultar Filtros"}</span>
-              <BsFilterLeft className="inline-block"/>
-            </button>
+            <Filters filtered={{ setBrand, price, setPrice, setShowFilter }} />
           </div>
+        )}
+
+        {/* CATALOGO de productos */}
+        <div className={`grid gap-3 justify-items-center grid-cols-1 ${!showFilters ? "md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4" : "md:grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3"}`}>
+          {products.map((prod, index) => (
+            <Product
+              key={`${prod._id}-${index}`}
+              data={prod}
+              params={[category, subcategory]}
+              featured={false}
+            />
+          ))}
         </div>
-      
-        {/* FILTROS DE PRODUCTOS (cambios en la parte de renderizado) */}
-        <div id="products-container" className={`grid grid-cols-1 ${showFilters ? 'md:grid-cols-[30%_1fr] 2xl:grid-cols-[15%_1fr]' : 'md:grid-cols-1'} w-full mt-10`}>
-          {showFilters && (
-            <div>
-              <Filters filtered={{ setBrand, price, setPrice, setShowFilter }} />
-            </div>
-          )}
-      
-          {/* CATALOGO de productos - Cambios aquí */}
-          <div className={`grid gap-3 justify-items-center grid-cols-1 ${!showFilters ? "md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4" : "md:grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3"}`}>
-            {products.map((prod, index) => (
-              <Product 
-                key={`${prod.codpro}-${index}`} 
-                data={prod} 
-                params={[category, subcategory]} 
-                featured={false} 
-              />
-            ))}
+
+        {/* Elemento observer y mensajes */}
+        {hasMore && products.length > 0 && !loading && (
+          <div ref={observerTarget} style={{ height: '20px', backgroundColor: 'transparent' }} />
+        )}
+
+        {loading && <Loading />}
+
+        {error && (
+          <div className="col-span-full text-center text-xl mt-8 py-4 text-red-500">
+            {error}
           </div>
-      
-          {/* Elemento observer y mensajes - Cambios aquí */}
-          <div ref={observerTarget} style={{ height: '1px' }} />
-          
-          {loading && <Loading />}
-          
-          {!hasMore && !loading && products.length > 0 && (
-            <div className="col-span-full text-center text-xl mt-8 py-4 text-gray-500 text-cBlack italic">
-              No hay más productos por cargar
-            </div>
-          )}
-          
-          {!loading && products.length === 0 && (
-            <div className="col-span-full text-center text-xl mt-8 py-4 text-gray-500 text-cBlack italic">
-              No se encontraron productos con los filtros seleccionados
-            </div>
-          )}
-        </div>
-      </>
-    )
-}
+        )}
+
+        {!hasMore && !loading && products.length > 0 && (
+          <div className="col-span-full text-center text-xl mt-8 py-4 text-gray-500 text-cBlack italic">
+            Fin de los resultados ({products.length} productos encontrados)
+          </div>
+        )}
+
+        {!loading && products.length === 0 && !error && initialized && (
+          <div className="col-span-full text-center text-xl mt-8 py-4 text-gray-500 text-cBlack italic">
+            No se encontraron productos con los filtros seleccionados
+          </div>
+        )}
+      </div>
+    </>
+  );
+};

@@ -1,6 +1,9 @@
+import mongoose from "mongoose";
+
 import User from "../models/user.model.js";
 import Cart from "../models/cart.model.js"
 import Order from "../models/order.model.js";
+import { trusted } from "mongoose";
 
 export const getUserById = async (req, res) => {
     try {
@@ -105,6 +108,41 @@ export const deleteUser = async (req, res) => {
     } catch (err) {
         res.status(500).json({
             message: "Error al eliminar usuario y datos asociados",
+            error: err.message,
+        });
+    }
+};
+
+export const addClientId = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { clientId } = req.body;
+
+        if (!userId || !clientId) {
+            return res.status(400).json({ message: "userId y clientId son requeridos" });
+        }
+
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ message: "userId inválido" });
+        }
+
+        const result = await User.findByIdAndUpdate(
+            userId,
+            { $set: { client_id: clientId } },
+            { new: true }
+        );
+
+        if (!result) {
+            return res.status(404).json({ message: "Usuario no encontrado" });
+        }
+
+        res.status(200).json({
+            message: "ClientId agregado con éxito",
+            user: result
+        });
+    } catch (err) {
+        res.status(500).json({
+            message: "Error al agregar clientId al usuario",
             error: err.message,
         });
     }

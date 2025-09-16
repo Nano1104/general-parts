@@ -11,7 +11,7 @@ export const useAuthContext = () => {
     return useContext(AuthContext);
 }
 
-export const AuthContextProvider = ({children}) => {
+export const AuthContextProvider = ({ children }) => {
     const [state, setState] = useState({
         authUser: null,
         isAdmin: false,
@@ -19,14 +19,14 @@ export const AuthContextProvider = ({children}) => {
         loading: true,
         error: null
     });
-    
+
 
     useEffect(() => {
         const source = axios.CancelToken.source();
 
         const verifyUser = async () => {
             try {
-                const res = await axios.get(`${API_URL}/api/auth/authUser`, { 
+                const res = await axios.get(`${API_URL}/api/auth/authUser`, {
                     withCredentials: true,
                     cancelToken: source.token
                 });
@@ -44,7 +44,7 @@ export const AuthContextProvider = ({children}) => {
                     console.log('Request canceled:', err.message);
                     return;
                 }
-                
+
                 // Manejo diferenciado de errores
                 if (err.response?.status === 401 || err.response?.status === 403) {
                     // No autenticado - comportamiento esperado
@@ -76,19 +76,21 @@ export const AuthContextProvider = ({children}) => {
         setState({
             authUser: user,
             isAdmin: user?.role === "admin",
+            accepted: user?.accepted || false,
             loading: false,
             error: null
         });
     };
 
+
     if (state.loading) {
-        return <Loading />; 
+        return <Loading />;
     }
 
     return (
-        <AuthContext.Provider value={{ 
-            authUser: state.authUser, 
-            setAuthUser, 
+        <AuthContext.Provider value={{
+            authUser: state.authUser,
+            setAuthUser,
             isAdmin: state.isAdmin,
             accepted: state.accepted,
             loading: state.loading,

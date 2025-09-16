@@ -10,7 +10,7 @@ export const FormLocalidades = ({
                 id="localidades"
                 className="p-2 bg-transparent w-full outline-0 text-cBlack focus:text-black
                         border-[1px] border-cBlack rounded-xl
-                        focus:border-dotted"
+                        focus:border-dotted placeholder-cBlack"
                 {...register(name, {
                     required: "Debe seleccionar una localidad"
                 })}

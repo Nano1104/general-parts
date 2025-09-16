@@ -8,15 +8,24 @@ const useSignup = () => {
 
     const signUp = async ({ first_name, last_name, email, phone, password, location, city, cuit }) => {
         try {
-            await axios.post(`${API_URL}/api/auth/register`, { first_name, last_name, email, phone: Number(phone), password, location, city, cuit }, { withCredentials: true })
+            await axios.post(`${API_URL}/api/auth/register`, {
+                first_name, 
+                last_name, 
+                email, 
+                phone: Number(phone), 
+                password, 
+                city,
+                cuit,
+                ...(location && { location })
+            }, { withCredentials: true })
                 .then(res => {
                     Swal.fire({
                         title: 'Te has registrado',
                         confirmButtonColor: "#DC5F00",
                     })
-                    .then((result) => { if (result.isConfirmed) window.location.reload() });
+                        .then((result) => { if (result.isConfirmed) window.location.reload() });
                 })
-            const data = res.data; 
+            const data = res.data;
             console.log("🚀 ~ signUp ~ data:", data)
 
         } catch (err) {
