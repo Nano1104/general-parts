@@ -58,14 +58,6 @@ export const UserManage = () => {
         }
     }
 
-    const handleUpdateUser = async (e) => {
-        try {
-
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
     const handleUserAction = async (e, action) => {
         e.preventDefault();
         const userId = e.target.userId.value.trim();
@@ -107,10 +99,11 @@ export const UserManage = () => {
 
             const response = await axios.put(endpoint, {}, { withCredentials: true });
 
+            await handleGetUsers()
+
             // Manejo de respuesta exitosa
             Swal.fire({
                 title: `Usuario ${action === 'accept' ? 'Aceptado' : 'Denegado'}!`,
-                text: response.data?.message || `El usuario ha sido ${action === 'accept' ? 'dado de alta' : 'dado de baja'} correctamente.`,
                 icon: 'success',
                 confirmButtonColor: '#DC5F00',
             });
