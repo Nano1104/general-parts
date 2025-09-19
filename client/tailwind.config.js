@@ -32,7 +32,8 @@ export default {
       },
       colors: {
         orange: "#DC5F00",
-        red: "#66212a",
+        lightRed: "#D7263D",
+        deepRed: "#66212a",
         cBlack: "#272829",
         deepGray: "#61677A",
         gray: "#A6A9AD",

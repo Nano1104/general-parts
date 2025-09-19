@@ -87,7 +87,7 @@ export const Filters = ({ filtered }) => {
                 {
                     productsBrands.map((brand) => (
                         <div key={brand} className="sm:text-xs my-1">
-                            <input type="checkbox" id={`checkbox-${brand}`} className="accent-orange" checked={selectedBrand === brand} value={brand} onChange={handleBrand} />
+                            <input type="checkbox" id={`checkbox-${brand}`} className="accent-lightRed" checked={selectedBrand === brand} value={brand} onChange={handleBrand} />
                             <label className="ml-1">{brand}</label>
                         </div>
                     ))
@@ -97,16 +97,16 @@ export const Filters = ({ filtered }) => {
             <div className="mt-4">
                 <label htmlFor="price-sort" className="text-xl font-bold">Precio:</label>
                 <div className="sm:text-xs my-1">
-                    <input type="checkbox" className="accent-orange" checked={JSON.stringify(selectedPrice) === JSON.stringify([0, 10000])} onChange={(e) => handlePrice(e, [0, 10000])} />
+                    <input type="checkbox" className="accent-lightRed" checked={JSON.stringify(selectedPrice) === JSON.stringify([0, 10000])} onChange={(e) => handlePrice(e, [0, 10000])} />
                     <label className="ml-1">Hasta - $10000</label>
                 </div>
                 <div className="sm:text-xs my-1">
-                    <input type="checkbox" className="accent-orange" checked={JSON.stringify(selectedPrice) === JSON.stringify([10000, 85000])} onChange={(e) => handlePrice(e, [10000, 85000])}  />
+                    <input type="checkbox" className="accent-lightRed" checked={JSON.stringify(selectedPrice) === JSON.stringify([10000, 85000])} onChange={(e) => handlePrice(e, [10000, 85000])}  />
                     <label className="ml-1">$10000 - $85000</label>
                 </div>
 
                 <div className="sm:text-xs my-1">
-                    <input type="checkbox" className="accent-orange" checked={JSON.stringify(selectedPrice) === JSON.stringify([85000])} onChange={(e) => handlePrice(e, [85000])}  />
+                    <input type="checkbox" className="accent-lightRed" checked={JSON.stringify(selectedPrice) === JSON.stringify([85000])} onChange={(e) => handlePrice(e, [85000])}  />
                     <label className="ml-1">Más de - $85000</label>
                 </div>
             </div>

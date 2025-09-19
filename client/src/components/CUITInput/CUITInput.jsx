@@ -76,7 +76,7 @@ export const CUITInput = ({ register, errors, name = "cuit" }) => {
 
             {/* Mensajes de estado */}
             {errors?.[name]?.message && (
-                <span className="text-red font-custom font-medium text-xs mt-2 lg:ml-12">
+                <span className="text-lightRed font-custom font-medium text-xs mt-2 lg:ml-12">
                     {errors[name].message}
                 </span>
             )}

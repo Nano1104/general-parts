@@ -10,122 +10,64 @@ import logo from "../../../public/vite.svg"
 export const Home = () => {
     const { authUser } = useAuthContext()
 
-    return(
+    return (
         <>
-        <div className="h-[100vh] w-full relative overflow-hidden">
-            <div className="bg-homeBg bg-cover brightness-50 blur-[2px] grayscale-[0.9] w-full h-[100vh]"></div>
-            {/* <img src={bgImg} alt="" id="bg-home" className="hidden lg:block" /> */}
-            <NavBar />
+            <div className="h-screen w-full relative overflow-hidden">
+                <div className="bg-homeBg bg-cover brightness-[.4] blur-[2px] grayscale-[0.9] w-full h-[100vh]"></div>
+                <NavBar />
 
-            <div className="h-screen absolute top-[10%] border-white w-full blur-none flex flex-col lg:items-start">
-                <div className="flex w-full justify-center items-center">
-                    {/* <img src={logo} alt="" className="w-[20%] border" /> */}
+                <div className="absolute top-[8%] flex flex-col lg:items-start lg:ml-20">
                     <Logo />
+                    <span
+                        className="text-white font-montserrat font-medium p-3
+                                    text-justify lg:text-left
+                                    text-2xl lg:text-3xl 2xl:text-6xl 2xl:w-3/6
+                                    mt-14 lg:mt-0"
+                    >
+                        Venta de repuestos para automóviles de todas las marcas
+                    </span>
+                    {
+                        authUser
+                            ?
+                            <Link
+                                to="/productos"
+                                className="border text-white bg-lightRed border-lightRed rounded-md lg:mt-16
+                                            py-1 px-5 hover:bg-transparent hover:text-lightRed hover:font-semibold
+                                            transition-colors duration-200 ease-in-out"
+                            >
+                                VER REPUESTOS
+                            </Link>
+                            :
+                            <div className="font-montserrat w-full flex flex-col items-center lg:items-start gap-6 text-base lg:mt-16">
+                                <Link
+                                    to="/authPage/"
+                                    className="border text-white bg-lightRed border-lightRed rounded-md
+                                            py-1 px-5 hover:bg-transparent hover:text-lightRed
+                                            transition-colors duration-200 ease-in-out"
+                                >
+                                    INICIAR SESIÓN
+                                </Link>
+                            </div>
+                    }
                 </div>
-                <span className="text-white text-center lg:text-left text-2xl lg:text-3xl p-3 mt-14 lg:mt-0 lg:ml-8 font-poppins font-bold">Venta de repuestos para automóviles de todas las marcas</span>
-                <div className="flex justify-center gap-4 text-white italic mt-4 lg:ml-10 lg:text-xl font-roboto font-bold">
-                    <div className="flex items-center">
-                        <FaWhatsapp /><span className="ml-2">11 5452-9682</span>
-                    </div>
-                    <span>-</span>
-                    <div className="flex items-center">
-                        <FaWhatsapp /><span className="ml-2">11 6335-8220</span>
-                    </div>
-                </div> 
-                {
-                    authUser 
-                    ?
-                    <Link to="/productos" className="font-roboto font-medium text-lightGray [text-shadow:_0_2px_4px_rgb(0_0_0/_0.5)] mt-[3rem] text-center text-3xl lg:text-4xl lg:mt-24 lg:mx-auto">
-                        Ver repuestos
-                    </Link>
-                    : 
-                    <div className="w-full flex flex-col items-center gap-6 text-xl lg:mt-24 lg:mx-auto font-montserrat text-cBlack">
-                        <Link to="/authPage/" className="relative            
-                                                    px-[7px] py-[3px]    
-                                                    rounded-lg           
-                                                    border            
-                                                    border-white         
-                                                    z-10              
-                                                    text-white       
-                                                    inline-flex       
-                                                    justify-center   
-                                                    items-center      
-                                                    gap-[5px]     
-                                                    transition-all  
-                                                    duration-300   
-                                                    hover:text-black 
-                                                    hover:border-black 
-                                                    before:content-['']
-                                                    before:absolute
-                                                    before:inset-0    
-                                                    before:rounded-lg 
-                                                    before:-z-10    
-                                                    before:bg-[var(--lightGray)] 
-                                                    before:transition-transform
-                                                    before:duration-300
-                                                    before:origin-left
-                                                    before:scale-x-0
-                                                    hover:before:scale-x-100
-                                                    after:content-[''] 
-                                                    after:border
-                                                    after:border-white
-                                                    after:rounded-full 
-                                                    after:w-[10px]
-                                                    after:h-[10px]
-                                                    after:transition-colors
-                                                    after:duration-300
-                                                    hover:after:bg-[var(--cBlack)]
-                                                    hover:after:border-transparent
-                            ">
-                            Iniciar Sesión
-                        </Link>
-                        {/* <Link to="/authPage/register" className="relative            
-                                                    px-[7px] py-[3px]    
-                                                    rounded-lg           
-                                                    border            
-                                                    border-white         
-                                                    z-10              
-                                                    text-white       
-                                                    inline-flex       
-                                                    justify-center   
-                                                    items-center      
-                                                    gap-[5px]     
-                                                    transition-all  
-                                                    duration-300   
-                                                    hover:text-black 
-                                                    hover:border-black 
-                                                    before:content-['']
-                                                    before:absolute
-                                                    before:inset-0    
-                                                    before:rounded-lg 
-                                                    before:-z-10    
-                                                    before:bg-[var(--lightGray)] 
-                                                    before:transition-transform
-                                                    before:duration-300
-                                                    before:origin-left
-                                                    before:scale-x-0
-                                                    hover:before:scale-x-100
-                                                    after:content-[''] 
-                                                    after:border
-                                                    after:border-white
-                                                    after:rounded-full 
-                                                    after:w-[10px]
-                                                    after:h-[10px]
-                                                    after:transition-colors
-                                                    after:duration-300
-                                                    hover:after:bg-[var(--cBlack)]
-                                                    hover:after:border-transparent
-                            ">
-                            Registrarse
-                        </Link> */}
-                    </div>
-                }
-            </div>
 
-            <FaWhatsapp
-            className="absolute cursor-pointer bottom-0 right-0 text-4xl lg:text-5xl
-            p-1 mr-8 mb-8 border bg-orange text-white rounded-full" />
-        </div>
+                <div className="text-white w-full font-montserrat font-semibold italic absolute bottom-0 flex items-center justify-between px-10 py-6">
+                    <div className="flex items-center mx-auto text-2xl">
+                        <div className="flex items-center">
+                            <FaWhatsapp />
+                            <span className="ml-2">11 5452-9682</span>
+                        </div>
+                        <span className="mx-2">-</span>
+                        <div className="flex items-center">
+                            <FaWhatsapp />
+                            <span className="ml-2">11 6335-8220</span>
+                        </div>
+                    </div>
+
+                    <FaWhatsapp className="cursor-pointer text-4xl lg:text-5xl bg-lightRed text-white rounded-full" />
+                </div>
+
+            </div>
         </>
     )
 }

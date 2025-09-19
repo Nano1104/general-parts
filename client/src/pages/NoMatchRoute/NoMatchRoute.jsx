@@ -6,7 +6,7 @@ export const NoMatchRoute = () => {
             <h1 className="text-8xl font-semibold">404!</h1>
             <h2 className="text-2xl">Ruta no encontrada</h2>
             <p className="text-lg">La página que estás buscando no existe o ha sido movida.</p>
-            <Link to="/" className="bg-orange w-40 rounded-md py-1 px-2 mt-2 text-cBlack font-semibold">VOLVER</Link>
+            <Link to="/" className="bg-lightRed w-40 rounded-md py-1 px-2 mt-2 text-white font-semibold">VOLVER</Link>
         </div>
     )
 }

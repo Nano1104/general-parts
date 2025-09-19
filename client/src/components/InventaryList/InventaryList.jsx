@@ -51,7 +51,7 @@ export const InventaryList = ({ stateNews }) => {
     };
 
     return (
-        <nav className="bg-gray flex h-8 relative px-7 text-xs lg:text-sm"> 
+        <nav className="bg-deepGray flex h-8 relative px-7 text-xs lg:text-sm"> 
             <div ref={menuRef} className="flex">
                 <span
                     className="flex items-center italic px-4 h-full bg-cWhite text-black uppercase font-montserrat font-bold tracking-tight cursor-pointer"
@@ -61,7 +61,7 @@ export const InventaryList = ({ stateNews }) => {
                 </span>
                 
                 <span
-                    className="flex items-center italic ml-4 px-4 h-full bg-coral text-black uppercase font-montserrat font-bold tracking-tight cursor-pointer"
+                    className="flex items-center italic ml-4 px-4 h-full bg-lightRed text-white uppercase font-montserrat font-bold tracking-tight cursor-pointer"
                     onClick={handleDestacadoClick}
                 >
                     DESTACADO

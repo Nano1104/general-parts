@@ -14,7 +14,7 @@ const useSignin = () => {
                 .then(res => {
                     Swal.fire({
                         title: 'Sesión Iniciada',
-                        confirmButtonColor: "#ffb3a5",
+                        confirmButtonColor: "#D7263D",
                     })
                     .then((result) => { 
                         if (result.isConfirmed) setAuthUser(res.data.user)

@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { IoIosArrowUp } from "react-icons/io"; //flecha arriba
-import { IoIosArrowForward } from "react-icons/io"; //flecha mirando derecha
+//icons
+import { FaArrowAltCircleUp } from "react-icons/fa";    //flecha arriba
+import { FaArrowAltCircleRight } from "react-icons/fa";   //flecha mirando derecha
+
+/* import { IoIosArrowUp } from "react-icons/io";    //flecha arriba
+import { FaArrowAltCircleRight } from "react-icons/io";   //flecha mirando derecha */
 
 import 'animate.css';
 
@@ -34,20 +38,20 @@ export const Category = ({
         <div className="flex w-32 justify-between items-center">
           <Link
             id={`category-${category}-link`}
-            className={`category-link gap-1 text-white mb-1 uppercase`}
+            className={`category-link gap-1 text-black mb-1 uppercase ${isActive ? "font-bold" : ""}`}
             to={`/productos/${category}`}
             onClick={(e) => e.stopPropagation()}
           >
             {category}
           </Link>
           {!isActive
-            ? <IoIosArrowUp onClick={handleCategoryClick} className="text-base mb-1 cursor-pointer" />
-            : <IoIosArrowForward onClick={handleCategoryClick} className="text-base mb-1 cursor-pointer" />
+            ? <FaArrowAltCircleUp onClick={handleCategoryClick} className="text-base mb-1 cursor-pointer" />
+            : <FaArrowAltCircleRight onClick={handleCategoryClick} className="text-base mb-1 cursor-pointer" />
           }
         </div>
 
         {/* SUBRUBROS */}
-        {isActive && (
+        {isActive && (      //CASO PARA RUBROS DE MOTOR: BULONES/TORNILLOS Y ENGRANAJE
           category === "MOTOR" ? (
             <div
               className="absolute z-20 top-0 left-full py-3 bg-gray border w-40 flex flex-col gap-2"
@@ -57,11 +61,11 @@ export const Category = ({
               <div className="flex items-center justify-between px-4">
                 <Link
                   to={`/productos/${category}/engranaje`}
-                  className="text-white transition ease-in duration-300 uppercase"
+                  className="text-black hover:font-bold transition ease-in duration-300 uppercase"
                 >
                   ENGRANAJE
                 </Link>
-                <IoIosArrowForward
+                <FaArrowAltCircleUp
                   onClick={(e) => handleMotorSubCategoryClick("engranaje", e)}
                   className={`text-base cursor-pointer ${activeMotorSubCategory === "engranaje" ? 'rotate-90' : ''
                     }`}
@@ -76,7 +80,7 @@ export const Category = ({
                       <Link
                         key={`engranaje-${sub[1]}-${index}`}
                         to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub[0])}`}
-                        className="text-white block px-4 py-1 hover:font-bold transition ease-in"
+                        className="text-black block px-4 py-1 hover:font-bold transition ease-in"
                       >
                         {sub[0]}
                       </Link>
@@ -89,11 +93,11 @@ export const Category = ({
               <div className="flex items-center justify-between px-4">
                 <Link
                   to={`/productos/${category}/bulones`}
-                  className="text-white transition ease-in duration-300 uppercase"
+                  className="text-black hover:font-bold transition ease-in duration-300 uppercase"
                 >
                   BULONES
                 </Link>
-                <IoIosArrowForward
+                <FaArrowAltCircleUp
                   onClick={(e) => handleMotorSubCategoryClick("bulones", e)}
                   className={`text-base cursor-pointer ${activeMotorSubCategory === "bulones" ? 'rotate-90' : ''
                     }`}
@@ -108,7 +112,7 @@ export const Category = ({
                       <Link
                         key={`bulones-${sub[1]}-${index}`}
                         to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub[0])}`}
-                        className="text-white block px-4 py-1 hover:font-bold transition ease-in"
+                        className="text-black block px-4 py-1 hover:font-bold transition ease-in"
                       >
                         {sub[0]}
                       </Link>
@@ -127,7 +131,7 @@ export const Category = ({
                 <Link
                   key={`${sub[1]}-${index}`}
                   to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub[0])}`}
-                  className="text-white block px-4 hover:font-bold transition ease-in"
+                  className="text-black block px-4 hover:font-bold transition ease-in"
                 >
                   {sub[0]}
                 </Link>
