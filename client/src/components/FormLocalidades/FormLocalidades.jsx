@@ -23,7 +23,7 @@ export const FormLocalidades = ({
                 ))}
             </select>
             {errors?.[name]?.message && (
-                <span className="text-red font-custom font-medium text-xs mt-2">
+                <span className="text-lightRed font-custom font-medium text-xs mt-2">
                     {errors[name].message}
                 </span>
             )}

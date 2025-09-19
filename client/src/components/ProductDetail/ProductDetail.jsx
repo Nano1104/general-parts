@@ -1,6 +1,6 @@
 import axios from "axios"
 import { useState, useRef } from "react";
-import { Link, useParams } from "react-router-dom"
+import { Link, useParams, useNavigate } from "react-router-dom"
 import Swal from 'sweetalert2';
 //context
 import { useAuthContext } from "../../context/AuthContext.jsx"
@@ -9,8 +9,8 @@ import { useCartContext } from "../../context/CartContext.jsx";
 import { IoCartOutline } from "react-icons/io5";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { ItemCount } from "../ItemCount/ItemCount.jsx"
-import { Loading } from "../Loading/Loading.jsx";
 //icons
+import { IoArrowUndoCircleOutline } from "react-icons/io5";
 import { FaPencil } from "react-icons/fa6";
 
 import { formatCurrency } from "../../utils/formatCurrency.js";
@@ -24,6 +24,7 @@ export const ProductDetail = ({ prod }) => {
     const { id } = useParams();
     const formatedPrice = formatCurrency(precioimpre);
 
+    const navigate = useNavigate()
     const [quantity, setQuantity] = useState(stock);
     const [amount, setAmount] = useState(0);
     const [isFocus, setIsFocus] = useState(false);
@@ -73,14 +74,15 @@ export const ProductDetail = ({ prod }) => {
         <>
             <div
                 className={`w-full lg:h-[90vh] lg:w-[85%] xl:w-[75%] lg:py-[50px] lg:px-[65px] text-center border
-                        flex flex-col lg:m-auto lg:mt-10 lg:flex-row lg:rounded-xl relative ${destacado ? "bg-[#DC5F00]" : "bg-gray"
+                        flex flex-col lg:m-auto lg:mt-10 lg:flex-row lg:rounded-xl ${destacado ? "bg-[#DC5F00]" : "bg-gray"
                     }`}
             >
 
                 {/* PRIMERA PARTE DEL PRODUCT DESCRIPTION */}
-                <div className="basis-[58%] text-xs lg:text-sm 2xl:text-base">
+                <div className="basis-[58%] text-xs relative lg:text-sm 2xl:text-base">
                     <img src={getImage(imageUrl)} className="w-full object-contain h-full my-28 mobile:my-14 lg:my-3" alt={`prod-${codpro}-img`} />
-                    <div className="font-roboto font-semibold italic flex flex-col mobile:flex-row items-start mobile:justify-center lg:justify-start w-full mt-5 absolute top-0">
+
+                    <div className="font-roboto font-semibold italic flex flex-col mobile:flex-row items-start mobile:justify-center lg:justify-start w-full absolute top-0">
                         <div className="flex items-center mx-2 my-1 lg:mx-0">
                             <Link className="first-letter:uppercase" to={`/productos/${encodedCategory}`}>{desc_rubro}</Link><MdKeyboardArrowRight />
                         </div>
@@ -89,6 +91,14 @@ export const ProductDetail = ({ prod }) => {
                         </div>
                         <span className="cursor-pointer mx-2 my-1 lg:mx-0">{id}</span>
                     </div>
+
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="rounded-md py-2 px-4 bg-lightRed text-white lg:text-xs 2xl:text-base absolute bottom-0 left-0 flex items-center gap-1"
+                    >
+                        <IoArrowUndoCircleOutline className="text-lg" />
+                        <span className="text-sm">VOLVER A PRODUCTOS</span>
+                    </button>
                 </div>
 
                 <div className="border mx-8 mb-6"></div>
@@ -123,9 +133,9 @@ export const ProductDetail = ({ prod }) => {
                         {/* AGREGAR PRODUCTO */}
                         <div className="flex justify-center mt-4 gap-2">
                             <button
-                                className={`rounded-md py-2 px-4 ${destacado ? "bg-white" : "bg-orange"} text-black flex justify-center items-center gap-1 lg:text-xs 2xl:text-base`}
+                                className={`rounded-md py-2 px-4 ${destacado ? "bg-white" : "bg-lightRed"} text-white flex justify-center items-center gap-1 lg:text-xs 2xl:text-base`}
                                 onClick={handleAddToCart}>
-                                <IoCartOutline className="inline-block text-xl lg:text-sm" />
+                                <IoCartOutline className="inline-block text-xl lg:text-lg" />
                                 <span>Agregar</span>
                             </button>
                         </div>

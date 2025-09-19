@@ -11,54 +11,65 @@ export const NavBar = () => {
     const [showMenu, setShowMenu] = useState(false);
 
     const handleMenuBurger = () => setShowMenu(showMenu => !showMenu)
- 
+
     return (
         <>
-        <div className="text-[2rem] sm:text-[3em] absolute top-0 text-white lg:hidden">
-            <HiBars3 onClick={handleMenuBurger} className="m-2" />
-        </div>
+            <div className="text-[2rem] sm:text-[3em] absolute top-0 text-white lg:hidden">
+                <HiBars3 onClick={handleMenuBurger} className="m-2" />
+            </div>
 
-        {
-            showMenu
-            ? 
-            /***** RESOLUCION PARA CELULAR *****/
-            <nav className="bg-lightGray font-montserrat text-[1rem] flex flex-col items-center py-2 px-4 h-screen w-[40%] z-40 absolute top-0 lg:hidden">
-                <RxCross1 onClick={handleMenuBurger} className="mt-4 sm:mt-10 text-[2em]" />
-                <ul className="flex flex-col font-bold relative items-center mt-16 gap-4 w-full h-[80%] sm:text-[1.2em]">
-                    { authUser && authUser.role === "admin"
-                        ? 
-                        <>
-                        <Link to="/admin">Administrador</Link>
-                        <Link to="/reservas">Reservas</Link>
-                        </>
-                        : <></>
-                    }
-                    <Link to="/contact">Contáctanos</Link>
-                    <Link to="/authPage" className="absolute border py-1 px-2 rounded-md bg-orange text-xs bottom-[50px] text-center sm:text-[.8em] sm:py-2 sm:px-4">Iniciar Sesión<div></div></Link>
+            {
+                showMenu
+                    ?
+                    /***** RESOLUCION PARA CELULAR *****/
+                    <nav className="bg-lightGray font-montserrat text-[1rem] flex flex-col items-center py-2 px-4 h-screen w-[40%] z-40 absolute top-0 lg:hidden">
+                        <RxCross1 onClick={handleMenuBurger} className="mt-4 sm:mt-10 text-[2em]" />
+                        <ul className="flex flex-col font-bold relative items-center mt-16 gap-4 w-full h-[80%] sm:text-[1.2em]">
+                            {authUser && authUser.role === "admin"
+                                ?
+                                <>
+                                    <Link to="/admin">Administrador</Link>
+                                    <Link to="/reservas">Reservas</Link>
+                                </>
+                                : <></>
+                            }
+                            <Link to="/contact">Contáctanos</Link>
+                            <Link to="/authPage" className="absolute border py-1 px-2 rounded-md bg-orange text-xs bottom-[50px] text-center sm:text-[.8em] sm:py-2 sm:px-4">Iniciar Sesión<div></div></Link>
+                        </ul>
+                    </nav>
+                    : <></>
+            }
+
+            {/* RESOLUCION PARA DESKTOP */}
+            <nav className="hidden absolute top-0 w-full text-sm font-montserrat text-white lg:block">
+                <ul className="flex font-bold justify-end items-center gap-7 m-7">
+                    <div className="flex items-center gap-10">
+                        {authUser && authUser.role === "admin"
+                            ?
+                            <>
+                                <Link
+                                    to="/admin"
+                                    className="hover:text-lightRed transition-colors duration-200 ease-in-out"
+                                >
+                                    ADMINISTRADOR
+                                </Link>
+                                <Link
+                                    to="/reservas"
+                                    className="hover:text-lightRed transition-colors duration-200 ease-in-out"
+                                >
+                                    RESERVAS
+                                </Link>
+                            </>
+                            : <></>
+                        }
+                        {
+                            authUser && (
+                                <UserIcon />
+                            )
+                        }
+                    </div>
                 </ul>
             </nav>
-            : <></>
-        }
-
-        {/* RESOLUCION PARA DESKTOP */}
-        <nav className="hidden absolute top-0 w-full text-sm font-montserrat text-white lg:block">
-            <ul className="flex font-bold justify-end items-center gap-7 m-7">
-                <div className="flex items-center gap-10">
-                    { authUser && authUser.role === "admin"
-                        ? 
-                        <>
-                            <Link to="/admin" className="hover:text-lightGray hover:scale-110 transition duration-200">Administrador</Link>
-                            <Link to="/reservas" className="hover:text-lightGray hover:scale-110 transition duration-200">Reservas</Link>
-                        </>
-                        : <></>
-                    }
-                    { authUser && (
-                            <UserIcon />
-                        )
-                    }             
-                </div>
-            </ul>
-        </nav>
         </>
     )
 }

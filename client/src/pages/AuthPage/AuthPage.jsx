@@ -76,7 +76,7 @@ export const AuthPage = () => {
                     onSubmit={onSubmit}
                     className="flex flex-col items-center mt-10 gap-4
                     lg:absolute lg:top-1/2 lg:left-1/2 lg:transform lg:-translate-x-1/2 lg:-translate-y-1/2 
-                    bg-gray lg:w-[45%] lg:rounded-2xl lg:p-10 w-full"
+                    bg-cWhite lg:w-[45%] lg:rounded-2xl lg:p-10 w-full border"
                 >
                     <h3 className="text-cBlack text-center text-[2.5em] mt-6 font-roboto">
                         {login ? "INCIAR SESIÓN" : "REGISTRATE"}
@@ -91,14 +91,14 @@ export const AuthPage = () => {
                                         autoComplete="off"
                                         onFocus={() => setLoginError(" ")}
                                         className="p-2 bg-transparent w-[65%] sm:w-[50%] md:w-[45%] outline-0 text-cBlack
-                                                border-[1px] border-cBlack rounded-xl focus:border-dotted lg:ml-12"
+                                                border-[1px] border-cBlack rounded-xl focus:border-dotted"
                                         placeholder="Ingrese su email"
                                         {...register("emailLogin", {
                                             required: "Campo incompleto"
                                         })}
                                     />
-                                    {errors.emailLogin?.type && <span className="text-red font-custom font-medium text-xs mt-2 lg:ml-12">{errors.emailLogin.message}</span>}
-                                    {loginError === "User does not exist" ? <span className="text-red font-custom font-medium text-xs mt-2 lg:ml-12 xl:absolute xl:left-[47%] xl:bottom-[4px]">No existe usuario con este mail</span> : <></>}
+                                    {errors.emailLogin?.type && <span className="text-lightRed font-custom font-medium text-xs mt-2">{errors.emailLogin.message}</span>}
+                                    {loginError === "User does not exist" ? <span className="text-lightRed font-custom font-medium text-xs mt-2">No existe usuario con este mail</span> : <></>}
                                 </div>
 
                                 <div className="w-full flex flex-col items-center relative">
@@ -108,14 +108,14 @@ export const AuthPage = () => {
                                         onFocus={() => setLoginError("")}
                                         className="p-2 bg-transparent w-[65%] sm:w-[50%] md:w-[45%] outline-0 text-cBlack
                                                 border-[1px] border-cBlack rounded-xl
-                                                focus:border-dotted lg:ml-12"
+                                                focus:border-dotted"
                                         placeholder="Ingrese su contraseña"
                                         {...register("passwordLogin", {
                                             required: "Campo incompleto"
                                         })}
                                     />
-                                    {errors.passwordLogin?.type && <span className="text-red font-custom font-medium text-xs mt-2 lg:ml-12">{errors.passwordLogin.message}</span>}
-                                    {loginError === "password incorrect" ? <span className="text-red font-custom font-medium text-xs mt-2 lg:ml-12">Contraseña Incorrecta</span> : <></>}
+                                    {errors.passwordLogin?.type && <span className="text-lightRed font-custom font-medium text-xs mt-2">{errors.passwordLogin.message}</span>}
+                                    {loginError === "password incorrect" ? <span className="text-lightRed font-custom font-medium text-xs mt-2">Contraseña Incorrecta</span> : <></>}
                                 </div>
                             </>
                         )
@@ -140,7 +140,7 @@ export const AuthPage = () => {
                                                     }
                                                 })}
                                             />
-                                            {errors.nombre?.type && <span className="text-red font-custom font-medium text-xs mt-2">{errors.nombre.message}</span>}
+                                            {errors.nombre?.type && <span className="text-lightRed font-custom font-medium text-xs mt-2">{errors.nombre.message}</span>}
                                         </div>
 
                                         <div className="flex-1 flex flex-col items-center relative mt-4 lg:mt-0">
@@ -160,7 +160,7 @@ export const AuthPage = () => {
                                                     }
                                                 })}
                                             />
-                                            {errors.apellido?.type && <span className="text-red font-custom font-medium text-xs mt-2">{errors.apellido.message}</span>}
+                                            {errors.apellido?.type && <span className="text-lightRed font-custom font-medium text-xs mt-2">{errors.apellido.message}</span>}
                                         </div>
                                     </div>
 
@@ -183,7 +183,7 @@ export const AuthPage = () => {
                                                     }
                                                 })}
                                             />
-                                            {errors.email?.type && <span className="text-red font-custom font-medium text-xs mt-2">{errors.email.message}</span>}
+                                            {errors.email?.type && <span className="text-lightRed font-custom font-medium text-xs mt-2">{errors.email.message}</span>}
                                         </div>
 
                                         <div className="flex-1 flex flex-col items-center relative">
@@ -202,7 +202,7 @@ export const AuthPage = () => {
                                                     }
                                                 })}
                                             />
-                                            {errors.phone?.type && <span className="text-red font-custom font-medium text-xs mt-2">{errors.phone.message}</span>}
+                                            {errors.phone?.type && <span className="text-lightRed font-custom font-medium text-xs mt-2">{errors.phone.message}</span>}
                                         </div>
                                     </div>
 
@@ -256,7 +256,7 @@ export const AuthPage = () => {
                                                     }
                                                 })}
                                             />
-                                            {errors.password?.type && <span className="text-red font-custom font-medium text-xs mt-2">{errors.password.message}</span>}
+                                            {errors.password?.type && <span className="text-lightRed font-custom font-medium text-xs mt-2">{errors.password.message}</span>}
                                         </div>
                                     </div>
 
@@ -276,7 +276,7 @@ export const AuthPage = () => {
                                                 }
                                             })}
                                         />
-                                        {errors.confirmPassword?.type && <span className="text-red font-custom font-medium text-xs mt-2">{errors.confirmPassword.message}</span>}
+                                        {errors.confirmPassword?.type && <span className="text-lightRed font-custom font-medium text-xs mt-2">{errors.confirmPassword.message}</span>}
                                     </div>
                                 </>
                             )
@@ -286,7 +286,7 @@ export const AuthPage = () => {
                     {/* BUTTON SUBMIT  */}
                     <div className="w-full flex justify-center">
                         <button type="submit"
-                            className="bg-coral w-[30%] sm:w-[20%] md:w-[15%] lg:w-[25%] 2xl:w-[20%] rounded-md py-1 text-black font-montserrat lg:ml-12">
+                            className="bg-lightRed w-[30%] sm:w-[20%] md:w-[15%] lg:w-[25%] 2xl:w-[20%] rounded-md py-1 text-white font-montserrat">
                             {loading ? (
                                 <>Procesando...</>
                             ) : (
@@ -308,7 +308,7 @@ export const AuthPage = () => {
                                     {login ? "NO TIENES UNA CUENTA?" : "YA TIENES UNA CUENTA?"}
                                 </span>
                                 <div className="mr-3 2xl:mr-5">
-                                    <button onClick={handleAuth}>
+                                    <button onClick={handleAuth} className="hover:text-lightRed">
                                         {login ? "REGISTRAR" : "LOGIN"}
                                         <FaArrowRight className="inline-block" id="icon-back" />
                                     </button>
