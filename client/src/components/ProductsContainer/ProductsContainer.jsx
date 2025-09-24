@@ -22,7 +22,6 @@ import { API_URL } from "../../utils/api_url.js";
 export const ProductsContainer = ({ searchValue, setSearchValue }) => {
   const { category, subcategory, categories } = useParams();
   const encodedSubcategory = encodeURIComponent(subcategory);
-
   const productsPerPage = 10;
 
   const [brand, setBrand] = useState(null);
@@ -173,7 +172,7 @@ export const ProductsContainer = ({ searchValue, setSearchValue }) => {
     <>
       {/* LINK DE CATEGORIAS Y SUBCATEGORIAS */}
       <div className="text-cBlack text-xs font-poppins mt-[6rem] text-end flex justify-between w-[95%] m-auto">
-        <div className="ml-4 text-sm xl:text-base italic font-normal uppercase">
+        <div className="ml-4 text-sm xl:text-base italic font-semibold uppercase">
           {category && <Link to={`/productos/${category}`}>{category}<MdKeyboardArrowRight className="inline-block" /></Link>}
           {subcategory && <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`}>{subcategory}</Link>}
           {categories && <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`}><MdKeyboardArrowRight className="inline-block" />{categories}</Link>}
@@ -188,11 +187,11 @@ export const ProductsContainer = ({ searchValue, setSearchValue }) => {
       </div>
 
       {/* Debug info - quitar en producción */}
-      {process.env.NODE_ENV === 'development' && (
+      {/* {process.env.NODE_ENV === 'development' && (
         <div className="w-[95%] m-auto text-xs text-gray-500 mb-2">
           Productos: {products.length} | Loading: {loading.toString()} | HasMore: {hasMore.toString()} | Initialized: {initialized.toString()}
         </div>
-      )}
+      )} */}
 
       {/* FILTROS DE PRODUCTOS */}
       <div id="products-container" className={`grid grid-cols-1 ${showFilters ? 'md:grid-cols-[30%_1fr] 2xl:grid-cols-[15%_1fr]' : 'md:grid-cols-1'} w-full mt-10`}>
@@ -202,8 +201,13 @@ export const ProductsContainer = ({ searchValue, setSearchValue }) => {
           </div>
         )}
 
-        {/* CATALOGO de productos */}
-        <div className={`grid gap-3 justify-items-center grid-cols-1 ${!showFilters ? "md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4" : "md:grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3"}`}>
+        <div
+          className={`grid justify-items-center grid-cols-1 gap-3
+          ${!showFilters
+              ? "md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 2xl:gap-6"
+              : "md:grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 2xl:gap-6"
+            }`}
+        >
           {products.map((prod, index) => (
             <Product
               key={`${prod._id}-${index}`}

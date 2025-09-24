@@ -23,19 +23,15 @@ export const AuthPage = () => {
     const [loginError, setLoginError] = useState(" ")
     const [loading, setLoading] = useState(false)
 
-
     const handleAuth = () => {
         setLoginError("")
         setLogin(login => !login)
     };
 
-
     const onSubmit = handleSubmit(async (data) => {
-        /* console.log("🚀 ~ onSubmit ~ data:", data) */
-
         try {
-            setLoading(true); // Activar loading al inicio
-            setLoginError(''); // Limpiar errores previos
+            setLoading(true);
+            setLoginError('');
 
             if (login) {
                 await signIn({ email: data.emailLogin, password: data.passwordLogin });
@@ -48,277 +44,355 @@ export const AuthPage = () => {
                     password: data.password,
                     city: data.city,
                     cuit: data.cuit,
-                    ...(data.location && { location: data.location }) // se agrega solo si existe
+                    ...(data.location && { location: data.location })
                 });
             }
         } catch (err) {
             console.log(err);
             setLoginError(err.message);
         } finally {
-            setLoading(false); // Desactivar loading al final (tanto en éxito como en error)
+            setLoading(false);
         }
     });
 
-
-
     return (
-        <>
-            <div className="w-full overflow-y-auto relative" id="login-container">
-                {/* FONDO DE AUTHPAGE */}
-                <div className="bg-authPageBg hidden lg:block relative w-full h-screen bg-cover bg-center filter brightness-50 blur-[3px] grayscale"></div>
-                {/* LOGO SWPARTS */}
+        <div className="w-full min-h-screen overflow-y-auto relative bg-gray-50 lg:bg-transparent" id="login-container">
+            {/* FONDO DE AUTHPAGE - Solo Desktop */}
+            <div className="bg-authPageBg hidden lg:block fixed inset-0 w-full h-full bg-cover bg-center filter brightness-50 blur-[3px] grayscale -z-10"></div>
 
+            {/* CONTENEDOR PRINCIPAL */}
+            <div className="min-h-screen flex items-center justify-center p-4 lg:p-0">
                 {/* FORM */}
                 <form
                     key={login ? "login" : "register"}
                     action="post"
                     id="form"
                     onSubmit={onSubmit}
-                    className="flex flex-col items-center mt-10 gap-4
-                    lg:absolute lg:top-1/2 lg:left-1/2 lg:transform lg:-translate-x-1/2 lg:-translate-y-1/2 
-                    bg-cWhite lg:w-[45%] lg:rounded-2xl lg:p-10 w-full border"
+                    className="w-full max-w-md sm:max-w-lg lg:max-w-2xl xl:max-w-3xl
+                             bg-gray rounded-2xl shadow-xl lg:shadow-2xl
+                             p-6 sm:p-8 lg:p-10 space-y-6
+                             border border-gray-200 lg:border-gray-300"
                 >
-                    <h3 className="text-cBlack text-center text-[2.5em] mt-6 font-roboto">
-                        {login ? "INCIAR SESIÓN" : "REGISTRATE"}
-                    </h3>
+                    {/* TÍTULO */}
+                    <div className="text-center">
+                        <h1 className="text-cBlack text-2xl sm:text-3xl lg:text-4xl xl:text-[2.5em] font-roboto font-bold">
+                            {login ? "INICIAR SESIÓN" : "REGISTRARSE"}
+                        </h1>
+                    </div>
 
-                    <div className="w-full flex flex-col gap-2">
+                    {/* CAMPOS DEL FORMULARIO */}
+                    <div className="space-y-4 lg:space-y-6">
                         {login ? (
+                            /* FORMULARIO DE LOGIN */
                             <>
-                                <div className="w-full flex flex-col items-center relative">
-                                    <input
-                                        type="email"
-                                        autoComplete="off"
-                                        onFocus={() => setLoginError(" ")}
-                                        className="p-2 bg-transparent w-[65%] sm:w-[50%] md:w-[45%] outline-0 text-cBlack
-                                                border-[1px] border-cBlack rounded-xl focus:border-dotted"
-                                        placeholder="Ingrese su email"
-                                        {...register("emailLogin", {
-                                            required: "Campo incompleto"
-                                        })}
-                                    />
-                                    {errors.emailLogin?.type && <span className="text-lightRed font-custom font-medium text-xs mt-2">{errors.emailLogin.message}</span>}
-                                    {loginError === "User does not exist" ? <span className="text-lightRed font-custom font-medium text-xs mt-2">No existe usuario con este mail</span> : <></>}
-                                </div>
-
-                                <div className="w-full flex flex-col items-center relative">
-                                    <input
-                                        type="password"
-                                        autoComplete="off"
-                                        onFocus={() => setLoginError("")}
-                                        className="p-2 bg-transparent w-[65%] sm:w-[50%] md:w-[45%] outline-0 text-cBlack
-                                                border-[1px] border-cBlack rounded-xl
-                                                focus:border-dotted"
-                                        placeholder="Ingrese su contraseña"
-                                        {...register("passwordLogin", {
-                                            required: "Campo incompleto"
-                                        })}
-                                    />
-                                    {errors.passwordLogin?.type && <span className="text-lightRed font-custom font-medium text-xs mt-2">{errors.passwordLogin.message}</span>}
-                                    {loginError === "password incorrect" ? <span className="text-lightRed font-custom font-medium text-xs mt-2">Contraseña Incorrecta</span> : <></>}
-                                </div>
-                            </>
-                        )
-                            : (
-                                <>
-                                    {/* FIRST_NAME && LAST_NAME */}
-                                    <div className="w-full lg:flex p-4 gap-4">
-                                        <div className="flex-1 flex flex-col items-center relative">
-                                            <input
-                                                type="text"
-                                                autoComplete="off"
-                                                onFocus={() => setLoginError("")}
-                                                className="p-2 bg-transparent w-full outline-0 textblack
-                                                    border-[1px] border-black rounded-xl
-                                                    focus:border-dotted placeholder-cBlack"
-                                                placeholder="Ingrese su nombre"
-                                                {...register("nombre", {
-                                                    required: "Campo incompleto",
-                                                    validate: (value) => {
-                                                        const val = value.trim().split(" ");
-                                                        return val.length === 1 || "Debe ingresar solo un valor (sin espacios)";
-                                                    }
-                                                })}
-                                            />
-                                            {errors.nombre?.type && <span className="text-lightRed font-custom font-medium text-xs mt-2">{errors.nombre.message}</span>}
-                                        </div>
-
-                                        <div className="flex-1 flex flex-col items-center relative mt-4 lg:mt-0">
-                                            <input
-                                                type="text"
-                                                autoComplete="off"
-                                                onFocus={() => setLoginError("")}
-                                                className="p-2 bg-transparent w-full outline-0 text-cBlack
-                                                        border-[1px] border-cBlack rounded-xl
-                                                        focus:border-dotted placeholder-cBlack"
-                                                placeholder="Ingrese su apellido"
-                                                {...register("apellido", {
-                                                    required: "Campo incompleto",
-                                                    validate: (value) => {
-                                                        const val = value.trim().split(" ");
-                                                        return val.length === 1 || "Debe ingresar solo un valor (sin espacios)";
-                                                    }
-                                                })}
-                                            />
-                                            {errors.apellido?.type && <span className="text-lightRed font-custom font-medium text-xs mt-2">{errors.apellido.message}</span>}
-                                        </div>
-                                    </div>
-
-                                    {/* EMAIL && PHONE */}
-                                    <div className="w-full lg:flex p-4 gap-4">
-                                        <div className="flex-1 flex flex-col items-center relative">
-                                            <input
-                                                type="email"
-                                                autoComplete="off"
-                                                onFocus={() => setLoginError("")}
-                                                className="p-2 bg-transparent w-full outline-0 text-cBlack
-                                                    border-[1px] border-cBlack rounded-xl
-                                                    focus:border-dotted placeholder-cBlack"
-                                                placeholder="Ingrese su email"
-                                                {...register("email", {
-                                                    required: "Campo incompleto",
-                                                    pattern: {
-                                                        value: /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/,
-                                                        message: "Email no válido"
-                                                    }
-                                                })}
-                                            />
-                                            {errors.email?.type && <span className="text-lightRed font-custom font-medium text-xs mt-2">{errors.email.message}</span>}
-                                        </div>
-
-                                        <div className="flex-1 flex flex-col items-center relative">
-                                            <input
-                                                type="text"
-                                                autoComplete="off"
-                                                onFocus={() => setLoginError("")}
-                                                className="p-2 bg-transparent w-full outline-0 text-cBlack
-                                                    border-[1px] border-cBlack rounded-xl
-                                                    focus:border-dotted placeholder-cBlack"
-                                                placeholder="Ingrese su número de celular"
-                                                {...register("phone", {
-                                                    required: "Campo incompleto",
-                                                    validate: (value) => {
-                                                        return value.length === 10 || "Numero de celular no valido";
-                                                    }
-                                                })}
-                                            />
-                                            {errors.phone?.type && <span className="text-lightRed font-custom font-medium text-xs mt-2">{errors.phone.message}</span>}
-                                        </div>
-                                    </div>
-
-                                    {/* LOCATION && CITY */}
-                                    <div className="w-full lg:flex p-4 gap-4">
-                                        <div className="w-full flex flex-col items-center relative">
-                                            <input
-                                                type="text"
-                                                autoComplete="off"
-                                                onFocus={() => setLoginError("")}
-                                                className="p-2 bg-transparent w-full outline-0 text-cBlack
-                                                    border-[1px] border-cBlack rounded-xl
-                                                    focus:border-dotted placeholder-cBlack"
-                                                placeholder="Ingrese su dirección. Ej: Calle San Martín 567"
-                                                /* {...register("location", {
-                                                    required: "Campo incompleto",
-                                                })} */
-                                            />
-                                        </div>
-
-                                        <FormLocalidades
-                                            localidades={localidadesOrdenadas}
-                                            register={register}
-                                            errors={errors}
-                                            name="city" // Mismo nombre que tu campo de dirección
+                                <div className="space-y-4">
+                                    <div className="w-full">
+                                        <input
+                                            type="email"
+                                            autoComplete="off"
+                                            onFocus={() => setLoginError(" ")}
+                                            className="w-full p-3 sm:p-4 bg-transparent outline-none text-cBlack
+                                                     border border-cBlack rounded-xl transition-all duration-200
+                                                     focus:border-lightRed focus:border-2 focus:shadow-md
+                                                     placeholder:text-gray-500"
+                                            placeholder="Ingrese su email"
+                                            {...register("emailLogin", {
+                                                required: "Campo incompleto"
+                                            })}
                                         />
+                                        {errors.emailLogin?.type && (
+                                            <span className="text-lightRed font-medium text-xs sm:text-sm mt-2 block">
+                                                {errors.emailLogin.message}
+                                            </span>
+                                        )}
+                                        {loginError === "User does not exist" && (
+                                            <span className="text-lightRed font-medium text-xs sm:text-sm mt-2 block">
+                                                No existe usuario con este mail
+                                            </span>
+                                        )}
                                     </div>
 
-                                    {/* CUIT && PASSWORD */}
-                                    <div className="w-full lg:flex p-4 gap-4">
-                                        <CUITInput
-                                            register={register}
-                                            errors={errors}
-                                            name="cuit" // Opcional (por defecto ya es "cuit")
-                                        />
-
-                                        <div className="w-full flex flex-col items-center relative">
-                                            <input
-                                                type="password"
-                                                autoComplete="off"
-                                                onFocus={() => setLoginError("")}
-                                                className="p-2 bg-transparent w-full outline-0 text-cBlack
-                                                    border-[1px] border-cBlack rounded-xl
-                                                    focus:border-dotted placeholder-cBlack"
-                                                placeholder="Ingrese su contraseña"
-                                                {...register("password", {
-                                                    required: "Campo incompleto",
-                                                    pattern: {
-                                                        value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)([A-Za-z\d]|[^ ]){8,15}$/,
-                                                        message: "Contraseña débil"
-                                                    }
-                                                })}
-                                            />
-                                            {errors.password?.type && <span className="text-lightRed font-custom font-medium text-xs mt-2">{errors.password.message}</span>}
-                                        </div>
-                                    </div>
-
-                                    <div className="w-full flex flex-col items-center relative">
+                                    <div className="w-full">
                                         <input
                                             type="password"
                                             autoComplete="off"
                                             onFocus={() => setLoginError("")}
-                                            className="p-2 bg-transparent w-[65%] md:w-[45%] outline-0 text-cBlack
-                                                border-[1px] border-cBlack rounded-xl
-                                                focus:border-dotted lg:ml-12 placeholder-cBlack"
-                                            placeholder="Confirmar contraseña"
-                                            {...register("confirmPassword", {
+                                            className="w-full p-3 sm:p-4 bg-transparent outline-none text-cBlack
+                                                     border border-cBlack rounded-xl transition-all duration-200
+                                                     focus:border-lightRed focus:border-2 focus:shadow-md
+                                                     placeholder:text-gray-500"
+                                            placeholder="Ingrese su contraseña"
+                                            {...register("passwordLogin", {
+                                                required: "Campo incompleto"
+                                            })}
+                                        />
+                                        {errors.passwordLogin?.type && (
+                                            <span className="text-lightRed font-medium text-xs sm:text-sm mt-2 block">
+                                                {errors.passwordLogin.message}
+                                            </span>
+                                        )}
+                                        {loginError === "password incorrect" && (
+                                            <span className="text-lightRed font-medium text-xs sm:text-sm mt-2 block">
+                                                Contraseña Incorrecta
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+                            </>
+                        ) : (
+                            /* FORMULARIO DE REGISTRO */
+                            <>
+                                {/* NOMBRE Y APELLIDO */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="w-full">
+                                        <input
+                                            type="text"
+                                            autoComplete="off"
+                                            onFocus={() => setLoginError("")}
+                                            className="w-full p-3 sm:p-4 bg-transparent outline-none text-cBlack
+                                                     border border-cBlack rounded-xl transition-all duration-200
+                                                     focus:border-lightRed focus:border-2 focus:shadow-md
+                                                     placeholder:text-gray-500"
+                                            placeholder="Ingrese su nombre"
+                                            {...register("nombre", {
                                                 required: "Campo incompleto",
                                                 validate: (value) => {
-                                                    return value === watch("password") || "Las contraseñas no coinciden";
+                                                    const val = value.trim().split(" ");
+                                                    return val.length === 1 || "Debe ingresar solo un valor (sin espacios)";
                                                 }
                                             })}
                                         />
-                                        {errors.confirmPassword?.type && <span className="text-lightRed font-custom font-medium text-xs mt-2">{errors.confirmPassword.message}</span>}
+                                        {errors.nombre?.type && (
+                                            <span className="text-lightRed font-medium text-xs sm:text-sm mt-2 block">
+                                                {errors.nombre.message}
+                                            </span>
+                                        )}
                                     </div>
-                                </>
-                            )
-                        }
+
+                                    <div className="w-full">
+                                        <input
+                                            type="text"
+                                            autoComplete="off"
+                                            onFocus={() => setLoginError("")}
+                                            className="w-full p-3 sm:p-4 bg-transparent outline-none text-cBlack
+                                                     border border-cBlack rounded-xl transition-all duration-200
+                                                     focus:border-lightRed focus:border-2 focus:shadow-md
+                                                     placeholder:text-gray-500"
+                                            placeholder="Ingrese su apellido"
+                                            {...register("apellido", {
+                                                required: "Campo incompleto",
+                                                validate: (value) => {
+                                                    const val = value.trim().split(" ");
+                                                    return val.length === 1 || "Debe ingresar solo un valor (sin espacios)";
+                                                }
+                                            })}
+                                        />
+                                        {errors.apellido?.type && (
+                                            <span className="text-lightRed font-medium text-xs sm:text-sm mt-2 block">
+                                                {errors.apellido.message}
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* EMAIL Y TELÉFONO */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="w-full">
+                                        <input
+                                            type="email"
+                                            autoComplete="off"
+                                            onFocus={() => setLoginError("")}
+                                            className="w-full p-3 sm:p-4 bg-transparent outline-none text-cBlack
+                                                     border border-cBlack rounded-xl transition-all duration-200
+                                                     focus:border-lightRed focus:border-2 focus:shadow-md
+                                                     placeholder:text-gray-500"
+                                            placeholder="Ingrese su email"
+                                            {...register("email", {
+                                                required: "Campo incompleto",
+                                                pattern: {
+                                                    value: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/,
+                                                    message: "Email no válido"
+                                                }
+                                            })}
+                                        />
+                                        {errors.email?.type && (
+                                            <span className="text-lightRed font-medium text-xs sm:text-sm mt-2 block">
+                                                {errors.email.message}
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    <div className="w-full">
+                                        <input
+                                            type="text"
+                                            autoComplete="off"
+                                            onFocus={() => setLoginError("")}
+                                            className="w-full p-3 sm:p-4 bg-transparent outline-none text-cBlack
+                                                     border border-cBlack rounded-xl transition-all duration-200
+                                                     focus:border-lightRed focus:border-2 focus:shadow-md
+                                                     placeholder:text-gray-500"
+                                            placeholder="Ingrese su número de celular"
+                                            {...register("phone", {
+                                                required: "Campo incompleto",
+                                                validate: (value) => {
+                                                    return value.length === 10 || "Numero de celular no valido";
+                                                }
+                                            })}
+                                        />
+                                        {errors.phone?.type && (
+                                            <span className="text-lightRed font-medium text-xs sm:text-sm mt-2 block">
+                                                {errors.phone.message}
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* DIRECCIÓN Y CIUDAD */}
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                    <div className="w-full">
+                                        <input
+                                            type="text"
+                                            autoComplete="off"
+                                            onFocus={() => setLoginError("")}
+                                            className="w-full p-3 sm:p-4 bg-transparent outline-none text-cBlack
+                                                     border border-cBlack rounded-xl transition-all duration-200
+                                                     focus:border-lightRed focus:border-2 focus:shadow-md
+                                                     placeholder:text-gray-500"
+                                            placeholder="Ingrese su dirección. Ej: Calle San Martín 567"
+                                            {...register("location")}
+                                        />
+                                    </div>
+
+                                    <div className="w-full">
+                                        <FormLocalidades
+                                            localidades={localidadesOrdenadas}
+                                            register={register}
+                                            errors={errors}
+                                            name="city"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* CUIT Y CONTRASEÑA */}
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                    <div className="w-full">
+                                        <CUITInput
+                                            register={register}
+                                            errors={errors}
+                                            name="cuit"
+                                        />
+                                    </div>
+
+                                    <div className="w-full">
+                                        <input
+                                            type="password"
+                                            autoComplete="off"
+                                            onFocus={() => setLoginError("")}
+                                            className="w-full p-3 sm:p-4 bg-transparent outline-none text-cBlack
+                                                     border border-cBlack rounded-xl transition-all duration-200
+                                                     focus:border-lightRed focus:border-2 focus:shadow-md
+                                                     placeholder:text-gray-500"
+                                            placeholder="Ingrese su contraseña"
+                                            {...register("password", {
+                                                required: "Campo incompleto",
+                                                pattern: {
+                                                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)([A-Za-z\d]|[^ ]){8,15}$/,
+                                                    message: "Contraseña débil"
+                                                }
+                                            })}
+                                        />
+                                        {errors.password?.type && (
+                                            <span className="text-lightRed font-medium text-xs sm:text-sm mt-2 block">
+                                                {errors.password.message}
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* CONFIRMAR CONTRASEÑA */}
+                                <div className="w-full max-w-md mx-auto">
+                                    <input
+                                        type="password"
+                                        autoComplete="off"
+                                        onFocus={() => setLoginError("")}
+                                        className="w-full p-3 sm:p-4 bg-transparent outline-none text-cBlack
+                                                 border border-cBlack rounded-xl transition-all duration-200
+                                                 focus:border-lightRed focus:border-2 focus:shadow-md
+                                                 placeholder:text-gray-500"
+                                        placeholder="Confirmar contraseña"
+                                        {...register("confirmPassword", {
+                                            required: "Campo incompleto",
+                                            validate: (value) => {
+                                                return value === watch("password") || "Las contraseñas no coinciden";
+                                            }
+                                        })}
+                                    />
+                                    {errors.confirmPassword?.type && (
+                                        <span className="text-lightRed font-medium text-xs sm:text-sm mt-2 block">
+                                            {errors.confirmPassword.message}
+                                        </span>
+                                    )}
+                                </div>
+                            </>
+                        )}
                     </div>
 
-                    {/* BUTTON SUBMIT  */}
-                    <div className="w-full flex justify-center">
-                        <button type="submit"
-                            className="bg-lightRed w-[30%] sm:w-[20%] md:w-[15%] lg:w-[25%] 2xl:w-[20%] rounded-md py-1 text-white font-montserrat">
+                    {/* BOTÓN SUBMIT */}
+                    <div className="flex flex-col items-center space-y-3">
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="bg-lightRed hover:bg-red-600 disabled:bg-gray-400
+                                     w-full max-w-xs sm:max-w-sm lg:max-w-md
+                                     rounded-lg py-3 px-6
+                                     text-white font-montserrat font-medium
+                                     transition-all duration-200
+                                     transform hover:scale-105 disabled:hover:scale-100
+                                     shadow-md hover:shadow-lg
+                                     focus:outline-none focus:ring-2 focus:ring-lightRed/50"
+                        >
                             {loading ? (
-                                <>Procesando...</>
+                                <span className="flex items-center justify-center">
+                                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Procesando...
+                                </span>
                             ) : (
                                 login ? 'Iniciar sesión' : 'Registrarse'
                             )}
                         </button>
 
-
-                        {loginError === "user already exists" ? <span className="text-orange font-custom font-medium text-xs xl:text-base mt-2 lg:ml-12 xl:absolute xl:left-[27%] xl:bottom-[4px]">Usuario ya registrado</span> : <></>}
+                        {/* ERROR DE USUARIO YA EXISTENTE */}
+                        {loginError === "user already exists" && (
+                            <span className="text-orange font-medium text-xs sm:text-sm text-center">
+                                Usuario ya registrado
+                            </span>
+                        )}
                     </div>
 
-                    {/* //FORM FOOTER */}
-                    <div className="w-full text-cBlack flex flex-col justify-center items-center">
-                        <hr className="border-cBlack mt-6 w-[75%] mx-auto" />
-
-                        <div className="w-[80%] my-8 xl:my-2 flex flex-col">     {/* //FOOTER FORM  */}
-                            <div className="flex flex-col xl:flex-row items-center xl:justify-between mt-4 gap-2">
-                                <span className="ml-3 2xl:ml-5">
-                                    {login ? "NO TIENES UNA CUENTA?" : "YA TIENES UNA CUENTA?"}
-                                </span>
-                                <div className="mr-3 2xl:mr-5">
-                                    <button onClick={handleAuth} className="hover:text-lightRed">
-                                        {login ? "REGISTRAR" : "LOGIN"}
-                                        <FaArrowRight className="inline-block" id="icon-back" />
-                                    </button>
-                                </div>
-                            </div>
+                    {/* FOOTER DEL FORMULARIO */}
+                    <div className="pt-6 border-t border-gray-200">
+                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-cBlack">
+                            <span className="text-sm sm:text-base font-medium text-center sm:text-left">
+                                {login ? "¿NO TIENES UNA CUENTA?" : "¿YA TIENES UNA CUENTA?"}
+                            </span>
+                            <button
+                                type="button"
+                                onClick={handleAuth}
+                                className="flex items-center gap-2 text-sm sm:text-base font-medium
+                                         hover:text-lightRed transition-colors duration-200
+                                         focus:outline-none focus:text-lightRed"
+                            >
+                                {login ? "REGISTRARSE" : "INICIAR SESIÓN"}
+                                <FaArrowRight className="text-sm" />
+                            </button>
                         </div>
                     </div>
                 </form>
             </div>
-        </>
+        </div>
     )
 }
 
