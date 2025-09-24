@@ -82,7 +82,7 @@ export const ProductDetail = ({ prod }) => {
                 <div className="basis-[58%] text-xs relative lg:text-sm 2xl:text-base">
                     <img src={getImage(imageUrl)} className="w-full object-contain h-full my-28 mobile:my-14 lg:my-3" alt={`prod-${codpro}-img`} />
 
-                    <div className="font-roboto font-semibold italic flex flex-col mobile:flex-row items-start mobile:justify-center lg:justify-start w-full absolute top-0">
+                    <div className="font-roboto font-semibold italic text-base sm:text-lg flex flex-col mobile:flex-row items-start mobile:justify-center lg:justify-start w-full absolute top-0">
                         <div className="flex items-center mx-2 my-1 lg:mx-0">
                             <Link className="first-letter:uppercase" to={`/productos/${encodedCategory}`}>{desc_rubro}</Link><MdKeyboardArrowRight />
                         </div>
@@ -94,7 +94,7 @@ export const ProductDetail = ({ prod }) => {
 
                     <button
                         onClick={() => navigate(-1)}
-                        className="rounded-md py-2 px-4 bg-lightRed text-white lg:text-xs 2xl:text-base absolute bottom-0 left-0 flex items-center gap-1"
+                        className="rounded-md m-8 lg:m-2 py-2 px-4 bg-lightRed text-white flex absolute bottom-0"
                     >
                         <IoArrowUndoCircleOutline className="text-lg" />
                         <span className="text-sm">VOLVER A PRODUCTOS</span>
@@ -119,7 +119,7 @@ export const ProductDetail = ({ prod }) => {
                             <span>Marca: <span className="font-bold">{desc_marca}</span></span>
                             <span>
                                 Stock:{" "}
-                                <span className={`italic inline-block font-bold ${stock > 0 ? "text-orange" : "text-red"} ${destacado ? "text-white" : ""} first-letter:uppercase`}>
+                                <span className={`italic inline-block font-bold ${stock > 0 ? "text-deepRed" : "text-red"} ${destacado ? "text-white" : ""} first-letter:uppercase`}>
                                     {stock > 0 ? "Disponible" : "Sin stock"}
                                 </span>
                             </span>

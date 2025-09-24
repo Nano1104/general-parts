@@ -19,7 +19,7 @@ export const UserIcon = () => {
     return (
         <>
             <div className="relative">
-                <PiUser onClick={() => setShowMenu(showMenu => !showMenu)} className="text-4xl cursor-pointer hover:text-lightRed hover:scale-110 transition duration-100" />
+                <PiUser onClick={() => setShowMenu(showMenu => !showMenu)} className="text-4xl text-cBlack lg:text-white cursor-pointer hover:text-lightRed hover:scale-110 transition duration-100" />
                 {
                     showMenu ? (
                         <div className="bg-cWhite absolute top-14 -left-28 w-40 h-48 rounded-2xl text-black text-center shadow-lg z-10">

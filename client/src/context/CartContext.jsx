@@ -83,7 +83,7 @@ export const CartContextProvider = ({ children }) => {
                 title: "Estas seguro que quieras eliminar el producto del carrito?",
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonColor: "#DC5F00",
+                confirmButtonColor: "#D7263D",
                 cancelButtonColor: "#D8D9DA",
                 confirmButtonText: "Si, eliminar!"
             }).then(async (result) => {             // Añadir async aquí
@@ -102,7 +102,7 @@ export const CartContextProvider = ({ children }) => {
                             icon: "success",
                             title: "Producto eliminado",
                             text: "El producto ha sido eliminado del carrito",
-                            confirmButtonColor: "#DC5F00"
+                            confirmButtonColor: "#D7263D"
                         });
                     } else {
                         throw new Error("Error al eliminar el producto del carrito");

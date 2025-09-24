@@ -1,20 +1,21 @@
 
 
+// Logo Component - Mejorado y Responsivo
 export const Logo = () => {
     return (
-        <>
-            <div
-                translate="no"
-                className="font-poppins font-bold
-                            text-[4rem] sm:text-[6.5rem] lg:text-[6rem] xl:text-[8rem] 2xl:text-[10rem]
-                            flex flex-col lg:flex-row items-center w-full relative 
-                            mt-16 sm:mt-[25%] lg:mt-0"
-
-            >
-                <span className="text-lightRed tracking-tighter italic">SW</span>
-                <span className="text-white tracking-tight italic absolute lg:static top-12 sm:top-20">Parts</span>
-            </div>
-        </>
+        <div className="font-poppins font-bold flex items-baseline justify-center lg:justify-start mb-12 sm:mb-24">
+            <h1 className="flex items-baseline">
+                <span className="text-lightRed tracking-tighter italic
+                               text-6xl md:text-7xl lg:text-8xl xl:text-9xl 2xl:text-[10rem]">
+                    SW
+                </span>
+                <span className="text-cBlack lg:text-white tracking-tight italic
+                               text-6xl md:text-7xl lg:text-8xl xl:text-9xl 2xl:text-[10rem]
+                               ml-1 sm:ml-2">
+                    Parts
+                </span>
+            </h1>
+        </div>
     )
 }
 
