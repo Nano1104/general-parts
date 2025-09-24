@@ -69,7 +69,7 @@ export const AuthPage = () => {
                     id="form"
                     onSubmit={onSubmit}
                     className="w-full max-w-md sm:max-w-lg lg:max-w-2xl xl:max-w-3xl
-                             bg-gray rounded-2xl shadow-xl lg:shadow-2xl
+                             bg-cWhite rounded-2xl shadow-xl lg:shadow-2xl
                              p-6 sm:p-8 lg:p-10 space-y-6
                              border border-gray-200 lg:border-gray-300"
                 >
