@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /authPage/private/
+
+# Sitemap
+Sitemap: https://general-parts.vercel.app/sitemap.xml
