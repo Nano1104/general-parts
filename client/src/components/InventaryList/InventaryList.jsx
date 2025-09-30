@@ -77,7 +77,7 @@ export const InventaryList = ({ stateNews }) => {
             <nav className="hidden lg:flex bg-deepGray h-8 relative px-4 xl:px-7 text-xs xl:text-sm">
                 <div ref={menuRef} className="flex">
                     <button
-                        className="flex items-center italic px-3 xl:px-4 h-full bg-cWhite text-black uppercase font-montserrat font-bold tracking-tight cursor-pointer hover:bg-gray-100 transition-colors duration-200"
+                        className="flex items-center italic px-3 xl:px-4 h-full bg-black text-white uppercase font-montserrat font-bold tracking-tight cursor-pointer hover:bg-gray-100 transition-colors duration-200"
                         onClick={handleRubrosClick}
                         aria-expanded={isRubrosOpen}
                         aria-label="Mostrar rubros"
@@ -96,7 +96,7 @@ export const InventaryList = ({ stateNews }) => {
                     {isAdmin && (
                         <Link
                             to="/"
-                            className="flex items-center italic ml-2 xl:ml-4 px-3 xl:px-4 h-full bg-cWhite text-black uppercase font-montserrat font-bold tracking-tight hover:bg-gray-100 transition-colors duration-200"
+                            className="flex items-center italic ml-2 xl:ml-4 px-3 xl:px-4 h-full bg-black text-white uppercase font-montserrat font-bold tracking-tight hover:bg-gray-100 transition-colors duration-200"
                             aria-label="Volver al inicio"
                         >
                             VOLVER A INICIO
