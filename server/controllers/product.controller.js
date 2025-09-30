@@ -62,34 +62,34 @@ function buildBaseFilter(params) {
 async function smartSearch(baseFilter, searchTerm, limit, lastId) {
     const rawTerms = searchTerm.toLowerCase().split(/\s+/).filter(t => t.length > 0);
     const terms = normalizeTerms(rawTerms);
-    
+
     // Construir múltiples queries con diferentes niveles de especificidad
     const queries = buildSearchQueries(baseFilter, terms, searchTerm);
-    
+
     let allResults = [];
     const seenIds = new Set();
-    
+
     // Ejecutar queries en orden de prioridad
     for (const query of queries) {
         const results = await executeProductQuery(query, 50, lastId); // Buscar más para luego filtrar
-        
+
         // Agregar solo productos no vistos
         for (const product of results) {
             if (!seenIds.has(product._id.toString())) {
                 seenIds.add(product._id.toString());
-                
+
                 // Calcular score de relevancia
                 const score = calculateRelevanceScore(product, terms, searchTerm);
                 product._score = score;
-                
+
                 allResults.push(product);
             }
         }
-        
+
         // Si ya tenemos suficientes resultados relevantes, parar
         if (allResults.length >= parseInt(limit) * 3) break;
     }
-    
+
     // Ordenar por relevancia y limitar
     return allResults
         .sort((a, b) => b._score - a._score)
@@ -99,12 +99,12 @@ async function smartSearch(baseFilter, searchTerm, limit, lastId) {
 // Función para normalizar términos (manejar plurales, géneros, etc.)
 function normalizeTerms(terms) {
     const normalized = [];
-    
+
     terms.forEach(term => {
         const variants = getWordVariants(term);
         normalized.push(...variants);
     });
-    
+
     // Remover duplicados manteniendo el orden
     return [...new Set(normalized)];
 }
@@ -112,7 +112,7 @@ function normalizeTerms(terms) {
 // Generar variantes de una palabra
 function getWordVariants(word) {
     const variants = [word]; // Siempre incluir la palabra original
-    
+
     // Diccionario específico de plurales/singulares comunes en autopartes
     const autopartsDict = {
         // Plurales -> Singular
@@ -177,7 +177,7 @@ function getWordVariants(word) {
         'desengrasantes': 'desengrasante',
         'selladores': 'sellador',
         'adhesivos': 'adhesivo',
-        
+
         // Singular -> Plural (agregar el inverso)
         'sonda': 'sondas',
         'sensor': 'sensores',
@@ -228,12 +228,12 @@ function getWordVariants(word) {
         'estopera': 'estoperas',
         'empaque': 'empaques'
     };
-    
+
     // Buscar en diccionario específico
     if (autopartsDict[word]) {
         variants.push(autopartsDict[word]);
     }
-    
+
     // Reglas generales para español (como fallback)
     if (word.length >= 4) {
         // Manejar plurales terminados en -s
@@ -242,14 +242,14 @@ function getWordVariants(word) {
         } else {
             variants.push(word + 's'); // agregar 's'
         }
-        
+
         // Manejar plurales terminados en -es
         if (word.endsWith('es') && word.length > 3) {
             variants.push(word.slice(0, -2)); // quitar 'es'
         } else if (!word.endsWith('s')) {
             variants.push(word + 'es'); // agregar 'es'
         }
-        
+
         // Variaciones comunes
         if (word.endsWith('or')) {
             variants.push(word + 'es'); // sensor -> sensores
@@ -258,14 +258,14 @@ function getWordVariants(word) {
             variants.push(word.slice(0, -2)); // sensores -> sensor
         }
     }
-    
+
     return [...new Set(variants)]; // Remover duplicados
 }
 
 // Construir queries con diferentes niveles de especificidad
 function buildSearchQueries(baseFilter, terms, originalTerm) {
     const queries = [];
-    
+
     // 1. PRIORIDAD MÁXIMA: Código exacto completo
     if (/^[a-zA-Z0-9]+$/i.test(originalTerm.replace(/\s/g, ''))) {
         queries.push({
@@ -273,7 +273,7 @@ function buildSearchQueries(baseFilter, terms, originalTerm) {
             codpro: { $regex: `^${originalTerm.replace(/\s/g, '')}`, $options: 'i' }
         });
     }
-    
+
     // 2. ALTA PRIORIDAD: Códigos que empiecen con números o letras del término
     const codeTerms = terms.filter(t => /[0-9a-zA-Z]{3,}/.test(t));
     if (codeTerms.length > 0) {
@@ -284,7 +284,7 @@ function buildSearchQueries(baseFilter, terms, originalTerm) {
             }))
         });
     }
-    
+
     // 3. ALTA PRIORIDAD: Frase exacta en descripción
     if (terms.length > 1) {
         const exactPhrase = terms.join(' ');
@@ -297,7 +297,7 @@ function buildSearchQueries(baseFilter, terms, originalTerm) {
             ]
         });
     }
-    
+
     // 4. MEDIA-ALTA PRIORIDAD: Todos los términos presentes (más flexible)
     if (terms.length > 1) {
         const allTermsConditions = terms.map(term => ({
@@ -309,13 +309,13 @@ function buildSearchQueries(baseFilter, terms, originalTerm) {
                 { codpro: { $regex: term, $options: 'i' } }
             ]
         }));
-        
+
         queries.push({
             ...baseFilter,
             $and: allTermsConditions
         });
     }
-    
+
     // 5. MEDIA PRIORIDAD: Al menos algunos términos importantes
     const importantTerms = terms.filter(t => t.length >= 4); // Palabras más largas
     if (importantTerms.length > 0) {
@@ -330,7 +330,7 @@ function buildSearchQueries(baseFilter, terms, originalTerm) {
             }))
         });
     }
-    
+
     // 6. BAJA PRIORIDAD: Cualquier término
     queries.push({
         ...baseFilter,
@@ -344,14 +344,14 @@ function buildSearchQueries(baseFilter, terms, originalTerm) {
             ]
         }))
     });
-    
+
     return queries;
 }
 
 // Cálculo de relevancia mejorado
 function calculateRelevanceScore(product, terms, originalTerm) {
     let score = 0;
-    
+
     const productText = {
         code: (product.codpro || '').toLowerCase(),
         description: (product.desc_stock || '').toLowerCase(),
@@ -359,65 +359,65 @@ function calculateRelevanceScore(product, terms, originalTerm) {
         category: (product.desc_rubro || '').toLowerCase(),
         subcategory: (product.desc_subrub || '').toLowerCase()
     };
-    
+
     const searchLower = originalTerm.toLowerCase();
     const allText = Object.values(productText).join(' ');
-    
+
     // También normalizar los términos originales para el scoring
     const originalTermsNormalized = normalizeTerms(searchLower.split(/\s+/));
-    
+
     // 1. Código exacto = máximo score
     if (productText.code.startsWith(searchLower.replace(/\s/g, ''))) {
         score += 1000;
     }
-    
+
     // 2. Frase exacta en descripción (original y normalizada)
     if (productText.description.includes(searchLower)) {
         score += 500;
     }
-    
+
     // 3. Frase exacta en marca
     if (productText.brand.includes(searchLower)) {
         score += 400;
     }
-    
+
     // 4. Frase exacta en subcategoría
     if (productText.subcategory.includes(searchLower)) {
         score += 300;
     }
-    
+
     // 5. Score por cada término encontrado (incluyendo variantes)
     terms.forEach(term => {
         const termLower = term.toLowerCase();
-        
+
         // Código
         if (productText.code.includes(termLower)) {
             score += productText.code.startsWith(termLower) ? 200 : 100;
         }
-        
+
         // Descripción
         if (productText.description.includes(termLower)) {
             // Bonus si es palabra completa
             const wordBoundary = new RegExp(`\\b${termLower}\\b`);
             score += wordBoundary.test(productText.description) ? 80 : 40;
         }
-        
+
         // Marca
         if (productText.brand.includes(termLower)) {
             score += 60;
         }
-        
+
         // Subcategoría
         if (productText.subcategory.includes(termLower)) {
             score += 40;
         }
-        
+
         // Categoría
         if (productText.category.includes(termLower)) {
             score += 20;
         }
     });
-    
+
     // 6. Penalty por términos faltantes en búsquedas específicas (más suave)
     const originalWords = originalTerm.toLowerCase().split(/\s+/);
     const missingTerms = originalWords.filter(originalWord => {
@@ -425,12 +425,12 @@ function calculateRelevanceScore(product, terms, originalTerm) {
         return !variants.some(variant => allText.includes(variant));
     });
     score -= missingTerms.length * 30; // Reducido de 50 a 30
-    
+
     // 7. Bonus por longitud de término vs longitud de descripción (más específico = mejor)
     if (originalWords.length >= 3 && productText.description.length < 100) {
         score += 50;
     }
-    
+
     return Math.max(0, score);
 }
 
@@ -745,6 +745,135 @@ export const uploadExcelProducts = async (req, res) => {
         });
     }
 }
+
+export const downloadExcelProducts = async (req, res) => {
+    try {
+        console.log('=== INICIO downloadExcelProducts ===');
+        const { rubro } = req.query;
+        console.log('Rubro recibido:', rubro);
+
+        // Validar que se envió el rubro
+        if (!rubro || rubro.trim() === '') {
+            console.log('ERROR: Rubro vacío');
+            return res.status(400).json({
+                message: "El parámetro 'rubro' es requerido"
+            });
+        }
+
+        const rubroTrimmed = rubro.trim();
+        console.log('Rubro limpio:', rubroTrimmed);
+
+        // BÚSQUEDA EXACTA (case-insensitive)
+        console.log('Buscando en DB con desc_rubro...');
+        const products = await Product.find({
+            desc_rubro: { $regex: new RegExp(`^${rubroTrimmed}$`, 'i') }
+        })
+            .select('codpro desc_stock rubro subrub proveed desc_rubro desc_subrub desc_marca porcen1 precioimpre stock lastUpdated')
+            .lean();
+
+        console.log('Productos encontrados:', products.length);
+
+        // Validar si hay productos
+        if (!products || products.length === 0) {
+            console.log('ERROR: No se encontraron productos');
+
+            // Debug: Ver qué rubros existen en la DB
+            const existingRubros = await Product.distinct('desc_rubro');
+            console.log('Rubros disponibles en DB:', existingRubros);
+
+            return res.status(404).json({
+                message: `No se encontraron productos para el rubro: "${rubroTrimmed}"`,
+                rubro: rubroTrimmed,
+                encontrados: 0,
+                rubrosDisponibles: existingRubros.slice(0, 10) // Primeros 10 para referencia
+            });
+        }
+
+        console.log('Generando Excel con', products.length, 'productos');
+
+        // Formatear datos para el Excel
+        const excelData = products.map(product => ({
+            codpro: product.codpro || '',
+            desc_stock: product.desc_stock || '',
+            rubro: product.rubro !== undefined ? product.rubro : '',
+            subrub: product.subrub !== undefined ? product.subrub : '',
+            proveed: product.proveed !== undefined ? product.proveed : '',
+            desc_rubro: product.desc_rubro || '',
+            desc_subrub: product.desc_subrub || '',
+            desc_marca: product.desc_marca || '',
+            porcen1: product.porcen1 !== undefined ? product.porcen1 : '',
+            precioimpre: product.precioimpre !== undefined ? product.precioimpre : '',
+            stock: product.stock !== undefined ? product.stock : 0,
+            lastUpdated: product.lastUpdated ? new Date(product.lastUpdated).toISOString().split('T')[0] : ''
+        }));
+
+        console.log('Datos formateados:', excelData.length, 'filas');
+        console.log('Primera fila:', excelData[0]);
+
+        // Crear el worksheet
+        const worksheet = xlsx.utils.json_to_sheet(excelData);
+
+        // Crear el workbook
+        const workbook = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(workbook, worksheet, 'Productos');
+
+        // Ajustar anchos de columna
+        worksheet['!cols'] = [
+            { wch: 15 }, // codpro
+            { wch: 40 }, // desc_stock
+            { wch: 10 }, // rubro
+            { wch: 10 }, // subrub
+            { wch: 10 }, // proveed
+            { wch: 20 }, // desc_rubro
+            { wch: 20 }, // desc_subrub
+            { wch: 20 }, // desc_marca
+            { wch: 10 }, // porcen1
+            { wch: 15 }, // precioimpre
+            { wch: 10 }, // stock
+            { wch: 20 }  // lastUpdated
+        ];
+
+        console.log('Generando buffer del archivo...');
+
+        // Generar el buffer
+        const excelBuffer = xlsx.write(workbook, {
+            type: 'buffer',
+            bookType: 'xlsx'
+        });
+
+        console.log('Buffer generado, tamaño:', excelBuffer.length, 'bytes');
+
+        // Crear nombre de archivo seguro
+        const safeRubro = rubroTrimmed.replace(/[^a-zA-Z0-9]/g, '_');
+        const filename = `productos_${safeRubro}_${new Date().toISOString().split('T')[0]}.xlsx`;
+
+        console.log('Nombre del archivo:', filename);
+
+        // Configurar headers
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+        res.setHeader('Content-Length', excelBuffer.length);
+        res.setHeader('Cache-Control', 'no-cache');
+
+        console.log('Enviando archivo...');
+        console.log('=== FIN downloadExcelProducts ===');
+
+        // Enviar buffer
+        return res.end(excelBuffer);
+
+    } catch (err) {
+        console.error("❌ ERROR en download-excel:", err);
+        console.error("Stack:", err.stack);
+
+        return res.status(500).json({
+            message: "Error al generar el archivo Excel",
+            error: err.message,
+            ...(process.env.NODE_ENV === 'development' && {
+                stack: err.stack
+            })
+        });
+    }
+};
 
 export const highlightProduct = async (req, res) => {
     const { id } = req.params; // Cambia "id" por "codigo"

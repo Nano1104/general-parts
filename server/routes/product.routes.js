@@ -3,7 +3,7 @@ import { authenticateJWT } from "../utils/jwt.js"
 import {
     getProducts, getProductById, getAllProducts, getCategoriesAndSubcategories, getHighlightedProducts, postProducts, uploadExcelProducts, highlightProduct, unhighlightProduct, addFieldToProducts,
     changeProductFieldVal, changeFieldToProducts, changeFieldValueToProducts, deleteFieldFromProducts, updateStock, deleteProdsWithSubrub, deleteMongoDBCollection, addImageToTornillos, changeImageurlProd,
-    addImageUrlToSubrub, deleteProdsByRubro
+    addImageUrlToSubrub, deleteProdsByRubro, downloadExcelProducts
 } from "../controllers/product.controller.js";
 
 import multer from "multer"
@@ -15,32 +15,50 @@ const upload = multer({
 
 const router = express.Router();
 
+// ========================================
+// REGLA DE ORO: Rutas estáticas PRIMERO, dinámicas DESPUÉS
+// ========================================
+
+// GET ROUTES - Rutas estáticas primero
+router.get("/highlight/products", getHighlightedProducts)
+router.get("/rubro/get-categories-and-subcategories", getCategoriesAndSubcategories)
+router.get('/download-excel', downloadExcelProducts)  // ANTES de /rubro/:rubro
+
+// GET ROUTES - Rutas dinámicas después
 router.get("/", getProducts)
 router.get("/id/:id", getProductById)
-router.get("/rubro/get-categories-and-subcategories", getCategoriesAndSubcategories)
-router.get("/rubro/:rubro", getAllProducts)                       //devuelve la cantidad de los productos con cierto rubro mandado por parametro
-router.get("/highlight/products", getHighlightedProducts)
+router.get("/rubro/:rubro", getAllProducts)  // Esta debe ir DESPUÉS de las rutas estáticas
+
+// POST ROUTES
 router.post('/post-products-in-db', postProducts)
 router.post("/upload-excel", upload.single("excelFile"), uploadExcelProducts)
-router.put("/highlight-product/:id", highlightProduct)
+
+// PUT ROUTES - Rutas estáticas primero
 router.put("/highlight/unHighlight-product/:id", unhighlightProduct)
 router.put("/add-field-to-products", authenticateJWT, addFieldToProducts)
-router.put("/change-product-fieldValue/:prodId", authenticateJWT, changeProductFieldVal)
-router.put("/change-field-value-to-products", changeFieldValueToProducts)                 //cambia el valor de un campo de los productos
-router.put("/change-field-to-products", changeFieldToProducts)                          //cambia el valor de un campo
+router.put("/change-field-value-to-products", changeFieldValueToProducts)
+router.put("/change-field-to-products", changeFieldToProducts)
 router.put("/delete-products-field", deleteFieldFromProducts)
-router.put("/update-stock/:productId", updateStock)                 //cambia el stock de un producto
-router.delete("/delete/dlt-prods-subrubs", deleteProdsWithSubrub)                          //elimina los productos con el subrubro especificado en el body
+router.put("/put/add-image-to-tornillos", addImageToTornillos)
+
+// PUT ROUTES - Rutas dinámicas después
+router.put("/highlight-product/:id", highlightProduct)
+router.put("/change-product-fieldValue/:prodId", authenticateJWT, changeProductFieldVal)
+router.put("/update-stock/:productId", updateStock)
+router.put("/put/change-imageUrl-prod/:prodId", changeImageurlProd)
+
+// DELETE ROUTES - Rutas estáticas primero
+router.delete("/delete/dlt-prods-subrubs", deleteProdsWithSubrub)
 router.delete("/delete-mongo-db", deleteMongoDBCollection)
+
+// DELETE ROUTES - Rutas dinámicas después
 router.delete("/delete/prods/rubro/:rubro", deleteProdsByRubro)
 
 
 // Rutas estáticas primero
-router.put("/put/add-image-to-tornillos", addImageToTornillos)
 /* router.put("/put/add-imageUrl-toSubrub", addImageUrlToSubrub) */
 
 // Rutas dinámicas después
-router.put("/put/change-imageUrl-prod/:prodId", changeImageurlProd)
 
 
 export default router;

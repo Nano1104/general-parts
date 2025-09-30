@@ -76,23 +76,135 @@ export const ProductsManage = () => {
     };
 
 
-    const handleDonwloadExcel = async (e) => {
-        try {
 
-        } catch (err) {
-
-        }
-    }
-
-    const handleChange = async (e) => {
+    // Función para manejar la descarga
+    const handleDownloadExcel = async (e) => {
         e.preventDefault();
-        const prodId = e.target.prodId.value
-        const newStock = e.target.stock.value
 
-        const res = await axios.put(`${API_URL}/api/products/update-stock/${prodId}`, { newStock }, { withCredentials: true })
-        console.log(res)
-        if (res.status == 200) Swal.fire("Stock cambiado!");
-    }
+        const formData = new FormData(e.target);
+        const rubro = formData.get('rubro').trim();
+
+        if (!rubro) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campo requerido',
+                text: 'Por favor ingrese un rubro',
+                confirmButtonColor: '#3085d6'
+            });
+            return;
+        }
+
+        // Mostrar loading
+        Swal.fire({
+            title: 'Generando Excel...',
+            text: 'Por favor espere',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        try {
+            console.log('🔍 Iniciando descarga para rubro:', rubro);
+
+            const response = await fetch(`${API_URL}/api/products/download-excel?rubro=${encodeURIComponent(rubro)}`);
+
+            console.log('📡 Response status:', response.status);
+            console.log('📡 Response headers:', response.headers);
+
+            if (!response.ok) {
+                const error = await response.json();
+                console.error('❌ Error del servidor:', error);
+
+                Swal.close(); // Cerrar loading
+
+                // Manejo específico según el status
+                if (response.status === 404) {
+                    const rubrosDisponibles = error.rubrosDisponibles
+                        ? `<br><br><small>Algunos rubros disponibles: ${error.rubrosDisponibles.join(', ')}</small>`
+                        : '';
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Rubro no encontrado',
+                        html: `No se encontraron productos para el rubro:<br><strong>"${rubro}"</strong><br><br>Verifique que el nombre esté escrito correctamente.${rubrosDisponibles}`,
+                        confirmButtonColor: '#d33'
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message || 'Error al descargar el archivo',
+                        confirmButtonColor: '#d33'
+                    });
+                }
+                return;
+            }
+
+            console.log('✅ Respuesta OK, obteniendo blob...');
+
+            // Obtener el blob del archivo
+            const blob = await response.blob();
+            console.log('📦 Blob recibido, tamaño:', blob.size, 'bytes');
+            console.log('📦 Blob type:', blob.type);
+
+            // Verificar que el blob tenga contenido
+            if (blob.size === 0) {
+                throw new Error('El archivo descargado está vacío');
+            }
+
+            // Verificar que sea un archivo Excel válido
+            if (!blob.type.includes('spreadsheet') && !blob.type.includes('excel')) {
+                console.warn('⚠️ Tipo de blob inesperado:', blob.type);
+            }
+
+            console.log('💾 Creando enlace de descarga...');
+
+            // Crear un link temporal para descargar
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = `productos_${rubro.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.xlsx`;
+            document.body.appendChild(a);
+
+            console.log('🖱️ Activando descarga...');
+            a.click();
+
+            console.log('✅ Descarga iniciada');
+
+            // Limpiar después de un pequeño delay
+            setTimeout(() => {
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                console.log('🧹 Recursos limpiados');
+            }, 100);
+
+            Swal.close(); // Cerrar loading
+
+            // Mostrar éxito
+            Swal.fire({
+                icon: 'success',
+                title: '¡Descarga exitosa!',
+                text: `Excel de "${rubro}" descargado correctamente`,
+                timer: 2000,
+                showConfirmButton: false
+            });
+
+            e.target.reset(); // Limpiar formulario
+
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.close(); // Cerrar loading
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de conexión',
+                text: 'No se pudo conectar con el servidor. Intente nuevamente.',
+                confirmButtonColor: '#d33'
+            });
+        }
+    };
 
     return (
         <>
@@ -113,26 +225,31 @@ export const ProductsManage = () => {
                             accept=".xlsx, .xls"
                             onChange={(e) => setFile(e.target.files[0])}
                         />
-                        <button className="bg-coral w-[25%] rounded-md py-1 mt-2 text-sm text-cBlack font-medium font-poppins" type="submit">Cargar Lista</button>
+                        <button className="bg-lightRed w-[25%] rounded-md py-1 mt-2 text-sm text-white font-medium font-poppins" type="submit">Cargar Lista</button>
                     </form>
                     <hr className="my-4 w-[45%] ml-2" />
 
                     {/***************** DESCARGAR LISTA DE PRODUCTOS *****************/}
-                    <form method="POST" className="flex flex-col" onSubmit={handleDonwloadExcel}>
+                    <form method="POST" className="flex flex-col" onSubmit={handleDownloadExcel}>
                         <h3 className="font-semibold">DESCARGAR LISTA DE PRODUCTOS</h3>
                         <div className="text-sm">
-                            <span className="font-medium">Nombre de rubro a descargar:</span><input type="text" name="rubro" placeholder="Rubro" required className="w-[23%] ml-2 rounded-md py-1 px-2 my-2" /><br />
-                            <span className="italic">Se descargara un excel de los productos con el rubro indicado</span>
+                            <span className="font-medium">Nombre de rubro a descargar:</span>
+                            <input
+                                type="text"
+                                name="rubro"
+                                placeholder="Ej: ELECTRÓNICA"
+                                required
+                                className="w-[23%] ml-2 rounded-md py-1 px-2 my-2"
+                            />
+                            <br />
+                            <span className="italic">Se descargará un excel de los productos con el rubro indicado</span>
                         </div>
-                        <input
-                            className="w-[50%] mt-4"
-                            type="file"
-                            name="excelFile"
-                            required
-                            accept=".xlsx, .xls"
-                            onChange={(e) => setFile(e.target.files[0])}
-                        />
-                        <button className="bg-coral w-[25%] rounded-md py-1 mt-2 text-sm text-cBlack font-medium font-poppins" type="submit">Descargar Lista</button>
+                        <button
+                            className="bg-lightRed w-[25%] rounded-md py-1 mt-2 text-sm text-white font-medium font-poppins"
+                            type="submit"
+                        >
+                            Descargar Lista
+                        </button>
                     </form>
                     <hr className="my-4 w-[45%] ml-2" />
 

@@ -21,7 +21,7 @@ const useSignup = () => {
                 .then(res => {
                     Swal.fire({
                         title: 'Te has registrado',
-                        confirmButtonColor: "#DC5F00",
+                        confirmButtonColor: "#D7263D",
                     })
                         .then((result) => { if (result.isConfirmed) window.location.reload() });
                 })
