@@ -44,7 +44,7 @@ export default {
         coral: "#ffb3a5"
       },
       backgroundImage: {
-        'homeBg': "url('/spare-parts.jpg')",
+        'homeBg': "url('/spare-parts2.jpg')",
         'authPageBg': "url('/bg-login.avif')",
         'custom-gradient': 'linear-gradient(0deg, rgba(255,255,255,1) 15%, rgba(34,193,195,0) 100%)',
       }
