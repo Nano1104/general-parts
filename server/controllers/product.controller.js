@@ -768,7 +768,7 @@ export const downloadExcelProducts = async (req, res) => {
         const products = await Product.find({
             desc_rubro: { $regex: new RegExp(`^${rubroTrimmed}$`, 'i') }
         })
-            .select('codpro desc_stock rubro subrub proveed desc_rubro desc_subrub desc_marca porcen1 precioimpre stock lastUpdated')
+            .select('codpro desc_stock desc_subrub precioimpre')
             .lean();
 
         console.log('Productos encontrados:', products.length);
@@ -795,16 +795,8 @@ export const downloadExcelProducts = async (req, res) => {
         const excelData = products.map(product => ({
             codpro: product.codpro || '',
             desc_stock: product.desc_stock || '',
-            rubro: product.rubro !== undefined ? product.rubro : '',
-            subrub: product.subrub !== undefined ? product.subrub : '',
-            proveed: product.proveed !== undefined ? product.proveed : '',
-            desc_rubro: product.desc_rubro || '',
             desc_subrub: product.desc_subrub || '',
-            desc_marca: product.desc_marca || '',
-            porcen1: product.porcen1 !== undefined ? product.porcen1 : '',
             precioimpre: product.precioimpre !== undefined ? product.precioimpre : '',
-            stock: product.stock !== undefined ? product.stock : 0,
-            lastUpdated: product.lastUpdated ? new Date(product.lastUpdated).toISOString().split('T')[0] : ''
         }));
 
         console.log('Datos formateados:', excelData.length, 'filas');
@@ -821,16 +813,8 @@ export const downloadExcelProducts = async (req, res) => {
         worksheet['!cols'] = [
             { wch: 15 }, // codpro
             { wch: 40 }, // desc_stock
-            { wch: 10 }, // rubro
-            { wch: 10 }, // subrub
-            { wch: 10 }, // proveed
-            { wch: 20 }, // desc_rubro
             { wch: 20 }, // desc_subrub
-            { wch: 20 }, // desc_marca
-            { wch: 10 }, // porcen1
             { wch: 15 }, // precioimpre
-            { wch: 10 }, // stock
-            { wch: 20 }  // lastUpdated
         ];
 
         console.log('Generando buffer del archivo...');

@@ -160,7 +160,7 @@ export const Category = ({
 
   // Versión Desktop (mejorada con mejor manejo de eventos)
   return (
-    <div className="text-xs 2xl:text-sm font-montserrat">
+    <div className="text-xs lg:text-sm font-montserrat">
       <div className="flex items-center gap-1 relative">
         <div className="flex w-32 xl:w-36 justify-between items-center">
           <Link
@@ -189,7 +189,7 @@ export const Category = ({
           <div className="absolute z-30 top-0 left-full subcategory-dropdown" data-category-menu="true">
             {category === "MOTOR" ? (
               <div
-                className="py-3 bg-gray border border-gray-300 shadow-lg rounded w-40 xl:w-44 flex flex-col gap-2"
+                className="py-3 bg-cWhite border border-gray-300 shadow-lg rounded w-40 xl:w-44 flex flex-col gap-2"
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* Grupo ENGRANAJE */}
@@ -197,7 +197,7 @@ export const Category = ({
                   <div className="flex items-center justify-between px-4 hover:bg-gray-100">
                     <Link
                       to={`/productos/${category}/engranaje`}
-                      className="flex-1 text-black hover:text-deepRed hover:font-bold uppercase text-xs xl:text-sm py-1"
+                      className="flex-1 text-black hover:text-deepRed hover:font-bold uppercase py-1"
                       onClick={(e) => e.stopPropagation()}
                     >
                       ENGRANAJE
@@ -217,7 +217,7 @@ export const Category = ({
 
                   {activeMotorSubCategory === "engranaje" && (
                     <div
-                      className="absolute left-full top-0 bg-gray border border-gray-300 shadow-lg rounded w-72 xl:w-80 py-3 ml-1 z-40"
+                      className="absolute left-full top-0 bg-cWhite border border-gray-300 shadow-lg rounded w-72 xl:w-80 py-3 ml-1 z-40"
                       data-category-menu="true"
                       onClick={(e) => e.stopPropagation()}
                     >
@@ -227,7 +227,7 @@ export const Category = ({
                           <Link
                             key={`engranaje-${sub[1]}-${index}`}
                             to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub[0])}`}
-                            className="text-black block px-4 py-2 hover:text-deepRed hover:font-bold hover:bg-gray-100 text-xs xl:text-sm"
+                            className="text-black block px-4 py-2 hover:text-deepRed hover:font-bold hover:bg-gray-100"
                             onClick={(e) => e.stopPropagation()}
                           >
                             {sub[0]}
@@ -243,7 +243,7 @@ export const Category = ({
                   <div className="flex items-center justify-between px-4 hover:bg-gray-100">
                     <Link
                       to={`/productos/${category}/bulones`}
-                      className="flex-1 text-black hover:text-deepRed hover:font-bold uppercase text-xs xl:text-sm py-1"
+                      className="flex-1 text-black hover:text-deepRed hover:font-bold uppercase py-1"
                       onClick={(e) => e.stopPropagation()}
                     >
                       BULONES
@@ -263,7 +263,7 @@ export const Category = ({
 
                   {activeMotorSubCategory === "bulones" && (
                     <div
-                      className="absolute left-full top-0 bg-gray border border-gray-300 shadow-lg rounded w-72 xl:w-80 py-3 ml-1 z-40"
+                      className="absolute left-full top-0 bg-cWhite border border-gray-300 shadow-lg rounded w-72 xl:w-80 py-3 ml-1 z-40"
                       data-category-menu="true"
                       onClick={(e) => e.stopPropagation()}
                     >
@@ -273,7 +273,7 @@ export const Category = ({
                           <Link
                             key={`bulones-${sub[1]}-${index}`}
                             to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub[0])}`}
-                            className="text-black block px-4 py-2 hover:text-deepRed hover:font-bold hover:bg-gray-100 text-xs xl:text-sm"
+                            className="text-black block px-4 py-2 hover:text-deepRed hover:font-bold hover:bg-gray-100"
                             onClick={(e) => e.stopPropagation()}
                           >
                             {sub[0]}
@@ -287,14 +287,14 @@ export const Category = ({
             ) : (
               // Renderizado normal para otros rubros en desktop
               <div
-                className="bg-gray py-4 border border-gray-300 shadow-lg rounded w-72 xl:w-80 flex flex-col"
+                className="bg-cWhite py-4 border border-gray-300 shadow-lg rounded w-72 xl:w-80 flex flex-col"
                 onClick={(e) => e.stopPropagation()}
               >
                 {categoryData.subrubros.map((sub, index) => (
                   <Link
                     key={`${sub[1]}-${index}`}
                     to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub[0])}`}
-                    className="text-black block px-4 py-2 hover:text-deepRed hover:font-bold hover:bg-gray-100  text-xs xl:text-sm"
+                    className="text-black block px-4 py-2 hover:text-deepRed hover:font-bold hover:bg-gray-100"
                     onClick={(e) => e.stopPropagation()}
                   >
                     {sub[0]}

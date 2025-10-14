@@ -13,7 +13,7 @@ export const Home = () => {
     return (
         <div className="min-h-screen w-full relative overflow-hidden">
             {/* Background con mejor optimización */}
-            <div className="hidden lg:block bg-homeBg bg-cover bg-center brightness-[100%] grayscale-[100%] blur-[3px] w-full h-full absolute inset-0"></div>
+            <div className="hidden lg:block bg-homeBg bg-cover bg-center brightness-[80%] grayscale-[100%] blur-[3px] w-full h-full absolute inset-0"></div>
 
             <NavBar />
 
@@ -25,7 +25,7 @@ export const Home = () => {
                         <Logo />
 
                         {/* Texto principal optimizado */}
-                        <h1 className="text-cBlack lg:text-black font-montserrat font-medium 
+                        <h1 className="text-cBlack lg:text-white font-montserrat font-medium 
                                      text-xl sm:text-2xl lg:text-3xl xl:text-4xl 2xl:text-6xl
                                      text-center lg:text-left
                                      mt-6 sm:mt-8 lg:mt-12 2xl:mt-16
@@ -63,7 +63,7 @@ export const Home = () => {
                 </main>
 
                 {/* Footer con contactos */}
-                <footer className="relative z-10 text-cBlack lg:text-black w-full font-montserrat font-semibold 
+                <footer className="relative z-10 text-cBlack lg:text-white w-full font-montserrat font-semibold 
                                  bg-gradient-to-t from-black/20 to-transparent
                                  px-4 sm:px-6 lg:px-10 py-4 sm:py-6">
                     <div className="flex flex-col sm:flex-row items-center justify-center">

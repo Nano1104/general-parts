@@ -106,7 +106,7 @@ export const InventaryList = ({ stateNews }) => {
                     {/* Dropdown de categorías para desktop */}
                     {isRubrosOpen && (
                         <div
-                            className="absolute top-8 left-0 z-50 bg-gray border-r-[1px] border-b-[1px] shadow-lg rounded-b-md max-h-96 category-dropdown"
+                            className="absolute top-8 left-0 z-50 bg-cWhite border-r-[1px] border-b-[1px] shadow-lg rounded-b-md max-h-96 category-dropdown"
                             data-category-menu="true"
                         >
                             <div className="px-6 xl:px-10 py-4">

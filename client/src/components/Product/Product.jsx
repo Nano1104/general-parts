@@ -52,8 +52,8 @@ export const Product = ({ data, params }) => {
       className={`
         w-full max-w-sm mx-auto
         min-h-[380px] sm:min-h-[420px] lg:min-h-[450px] xl:min-h-[480px]
-        ${destacado ? "bg-orange text-cBlack" : "bg-gray"} 
-        font-poppins rounded-xl relative
+        ${destacado ? "bg-orange text-cBlack" : "bg-cWhite"} 
+        font-poppins rounded-xl relative cursor-pointer
         shadow-sm hover:shadow-lg 
         transition-all duration-300 ease-in-out
         transform hover:scale-[1.02]

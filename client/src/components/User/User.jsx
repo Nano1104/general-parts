@@ -21,7 +21,7 @@ export const User = ({ userData }) => {
         <span className="font-bold">
           Id Usuario: <span className="ml-2 font-normal">{_id}</span>
         </span>
-        <button onClick={copyId} className="bg-coral w-[20%] rounded-md py-1 text-sm text-cBlack font-medium font-poppins">
+        <button onClick={copyId} className="bg-lightRed w-[20%] rounded-md py-1 text-sm text-cWhite font-medium font-poppins">
           Copiar Código
         </button>
       </div>

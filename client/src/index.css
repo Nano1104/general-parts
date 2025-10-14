@@ -114,7 +114,7 @@
 }
 
 body {
-  background-color: var(--lightGray);
+  background-color: var(--gray);
   overflow: auto;
 }
 

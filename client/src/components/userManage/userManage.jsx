@@ -141,7 +141,7 @@ export const UserManage = () => {
                     {/* // VER USUARIOS */}
                     <div>
                         <h3 className="font-semibold">VER USUARIOS</h3>
-                        <button className="bg-coral w-[30%] rounded-md py-1 text-sm text-cBlack font-medium font-poppins" type="submit" onClick={handleGetUsers}>Ver lista de usuarios</button>
+                        <button className="bg-lightRed w-[30%] rounded-md py-1 text-sm text-cWhite font-medium font-poppins" type="submit" onClick={handleGetUsers}>Ver lista de usuarios</button>
                     </div>
                     <hr className="my-4 w-[45%] ml-2" />
 
@@ -150,7 +150,7 @@ export const UserManage = () => {
                         <h3 className="font-semibold">BORRAR USUARIO DE LA BASE DE DATOS</h3>
                         <form action="" className="flex flex-col text-sm" onSubmit={handleDeleteUser}>
                             <input type="text" name="prodId" placeholder="Ingresar ID del usuario" className="w-[30%] rounded-md py-1 px-2 my-2" />
-                            <button className="bg-coral w-[30%] rounded-md py-1 text-sm text-cBlack font-medium font-poppins" type="submit">Borrar usuario</button>
+                            <button className="bg-lightRed w-[30%] rounded-md py-1 text-sm text-cWhite font-medium font-poppins" type="submit">Borrar usuario</button>
                         </form>
                     </div>
                     <hr className="my-4 w-[45%] ml-2" />
@@ -169,7 +169,7 @@ export const UserManage = () => {
                                 required
                             />
                             <button
-                                className="w-[25%] h-7 bg-coral rounded-md py-1 text-sm text-cBlack font-medium font-poppins"
+                                className="w-[25%] h-7 bg-lightRed rounded-md py-1 text-sm text-cWhite font-medium font-poppins"
                                 type="submit"
                             >
                                 Dar de ALTA al usuario
@@ -186,7 +186,7 @@ export const UserManage = () => {
                                 required
                             />
                             <button
-                                className="w-[25%] h-7 bg-red rounded-md py-1 text-sm text-cWhite font-medium font-poppins"
+                                className="w-[25%] h-7 bg-orange rounded-md py-1 text-sm text-cWhite font-medium font-poppins"
                                 type="submit"
                             >
                                 Dar de BAJA al usuario
