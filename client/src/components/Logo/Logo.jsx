@@ -12,7 +12,7 @@ export const Logo = () => {
                 <span className="text-cBlack lg:text-white tracking-tight italic
                                text-6xl md:text-7xl lg:text-8xl xl:text-9xl 2xl:text-[10rem]
                                ml-1 sm:ml-2">
-                    Parts
+                    Autoparts
                 </span>
             </h1>
         </div>

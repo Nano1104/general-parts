@@ -38,32 +38,17 @@ const validarCUIT = (cuit) => {
 };
 
 export const CUITInput = ({ register, errors, name = "cuit" }) => {
-    const [inputValue, setInputValue] = useState('');
 
-    // Validación en tiempo real
-    /* useEffect(() => {
-        if (inputValue.length >= 11) {
-            setIsValid(validarCUIT(inputValue) === true);
-        } else {
-            setIsValid(null);
-        }
-    }, [inputValue]); */
-
-    /* const handleChange = (e) => {
-        const formatted = formatCUIT(e.target.value);
-        setInputValue(formatted);
-        e.target.value = formatted; // Para react-hook-form
-    }; */
 
     return (
         <div className="w-full flex flex-col items-center relative">
             <input
                 type="text"
                 autoComplete="off"
-                /* onChange={handleChange} */
-                className="p-2 bg-transparent w-full outline-0 text-cBlack
-                        border-[1px] border-cBlack rounded-xl
-                        focus:border-dotted placeholder-cBlack"
+                className="w-full p-3 sm:p-4 bg-transparent outline-none text-cBlack
+                            border border-cBlack rounded-xl transition-all duration-200
+                            focus:border-lightRed focus:border-2 focus:shadow-md
+                            placeholder:text-gray-500"
                 placeholder="Ingrese su CUIT"
                 {...register(name, {
                     required: "El CUIT es obligatorio",

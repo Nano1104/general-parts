@@ -75,7 +75,7 @@ export const UserManage = () => {
                 text: `¿Estás seguro de querer ${action === 'accept' ? 'aceptar' : 'rechazar'} al usuario?`,
                 icon: 'question',
                 showCancelButton: true,
-                confirmButtonColor: '#DC5F00',
+                confirmButtonColor: '#D7263D',
                 cancelButtonColor: '#BDC3C7',
                 confirmButtonText: 'Sí, continuar',
                 cancelButtonText: 'Cancelar'
@@ -105,7 +105,7 @@ export const UserManage = () => {
             Swal.fire({
                 title: `Usuario ${action === 'accept' ? 'Aceptado' : 'Denegado'}!`,
                 icon: 'success',
-                confirmButtonColor: '#DC5F00',
+                confirmButtonColor: '#D7263D',
             });
 
         } catch (err) {

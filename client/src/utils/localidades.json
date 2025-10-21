@@ -398,5 +398,17 @@
     {
         "id": "060014",
         "nombre": "Adolfo Gonzales Chaves"
+    },
+    {
+        "id": "060900",
+        "nombre": "San Miguel"
+    },
+    {
+        "id": "060901",
+        "nombre": "Bella Vista"
+    },
+    {
+        "id": "060902",
+        "nombre": "Villa Tesei"
     }
 ]

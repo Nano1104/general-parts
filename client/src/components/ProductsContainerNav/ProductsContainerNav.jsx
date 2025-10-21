@@ -24,7 +24,7 @@ export const ProductsContainerNav = ({ searchValue, setSearchValue }) => {
                     {/* LOGO */}
                     <Link to="/" translate="no" className="text-3xl italic font-roboto lg:text-4xl 2xl:text-5xl 2xl:my-2 w-0">
                         <span className="font-extrabold text-lightRed tracking-tighter">SW</span>
-                        <span className="font-bold text-white tracking-tight">Parts</span>
+                        <span className="font-bold text-white tracking-tight">Autoparts</span>
                     </Link>
 
                     {/* INPUTS DE INICIO DE SESION */}

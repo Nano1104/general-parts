@@ -69,29 +69,25 @@ export const Home = () => {
                     <div className="flex flex-col sm:flex-row items-center justify-center">
                         {/* Números de WhatsApp */}
                         <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 text-sm sm:text-base lg:text-xl">
-                            <div className="flex items-center gap-2">
+                            <a
+                                href="https://wa.me/5491154529682?text=¡Hola!%20Quisiera%20hacer%20una%20consulta."
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2"
+                            >
                                 <FaWhatsapp className="" />
                                 <span>11 5452-9682</span>
-                            </div>
-                            <span className="hidden sm:inline text-gray-300">-</span>
-                            <div className="flex items-center gap-2">
+                            </a>
+                            <a
+                                href="https://wa.me/5491163358220?text=¡Hola!%20Quisiera%20hacer%20una%20consulta."
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2"
+                            >
                                 <FaWhatsapp className="" />
-                                <span>11 6335-8220</span>
-                            </div>
+                                <span>11 5452-9682</span>
+                            </a>
                         </div>
-
-                        {/* Botón WhatsApp flotante */}
-                        {/* <button
-                            className="flex items-center justify-center
-                                     bg-lightRed hover:bg-red-600 
-                                     text-white rounded-full
-                                     w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16
-                                     transition-colors duration-200 ease-in-out
-                                     shadow-lg hover:shadow-xl"
-                            aria-label="Contactar por WhatsApp"
-                        >
-                            <FaWhatsapp className="text-xl sm:text-2xl lg:text-3xl" />
-                        </button> */}
                     </div>
                 </footer>
             </div>
