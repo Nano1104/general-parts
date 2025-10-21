@@ -21,7 +21,7 @@ export const ProductsManage = () => {
             showCancelButton: true,
             confirmButtonText: "Sí, cargar",
             cancelButtonText: "No, cancelar",
-            confirmButtonColor: "#ffb3a5",
+            confirmButtonColor: "#D7263D",
             cancelButtonColor: "#6c757d"
         });
 
@@ -74,8 +74,6 @@ export const ProductsManage = () => {
             console.error("Error al cargar el Excel:", err);
         }
     };
-
-
 
     // Función para manejar la descarga
     const handleDownloadExcel = async (e) => {

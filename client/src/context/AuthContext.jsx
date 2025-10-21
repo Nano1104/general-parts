@@ -72,6 +72,21 @@ export const AuthContextProvider = ({ children }) => {
         return () => source.cancel('Component unmounted');
     }, []);
 
+    const refreshAuthUser = async () => {
+        try {
+            const res = await axios.get(`${API_URL}/api/auth/authUser`, { withCredentials: true });
+            setState({
+                authUser: res.data,
+                isAdmin: res.data?.role === "admin",
+                accepted: res.data?.accepted || false,
+                loading: false,
+                error: null
+            });
+        } catch (err) {
+            console.error('Error refreshing auth user:', err);
+        }
+    };
+
     const setAuthUser = (user) => {
         setState({
             authUser: user,
@@ -94,7 +109,8 @@ export const AuthContextProvider = ({ children }) => {
             isAdmin: state.isAdmin,
             accepted: state.accepted,
             loading: state.loading,
-            error: state.error
+            error: state.error,
+            refreshAuthUser
         }}>
             {children}
         </AuthContext.Provider>

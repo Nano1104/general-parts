@@ -5,6 +5,10 @@ import _ from "lodash";
 import Product from "../models/product.model.js";
 import agendaModule from '../agenda.js'
 
+const MOTOR_GROUPS = {
+    engranaje: [149, 147, 146, 151, 140, 139, 141, 142, 143, 144, 145, 150, 148],
+    bulones: [101, 102, 103]
+};
 
 // ---------------------------
 // BUSCADOR DE PRODUCTOS
@@ -43,18 +47,52 @@ export const getProducts = async (req, res) => {
     }
 };
 
-// Filtro base (sin cambios)
-function buildBaseFilter(params) {
-    const filter = {};
-    if (params.category) filter.desc_rubro = params.category.toUpperCase();
-    if (params.brand) filter.desc_marca = params.brand.toUpperCase();
-    if (params.subcategory) filter.desc_subrub = params.subcategory.toUpperCase();
+function escapeRegex(s = "") {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
+function ensureNumbers(arr) {
+    return arr.map((v) => {
+        const n = Number(v);
+        return Number.isNaN(n) ? v : n;
+    });
+}
+
+// buildBaseFilter limpio y determinista
+function buildBaseFilter(params = {}) {
+    const filter = {};
+
+    if (params.category) {
+        filter.desc_rubro = params.category.toString().toUpperCase();
+    }
+
+    if (params.brand) {
+        filter.desc_marca = params.brand.toString().toUpperCase();
+    }
+
+    // --- SUBCATEGORY logic (centralizada acá, y sin asignar desc_subrub previamente) ---
+    if (params.subcategory) {
+        const raw = params.subcategory.toString().trim();
+        const key = raw.toLowerCase();
+
+        if (MOTOR_GROUPS[key]) {
+            // Si es uno de los grupos especiales, filtramos por 'rubro' usando los códigos
+            // Convertimos a Number porque muy probablemente 'rubro' en la BD sea numérico.
+            // Si tu BD tiene rubro como string, cambialo a .map(String) en su lugar.
+            filter.rubro = { $in: ensureNumbers(MOTOR_GROUPS[key]) };
+        } else {
+            // Caso normal: buscamos por desc_subrub (case-insensitive, coincidencia exacta)
+            filter.desc_subrub = { $regex: `^${escapeRegex(raw)}$`, $options: "i" };
+        }
+    }
+
+    // precios
     if (!isNaN(params.minPrice) || !isNaN(params.maxPrice)) {
         filter.precioimpre = {};
         if (!isNaN(params.minPrice)) filter.precioimpre.$gte = parseFloat(params.minPrice);
         if (!isNaN(params.maxPrice)) filter.precioimpre.$lte = parseFloat(params.maxPrice);
     }
+
     return filter;
 }
 
@@ -664,7 +702,8 @@ export const uploadExcelProducts = async (req, res) => {
                 porcen1: item.porcen1 !== undefined ? parseInt(item.porcen1) : undefined,
                 precioimpre: item.precioimpre !== undefined ? item.precioimpre : undefined,
                 /* destacado: existingProduct?.destacado || false, */
-                stock: existingProduct?.stock || 0,
+                stock: existingProduct?.stock || 10,
+                imageUrl: existingProduct?.imageUrl || null, // 👈 mantiene la imagen si ya existe
                 lastUpdated: new Date()
             };
 
@@ -1152,7 +1191,7 @@ export const deleteProdsByRubro = async (req, res) => {
         const { rubro } = req.params;
         if (!rubro) throw new Error("Field rubro is required");
 
-        const result = await Product.deleteMany({ desc_rubro: rubro });
+        const result = await Product.deleteMany({ desc_rubro: rubro.toUpperCase() });
 
         res.status(200).json({
             message: `Deleted ${result.deletedCount} products with rubro ${rubro}`,

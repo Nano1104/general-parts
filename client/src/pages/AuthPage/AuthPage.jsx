@@ -29,6 +29,7 @@ export const AuthPage = () => {
     };
 
     const onSubmit = handleSubmit(async (data) => {
+        console.log("🚀 ~ AuthPage ~ data:", data.phone)
         try {
             setLoading(true);
             setLoginError('');
@@ -36,11 +37,13 @@ export const AuthPage = () => {
             if (login) {
                 await signIn({ email: data.emailLogin, password: data.passwordLogin });
             } else {
+                const cleanPhone = data.phone.replace(/\D/g, "");
+
                 await signUp({
                     first_name: data.nombre,
                     last_name: data.apellido,
                     email: data.email,
-                    phone: data.phone,
+                    phone: cleanPhone,
                     password: data.password,
                     city: data.city,
                     cuit: data.cuit,
@@ -228,15 +231,33 @@ export const AuthPage = () => {
                                             autoComplete="off"
                                             onFocus={() => setLoginError("")}
                                             className="w-full p-3 sm:p-4 bg-transparent outline-none text-cBlack
-                                                     border border-cBlack rounded-xl transition-all duration-200
-                                                     focus:border-lightRed focus:border-2 focus:shadow-md
-                                                     placeholder:text-gray-500"
+                                                        border border-cBlack rounded-xl transition-all duration-200
+                                                        focus:border-lightRed focus:border-2 focus:shadow-md
+                                                        placeholder:text-gray-500"
                                             placeholder="Ingrese su número de celular"
                                             {...register("phone", {
                                                 required: "Campo incompleto",
                                                 validate: (value) => {
-                                                    return value.length === 10 || "Numero de celular no valido";
-                                                }
+                                                    // eliminamos espacios, guiones y paréntesis
+                                                    const cleanValue = value.replace(/[\s\-()]/g, "");
+
+                                                    // debe contener solo números
+                                                    if (!/^\d+$/.test(cleanValue)) {
+                                                        return "Solo se permiten números";
+                                                    }
+
+                                                    // si empieza con 15, lo eliminamos (prefijo local)
+                                                    const normalized = cleanValue.startsWith("15")
+                                                        ? cleanValue.slice(2)
+                                                        : cleanValue;
+
+                                                    // debe comenzar con 11 y tener exactamente 10 dígitos totales (número completo de CABA o AMBA)
+                                                    if (!/^11\d{8}$/.test(normalized)) {
+                                                        return "Número de celular no válido";
+                                                    }
+
+                                                    return true;
+                                                },
                                             })}
                                         />
                                         {errors.phone?.type && (
@@ -244,6 +265,7 @@ export const AuthPage = () => {
                                                 {errors.phone.message}
                                             </span>
                                         )}
+
                                     </div>
                                 </div>
 

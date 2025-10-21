@@ -20,7 +20,7 @@ export const AdminNavBar = () => {
             title: "Estas seguro que quiere cerrar sesión?",
             showCancelButton: true,
             confirmButtonText: "CERRAR",
-            confirmButtonColor: "#DC5F00",
+            confirmButtonColor: "#D7263D",
             cancelButtonText: `CANCELAR`
         }).then(async (result) => {
             if (result.isConfirmed) {

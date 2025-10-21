@@ -8,9 +8,10 @@ export const FormLocalidades = ({
         <div className="w-full flex flex-col items-center relative">
             <select
                 id="localidades"
-                className="p-2 bg-transparent w-full outline-0 text-cBlack focus:text-black
-                        border-[1px] border-cBlack rounded-xl
-                        focus:border-dotted placeholder-cBlack"
+                className="w-full p-3 sm:p-4 bg-transparent outline-none text-cBlack
+                            border border-cBlack rounded-xl transition-all duration-200
+                            focus:border-lightRed focus:border-2 focus:shadow-md
+                            placeholder:text-gray-500"
                 {...register(name, {
                     required: "Debe seleccionar una localidad"
                 })}

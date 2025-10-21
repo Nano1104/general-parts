@@ -11,7 +11,7 @@ export const User = ({ userData }) => {
     navigator.clipboard.writeText(_id);
     Swal.fire({
       title: "Codigo copiado",
-      confirmButtonColor: "#DC5F00"
+      confirmButtonColor: "#D7263D"
     });
   };
 

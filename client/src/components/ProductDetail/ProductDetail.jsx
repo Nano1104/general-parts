@@ -74,7 +74,7 @@ export const ProductDetail = ({ prod }) => {
         <>
             <div
                 className={`w-full lg:h-[90vh] lg:w-[85%] xl:w-[75%] lg:py-[50px] lg:px-[65px] text-center border
-                        flex flex-col lg:m-auto lg:mt-10 lg:flex-row lg:rounded-xl ${destacado ? "bg-[#DC5F00]" : "bg-gray"
+                        flex flex-col lg:m-auto lg:mt-10 lg:flex-row lg:rounded-xl ${destacado ? "bg-[#DC5F00]" : "bg-white"
                     }`}
             >
 
@@ -124,6 +124,7 @@ export const ProductDetail = ({ prod }) => {
                                 </span>
                             </span>
                             <span className="text-2xl">{formatedPrice}</span>
+                            <span className="italic text-cBlack">Este precio no incluye IVA</span>
                         </div>
                         <div className="flex flex-col items-start mt-2">
                             <span className="font-semibold ml-1">Cantidad.</span>

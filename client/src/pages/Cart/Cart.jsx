@@ -31,7 +31,7 @@ export const Cart = () => {
                 <div className="flex items-center justify-between">
                     <Link to="/" className="flex items-center">
                         <span className="font-extrabold text-lightRed font-poppins tracking-tighter italic text-2xl sm:text-3xl">SW</span>
-                        <span className="font-bold text-black font-poppins tracking-tight italic text-2xl sm:text-3xl">Parts</span>
+                        <span className="font-bold text-black font-poppins tracking-tight italic text-2xl sm:text-3xl">Autoparts</span>
                     </Link>
                     <h1 className="text-lg sm:text-xl font-montserrat font-medium text-gray-800">
                         Tu Carrito

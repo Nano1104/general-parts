@@ -4,7 +4,8 @@ import { useProductSearch } from "../../hooks/useProductSearch.js";
 import { useParams, Link } from "react-router-dom";
 /* import { categoriesAndSubCategories } from "../../utils/categories&SubCategories.js";
 import { getSubcategory } from "../../utils/getSubcategory" */
-
+//context
+import { useAuthContext } from "../../context/AuthContext.jsx";
 //components
 import { Product } from "../Product/Product.jsx";
 import { Filters } from "../Filters/Filters.jsx"
@@ -23,6 +24,8 @@ export const ProductsContainer = ({ searchValue, setSearchValue }) => {
   const { category, subcategory, categories } = useParams();
   const encodedSubcategory = encodeURIComponent(subcategory);
   const productsPerPage = 10;
+
+  const { refreshAuthUser } = useAuthContext();
 
   const [brand, setBrand] = useState(null);
   const [price, setPrice] = useState([]);
@@ -112,6 +115,10 @@ export const ProductsContainer = ({ searchValue, setSearchValue }) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    refreshAuthUser();
+  }, []);
 
   // Efecto para resetear búsqueda cuando cambien las rutas
   useEffect(() => {
