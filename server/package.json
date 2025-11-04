@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./server.js",
-    "dev": "cross-env NODE_ENV=development nodemon ./server.js"
+    "dev": "cross-env NODE_ENV=development nodemon ./server.js",
+    "update-users": "cross-env NODE_ENV=production node ./scripts/updateUsers.js"
   },
   "keywords": [],
   "author": "",
