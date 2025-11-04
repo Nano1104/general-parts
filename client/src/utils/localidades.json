@@ -410,5 +410,17 @@
     {
         "id": "060902",
         "nombre": "Villa Tesei"
+    },
+    {
+        "id": "060903",
+        "nombre": "Lujan"
+    },
+    {
+        "id": "060904",
+        "nombre": "San Isidro"
+    },
+    {
+        "id": "060905",
+        "nombre": "Mercedes"
     }
 ]

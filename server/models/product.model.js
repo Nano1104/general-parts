@@ -65,6 +65,10 @@ const productSchema = new mongoose.Schema({
     highlightJobId: {
         type: mongoose.Schema.Types.ObjectId, // Tipo compatible con Agenda
         default: null
+    },
+    prod_details: {
+        type: String,
+        default: ""
     }
 }, { strict: false })
 

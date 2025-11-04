@@ -21,16 +21,42 @@ export const UserManage = () => {
     const handleGetUsers = async () => {
         try {
             setLoading(true);
-            await new Promise((resolve) => setTimeout(resolve, 5000));
+            await new Promise((resolve) => setTimeout(resolve, 500)); // podés acortar el delay si querés
 
             const res = await axios.get(`${API_URL}/api/user`, { withCredentials: true })
-            setUsers([...res.data.users])
+            setUsers(res.data.users)
         } catch (err) {
             console.log(err.message)
         } finally {
             setLoading(false);
         }
     }
+
+    // 🔹 función para actualizar el descuento de un usuario localmente y en el backend
+    const handleDiscountChange = async (userId, field, newDiscount) => {
+        try {
+            // 🔹 Actualiza localmente primero
+            setUsers(prevUsers =>
+                prevUsers.map(u =>
+                    u._id === userId ? { ...u, [field]: newDiscount } : u
+                )
+            );
+
+            // 🔹 Llama al backend
+            await axios.put(
+                `${API_URL}/api/user/change-discount/${userId}`,
+                { field, value: newDiscount },
+                { withCredentials: true }
+            );
+        } catch (err) {
+            console.error("Error cambiando descuento:", err.message);
+            Swal.fire({
+                title: "Error al cambiar descuento",
+                icon: "error",
+                confirmButtonColor: "#D7263D"
+            });
+        }
+    };
 
     const handleDeleteUser = async (e) => {
         e.preventDefault()
@@ -197,20 +223,25 @@ export const UserManage = () => {
                 </div>
 
                 <div className="basis-[50%] overflow-y-auto border-l">
-                    {
-                        loading ? (
-                            <div className="flex justify-center items-center h-full">
-                                <span className="text-xl">Cargando Usuarios...</span>
-                            </div>
-                        ) : users.length > 0 ? (
-                            users.map(user => <User key={user.id} userData={user} />)
-                        ) : (
-                            <div className="flex justify-center items-center h-full">
-                                <span className="text-xl">Lista de usuarios</span>
-                            </div>
-                        )
-                    }
+                    {loading ? (
+                        <div className="flex justify-center items-center h-full">
+                            <span className="text-xl">Cargando Usuarios...</span>
+                        </div>
+                    ) : users.length > 0 ? (
+                        users.map(user => (
+                            <User
+                                key={user._id}
+                                userData={user}
+                                onDiscountChange={handleDiscountChange}
+                            />
+                        ))
+                    ) : (
+                        <div className="flex justify-center items-center h-full">
+                            <span className="text-xl">Lista de usuarios</span>
+                        </div>
+                    )}
                 </div>
+
             </div>
         </>
     )

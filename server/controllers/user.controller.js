@@ -27,7 +27,7 @@ export const updateUser = async (req, res) => {
     try {
         const { userId } = req.params
         const userFound = await User.findById(userId);
-        if(!userFound) throw new Error("User not found with given Id");
+        if (!userFound) throw new Error("User not found with given Id");
 
         const updatedUser = await User.findByIdAndUpdate(userId, { ...req.body }, { new: true });
 
@@ -43,7 +43,7 @@ export const emptyCartFromUser = async (req, res) => {
 
         const userFound = await User.findById(userId);
         const cartFound = await Cart.findById(cartId);
-        if(!userFound || !cartFound) throw new Error("User or cart may not exists")
+        if (!userFound || !cartFound) throw new Error("User or cart may not exists")
 
         cartFound.products = [];
         await cartFound.save();  // Guardar los cambios en el carrito
@@ -58,7 +58,7 @@ export const acceptUser = async (req, res) => {
     try {
         const { userId } = req.params
         const userFound = await User.findById(userId);
-        if(!userFound) throw new Error("User not found with given Id");
+        if (!userFound) throw new Error("User not found with given Id");
 
         userFound.accepted = true;
         await userFound.save();
@@ -74,7 +74,7 @@ export const deniedUser = async (req, res) => {
         const { userId } = req.params
         const userFound = await User.findById(userId);
         console.log("🚀 ~ deniedUser ~ userFound:", userFound)
-        if(!userFound) throw new Error("User not found with given Id");
+        if (!userFound) throw new Error("User not found with given Id");
 
         userFound.accepted = false;
         await userFound.save();
@@ -147,3 +147,21 @@ export const addClientId = async (req, res) => {
         });
     }
 };
+
+// PUT /api/users/change-discount/:uid
+export const changeUserDiscount = async (req, res) => {
+    const { uid } = req.params;
+    const { field, value } = req.body;
+
+    if (!["discount_1", "discount_2", "discount_3"].includes(field)) {
+        return res.status(400).json({ error: "Campo inválido" });
+    }
+
+    try {
+        const updated = await User.findByIdAndUpdate(uid, { [field]: value }, { new: true });
+        res.json({ message: "Descuento actualizado", user: updated });
+    } catch (error) {
+        console.error("Error al actualizar descuento:", error);
+        res.status(500).json({ error: "Error del servidor" });
+    }
+}

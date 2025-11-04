@@ -18,11 +18,24 @@ import { getImage } from "../../utils/getImage.js";
 import { API_URL } from "../../utils/api_url.js";
 
 export const ProductDetail = ({ prod }) => {
-    const { _id, codpro, desc_stock, proveed, desc_rubro, desc_subrub, desc_marca, precioimpre, stock, prod_details, imageUrl, destacado } = prod;
+    const { _id, codpro, desc_stock, proveed, desc_rubro, desc_subrub, desc_marca,
+        precioimpre, stock, prod_details, imageUrl, destacado } = prod;
+
     const { authUser, isAdmin } = useAuthContext();
     const { addProductToCart } = useCartContext();
     const { id } = useParams();
+
     const formatedPrice = formatCurrency(precioimpre);
+    const d1 = authUser?.discount_1 || 0;
+    const d2 = authUser?.discount_2 || 0;
+    const d3 = authUser?.discount_3 || 0;
+
+    const netPrice = precioimpre * (1 - d1 / 100) * (1 - d2 / 100) * (1 - d3 / 100);
+
+    const formattedNetPrice = netPrice.toLocaleString("es-AR", {
+        style: "currency",
+        currency: "ARS",
+    });
 
     const navigate = useNavigate()
     const [quantity, setQuantity] = useState(stock);
@@ -123,7 +136,17 @@ export const ProductDetail = ({ prod }) => {
                                     {stock > 0 ? "Disponible" : "Sin stock"}
                                 </span>
                             </span>
-                            <span className="text-2xl">{formatedPrice}</span>
+                            <span className="text-2xl">Precio de lista: {formatedPrice}</span>
+
+                            {/* DESCUENTO DE CADA USUARIO */}
+                            <div className="flex flex-col mt-1">
+                                <span className="text-start">Descuento ° 1 -- {authUser.discount_1}%</span>
+                                <span className="text-start">Descuento ° 2 -- {authUser.discount_2}%</span>
+                                <span className="text-start">Descuento ° 3 -- {authUser.discount_3}%</span>
+                            </div>
+
+                            <span className="text-2xl">Precio neto: {formattedNetPrice}</span>
+
                             <span className="italic text-cBlack">Este precio no incluye IVA</span>
                         </div>
                         <div className="flex flex-col items-start mt-2">
@@ -141,6 +164,7 @@ export const ProductDetail = ({ prod }) => {
                             </button>
                         </div>
 
+
                         {/* CAMBIAR O AGREGAR DESCRIPCION DEL PRODUCTO (disponible para admin)_ */}
                         <div className="text-left w-full">
                             <div className="flex justify-between items-end">
@@ -149,19 +173,31 @@ export const ProductDetail = ({ prod }) => {
                             </div>
 
                             {/* FORM PARA CAMBIAR LA DESCRIPCIOND EL PRODUCTO */}
-                            <form action="" onSubmit={handleSubmitNewText}>
-                                <textarea ref={textareaRef} defaultValue={prod_details} readOnly={!isFocus}
-                                    className={`mt-4 lg:mt-2 resize-none h-16 xl:h-20 text-xs xl:text-sm rounded-none overflow-auto w-full p-2 bg-transparent ${isFocus ? "border rounded" : ""}`}>
-                                    {/* {prod_details} */}
-                                </textarea>
-                                {isFocus
-                                    ?
+                            <form onSubmit={handleSubmitNewText}>
+                                <textarea
+                                    ref={textareaRef}
+                                    defaultValue={prod_details}
+                                    readOnly={!isFocus}
+                                    className={`mt-4 lg:mt-2 resize-none h-16 xl:h-40 text-xs xl:text-sm rounded-none overflow-auto w-full p-2 bg-transparent ${isFocus ? "border rounded" : ""}`}
+                                />
+
+                                {isFocus && (
                                     <div className="flex gap-2 mt-1">
-                                        <button type="submit" className="rounded py-1 px-2 bg-orange text-black flex justify-center items-center gap-1 lg:text-xs">EDITAR</button>
-                                        <button className="rounded py-1 px-2 bg-deepGray text-black flex justify-center items-center gap-1 lg:text-xs" onClick={() => setIsFocus(isFocus => !isFocus)}>CANCELAR</button>
+                                        <button
+                                            type="submit"
+                                            className="rounded py-1 px-2 bg-lightRed text-cWhite flex justify-center items-center gap-1 lg:text-xs"
+                                        >
+                                            EDITAR
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="rounded py-1 px-2 bg-deepGray text-cWhite flex justify-center items-center gap-1 lg:text-xs"
+                                            onClick={() => setIsFocus(false)}
+                                        >
+                                            CANCELAR
+                                        </button>
                                     </div>
-                                    : <></>
-                                }
+                                )}
                             </form>
                         </div>
                     </div>

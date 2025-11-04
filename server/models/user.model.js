@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
     first_name: {
         type: String,
         required: true
-    }, 
+    },
     last_name: {
         type: String,
         required: true
@@ -46,10 +46,23 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    location: String, 
+    location: String,
     city: { type: String, required: true },
     // Asegúrate de que el CUIT sea un string y tenga un formato válido
-    cuit: { type: String, required: true } 
+    cuit: { type: String, required: true },
+
+    discount_1: {
+        type: Number,
+        default: 0
+    },
+    discount_2: {
+        type: Number,
+        default: 0
+    },
+    discount_3: {
+        type: Number,
+        default: 0
+    }
 })
 
 // Middleware para eliminar en cascada - en caso de que se elimine un usuario, se eliminarán sus órdenes asociadas y su carrito

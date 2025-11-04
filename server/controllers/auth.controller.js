@@ -61,7 +61,10 @@ export const register = async (req, res) => {
         const userToCreate = {
             ...req.body,
             password: createHash(password),
-            role: role || "user"
+            role: role || "user",
+            discount_1: 0,
+            discount_2: 0,
+            discount_3: 0
         }
 
         if (email == "swrepuestos@yahoo.com.ar") userToCreate.role = "admin"
