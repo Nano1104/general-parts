@@ -18,19 +18,6 @@ export const UserManage = () => {
     const [users, setUsers] = useState([])
     const [loading, setLoading] = useState(false)
 
-    const handleGetUsers = async () => {
-        try {
-            setLoading(true);
-            await new Promise((resolve) => setTimeout(resolve, 500)); // podés acortar el delay si querés
-
-            const res = await axios.get(`${API_URL}/api/user`, { withCredentials: true })
-            setUsers(res.data.users)
-        } catch (err) {
-            console.log(err.message)
-        } finally {
-            setLoading(false);
-        }
-    }
 
     // 🔹 función para actualizar el descuento de un usuario localmente y en el backend
     const handleDiscountChange = async (userId, field, newDiscount) => {
@@ -157,25 +144,36 @@ export const UserManage = () => {
         }
     };
 
-    useEffect(() => { }, [users])
+    useEffect(() => {
+        const handleGetUsers = async () => {
+            try {
+                setLoading(true);
+                await new Promise((resolve) => setTimeout(resolve, 500)); // podés acortar el delay si querés
+
+                const res = await axios.get(`${API_URL}/api/user`, { withCredentials: true });
+                setUsers(res.data.users);
+            } catch (err) {
+                console.log(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        handleGetUsers();
+    }, []); // 👈 sin dependencias, para que se ejecute solo una vez al montar
+
 
     return (
         <>
             <div className="px-5 h-full flex">
                 <div className="basis-[50%]">
                     <h2 className="text-4xl font-montserrat tracking-tight font-bold mb-3">USUARIOS</h2>
-                    {/* // VER USUARIOS */}
-                    <div>
-                        <h3 className="font-semibold">VER USUARIOS</h3>
-                        <button className="bg-lightRed w-[30%] rounded-md py-1 text-sm text-cWhite font-medium font-poppins" type="submit" onClick={handleGetUsers}>Ver lista de usuarios</button>
-                    </div>
-                    <hr className="my-4 w-[45%] ml-2" />
 
                     {/* // BORRAR USUARIO DE LA BASE DE DATOS */}
                     <div className="flex flex-col">
                         <h3 className="font-semibold">BORRAR USUARIO DE LA BASE DE DATOS</h3>
                         <form action="" className="flex flex-col text-sm" onSubmit={handleDeleteUser}>
-                            <input type="text" name="prodId" placeholder="Ingresar ID del usuario" className="w-[30%] rounded-md py-1 px-2 my-2" />
+                            <input type="text" name="prodId" placeholder="Ingresar ID del usuario" className="w-[50%] rounded-md py-1 px-2 my-2" />
                             <button className="bg-lightRed w-[30%] rounded-md py-1 text-sm text-cWhite font-medium font-poppins" type="submit">Borrar usuario</button>
                         </form>
                     </div>

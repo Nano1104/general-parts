@@ -37,7 +37,7 @@ export const Orders = () => {
                     <div className="w-full h-screen flex flex-col font-poppins">
                         <div className="flex items-center text-white mt-[70px] ml-[70px]">
                             <Link to="/" /* className="absolute top-0 my-7 ml-10" */>
-                                <span className="font-extrabold text-orange tracking-tighter italic text-[4.5rem]">SW</span>
+                                <span className="font-extrabold text-lightRed tracking-tighter italic text-[4.5rem]">SW</span>
                                 <span className="font-bold text-white tracking-tight italic text-[4.5rem]">Parts</span>
                             </Link>
                             <h3 className="ml-[100px] text-[1.7rem] font-montserrat">Reservas:</h3>
@@ -50,7 +50,7 @@ export const Orders = () => {
                             ))}
 
 
-                            <Link to="/" className="bg-orange w-[10%] text-center rounded-md py-1 px-2 mt-2 mb-20 text-cBlack border">Volver al Inicio</Link>
+                            <Link to="/" className="bg-lightRed w-[10%] text-center rounded-md py-1 px-2 mt-2 mb-20 text-white">Volver al Inicio</Link>
                         </div>
                     </div>
                     :       // CASO NO HAY RESERVAS
@@ -59,14 +59,14 @@ export const Orders = () => {
                             <div className="bg-gray w-full h-[50%] flex justify-center items-center">
                                 <div className="flex relative">
                                     <LuClipboardList className="inline-block text-[17rem]" />
-                                    <CiWarning className="text-[8rem] text-orange absolute top-0 right-0 z-50" />
+                                    <CiWarning className="text-[8rem] text-lightRed absolute top-0 right-0 z-50" />
                                 </div>
                             </div>
                             <div className="h-[50%] text-lightGray">
                                 <h1 className="text-[4rem] font-semibold tracking-tighter font-montserrat">No hay reservas realizadas!</h1>
                                 <Link
                                     to="/productos"
-                                    className="bg-orange w-[25%] rounded-md py-1 px-3 mt-2 text-cBlack font-semibold" onClick={handleNavigate}>
+                                    className="bg-lightRed w-[25%] rounded-md py-1 px-3 mt-2 text-cBlack font-semibold" onClick={handleNavigate}>
                                     VOLVER
                                 </Link>
                             </div>
