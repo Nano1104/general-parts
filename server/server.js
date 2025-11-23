@@ -40,7 +40,9 @@ app.use(cors({
 
 
 //routes
-app.get('/api/health', (req, res) => res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() }));
+app.head('/api/health', (req, res) => {
+  res.status(200).end();
+});
 app.use("/api/products", productRouter)
 app.use("/api/auth", authRouter)
 app.use("/api/user", userRouter)
