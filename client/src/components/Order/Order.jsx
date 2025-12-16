@@ -8,7 +8,7 @@ export const Order = ({ order }) => {
 
     // Validación temprana
     if (!order || !order.userId) {
-        return null; // o un skeleton/loader
+        return null;
     }
 
     const { _id: orderId, userId, products, totalOrder } = order
@@ -20,12 +20,21 @@ export const Order = ({ order }) => {
                 title: "¿Seguro que quieres eliminar la reserva?",
                 showCancelButton: true,
                 confirmButtonText: "Sí, eliminar",
-                confirmButtonColor: "#DC5F00"
+                cancelButtonText: "Cancelar",
+                confirmButtonColor: "#DC5F00",
+                cancelButtonColor: "#6b7280"
             });
 
             if (result.isConfirmed) {
                 const res = await axios.delete(`${API_URL}/api/order/${orderId}`, { withCredentials: true });
-                if (res.status === 200) window.location.reload()
+                if (res.status === 200) {
+                    Swal.fire({
+                        text: "Reserva eliminada correctamente",
+                        icon: "success",
+                        confirmButtonColor: "#DC5F00"
+                    });
+                    window.location.reload()
+                }
             }
         } catch (err) {
             console.error("Error eliminando la reserva:", err);
@@ -38,37 +47,76 @@ export const Order = ({ order }) => {
     };
 
     return (
-        <div key={orderId} className="bg-gray w-[70%] my-6 rounded-md p-6 font-poppins relative">
-            <h3 className="text-center text-2xl font-medium">{userId.first_name} {userId.last_name}</h3>
-            <div className="flex flex-col mt-4">
-                <span>Id de reserva: <span className="font-semibold">{orderId}</span></span>
-                <span>Telefono/Celular: <span className="font-semibold">{userId.phone}</span></span>
-                <span>Mail: <span className="font-semibold">{userId.email}</span></span>
-                <span>Rol: <span className="font-semibold">{userId.role}</span></span>
-                <span>Total de reserva: <span className="font-semibold">${totalOrder}</span></span>
-            </div>
-            <hr className="mt-2" />
+        <div
+            key={orderId}
+            className="bg-gray w-full sm:w-[90%] md:w-[80%] lg:w-[70%] my-4 sm:my-6 rounded-md p-4 sm:p-6 font-poppins relative"
+        >
+            {/* Nombre del usuario */}
+            <h3 className="text-center text-xl sm:text-2xl font-medium mb-4 break-words">
+                {userId.first_name} {userId.last_name}
+            </h3>
 
-            <div key={`${orderId}-productsDiv`} className="mt-4 overflow-y-auto">
-                <h3 className="text-xl font-medium">Productos: </h3>
-                {
-                    products
-                        ?.filter(prod => prod.product !== null && prod.product !== undefined)
-                        .map(prod => (
-                            <div key={prod.product._id} className="flex justify-between ml-2 border-b-[1px]">
-                                <span className="first-letter:uppercase">{prod.product.desc_stock}</span>
-                                <span>Cantidad: <span className="font-semibold">x{prod.quantity}</span></span>
-                            </div>
-                        ))
-                }
+            {/* Información de la reserva */}
+            <div className="flex flex-col gap-2 text-sm sm:text-base">
+                <div className="flex flex-col sm:flex-row sm:gap-2">
+                    <span className="font-normal">Id de reserva:</span>
+                    <span className="font-semibold break-all">{orderId}</span>
+                </div>
+
+                <div className="flex flex-col sm:flex-row sm:gap-2">
+                    <span className="font-normal">Teléfono/Celular:</span>
+                    <span className="font-semibold">{userId.phone}</span>
+                </div>
+
+                <div className="flex flex-col sm:flex-row sm:gap-2">
+                    <span className="font-normal">Mail:</span>
+                    <span className="font-semibold break-all">{userId.email}</span>
+                </div>
+
+                <div className="flex flex-col sm:flex-row sm:gap-2">
+                    <span className="font-normal">Rol:</span>
+                    <span className="font-semibold capitalize">{userId.role}</span>
+                </div>
+
+                <div className="flex flex-col sm:flex-row sm:gap-2">
+                    <span className="font-normal">Total de reserva:</span>
+                    <span className="font-semibold">${totalOrder}</span>
+                </div>
             </div>
 
-            <button className="py-2 px-4 bg-lightRed text-white text-sm rounded-md m-4" onClick={handleDeleteOrder}>
+            <hr className="mt-4 mb-4" />
+
+            {/* Lista de productos */}
+            <div key={`${orderId}-productsDiv`} className="max-h-[300px] overflow-y-auto">
+                <h3 className="text-lg sm:text-xl font-semibold mb-3">Productos:</h3>
+                <div className="space-y-2">
+                    {
+                        products
+                            ?.filter(prod => prod.product !== null && prod.product !== undefined)
+                            .map(prod => (
+                                <div
+                                    key={prod.product._id}
+                                    className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 ml-2 pb-2 border-b-[1px] text-sm sm:text-base"
+                                >
+                                    <span className="first-letter:uppercase break-words">
+                                        {prod.product.desc_stock}
+                                    </span>
+                                    <span className="whitespace-nowrap">
+                                        Cantidad: <span className="font-semibold">x{prod.quantity}</span>
+                                    </span>
+                                </div>
+                            ))
+                    }
+                </div>
+            </div>
+
+            {/* Botón de cancelar */}
+            <button
+                className="w-full sm:w-auto py-2 px-6 bg-lightRed text-white text-sm sm:text-base rounded-md mt-4 hover:bg-opacity-90 transition-colors font-medium"
+                onClick={handleDeleteOrder}
+            >
                 Cancelar Reserva
             </button>
         </div>
     )
 }
-
-
-
