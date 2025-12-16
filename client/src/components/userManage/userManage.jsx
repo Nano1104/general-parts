@@ -18,6 +18,22 @@ export const UserManage = () => {
     const [users, setUsers] = useState([])
     const [loading, setLoading] = useState(false)
 
+    const handleGetUsers = async () => {
+        try {
+            setLoading(true);
+
+            const res = await axios.get(`${API_URL}/api/user`, {
+                withCredentials: true,
+            });
+
+            setUsers(res.data.users);
+        } catch (err) {
+            console.error("Error obteniendo usuarios:", err.message);
+            showErrorAlert("No se pudieron cargar los usuarios");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     // 🔹 función para actualizar el descuento de un usuario localmente y en el backend
     const handleDiscountChange = async (userId, field, newDiscount) => {
@@ -145,23 +161,8 @@ export const UserManage = () => {
     };
 
     useEffect(() => {
-        const handleGetUsers = async () => {
-            try {
-                setLoading(true);
-                await new Promise((resolve) => setTimeout(resolve, 500)); // podés acortar el delay si querés
-
-                const res = await axios.get(`${API_URL}/api/user`, { withCredentials: true });
-                setUsers(res.data.users);
-            } catch (err) {
-                console.log(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         handleGetUsers();
-    }, []); // 👈 sin dependencias, para que se ejecute solo una vez al montar
-
+    }, []);
 
     return (
         <>
