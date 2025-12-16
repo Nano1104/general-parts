@@ -312,15 +312,25 @@ export const AuthPage = () => {
                                             autoComplete="off"
                                             onFocus={() => setLoginError("")}
                                             className="w-full p-3 sm:p-4 pr-12 bg-transparent outline-none text-cBlack
-                                                    border border-cBlack rounded-xl transition-all duration-200
-                                                    focus:border-lightRed focus:border-2 focus:shadow-md
-                                                    placeholder:text-gray-500"
+                                                        border border-cBlack rounded-xl transition-all duration-200
+                                                        focus:border-lightRed focus:border-2 focus:shadow-md
+                                                        placeholder:text-gray-500"
                                             placeholder="Ingrese su contraseña"
                                             {...register("password", {
-                                                required: "Campo incompleto",
-                                                pattern: {
-                                                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)([A-Za-z\d]|[^ ]){8,15}$/,
-                                                    message: "Contraseña débil"
+                                                required: "La contraseña es obligatoria",
+                                                validate: {
+                                                    minLength: v =>
+                                                        v.length >= 8 || "Debe tener al menos 8 caracteres",
+                                                    maxLength: v =>
+                                                        v.length <= 15 || "Debe tener máximo 15 caracteres",
+                                                    hasUppercase: v =>
+                                                        /[A-Z]/.test(v) || "Debe contener al menos una mayúscula",
+                                                    hasLowercase: v =>
+                                                        /[a-z]/.test(v) || "Debe contener al menos una minúscula",
+                                                    hasNumber: v =>
+                                                        /\d/.test(v) || "Debe contener al menos un número",
+                                                    noSpaces: v =>
+                                                        !/\s/.test(v) || "No debe contener espacios"
                                                 }
                                             })}
                                         />
@@ -343,7 +353,7 @@ export const AuthPage = () => {
                                                 </svg>
                                             )}
                                         </button>
-                                        {errors.password?.type && (
+                                        {errors.password && (
                                             <span className="text-lightRed font-medium text-xs sm:text-sm mt-2 block">
                                                 {errors.password.message}
                                             </span>

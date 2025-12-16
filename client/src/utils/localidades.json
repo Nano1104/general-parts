@@ -422,5 +422,9 @@
     {
         "id": "060905",
         "nombre": "Mercedes"
+    },
+    {
+        "id": "060906",
+        "nombre": "Merlo"
     }
 ]
