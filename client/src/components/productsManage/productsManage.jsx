@@ -11,31 +11,42 @@ export const ProductsManage = () => {
     const handleUpdateExcel = async (e) => {
         e.preventDefault();
 
-        const rubroValue = e.target.rubro.value.toUpperCase();
+        const rubroValue = e.target.rubro.value.trim().toUpperCase();
+        const subrubroIntermedioValue = e.target.subrubroIntermedio.value.trim().toUpperCase();
 
-        // Preguntar confirmación antes de iniciar
+        // Validación básica
+        if (!rubroValue) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campo requerido',
+                text: 'Debes especificar el rubro principal',
+            });
+            return;
+        }
+
+        // Confirmación con info del subrubro intermedio si existe
+        const confirmText = subrubroIntermedioValue
+            ? `Rubro: <b>${rubroValue}</b><br>Subrubro: <b>${subrubroIntermedioValue}</b>`
+            : `Rubro: <b>${rubroValue}</b> (sin subrubro intermedio)`;
+
         const result = await Swal.fire({
             title: "¿Estás seguro?",
-            html: `Se va a cargar la lista para el rubro: <b>${rubroValue}</b>`,
+            html: confirmText,
             icon: "warning",
             showCancelButton: true,
             confirmButtonText: "Sí, cargar",
-            cancelButtonText: "No, cancelar",
+            cancelButtonText: "Cancelar",
             confirmButtonColor: "#D7263D",
             cancelButtonColor: "#6c757d"
         });
 
-        // Si cancela, salir de la función
         if (!result.isConfirmed) return;
 
-        // Mostrar loading
         Swal.fire({
             title: "Procesando Excel...",
             html: "Por favor espera, esto puede tomar unos momentos.",
             allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading(); // Muestra el spinner
-            }
+            didOpen: () => Swal.showLoading()
         });
 
         try {
@@ -43,11 +54,15 @@ export const ProductsManage = () => {
             formData.append("excelFile", file);
             formData.append("rubro", rubroValue);
 
+            // Solo agregar si tiene valor
+            if (subrubroIntermedioValue) {
+                formData.append("subrubroIntermedio", subrubroIntermedioValue);
+            }
+
             const response = await axios.post(`${API_URL}/api/products/upload-excel`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
-            // Cerrar loading y mostrar resultados
             Swal.close();
 
             const data = response.data;
@@ -64,8 +79,12 @@ export const ProductsManage = () => {
                 confirmButtonColor: "#DC5F00"
             });
 
+            // Limpiar formulario
+            e.target.reset();
+            setFile(null);
+
         } catch (err) {
-            Swal.close(); // Cierra el loading en caso de error
+            Swal.close();
             Swal.fire({
                 title: "Error",
                 text: "No se pudo cargar el archivo. Intenta nuevamente.",
@@ -212,18 +231,47 @@ export const ProductsManage = () => {
                     {/***************** CARGAR LISTA DE PRODUCTOS *****************/}
                     <form method="POST" className="flex flex-col" onSubmit={handleUpdateExcel}>
                         <h3 className="font-semibold">CARGAR LISTA DE PRODUCTOS</h3>
+
+                        {/* RUBRO PRINCIPAL */}
                         <div className="text-sm">
-                            <span className="font-medium">Nombre del rubro a cargar:</span><input type="text" name="rubro" placeholder="Rubro" required className="w-[23%] ml-2 rounded-md py-1 px-2 my-2" />
+                            <span className="font-medium">Rubro principal:</span>
+                            <input
+                                type="text"
+                                name="rubro"
+                                placeholder="Ej: MOTOR"
+                                required
+                                className="w-[23%] ml-2 rounded-md py-1 px-2 my-2"
+                            />
                         </div>
+
+                        {/* SUBRUBRO INTERMEDIO - NUEVO */}
+                        <div className="text-sm">
+                            <span className="font-medium">Subrubro (opcional):</span>
+                            <input
+                                type="text"
+                                name="subrubroIntermedio"
+                                placeholder="Ej: ENGRANAJES"
+                                className="w-[23%] ml-2 rounded-md py-1 px-2 my-2"
+                            />
+                            <br />
+                            <span className="italic text-xs text-gray-600">
+                                Dejar vacío si no aplica. Ej: ENGRANAJES, BULONES, BOMBAS DE AGUA
+                            </span>
+                        </div>
+
+                        {/* ARCHIVO */}
                         <input
-                            className="w-[50%]"
+                            className="w-[50%] mt-2"
                             type="file"
                             name="excelFile"
                             required
                             accept=".xlsx, .xls"
                             onChange={(e) => setFile(e.target.files[0])}
                         />
-                        <button className="bg-lightRed w-[25%] rounded-md py-1 mt-2 text-sm text-white font-medium font-poppins" type="submit">Cargar Lista</button>
+
+                        <button className="bg-lightRed w-[25%] rounded-md py-1 mt-2 text-sm text-white font-medium font-poppins" type="submit">
+                            Cargar Lista
+                        </button>
                     </form>
                     <hr className="my-4 w-[45%] ml-2" />
 

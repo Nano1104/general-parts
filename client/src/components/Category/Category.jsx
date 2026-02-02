@@ -1,15 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-//icons
-import { FaArrowAltCircleUp } from "react-icons/fa";    //flecha arriba
-import { FaArrowAltCircleRight } from "react-icons/fa";   //flecha mirando derecha
-import { FaChevronDown } from "react-icons/fa6";
-/* import { IoIosArrowUp } from "react-icons/io";    //flecha arriba
-import { FaArrowAltCircleRight } from "react-icons/io";   //flecha mirando derecha */
-
+import { FaArrowAltCircleUp, FaArrowAltCircleRight, FaChevronDown } from "react-icons/fa";
 import 'animate.css';
 
-// Category Component - Totalmente Responsivo
 export const Category = ({
   category,
   isActive,
@@ -17,30 +10,33 @@ export const Category = ({
   categoryData,
   isMobile = false
 }) => {
-  const [activeMotorSubCategory, setActiveMotorSubCategory] = useState(null);
+  const [activeIntermediateSubCategory, setActiveIntermediateSubCategory] = useState(null);
 
-  const MOTOR_GROUPS = {
-    engranaje: [149, 147, 146, 151, 140, 139, 141, 142, 143, 144, 145, 150, 148],
-    bulones: [101, 102, 103]
-  };
+  // ✨ Detectar si tiene subrubros intermedios
+  const hasIntermediateSubrubros = categoryData.subrubrosIntermedios && categoryData.subrubrosIntermedios.length > 0;
 
   const handleCategoryClick = (e) => {
     e.stopPropagation();
     e.preventDefault();
     onClick();
-    if (isActive) setActiveMotorSubCategory(null); // Reset subcategorías al cerrar
+    if (isActive) setActiveIntermediateSubCategory(null);
   };
 
-  const handleMotorSubCategoryClick = (group, e) => {
+  const handleIntermediateSubCategoryClick = (intermediateSubName, e) => {
     e.stopPropagation();
     e.preventDefault();
-    setActiveMotorSubCategory(activeMotorSubCategory === group ? null : group);
+    setActiveIntermediateSubCategory(
+      activeIntermediateSubCategory === intermediateSubName ? null : intermediateSubName
+    );
   };
 
+  // ============================================
+  // VERSIÓN MÓVIL
+  // ============================================
   if (isMobile) {
     return (
       <div className="font-montserrat">
-        {/* Categoría principal en móvil */}
+        {/* Categoría principal */}
         <div className="flex items-center gap-2">
           <div className="flex-1 flex items-center justify-between p-2 bg-white hover:bg-gray-50 rounded border transition-colors duration-200">
             <Link
@@ -54,94 +50,56 @@ export const Category = ({
               onClick={handleCategoryClick}
               className="p-1"
               aria-expanded={isActive}
-              aria-label={`${isActive ? 'Ocultar' : 'Mostrar'} subcategorías de ${category}`}
             >
               <FaChevronDown className={`text-sm text-gray-600 transform transition-transform duration-200 ${isActive ? 'rotate-180' : ''}`} />
             </button>
           </div>
         </div>
 
-        {/* Subcategorías en móvil */}
+        {/* Subcategorías */}
         {isActive && (
           <div className="mt-2 ml-4 space-y-2">
-            {category === "MOTOR" ? (
+            {hasIntermediateSubrubros ? (
+              // ✨ CON subrubros intermedios
               <div className="space-y-2">
-                {/* Grupo ENGRANAJE */}
-                <div>
-                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                    <Link
-                      to={`/productos/${category}/engranaje`}
-                      className="flex-1 text-gray-700 text-sm uppercase font-medium"
-                    >
-                      ENGRANAJE
-                    </Link>
-                    <button
-                      onClick={(e) => handleMotorSubCategoryClick("engranaje", e)}
-                      className="p-1"
-                      aria-expanded={activeMotorSubCategory === "engranaje"}
-                    >
-                      <FaChevronDown className={`text-xs text-gray-500 transform transition-transform duration-200 ${activeMotorSubCategory === "engranaje" ? 'rotate-180' : ''}`} />
-                    </button>
-                  </div>
+                {categoryData.subrubrosIntermedios.map((intermediate, idx) => (
+                  <div key={`mobile-intermediate-${idx}`}>
+                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <Link
+                        to={`/productos/${category}/${intermediate.nombre.toLowerCase()}`}
+                        className="flex-1 text-gray-700 text-sm uppercase font-medium"
+                      >
+                        {intermediate.nombre}
+                      </Link>
+                      <button
+                        onClick={(e) => handleIntermediateSubCategoryClick(intermediate.nombre, e)}
+                        className="p-1"
+                        aria-expanded={activeIntermediateSubCategory === intermediate.nombre}
+                      >
+                        <FaChevronDown className={`text-xs text-gray-500 transform transition-transform duration-200 ${activeIntermediateSubCategory === intermediate.nombre ? 'rotate-180' : ''}`} />
+                      </button>
+                    </div>
 
-                  {activeMotorSubCategory === "engranaje" && (
-                    <div className="mt-1 ml-4 space-y-1">
-                      {categoryData.subrubros
-                        .filter(sub => MOTOR_GROUPS.engranaje.includes(sub[1]))
-                        .map((sub, index) => (
+                    {activeIntermediateSubCategory === intermediate.nombre && (
+                      <div className="mt-1 ml-4 space-y-1">
+                        {intermediate.subrubros.map((sub, subIdx) => (
                           <Link
-                            key={`mobile-engranaje-${sub[1]}-${index}`}
+                            key={`mobile-sub-${sub[1]}-${subIdx}`}
                             to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub[0])}`}
                             className="block p-2 text-gray-600 text-xs hover:text-lightRed hover:bg-gray-50 rounded transition-all duration-200"
                           >
                             {sub[0]}
                           </Link>
-                        ))
-                      }
-                    </div>
-                  )}
-                </div>
-
-                {/* Grupo BULONES */}
-                <div>
-                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                    <Link
-                      to={`/productos/${category}/bulones`}
-                      className="flex-1 text-gray-700 text-sm uppercase font-medium"
-                    >
-                      BULONES
-                    </Link>
-                    <button
-                      onClick={(e) => handleMotorSubCategoryClick("bulones", e)}
-                      className="p-1"
-                      aria-expanded={activeMotorSubCategory === "bulones"}
-                    >
-                      <FaChevronDown className={`text-xs text-gray-500 transform transition-transform duration-200 ${activeMotorSubCategory === "bulones" ? 'rotate-180' : ''}`} />
-                    </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
-
-                  {activeMotorSubCategory === "bulones" && (
-                    <div className="mt-1 ml-4 space-y-1">
-                      {categoryData.subrubros
-                        .filter(sub => MOTOR_GROUPS.bulones.includes(sub[1]))
-                        .map((sub, index) => (
-                          <Link
-                            key={`mobile-bulones-${sub[1]}-${index}`}
-                            to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub[0])}`}
-                            className="block p-2 text-gray-600 text-xs hover:text-lightRed hover:bg-gray-50 rounded transition-all duration-200"
-                          >
-                            {sub[0]}
-                          </Link>
-                        ))
-                      }
-                    </div>
-                  )}
-                </div>
+                ))}
               </div>
             ) : (
-              // Subcategorías normales en móvil
+              // ✨ SIN subrubros intermedios (directo)
               <div className="space-y-1">
-                {categoryData.subrubros.map((sub, index) => (
+                {categoryData.subrubros?.map((sub, index) => (
                   <Link
                     key={`mobile-${sub[1]}-${index}`}
                     to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub[0])}`}
@@ -158,7 +116,9 @@ export const Category = ({
     );
   }
 
-  // Versión Desktop (mejorada con mejor manejo de eventos)
+  // ============================================
+  // VERSIÓN DESKTOP
+  // ============================================
   return (
     <div className="text-xs lg:text-sm font-montserrat">
       <div className="flex items-center gap-1 relative">
@@ -175,7 +135,6 @@ export const Category = ({
             onClick={handleCategoryClick}
             className="mb-1 cursor-pointer hover:text-deepRed p-1"
             aria-expanded={isActive}
-            aria-label={`${isActive ? 'Ocultar' : 'Mostrar'} subcategorías de ${category}`}
           >
             {!isActive
               ? <FaArrowAltCircleUp className="text-base" />
@@ -187,110 +146,63 @@ export const Category = ({
         {/* SUBRUBROS DESKTOP */}
         {isActive && (
           <div className="absolute z-30 top-0 left-full subcategory-dropdown" data-category-menu="true">
-            {category === "MOTOR" ? (
+            {hasIntermediateSubrubros ? (
+              // ✨ CON subrubros intermedios
               <div
                 className="py-3 bg-cWhite border border-gray-300 shadow-lg rounded w-40 xl:w-44 flex flex-col gap-2"
                 onClick={(e) => e.stopPropagation()}
               >
-                {/* Grupo ENGRANAJE */}
-                <div className="relative">
-                  <div className="flex items-center justify-between px-4 hover:bg-gray-100">
-                    <Link
-                      to={`/productos/${category}/engranaje`}
-                      className="flex-1 text-black hover:text-deepRed hover:font-bold uppercase py-1"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      ENGRANAJE
-                    </Link>
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleMotorSubCategoryClick("engranaje", e);
-                      }}
-                      className="text-base cursor-pointer hover:text-deepRed p-1 ml-2"
-                      aria-expanded={activeMotorSubCategory === "engranaje"}
-                    >
-                      <FaArrowAltCircleUp className={`transform transition-transform duration-200 ${activeMotorSubCategory === "engranaje" ? 'rotate-90' : ''}`} />
-                    </button>
-                  </div>
+                {categoryData.subrubrosIntermedios.map((intermediate, idx) => (
+                  <div key={`desktop-intermediate-${idx}`} className="relative">
+                    <div className="flex items-center justify-between px-4 hover:bg-gray-100">
+                      <Link
+                        to={`/productos/${category}/${intermediate.nombre.toLowerCase()}`}
+                        className="flex-1 text-black hover:text-deepRed hover:font-bold uppercase py-1"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {intermediate.nombre}
+                      </Link>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleIntermediateSubCategoryClick(intermediate.nombre, e);
+                        }}
+                        className="text-base cursor-pointer hover:text-deepRed p-1 ml-2"
+                        aria-expanded={activeIntermediateSubCategory === intermediate.nombre}
+                      >
+                        <FaArrowAltCircleUp className={`transform transition-transform duration-200 ${activeIntermediateSubCategory === intermediate.nombre ? 'rotate-90' : ''}`} />
+                      </button>
+                    </div>
 
-                  {activeMotorSubCategory === "engranaje" && (
-                    <div
-                      className="absolute left-full top-0 bg-cWhite border border-gray-300 shadow-lg rounded w-72 xl:w-80 py-3 ml-1 z-40"
-                      data-category-menu="true"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {categoryData.subrubros
-                        .filter(sub => MOTOR_GROUPS.engranaje.includes(sub[1]))
-                        .map((sub, index) => (
+                    {activeIntermediateSubCategory === intermediate.nombre && (
+                      <div
+                        className="absolute left-full top-0 bg-cWhite border border-gray-300 shadow-lg rounded w-72 xl:w-80 py-3 ml-1 z-40"
+                        data-category-menu="true"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {intermediate.subrubros.map((sub, subIdx) => (
                           <Link
-                            key={`engranaje-${sub[1]}-${index}`}
+                            key={`desktop-sub-${sub[1]}-${subIdx}`}
                             to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub[0])}`}
                             className="text-black block px-4 py-2 hover:text-deepRed hover:font-bold hover:bg-gray-100"
                             onClick={(e) => e.stopPropagation()}
                           >
                             {sub[0]}
                           </Link>
-                        ))
-                      }
-                    </div>
-                  )}
-                </div>
-
-                {/* Grupo BULONES */}
-                <div className="relative">
-                  <div className="flex items-center justify-between px-4 hover:bg-gray-100">
-                    <Link
-                      to={`/productos/${category}/bulones`}
-                      className="flex-1 text-black hover:text-deepRed hover:font-bold uppercase py-1"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      BULONES
-                    </Link>
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleMotorSubCategoryClick("bulones", e);
-                      }}
-                      className="text-base cursor-pointer hover:text-deepRed p-1 ml-2"
-                      aria-expanded={activeMotorSubCategory === "bulones"}
-                    >
-                      <FaArrowAltCircleUp className={`transform transition-transform duration-200 ${activeMotorSubCategory === "bulones" ? 'rotate-90' : ''}`} />
-                    </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
-
-                  {activeMotorSubCategory === "bulones" && (
-                    <div
-                      className="absolute left-full top-0 bg-cWhite border border-gray-300 shadow-lg rounded w-72 xl:w-80 py-3 ml-1 z-40"
-                      data-category-menu="true"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {categoryData.subrubros
-                        .filter(sub => MOTOR_GROUPS.bulones.includes(sub[1]))
-                        .map((sub, index) => (
-                          <Link
-                            key={`bulones-${sub[1]}-${index}`}
-                            to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub[0])}`}
-                            className="text-black block px-4 py-2 hover:text-deepRed hover:font-bold hover:bg-gray-100"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            {sub[0]}
-                          </Link>
-                        ))
-                      }
-                    </div>
-                  )}
-                </div>
+                ))}
               </div>
             ) : (
-              // Renderizado normal para otros rubros en desktop
+              // ✨ SIN subrubros intermedios (directo)
               <div
                 className="bg-cWhite py-4 border border-gray-300 shadow-lg rounded w-72 xl:w-80 flex flex-col"
                 onClick={(e) => e.stopPropagation()}
               >
-                {categoryData.subrubros.map((sub, index) => (
+                {categoryData.subrubros?.map((sub, index) => (
                   <Link
                     key={`${sub[1]}-${index}`}
                     to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub[0])}`}
@@ -309,4 +221,3 @@ export const Category = ({
     </div>
   );
 };
-
