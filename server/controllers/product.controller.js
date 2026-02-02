@@ -508,29 +508,33 @@ export const getAllProducts = async (req, res) => {
 export const getCategoriesAndSubcategories = async (req, res) => {
     try {
         const result = await Product.aggregate([
-            // Primero agrupamos para obtener combinaciones únicas de rubro/subrubro
+            // 1. Agrupar por combinación única de rubro + subrubro intermedio + subrubro
             {
                 $group: {
                     _id: {
                         rubro: "$desc_rubro",
+                        subrubroIntermedio: "$desc_subrubro_intermedio", // ✨ NUEVO
                         subrubro: "$desc_subrub",
-                        codigo: "$rubro"
+                        codigoSubrubro: "$subrub"
                     }
                 }
             },
-            // Luego agrupamos por rubro para juntar todos sus subrubros
+            // 2. Agrupar por rubro + subrubro intermedio
             {
                 $group: {
-                    _id: "$_id.rubro",
+                    _id: {
+                        rubro: "$_id.rubro",
+                        subrubroIntermedio: "$_id.subrubroIntermedio"
+                    },
                     subrubros: {
                         $push: {
                             nombre: "$_id.subrubro",
-                            codigo: "$_id.codigo"
+                            codigo: "$_id.codigoSubrubro"
                         }
                     }
                 }
             },
-            // Eliminamos duplicados de subrubros (por si acaso)
+            // 3. Eliminar duplicados de subrubros
             {
                 $addFields: {
                     subrubros: {
@@ -539,7 +543,12 @@ export const getCategoriesAndSubcategories = async (req, res) => {
                             initialValue: [],
                             in: {
                                 $cond: [
-                                    { $in: ["$$this", "$$value"] },
+                                    {
+                                        $in: [
+                                            "$$this.codigo",
+                                            { $map: { input: "$$value", as: "v", in: "$$v.codigo" } }
+                                        ]
+                                    },
                                     "$$value",
                                     { $concatArrays: ["$$value", ["$$this"]] }
                                 ]
@@ -548,24 +557,97 @@ export const getCategoriesAndSubcategories = async (req, res) => {
                     }
                 }
             },
-            // Formateamos la salida como necesitas
+            // 4. Formatear subrubros como array [nombre, codigo]
             {
-                $project: {
-                    _id: 0,
-                    rubro: "$_id",
+                $addFields: {
                     subrubros: {
                         $map: {
                             input: "$subrubros",
                             as: "sub",
-                            in: [
-                                "$$sub.nombre", // Nombre del subrubro
-                                "$$sub.codigo"  // Código del subrubro
-                            ]
+                            in: ["$$sub.nombre", "$$sub.codigo"]
                         }
                     }
                 }
             },
-            // Ordenamos alfabéticamente por rubro
+            // 5. Agrupar por rubro para juntar todos sus subrubros intermedios
+            {
+                $group: {
+                    _id: "$_id.rubro",
+                    grupos: {
+                        $push: {
+                            subrubroIntermedio: "$_id.subrubroIntermedio",
+                            subrubros: "$subrubros"
+                        }
+                    }
+                }
+            },
+            // 6. Separar productos CON y SIN subrubro intermedio
+            {
+                $addFields: {
+                    tieneSubrubrosIntermedios: {
+                        $anyElementTrue: {
+                            $map: {
+                                input: "$grupos",
+                                as: "g",
+                                in: { $ne: ["$$g.subrubroIntermedio", null] }
+                            }
+                        }
+                    }
+                }
+            },
+            // 7. Formatear salida final
+            {
+                $project: {
+                    _id: 0,
+                    rubro: "$_id",
+                    // Si tiene subrubros intermedios, agruparlos; si no, mostrar subrubros directamente
+                    subrubrosIntermedios: {
+                        $cond: [
+                            "$tieneSubrubrosIntermedios",
+                            {
+                                $filter: {
+                                    input: {
+                                        $map: {
+                                            input: "$grupos",
+                                            as: "g",
+                                            in: {
+                                                $cond: [
+                                                    { $ne: ["$$g.subrubroIntermedio", null] },
+                                                    {
+                                                        nombre: "$$g.subrubroIntermedio",
+                                                        subrubros: "$$g.subrubros"
+                                                    },
+                                                    null
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    as: "item",
+                                    cond: { $ne: ["$$item", null] }
+                                }
+                            },
+                            null
+                        ]
+                    },
+                    // Subrubros directos (solo si NO tiene intermedios)
+                    subrubros: {
+                        $cond: [
+                            "$tieneSubrubrosIntermedios",
+                            null,
+                            {
+                                $reduce: {
+                                    input: "$grupos",
+                                    initialValue: [],
+                                    in: {
+                                        $concatArrays: ["$$value", "$$this.subrubros"]
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            // 8. Ordenar alfabéticamente
             {
                 $sort: { rubro: 1 }
             }
@@ -573,13 +655,14 @@ export const getCategoriesAndSubcategories = async (req, res) => {
 
         res.status(200).json({
             success: true,
-            message: "Success getting categories with subrubros and codes",
+            message: "Success getting categories with optional intermediate subcategories",
             categories: result
         });
     } catch (err) {
+        console.error("Error in getCategoriesAndSubcategories:", err);
         res.status(500).json({
             success: false,
-            message: "Error getting categories with subrubros and codes",
+            message: "Error getting categories",
             error: err.message
         });
     }
@@ -625,7 +708,6 @@ export const getHighlightedProducts = async (req, res) => {
 }
 
 export const uploadExcelProducts = async (req, res) => {
-    // Objeto para manejar los timers
     const timers = {
         total: 'TiempoTotalCarga',
         lectura: 'LecturaExcel',
@@ -635,20 +717,27 @@ export const uploadExcelProducts = async (req, res) => {
     };
 
     try {
-        console.time(timers.total); // Medición de tiempo total
+        console.time(timers.total);
 
         // 1. Validar archivo
         if (!req.file) {
             return res.status(400).json({ message: "No se subió ningún archivo" });
         }
 
+        // 2. Obtener datos del formulario
+        const rubroPrincipal = req.body.rubro?.trim();
+        const subrubroIntermedio = req.body.subrubroIntermedio?.trim() || null; // 👈 NUEVO
+
+        if (!rubroPrincipal) {
+            return res.status(400).json({ message: "El rubro principal es requerido" });
+        }
+
         console.time(timers.lectura);
-        // 2. Leer archivo Excel optimizado
-        const workbook = xlsx.read(req.file.buffer, { type: "array" }); // Más rápido que 'buffer'
+        const workbook = xlsx.read(req.file.buffer, { type: "array" });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         const excelItems = xlsx.utils.sheet_to_json(worksheet, {
-            defval: undefined, // Mejor que null para nuestro caso
-            raw: false,       // Conversión automática de valores
+            defval: undefined,
+            raw: false,
             dateNF: 'yyyy-mm-dd'
         });
         console.timeEnd(timers.lectura);
@@ -660,7 +749,7 @@ export const uploadExcelProducts = async (req, res) => {
             'desc_marca', 'porcen1', 'precioimpre'
         ];
 
-        // 4. Obtener todos los códigos existentes en una sola consulta
+        // 4. Obtener productos existentes
         console.time(timers.consulta);
         const allCodpros = excelItems.map(item => item.codpro?.toString().trim()).filter(Boolean);
         const existingProducts = await Product.find({
@@ -669,8 +758,8 @@ export const uploadExcelProducts = async (req, res) => {
         const existingProductsMap = new Map(existingProducts.map(p => [p.codpro, p]));
         console.timeEnd(timers.consulta);
 
-        // 5. Procesamiento optimizado por lotes
-        const BATCH_SIZE = 1000; // Ajustar según necesidad
+        // 5. Procesamiento
+        const BATCH_SIZE = 1000;
         let productsToUpsert = [];
         let invalidProducts = [];
 
@@ -679,34 +768,41 @@ export const uploadExcelProducts = async (req, res) => {
             const item = excelItems[i];
             const rowNumber = i + 2;
 
-            // Validación de codpro
             const codpro = item.codpro?.toString().trim();
             if (!codpro) {
                 invalidProducts.push(`Fila ${rowNumber}: codpro es requerido`);
                 continue;
             }
 
-            // Obtener producto existente del mapa
             const existingProduct = existingProductsMap.get(codpro);
 
-            // Mapeo optimizado de campos
+            // Mapeo con NUEVA jerarquía de 3 niveles
             const mappedItem = {
                 codpro,
                 desc_stock: item.desc_stock?.toString().trim(),
-                rubro: item.rubro !== undefined ? parseInt(item.rubro) : undefined,
-                subrub: item.subrub !== undefined ? parseInt(item.subrub) : undefined,
-                proveed: item.proveed !== undefined ? parseInt(item.proveed) : undefined,
-                desc_rubro: req.body.rubro,
+
+                // NIVEL 1: Rubro principal (del form)
+                desc_rubro: rubroPrincipal,
+
+                // NIVEL 2: Subrubro intermedio (del form, opcional) 👈 NUEVO
+                desc_subrubro_intermedio: subrubroIntermedio || null,
+
+                // NIVEL 3: Subrubro final (del Excel)
+                subrub: item.rubro !== undefined ? parseInt(item.rubro) : undefined,
                 desc_subrub: item.desc_rubro?.toString().trim(),
+
+                // Resto de campos
+                rubro: item.subrub !== undefined ? parseInt(item.subrub) : undefined,
+                proveed: item.proveed !== undefined ? parseInt(item.proveed) : undefined,
                 desc_marca: item.desc_marca?.toString().trim(),
                 porcen1: item.porcen1 !== undefined ? parseInt(item.porcen1) : undefined,
                 precioimpre: item.precioimpre !== undefined ? item.precioimpre : undefined,
                 stock: 10,
-                imageUrl: existingProduct?.imageUrl || null, // 👈 mantiene la imagen si ya existe
+                imageUrl: existingProduct?.imageUrl || null,
                 lastUpdated: new Date()
             };
 
-            // Verificación de campos requeridos optimizada
+            // Validación de campos requeridos
             const isComplete = REQUIRED_FIELDS.every(field => {
                 const val = mappedItem[field];
                 return val !== undefined && val !== null && val !== '';
@@ -724,7 +820,7 @@ export const uploadExcelProducts = async (req, res) => {
         }
         console.timeEnd(timers.procesamiento);
 
-        // 6. Procesamiento por lotes para operaciones de BD
+        // 6. Operaciones DB
         console.time(timers.operaciones);
         const results = {
             insertedCount: 0,
@@ -748,7 +844,7 @@ export const uploadExcelProducts = async (req, res) => {
 
             const batchResult = await Product.bulkWrite(bulkOps, {
                 ordered: false,
-                writeConcern: { w: 1 } // Balance entre velocidad y confirmación
+                writeConcern: { w: 1 }
             });
 
             results.insertedCount += batchResult.upsertedCount;
@@ -756,8 +852,7 @@ export const uploadExcelProducts = async (req, res) => {
             results.unchangedCount += (batch.length - batchResult.modifiedCount - batchResult.upsertedCount);
         }
         console.timeEnd(timers.operaciones);
-
-        console.timeEnd(timers.total); // Fin medición tiempo total
+        console.timeEnd(timers.total);
 
         res.json({
             message: 'Carga completada',
@@ -769,7 +864,7 @@ export const uploadExcelProducts = async (req, res) => {
                 sinCambios: results.unchangedCount,
                 errores: invalidProducts.length,
             },
-            ...(invalidProducts.length > 0 && { erroresDetallados: invalidProducts.slice(0, 50) }) // Limitar salida
+            ...(invalidProducts.length > 0 && { erroresDetallados: invalidProducts.slice(0, 50) })
         });
 
     } catch (err) {
@@ -782,7 +877,7 @@ export const uploadExcelProducts = async (req, res) => {
             })
         });
     }
-}
+};
 
 export const downloadExcelProducts = async (req, res) => {
     try {
