@@ -17,7 +17,7 @@ export const getProducts = async (req, res) => {
     try {
         const { search, limit = 10, lastId, ...filters } = req.query;
 
-        const baseFilter = buildBaseFilter(filters);
+        const baseFilter = await buildBaseFilter(filters); // ✨ AHORA es async
 
         let products = [];
         if (search) {
@@ -51,15 +51,35 @@ function escapeRegex(s = "") {
     return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function ensureNumbers(arr) {
-    return arr.map((v) => {
-        const n = Number(v);
-        return Number.isNaN(n) ? v : n;
+// ✨ Caché de subrubros intermedios (se actualiza cada 5 minutos)
+let intermediateSubrubrosCache = new Set();
+let lastCacheUpdate = 0;
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutos
+
+async function getIntermediateSubrubros() {
+    const now = Date.now();
+
+    // Si el caché está fresco, usarlo
+    if (now - lastCacheUpdate < CACHE_TTL && intermediateSubrubrosCache.size > 0) {
+        return intermediateSubrubrosCache;
+    }
+
+    // Actualizar caché
+    const intermediates = await Product.distinct('desc_subrubro_intermedio', {
+        desc_subrubro_intermedio: { $ne: null }
     });
+
+    // Normalizar a minúsculas para comparación case-insensitive
+    intermediateSubrubrosCache = new Set(
+        intermediates.map(s => s?.toLowerCase()).filter(Boolean)
+    );
+
+    lastCacheUpdate = now;
+    return intermediateSubrubrosCache;
 }
 
-// buildBaseFilter limpio y determinista
-function buildBaseFilter(params = {}) {
+// ✨ buildBaseFilter con caché
+async function buildBaseFilter(params = {}) {
     const filter = {};
 
     if (params.category) {
@@ -70,23 +90,30 @@ function buildBaseFilter(params = {}) {
         filter.desc_marca = params.brand.toString().toUpperCase();
     }
 
-    // --- SUBCATEGORY logic (centralizada acá, y sin asignar desc_subrub previamente) ---
+    // --- SUBCATEGORY logic con caché ---
     if (params.subcategory) {
-        const raw = params.subcategory.toString().trim();
-        const key = raw.toLowerCase();
+        const subcategoryRaw = params.subcategory.toString().trim();
+        const subcategoryLower = subcategoryRaw.toLowerCase();
 
-        if (MOTOR_GROUPS[key]) {
-            // Si es uno de los grupos especiales, filtramos por 'rubro' usando los códigos
-            // Convertimos a Number porque muy probablemente 'rubro' en la BD sea numérico.
-            // Si tu BD tiene rubro como string, cambialo a .map(String) en su lugar.
-            filter.rubro = { $in: ensureNumbers(MOTOR_GROUPS[key]) };
+        // Obtener lista de subrubros intermedios (cacheada)
+        const intermediates = await getIntermediateSubrubros();
+
+        if (intermediates.has(subcategoryLower)) {
+            // Es un subrubro intermedio
+            filter.desc_subrubro_intermedio = {
+                $regex: `^${escapeRegex(subcategoryRaw)}$`,
+                $options: "i"
+            };
         } else {
-            // Caso normal: buscamos por desc_subrub (case-insensitive, coincidencia exacta)
-            filter.desc_subrub = { $regex: `^${escapeRegex(raw)}$`, $options: "i" };
+            // Es un subrubro normal
+            filter.desc_subrub = {
+                $regex: `^${escapeRegex(subcategoryRaw)}$`,
+                $options: "i"
+            };
         }
     }
 
-    // precios
+    // Precios
     if (!isNaN(params.minPrice) || !isNaN(params.maxPrice)) {
         filter.precioimpre = {};
         if (!isNaN(params.minPrice)) filter.precioimpre.$gte = parseFloat(params.minPrice);
@@ -508,17 +535,18 @@ export const getAllProducts = async (req, res) => {
 export const getCategoriesAndSubcategories = async (req, res) => {
     try {
         const result = await Product.aggregate([
-            // 1. Agrupar por combinación única de rubro + subrubro intermedio + subrubro
+            // 1. Agrupar por rubro + subrubro intermedio + subrubro
             {
                 $group: {
                     _id: {
                         rubro: "$desc_rubro",
-                        subrubroIntermedio: "$desc_subrubro_intermedio", // ✨ NUEVO
+                        subrubroIntermedio: "$desc_subrubro_intermedio",
                         subrubro: "$desc_subrub",
                         codigoSubrubro: "$subrub"
                     }
                 }
             },
+
             // 2. Agrupar por rubro + subrubro intermedio
             {
                 $group: {
@@ -534,7 +562,8 @@ export const getCategoriesAndSubcategories = async (req, res) => {
                     }
                 }
             },
-            // 3. Eliminar duplicados de subrubros
+
+            // 3. Eliminar duplicados
             {
                 $addFields: {
                     subrubros: {
@@ -557,7 +586,8 @@ export const getCategoriesAndSubcategories = async (req, res) => {
                     }
                 }
             },
-            // 4. Formatear subrubros como array [nombre, codigo]
+
+            // 4. Formatear subrubros como [nombre, codigo]
             {
                 $addFields: {
                     subrubros: {
@@ -569,7 +599,8 @@ export const getCategoriesAndSubcategories = async (req, res) => {
                     }
                 }
             },
-            // 5. Agrupar por rubro para juntar todos sus subrubros intermedios
+
+            // 5. Agrupar todo por rubro
             {
                 $group: {
                     _id: "$_id.rubro",
@@ -581,29 +612,25 @@ export const getCategoriesAndSubcategories = async (req, res) => {
                     }
                 }
             },
+
             // 6. Separar productos CON y SIN subrubro intermedio
-            {
-                $addFields: {
-                    tieneSubrubrosIntermedios: {
-                        $anyElementTrue: {
-                            $map: {
-                                input: "$grupos",
-                                as: "g",
-                                in: { $ne: ["$$g.subrubroIntermedio", null] }
-                            }
-                        }
-                    }
-                }
-            },
-            // 7. Formatear salida final
             {
                 $project: {
                     _id: 0,
                     rubro: "$_id",
-                    // Si tiene subrubros intermedios, agruparlos; si no, mostrar subrubros directamente
                     subrubrosIntermedios: {
                         $cond: [
-                            "$tieneSubrubrosIntermedios",
+                            // Si ALGÚN grupo tiene subrubroIntermedio != null
+                            {
+                                $anyElementTrue: {
+                                    $map: {
+                                        input: "$grupos",
+                                        as: "g",
+                                        in: { $ne: ["$$g.subrubroIntermedio", null] }
+                                    }
+                                }
+                            },
+                            // ENTONCES: devolver solo los grupos CON subrubroIntermedio
                             {
                                 $filter: {
                                     input: {
@@ -614,40 +641,48 @@ export const getCategoriesAndSubcategories = async (req, res) => {
                                                 $cond: [
                                                     { $ne: ["$$g.subrubroIntermedio", null] },
                                                     {
-                                                        nombre: "$$g.subrubroIntermedio",
+                                                        nombre: "$$g.subrubroIntermedio",  // ✨ CLAVE: nombre
                                                         subrubros: "$$g.subrubros"
                                                     },
-                                                    null
+                                                    "$$REMOVE"
                                                 ]
                                             }
                                         }
                                     },
                                     as: "item",
-                                    cond: { $ne: ["$$item", null] }
+                                    cond: { $ne: ["$$item", "$$REMOVE"] }
                                 }
                             },
+                            // SI NO: null
                             null
                         ]
                     },
-                    // Subrubros directos (solo si NO tiene intermedios)
+                    // Subrubros directos (si NO tiene intermedios)
                     subrubros: {
                         $cond: [
-                            "$tieneSubrubrosIntermedios",
+                            {
+                                $anyElementTrue: {
+                                    $map: {
+                                        input: "$grupos",
+                                        as: "g",
+                                        in: { $ne: ["$$g.subrubroIntermedio", null] }
+                                    }
+                                }
+                            },
                             null,
                             {
                                 $reduce: {
                                     input: "$grupos",
                                     initialValue: [],
-                                    in: {
-                                        $concatArrays: ["$$value", "$$this.subrubros"]
-                                    }
+                                    in: { $concatArrays: ["$$value", "$$this.subrubros"] }
                                 }
                             }
                         ]
                     }
                 }
             },
-            // 8. Ordenar alfabéticamente
+
+            // 7. Ordenar
             {
                 $sort: { rubro: 1 }
             }
@@ -667,6 +702,7 @@ export const getCategoriesAndSubcategories = async (req, res) => {
         });
     }
 };
+
 
 export const getProductById = async (req, res) => {
     const { id } = req.params;

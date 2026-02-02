@@ -40,7 +40,7 @@ const productSchema = new mongoose.Schema({
         enum: ["FIAT", "PEUGEOT", "FORD", "RENAULT", "VOLKSWAGEN", "MASSEY FERGUSON", "JHON DEERE", "SCANIA", "TOYOTA",
             "MERCEDES BENZ", "JEEP", "IVECO", "SEAT", "CITROEN", "CHEVROLET", "CUMMINS", "DEUTZ", "MAXION", "ACURA", "AUDI",
             "BMW", "CHRYSLER", "DAEWOO", "HONDA", "IKA", "ISUZU", "KIA", "LAND ROVER", "MAZDA", "MITSUBISHI", "MVM", "NISSAN",
-            "ROVER", "SUBARU", "SUZUKI", "VOLVO", "LADA", "UNIVERSAL", "AGRALE", "DEUTZ FAHR", "ZANELLO", "PERKINS", "HYUNDAI", "DODGE"],
+            "ROVER", "SUBARU", "SUZUKI", "VOLVO", "LADA", "UNIVERSAL", "AGRALE", "DEUTZ FAHR", "ZANELLO", "PERKINS", "HYUNDAI", "DODGE", "RANDOM"],
         required: true
     },
     porcen1: {

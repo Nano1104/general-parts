@@ -6,7 +6,10 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./server.js",
     "dev": "cross-env NODE_ENV=development nodemon ./server.js",
-    "update-users": "cross-env NODE_ENV=production node ./scripts/updateUsers.js"
+    "update-users": "cross-env NODE_ENV=production node ./scripts/updateUsers.js",
+    "fix-rubro-subrub:dry": "cross-env NODE_ENV=production node ./scripts/fix-rubros.js --dry-run",
+    "fix-rubro-subrub": "cross-env NODE_ENV=production node ./scripts/fix-rubros.js",
+    "fix-rubro-subrub-bulk": "cross-env NODE_ENV=production node ./scripts/fix_rubro_subrub_bulk.js"
   },
   "keywords": [],
   "author": "",
