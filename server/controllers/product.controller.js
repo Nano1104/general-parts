@@ -5,507 +5,255 @@ import _ from "lodash";
 import Product from "../models/product.model.js";
 import agendaModule from '../agenda.js'
 
-const MOTOR_GROUPS = {
+/* const MOTOR_GROUPS = {
     engranaje: [149, 147, 146, 151, 140, 139, 141, 142, 143, 144, 145, 150, 148],
     bulones: [101, 102, 103]
-};
+}; */
 
+import client from "../typesense/typesenseClient.js";
+import { COLLECTION_NAME } from "../typesense/typesenseSchema.js";
+import { mongoToTypesense } from "../typesense/typesenseSync.js";
+
+// product.controller.js  (versión con Typesense)
+// ─────────────────────────────────────────────────────────────────────────────
+// La API pública (/api/products) no cambia: el frontend funciona igual.
+// Internamente, las búsquedas con ?search= usan Typesense;
+// los filtros puros (categoría, marca, precio) siguen usando MongoDB directo
+// porque son queries exactas que ya están bien indexadas.
+// ─────────────────────────────────────────────────────────────────────────────
 // ---------------------------
 // BUSCADOR DE PRODUCTOS
 // ---------------------------
-export const getProducts = async (req, res) => {
-    try {
-        const { search, limit = 10, lastId, ...filters } = req.query;
-
-        const baseFilter = await buildBaseFilter(filters); // ✨ AHORA es async
-
-        let products = [];
-        if (search) {
-            const decodedSearch = decodeURIComponent(search).trim();
-            products = await smartSearch(baseFilter, decodedSearch, limit, lastId);
-        } else {
-            products = await executeProductQuery(baseFilter, limit, lastId);
-        }
-
-        const hasMore = products.length > parseInt(limit);
-        const response = {
-            success: true,
-            products: hasMore ? products.slice(0, -1) : products,
-            hasMore,
-            total: await Product.countDocuments(baseFilter)
-        };
-
-        return res.json(response);
-
-    } catch (err) {
-        console.error('Error en getProducts:', err);
-        res.status(500).json({
-            success: false,
-            message: "Error al obtener productos",
-            error: process.env.NODE_ENV === 'development' ? err.message : undefined
-        });
-    }
-};
+// ─── Helpers ────────────────────────────────────────────────────────────────
 
 function escapeRegex(s = "") {
     return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-// ✨ Caché de subrubros intermedios (se actualiza cada 5 minutos)
+// Caché de subrubros intermedios (igual que antes)
 let intermediateSubrubrosCache = new Set();
 let lastCacheUpdate = 0;
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutos
+const CACHE_TTL = 5 * 60 * 1000;
 
 async function getIntermediateSubrubros() {
     const now = Date.now();
-
-    // Si el caché está fresco, usarlo
     if (now - lastCacheUpdate < CACHE_TTL && intermediateSubrubrosCache.size > 0) {
         return intermediateSubrubrosCache;
     }
-
-    // Actualizar caché
-    const intermediates = await Product.distinct('desc_subrubro_intermedio', {
-        desc_subrubro_intermedio: { $ne: null }
+    const intermediates = await Product.distinct("desc_subrubro_intermedio", {
+        desc_subrubro_intermedio: { $ne: null },
     });
-
-    // Normalizar a minúsculas para comparación case-insensitive
     intermediateSubrubrosCache = new Set(
         intermediates.map(s => s?.toLowerCase()).filter(Boolean)
     );
-
     lastCacheUpdate = now;
     return intermediateSubrubrosCache;
 }
 
-// ✨ buildBaseFilter con caché
 async function buildBaseFilter(params = {}) {
     const filter = {};
-
-    if (params.category) {
-        filter.desc_rubro = params.category.toString().toUpperCase();
-    }
-
-    if (params.brand) {
-        filter.desc_marca = params.brand.toString().toUpperCase();
-    }
-
-    // --- SUBCATEGORY logic con caché ---
+    if (params.category) filter.desc_rubro = params.category.toString().toUpperCase();
+    if (params.brand) filter.desc_marca = params.brand.toString().toUpperCase();
     if (params.subcategory) {
         const subcategoryRaw = params.subcategory.toString().trim();
         const subcategoryLower = subcategoryRaw.toLowerCase();
-
-        // Obtener lista de subrubros intermedios (cacheada)
         const intermediates = await getIntermediateSubrubros();
-
         if (intermediates.has(subcategoryLower)) {
-            // Es un subrubro intermedio
             filter.desc_subrubro_intermedio = {
-                $regex: `^${escapeRegex(subcategoryRaw)}$`,
-                $options: "i"
+                $regex: `^${escapeRegex(subcategoryRaw)}$`, $options: "i",
             };
         } else {
-            // Es un subrubro normal
             filter.desc_subrub = {
-                $regex: `^${escapeRegex(subcategoryRaw)}$`,
-                $options: "i"
+                $regex: `^${escapeRegex(subcategoryRaw)}$`, $options: "i",
             };
         }
     }
-
-    // Precios
     if (!isNaN(params.minPrice) || !isNaN(params.maxPrice)) {
         filter.precioimpre = {};
         if (!isNaN(params.minPrice)) filter.precioimpre.$gte = parseFloat(params.minPrice);
         if (!isNaN(params.maxPrice)) filter.precioimpre.$lte = parseFloat(params.maxPrice);
     }
-
     return filter;
 }
 
-// Nueva función de búsqueda inteligente
-async function smartSearch(baseFilter, searchTerm, limit, lastId) {
-    const rawTerms = searchTerm.toLowerCase().split(/\s+/).filter(t => t.length > 0);
-    const terms = normalizeTerms(rawTerms);
+// ─── Búsqueda con Typesense ──────────────────────────────────────────────────
 
-    // Construir múltiples queries con diferentes niveles de especificidad
-    const queries = buildSearchQueries(baseFilter, terms, searchTerm);
+/**
+ * Convierte los filtros de MongoDB al formato filter_by de Typesense.
+ * Typesense usa una sintaxis especial: "campo:=VALOR && campo2:>=100"
+ */
+function buildTypesenseFilter(params = {}) {
+    const parts = [];
 
-    let allResults = [];
-    const seenIds = new Set();
-
-    // Ejecutar queries en orden de prioridad
-    for (const query of queries) {
-        const results = await executeProductQuery(query, 50, lastId); // Buscar más para luego filtrar
-
-        // Agregar solo productos no vistos
-        for (const product of results) {
-            if (!seenIds.has(product._id.toString())) {
-                seenIds.add(product._id.toString());
-
-                // Calcular score de relevancia
-                const score = calculateRelevanceScore(product, terms, searchTerm);
-                product._score = score;
-
-                allResults.push(product);
-            }
-        }
-
-        // Si ya tenemos suficientes resultados relevantes, parar
-        if (allResults.length >= parseInt(limit) * 3) break;
+    if (params.category) {
+        const cat = params.category.toString().toUpperCase();
+        parts.push(`desc_rubro:=\`${cat}\``);
     }
 
-    // Ordenar por relevancia y limitar
-    return allResults
-        .sort((a, b) => b._score - a._score)
-        .slice(0, parseInt(limit) + 1);
+    if (params.brand) {
+        const brand = params.brand.toString().toUpperCase();
+        parts.push(`desc_marca:=\`${brand}\``);
+    }
+
+    if (params.subcategory) {
+        // Nota: Typesense no distingue intermedio/normal automáticamente.
+        // Buscamos en ambos campos con OR.
+        const sub = params.subcategory.toString().trim();
+        parts.push(`(desc_subrub:=\`${sub}\` || desc_subrubro_intermedio:=\`${sub}\`)`);
+    }
+
+    if (!isNaN(params.minPrice) && !isNaN(params.maxPrice)) {
+        parts.push(`precioimpre:[${params.minPrice}..${params.maxPrice}]`);
+    } else if (!isNaN(params.minPrice)) {
+        parts.push(`precioimpre:>=${params.minPrice}`);
+    } else if (!isNaN(params.maxPrice)) {
+        parts.push(`precioimpre:<=${params.maxPrice}`);
+    }
+
+    return parts.join(" && ") || undefined;
 }
 
-// Función para normalizar términos (manejar plurales, géneros, etc.)
-function normalizeTerms(terms) {
-    const normalized = [];
+async function typesenseSearch(searchTerm, params, limit, page = 1) {
+    const filterBy = buildTypesenseFilter(params);
 
-    terms.forEach(term => {
-        const variants = getWordVariants(term);
-        normalized.push(...variants);
-    });
+    const searchParameters = {
+        q: searchTerm,
+        // Campos donde buscar (en orden de importancia)
+        query_by: "codpro,desc_stock,desc_marca,desc_subrub,desc_rubro,desc_subrubro_intermedio",
+        // Peso de cada campo (de mayor a menor)
+        query_by_weights: "10,8,5,4,3,3",
 
-    // Remover duplicados manteniendo el orden
-    return [...new Set(normalized)];
-}
+        // Typo tolerance: Typesense lo maneja automático según longitud de palabra
+        // 1 typo para palabras de 4-7 chars, 2 typos para 8+
+        num_typos: 2,
+        typo_tokens_threshold: 1,
 
-// Generar variantes de una palabra
-function getWordVariants(word) {
-    const variants = [word]; // Siempre incluir la palabra original
+        // Priorizar resultados donde el término aparece al inicio
+        prefix: true,
 
-    // Diccionario específico de plurales/singulares comunes en autopartes
-    const autopartsDict = {
-        // Plurales -> Singular
-        'sondas': 'sonda',
-        'sensores': 'sensor',
-        'bombas': 'bomba',
-        'filtros': 'filtro',
-        'discos': 'disco',
-        'pastillas': 'pastilla',
-        'bujias': 'bujia',
-        'correas': 'correa',
-        'amortiguadores': 'amortiguador',
-        'rotulas': 'rotula',
-        'terminales': 'terminal',
-        'cazoletas': 'cazoleta',
-        'retenes': 'reten',
-        'juntas': 'junta',
-        'tornillos': 'tornillo',
-        'tuercas': 'tuerca',
-        'arandelas': 'arandela',
-        'pernos': 'perno',
-        'bulones': 'bulon',
-        'espirales': 'espiral',
-        'resortes': 'resorte',
-        'brazos': 'brazo',
-        'bielas': 'biela',
-        'pistones': 'piston',
-        'anillos': 'anillo',
-        'valvulas': 'valvula',
-        'inyectores': 'inyector',
-        'bobinas': 'bobina',
-        'cables': 'cable',
-        'mangueras': 'manguera',
-        'radiadores': 'radiador',
-        'ventiladores': 'ventilador',
-        'alternadores': 'alternador',
-        'arranques': 'arranque',
-        'escobillas': 'escobilla',
-        'carbones': 'carbon',
-        'rodamientos': 'rodamiento',
-        'rulemanes': 'ruleman',
-        'cojinetes': 'cojinete',
-        'crucetas': 'cruceta',
-        'guardapolvos': 'guardapolvo',
-        'fuelles': 'fuelle',
-        'silentblocks': 'silentblock',
-        'bujes': 'buje',
-        'casquillos': 'casquillo',
-        'sellos': 'sello',
-        'estoperas': 'estopera',
-        'empaques': 'empaque',
-        'lijas': 'lija',
-        'masillas': 'masilla',
-        'pinturas': 'pintura',
-        'aceites': 'aceite',
-        'liquidos': 'liquido',
-        'refrigerantes': 'refrigerante',
-        'lubricantes': 'lubricante',
-        'grasas': 'grasa',
-        'aditivos': 'aditivo',
-        'limpiadores': 'limpiador',
-        'desengrasantes': 'desengrasante',
-        'selladores': 'sellador',
-        'adhesivos': 'adhesivo',
+        // Filtros
+        ...(filterBy && { filter_by: filterBy }),
 
-        // Singular -> Plural (agregar el inverso)
-        'sonda': 'sondas',
-        'sensor': 'sensores',
-        'bomba': 'bombas',
-        'filtro': 'filtros',
-        'disco': 'discos',
-        'pastilla': 'pastillas',
-        'bujia': 'bujias',
-        'correa': 'correas',
-        'amortiguador': 'amortiguadores',
-        'rotula': 'rotulas',
-        'terminal': 'terminales',
-        'cazoleta': 'cazoletas',
-        'reten': 'retenes',
-        'junta': 'juntas',
-        'tornillo': 'tornillos',
-        'tuerca': 'tuercas',
-        'arandela': 'arandelas',
-        'perno': 'pernos',
-        'bulon': 'bulones',
-        'espiral': 'espirales',
-        'resorte': 'resortes',
-        'brazo': 'brazos',
-        'biela': 'bielas',
-        'piston': 'pistones',
-        'anillo': 'anillos',
-        'valvula': 'valvulas',
-        'inyector': 'inyectores',
-        'bobina': 'bobinas',
-        'cable': 'cables',
-        'manguera': 'mangueras',
-        'radiador': 'radiadores',
-        'ventilador': 'ventiladores',
-        'alternador': 'alternadores',
-        'arranque': 'arranques',
-        'escobilla': 'escobillas',
-        'carbon': 'carbones',
-        'rodamiento': 'rodamientos',
-        'ruleman': 'rulemanes',
-        'cojinete': 'cojinetes',
-        'cruceta': 'crucetas',
-        'guardapolvo': 'guardapolvos',
-        'fuelle': 'fuelles',
-        'silentblock': 'silentblocks',
-        'buje': 'bujes',
-        'casquillo': 'casquillos',
-        'sello': 'sellos',
-        'estopera': 'estoperas',
-        'empaque': 'empaques'
+        // Paginación
+        per_page: parseInt(limit) + 1,   // +1 para saber si hay más
+        page,
+
+        // Devolver los campos originales de MongoDB (no solo los de Typesense)
+        include_fields:
+            "id,codpro,desc_stock,desc_marca,desc_rubro,desc_subrub," +
+            "desc_subrubro_intermedio,precioimpre,stock,imageUrl,destacado,prod_details",
+
+        // Snippets de texto resaltado (útil si luego quieres mostrarlos)
+        highlight_full_fields: "desc_stock,desc_marca",
+        snippet_threshold: 30,
+
+        // Ordenar: primero destacados, luego por score de relevancia
+        sort_by: "destacado:desc,_text_match:desc,precioimpre:asc",
     };
 
-    // Buscar en diccionario específico
-    if (autopartsDict[word]) {
-        variants.push(autopartsDict[word]);
-    }
+    const result = await client
+        .collections(COLLECTION_NAME)
+        .documents()
+        .search(searchParameters);
 
-    // Reglas generales para español (como fallback)
-    if (word.length >= 4) {
-        // Manejar plurales terminados en -s
-        if (word.endsWith('s') && !word.endsWith('ss')) {
-            variants.push(word.slice(0, -1)); // quitar 's'
+    return result;
+}
+
+// ─── Controller principal ────────────────────────────────────────────────────
+
+export const getProducts = async (req, res) => {
+    try {
+        const { search, limit = 10, lastId, page = 1, ...filters } = req.query;
+
+        let products = [];
+        let hasMore = false;
+        let total = 0;
+
+        if (search) {
+            // ── BÚSQUEDA POR TEXTO → Typesense ──────────────────────────────
+            const decodedSearch = decodeURIComponent(search).trim();
+
+            const tsResult = await typesenseSearch(
+                decodedSearch,
+                filters,
+                parseInt(limit),
+                parseInt(page)
+            );
+
+            total = tsResult.found;
+
+            // Typesense devuelve los docs dentro de hits[].document
+            const rawDocs = tsResult.hits.map(h => h.document);
+            hasMore = rawDocs.length > parseInt(limit);
+            const pageDocs = hasMore ? rawDocs.slice(0, -1) : rawDocs;
+
+            // Hidratamos desde MongoDB para tener el documento Mongoose completo
+            // (con todos los campos, incluyendo los que no indexamos en Typesense)
+            const ids = pageDocs.map(d => d.id);
+            const mongoProducts = await Product.find({ _id: { $in: ids } }).lean();
+
+            // Mantener el orden de relevancia de Typesense
+            const mongoMap = Object.fromEntries(mongoProducts.map(p => [p._id.toString(), p]));
+            products = ids.map(id => mongoMap[id]).filter(Boolean);
+
         } else {
-            variants.push(word + 's'); // agregar 's'
+            // ── FILTROS SIN BÚSQUEDA → MongoDB (ya funcionaba bien) ─────────
+            const baseFilter = await buildBaseFilter(filters);
+
+            let query = Product.find(baseFilter).sort({ _id: 1 }).limit(parseInt(limit) + 1);
+            if (lastId) query = query.where("_id").gt(lastId);
+            products = await query.exec();
+
+            hasMore = products.length > parseInt(limit);
+            if (hasMore) products = products.slice(0, -1);
+
+            total = await Product.countDocuments(baseFilter);
         }
 
-        // Manejar plurales terminados en -es
-        if (word.endsWith('es') && word.length > 3) {
-            variants.push(word.slice(0, -2)); // quitar 'es'
-        } else if (!word.endsWith('s')) {
-            variants.push(word + 'es'); // agregar 'es'
-        }
+        return res.json({
+            success: true,
+            products,
+            hasMore,
+            total,
+        });
 
-        // Variaciones comunes
-        if (word.endsWith('or')) {
-            variants.push(word + 'es'); // sensor -> sensores
-        }
-        if (word.endsWith('ores')) {
-            variants.push(word.slice(0, -2)); // sensores -> sensor
-        }
+    } catch (err) {
+        console.error("Error en getProducts:", err);
+        res.status(500).json({
+            success: false,
+            message: "Error al obtener productos",
+            error: process.env.NODE_ENV === "development" ? err.message : undefined,
+        });
     }
+};
 
-    return [...new Set(variants)]; // Remover duplicados
+// ─── Sync automático con Typesense ──────────────────────────────────────────
+// Agrega estos tres a tu product.model.js (o acá si usas mongoose hooks en el controller)
+
+// ✅ Llama esto desde tu createProduct / updateProduct controllers:
+export async function upsertToTypesense(mongoDoc) {
+    try {
+        await client
+            .collections(COLLECTION_NAME)
+            .documents()
+            .upsert(mongoToTypesense(mongoDoc));
+    } catch (err) {
+        console.error("⚠️ Typesense upsert error:", err.message);
+        // No lanzar el error — la DB principal (Mongo) ya guardó correctamente
+    }
 }
 
-// Construir queries con diferentes niveles de especificidad
-function buildSearchQueries(baseFilter, terms, originalTerm) {
-    const queries = [];
-
-    // 1. PRIORIDAD MÁXIMA: Código exacto completo
-    if (/^[a-zA-Z0-9]+$/i.test(originalTerm.replace(/\s/g, ''))) {
-        queries.push({
-            ...baseFilter,
-            codpro: { $regex: `^${originalTerm.replace(/\s/g, '')}`, $options: 'i' }
-        });
+// ✅ Llama esto desde tu deleteProduct controller:
+export async function deleteFromTypesense(mongoId) {
+    try {
+        await client
+            .collections(COLLECTION_NAME)
+            .documents(mongoId.toString())
+            .delete();
+    } catch (err) {
+        console.error("⚠️ Typesense delete error:", err.message);
     }
-
-    // 2. ALTA PRIORIDAD: Códigos que empiecen con números o letras del término
-    const codeTerms = terms.filter(t => /[0-9a-zA-Z]{3,}/.test(t));
-    if (codeTerms.length > 0) {
-        queries.push({
-            ...baseFilter,
-            $or: codeTerms.map(term => ({
-                codpro: { $regex: `^${term}`, $options: 'i' }
-            }))
-        });
-    }
-
-    // 3. ALTA PRIORIDAD: Frase exacta en descripción
-    if (terms.length > 1) {
-        const exactPhrase = terms.join(' ');
-        queries.push({
-            ...baseFilter,
-            $or: [
-                { desc_stock: { $regex: exactPhrase, $options: 'i' } },
-                { desc_marca: { $regex: exactPhrase, $options: 'i' } },
-                { desc_subrub: { $regex: exactPhrase, $options: 'i' } }
-            ]
-        });
-    }
-
-    // 4. MEDIA-ALTA PRIORIDAD: Todos los términos presentes (más flexible)
-    if (terms.length > 1) {
-        const allTermsConditions = terms.map(term => ({
-            $or: [
-                { desc_stock: { $regex: term, $options: 'i' } },
-                { desc_marca: { $regex: term, $options: 'i' } },
-                { desc_rubro: { $regex: term, $options: 'i' } },
-                { desc_subrub: { $regex: term, $options: 'i' } },
-                { codpro: { $regex: term, $options: 'i' } }
-            ]
-        }));
-
-        queries.push({
-            ...baseFilter,
-            $and: allTermsConditions
-        });
-    }
-
-    // 5. MEDIA PRIORIDAD: Al menos algunos términos importantes
-    const importantTerms = terms.filter(t => t.length >= 4); // Palabras más largas
-    if (importantTerms.length > 0) {
-        queries.push({
-            ...baseFilter,
-            $or: importantTerms.map(term => ({
-                $or: [
-                    { desc_stock: { $regex: term, $options: 'i' } },
-                    { desc_marca: { $regex: term, $options: 'i' } },
-                    { desc_subrub: { $regex: term, $options: 'i' } }
-                ]
-            }))
-        });
-    }
-
-    // 6. BAJA PRIORIDAD: Cualquier término
-    queries.push({
-        ...baseFilter,
-        $or: terms.map(term => ({
-            $or: [
-                { desc_stock: { $regex: term, $options: 'i' } },
-                { desc_marca: { $regex: term, $options: 'i' } },
-                { desc_rubro: { $regex: term, $options: 'i' } },
-                { desc_subrub: { $regex: term, $options: 'i' } },
-                { codpro: { $regex: term, $options: 'i' } }
-            ]
-        }))
-    });
-
-    return queries;
 }
-
-// Cálculo de relevancia mejorado
-function calculateRelevanceScore(product, terms, originalTerm) {
-    let score = 0;
-
-    const productText = {
-        code: (product.codpro || '').toLowerCase(),
-        description: (product.desc_stock || '').toLowerCase(),
-        brand: (product.desc_marca || '').toLowerCase(),
-        category: (product.desc_rubro || '').toLowerCase(),
-        subcategory: (product.desc_subrub || '').toLowerCase()
-    };
-
-    const searchLower = originalTerm.toLowerCase();
-    const allText = Object.values(productText).join(' ');
-
-    // También normalizar los términos originales para el scoring
-    const originalTermsNormalized = normalizeTerms(searchLower.split(/\s+/));
-
-    // 1. Código exacto = máximo score
-    if (productText.code.startsWith(searchLower.replace(/\s/g, ''))) {
-        score += 1000;
-    }
-
-    // 2. Frase exacta en descripción (original y normalizada)
-    if (productText.description.includes(searchLower)) {
-        score += 500;
-    }
-
-    // 3. Frase exacta en marca
-    if (productText.brand.includes(searchLower)) {
-        score += 400;
-    }
-
-    // 4. Frase exacta en subcategoría
-    if (productText.subcategory.includes(searchLower)) {
-        score += 300;
-    }
-
-    // 5. Score por cada término encontrado (incluyendo variantes)
-    terms.forEach(term => {
-        const termLower = term.toLowerCase();
-
-        // Código
-        if (productText.code.includes(termLower)) {
-            score += productText.code.startsWith(termLower) ? 200 : 100;
-        }
-
-        // Descripción
-        if (productText.description.includes(termLower)) {
-            // Bonus si es palabra completa
-            const wordBoundary = new RegExp(`\\b${termLower}\\b`);
-            score += wordBoundary.test(productText.description) ? 80 : 40;
-        }
-
-        // Marca
-        if (productText.brand.includes(termLower)) {
-            score += 60;
-        }
-
-        // Subcategoría
-        if (productText.subcategory.includes(termLower)) {
-            score += 40;
-        }
-
-        // Categoría
-        if (productText.category.includes(termLower)) {
-            score += 20;
-        }
-    });
-
-    // 6. Penalty por términos faltantes en búsquedas específicas (más suave)
-    const originalWords = originalTerm.toLowerCase().split(/\s+/);
-    const missingTerms = originalWords.filter(originalWord => {
-        const variants = getWordVariants(originalWord);
-        return !variants.some(variant => allText.includes(variant));
-    });
-    score -= missingTerms.length * 30; // Reducido de 50 a 30
-
-    // 7. Bonus por longitud de término vs longitud de descripción (más específico = mejor)
-    if (originalWords.length >= 3 && productText.description.length < 100) {
-        score += 50;
-    }
-
-    return Math.max(0, score);
-}
-
-// Ejecutar query (sin cambios)
-async function executeProductQuery(filter, limit, lastId) {
-    let query = Product.find(filter).sort({ _id: 1 }).limit(parseInt(limit) + 1);
-    if (lastId) query = query.where('_id').gt(lastId);
-    return await query.exec();
-}
-
 
 
 

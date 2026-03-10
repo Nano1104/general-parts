@@ -1,24 +1,22 @@
+// ProductsContainer.jsx
+// ─────────────────────────────────────────────────────────────────────────────
+// Cambios respecto a la versión original:
+// - Cuando hay ?search= usa paginación por `page` (Typesense la necesita)
+// - Cuando hay filtros puros usa cursor (`lastId`) igual que antes
+// - El resto del comportamiento (infinite scroll, observer) es idéntico
+// ─────────────────────────────────────────────────────────────────────────────
+
 import axios from "axios";
 import { useEffect, useState, useRef, useCallback } from "react";
-import { useProductSearch } from "../../hooks/useProductSearch.js";
 import { useParams, Link } from "react-router-dom";
-/* import { categoriesAndSubCategories } from "../../utils/categories&SubCategories.js";
-import { getSubcategory } from "../../utils/getSubcategory" */
-//context
 import { useAuthContext } from "../../context/AuthContext.jsx";
-//components
 import { Product } from "../Product/Product.jsx";
-import { Filters } from "../Filters/Filters.jsx"
+import { Filters } from "../Filters/Filters.jsx";
 import { Loading } from "../Loading/Loading.jsx";
-//icons
 import { BsFilterLeft } from "react-icons/bs";
 import { MdKeyboardArrowRight } from "react-icons/md";
-//css
-import "../../pages/ProductosPage/productospage.css"
-
+import "../../pages/ProductosPage/productospage.css";
 import { API_URL } from "../../utils/api_url.js";
-
-
 
 export const ProductsContainer = ({ searchValue, setSearchValue }) => {
   const { category, subcategory, categories } = useParams();
@@ -31,160 +29,149 @@ export const ProductsContainer = ({ searchValue, setSearchValue }) => {
   const [price, setPrice] = useState([]);
   const [showFilters, setShowFilter] = useState(false);
 
-  // Estados para manejar productos y paginación
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState(null);
   const [initialized, setInitialized] = useState(false);
 
-  // Referencias
+  // Para búsqueda: página actual de Typesense
+  const currentPageRef = useRef(1);
+  // Para cursor (filtros sin búsqueda)
+  const productsRef = useRef([]);
+
   const observerTarget = useRef(null);
+  const handleFilter = () => setShowFilter(v => !v);
 
-  const handleFilter = () => setShowFilter(showFilters => !showFilters);
-
-  // Función para construir filtros actuales
-  const getCurrentFilters = () => {
+  // ── Construir filtros ────────────────────────────────────────────────────
+  const getCurrentFilters = useCallback(() => {
     const isPureSearch = !!searchValue;
-
     const filters = {
       ...(searchValue && { search: searchValue }),
       ...(!isPureSearch && {
         ...(category && { category }),
         ...(subcategory && { subcategory }),
         ...(brand && { brand }),
-        ...(price.length > 0 && { minPrice: price[0], maxPrice: price[1] })
-      })
+        ...(price.length > 0 && { minPrice: price[0], maxPrice: price[1] }),
+      }),
     };
-
-    // Limpiar valores undefined/null/empty
     return Object.fromEntries(
-      Object.entries(filters).filter(([_, value]) =>
-        value !== undefined && value !== null && value !== ""
-      )
+      Object.entries(filters).filter(([_, v]) => v !== undefined && v !== null && v !== "")
     );
-  };
+  }, [searchValue, category, subcategory, brand, price]);
 
-  // Función para cargar productos
-  const loadProducts = async (filters, reset = true) => {
+  // ── Cargar productos ─────────────────────────────────────────────────────
+  const loadProducts = useCallback(async (filters, reset = true) => {
     if (loading) return;
-
     setLoading(true);
+
     if (reset) {
       setProducts([]);
+      productsRef.current = [];
+      currentPageRef.current = 1;
       setError(null);
     }
 
     try {
-      const params = {
-        ...filters,
-        limit: productsPerPage,
-        // Solo incluir lastId si NO es reset y tenemos productos
-        ...(!reset && products.length > 0 && {
-          lastId: products[products.length - 1]?._id
-        })
-      };
+      let params;
 
-      console.log("🔍 Loading products:", { params, reset });
+      if (filters.search) {
+        // Paginación por página (Typesense)
+        params = {
+          ...filters,
+          limit: productsPerPage,
+          page: currentPageRef.current,
+        };
+      } else {
+        // Cursor-based (MongoDB)
+        const lastProduct = productsRef.current[productsRef.current.length - 1];
+        params = {
+          ...filters,
+          limit: productsPerPage,
+          ...(!reset && lastProduct && { lastId: lastProduct._id }),
+        };
+      }
 
       const response = await axios.get(`${API_URL}/api/products`, {
         params,
-        withCredentials: true
+        withCredentials: true,
       });
 
       const newProducts = response.data.products || [];
 
-      console.log("📦 Received:", {
-        count: newProducts.length,
-        hasMore: response.data.hasMore
-      });
-
       if (reset) {
         setProducts(newProducts);
+        productsRef.current = newProducts;
       } else {
-        setProducts(prev => [...prev, ...newProducts]);
+        setProducts(prev => {
+          const updated = [...prev, ...newProducts];
+          productsRef.current = updated;
+          return updated;
+        });
+        if (filters.search) currentPageRef.current += 1;
       }
 
       setHasMore(response.data.hasMore || false);
-
     } catch (err) {
       console.error("❌ Error loading products:", err);
-      setError(err.response?.data?.message || 'Error al cargar productos');
+      setError(err.response?.data?.message || "Error al cargar productos");
       setHasMore(false);
     } finally {
       setLoading(false);
     }
-  };
+  }, [loading]);
+
+  // ── Effects ──────────────────────────────────────────────────────────────
+  useEffect(() => { refreshAuthUser(); }, []);
 
   useEffect(() => {
-    refreshAuthUser();
-  }, []);
-
-  // Efecto para resetear búsqueda cuando cambien las rutas
-  useEffect(() => {
-    if (category || subcategory || categories) {
-      setSearchValue("");
-    }
+    if (category || subcategory || categories) setSearchValue("");
   }, [category, subcategory, categories, setSearchValue]);
 
-  // Efecto ÚNICO que maneja toda la lógica de carga
   useEffect(() => {
     const filters = getCurrentFilters();
-
-    console.log("🎯 Effect triggered:", {
-      filters,
-      initialized,
-      category,
-      subcategory,
-      searchValue,
-      brand,
-      price
-    });
-
-    // Siempre cargar (inicial o por cambio de filtros)
     loadProducts(filters, true);
+    if (!initialized) setInitialized(true);
+  }, [category, subcategory, brand, price, searchValue]);
 
-    if (!initialized) {
-      setInitialized(true);
-    }
-
-  }, [category, subcategory, brand, price, searchValue]); // Solo dependencias de filtros
-
-  // Efecto separado SOLO para el observer
+  // Infinite scroll observer
   useEffect(() => {
     if (!hasMore || loading || !initialized) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !loading && hasMore && products.length > 0) {
-          console.log("👀 Loading more products");
-          const filters = getCurrentFilters();
-          loadProducts(filters, false);
+        if (entry.isIntersecting && !loading && hasMore && productsRef.current.length > 0) {
+          loadProducts(getCurrentFilters(), false);
         }
       },
       { threshold: 0.1 }
     );
 
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current);
-    }
-
+    if (observerTarget.current) observer.observe(observerTarget.current);
     return () => observer.disconnect();
-  }, [hasMore, loading, products.length, initialized]);
+  }, [hasMore, loading, initialized]);
 
-
-
-
+  // ── Render ───────────────────────────────────────────────────────────────
   return (
     <>
-      {/* LINK DE CATEGORIAS Y SUBCATEGORIAS */}
       <div className="text-cBlack text-xs font-poppins mt-[6rem] text-end flex justify-between w-[95%] m-auto">
         <div className="ml-4 text-sm xl:text-base italic font-semibold uppercase">
-          {category && <Link to={`/productos/${category}`}>{category}<MdKeyboardArrowRight className="inline-block" /></Link>}
-          {subcategory && <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`}>{subcategory}</Link>}
-          {categories && <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`}><MdKeyboardArrowRight className="inline-block" />{categories}</Link>}
+          {category && (
+            <Link to={`/productos/${category}`}>
+              {category}<MdKeyboardArrowRight className="inline-block" />
+            </Link>
+          )}
+          {subcategory && (
+            <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`}>
+              {subcategory}
+            </Link>
+          )}
+          {categories && (
+            <Link className="first-letter:uppercase" to={`/productos/${category}/${encodedSubcategory}`}>
+              <MdKeyboardArrowRight className="inline-block" />{categories}
+            </Link>
+          )}
         </div>
-
         <div>
           <button className="mr-4 sm:mr-8 text-sm xl:text-base text-cBlack">
             <span onClick={handleFilter}>{!showFilters ? "Mostrar Filtros" : "Ocultar Filtros"}</span>
@@ -193,15 +180,11 @@ export const ProductsContainer = ({ searchValue, setSearchValue }) => {
         </div>
       </div>
 
-      {/* Debug info - quitar en producción */}
-      {/* {process.env.NODE_ENV === 'development' && (
-        <div className="w-[95%] m-auto text-xs text-gray-500 mb-2">
-          Productos: {products.length} | Loading: {loading.toString()} | HasMore: {hasMore.toString()} | Initialized: {initialized.toString()}
-        </div>
-      )} */}
-
-      {/* FILTROS DE PRODUCTOS */}
-      <div id="products-container" className={`grid grid-cols-1 ${showFilters ? 'md:grid-cols-[30%_1fr] 2xl:grid-cols-[15%_1fr]' : 'md:grid-cols-1'} w-full mt-10`}>
+      <div
+        id="products-container"
+        className={`grid grid-cols-1 ${showFilters ? "md:grid-cols-[30%_1fr] 2xl:grid-cols-[15%_1fr]" : "md:grid-cols-1"
+          } w-full mt-10`}
+      >
         {showFilters && (
           <div>
             <Filters filtered={{ setBrand, price, setPrice, setShowFilter }} />
@@ -209,8 +192,7 @@ export const ProductsContainer = ({ searchValue, setSearchValue }) => {
         )}
 
         <div
-          className={`grid justify-items-center grid-cols-1 gap-3
-          ${!showFilters
+          className={`grid justify-items-center grid-cols-1 gap-3 ${!showFilters
               ? "md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 2xl:gap-6"
               : "md:grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 2xl:gap-6"
             }`}
@@ -225,9 +207,8 @@ export const ProductsContainer = ({ searchValue, setSearchValue }) => {
           ))}
         </div>
 
-        {/* Elemento observer y mensajes */}
         {hasMore && products.length > 0 && !loading && (
-          <div ref={observerTarget} style={{ height: '20px', backgroundColor: 'transparent' }} />
+          <div ref={observerTarget} style={{ height: "20px" }} />
         )}
 
         {loading && <Loading />}
@@ -246,7 +227,7 @@ export const ProductsContainer = ({ searchValue, setSearchValue }) => {
 
         {!loading && products.length === 0 && !error && initialized && (
           <div className="col-span-full text-center text-xl mt-8 py-4 text-gray-500 text-cBlack italic">
-            No se encontraron productos con los filtros seleccionados
+            No se encontraron productos
           </div>
         )}
       </div>

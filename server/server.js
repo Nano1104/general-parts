@@ -2,6 +2,9 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { NODE_ENV, PORT, CLIENT_URL } from "./config/envConfig.js";
+
+//connections 
+import { ensureCollection } from "./typesense/typesenseSchema.js";
 import { connectToDB } from "./db/dbConnection.js";
 import agendaModule from "./agenda.js"
 
@@ -51,19 +54,29 @@ app.use("/api/order", orderRouter)
 
 
 const startServer = async () => {
-  const { agenda, startAgenda } = agendaModule
+  const { agenda, startAgenda } = agendaModule;
 
   try {
-    await connectToDB(); // Asegura conexión con MongoDB
-    await startAgenda(); // Inicia Agenda una vez conectado a Mongo
-    await agenda.cancel({ 'data.productId': { $exists: true } }); // Limpia jobs antiguos si querés
+    await connectToDB();
+    await startAgenda();
+    await agenda.cancel({ 'data.productId': { $exists: true } });
+
+    // ✅ Typesense aislado: si falla, el servidor sigue funcionando
+    try {
+      await ensureCollection();
+      console.log("✅ Typesense listo");
+    } catch (tsErr) {
+      console.error("⚠️  Typesense no disponible, búsquedas usarán MongoDB:", tsErr.message);
+      // El servidor sigue levantando normalmente
+    }
 
     app.listen(PORT, () => {
       console.log("🚀 ~ allowedOrigins:", allowedOrigins);
       console.log(`App listening on port ${PORT} ${NODE_ENV}`);
     });
+
   } catch (err) {
-    console.error("❌ Error al iniciar el servidor o Agenda:", err);
+    console.error("❌ Error al iniciar el servidor:", err);
   }
 };
 
