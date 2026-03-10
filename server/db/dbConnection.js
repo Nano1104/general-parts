@@ -4,8 +4,8 @@ import { NODE_ENV, DB_USER_NAME, DB_PORT, DB_HOST, DB_USER_PASSWORD } from "../c
 
 const connectionOptions = {
     url: NODE_ENV === "production"
-            ? `mongodb+srv://${DB_USER_NAME}:${DB_USER_PASSWORD}@cluster-repuestos.kloz1gg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-Repuestos`
-            : `mongodb://${DB_HOST}:${DB_PORT}/${DB_USER_NAME}`,
+        ? `mongodb+srv://${DB_USER_NAME}:${DB_USER_PASSWORD}@cluster-repuestos.kloz1gg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-Repuestos`
+        : `mongodb://${DB_HOST}:${DB_PORT}/${DB_USER_NAME}`,
     options: {
         serverSelectionTimeoutMS: 5000,    // Timeout de 5 segundos para seleccionar servidor
         socketTimeoutMS: 45000,           // Cierra sockets inactivos después de 45s
@@ -20,13 +20,16 @@ const connectionOptions = {
 export const connectToDB = async () => {
     try {
         await mongoose.connect(connectionOptions.url, connectionOptions.options);
-        console.log(`======== Connected to MongoDB ===========`);
-        // Opcional: Verificar conexión con un ping
-        await mongoose.connection.db.admin().ping();
-        console.log(`======== MongoDB Ping Success ===========`);
+
+        console.log("======== Connected to MongoDB ===========");
+
+        if (mongoose.connection.db) {
+            await mongoose.connection.db.admin().ping();
+            console.log("======== MongoDB Ping Success ===========");
+        }
     } catch (err) {
         console.error(`======== Failed connection to MongoDB ===========`, err);
         process.exit(1); // Termina la aplicación si no hay conexión
-    }   
+    }
 };
 

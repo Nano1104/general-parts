@@ -6,10 +6,15 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./server.js",
     "dev": "cross-env NODE_ENV=development nodemon ./server.js",
+
+    "typesense-sync": "cross-env NODE_ENV=production node ./typesense/typesenseSync.js",
+    "typesense-sync:reset": "cross-env NODE_ENV=development node ./typesense/typesenseSync.js --reset",
+
     "update-users": "cross-env NODE_ENV=production node ./scripts/updateUsers.js",
     "fix-rubro-subrub:dry": "cross-env NODE_ENV=production node ./scripts/fix-rubros.js --dry-run",
     "fix-rubro-subrub": "cross-env NODE_ENV=production node ./scripts/fix-rubros.js",
-    "fix-rubro-subrub-bulk": "cross-env NODE_ENV=production node ./scripts/fix_rubro_subrub_bulk.js"
+    "fix-rubro-subrub-bulk": "cross-env NODE_ENV=production node ./scripts/fix_rubro_subrub_bulk.js",
+    "fix-rubro-subrub-products": "cross-env NODE_ENV=production node ./scripts/update_products_swap_rubro.js"
   },
   "keywords": [],
   "author": "",
@@ -33,6 +38,7 @@
     "mongoose": "^8.4.1",
     "multer": "^1.4.5-lts.2",
     "reflect-metadata": "^0.2.2",
+    "typesense": "^3.0.2",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

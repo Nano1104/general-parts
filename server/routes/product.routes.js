@@ -56,8 +56,8 @@ router.delete("/delete/prods/rubro/:rubro", deleteProdsByRubro)
 
 
 // Rutas estáticas primero
-/* router.put("/put/add-imageUrl-toSubrub", addImageUrlToSubrub) */
-
+/* router.put("/put/add-imageUrl-toSubrub", addImageUrlToSubrub)
+ */
 // Rutas dinámicas después
 
 

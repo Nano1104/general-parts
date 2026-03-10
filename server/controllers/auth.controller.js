@@ -71,8 +71,11 @@ export const register = async (req, res) => {
 
         const userFound = await User.findOne({ email: email });
         if (userFound) return res.status(404).json({ message: "user already exists" })
-
+        console.log("HASTA ACA LLEGA    ")
         const user = await User.create({ ...userToCreate })     //user create 
+        const userPopulated = await User.findById(user._id)
+        console.log("🚀 ~ register ~ userPopulated:", userPopulated)
+        console.log("🚀 ~ register ~ user:", user)
         const cart = await Cart.create({ userId: user._id })    //cart create
 
         user.cart = cart._id;
