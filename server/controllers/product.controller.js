@@ -10,9 +10,9 @@ import agendaModule from '../agenda.js'
     bulones: [101, 102, 103]
 }; */
 
-import client from "../typesense/typesenseClient.js";
+/* import client from "../typesense/typesenseClient.js";
 import { COLLECTION_NAME } from "../typesense/typesenseSchema.js";
-import { mongoToTypesense } from "../typesense/typesenseSync.js";
+import { mongoToTypesense } from "../typesense/typesenseSync.js"; */
 
 // product.controller.js  (versión con Typesense)
 // ─────────────────────────────────────────────────────────────────────────────
@@ -113,50 +113,36 @@ function buildTypesenseFilter(params = {}) {
     return parts.join(" && ") || undefined;
 }
 
-async function typesenseSearch(searchTerm, params, limit, page = 1) {
-    const filterBy = buildTypesenseFilter(params);
+async function mongoTextSearch(searchTerm, params, limit, page = 1) {
+    const baseFilter = await buildBaseFilter(params);
 
-    const searchParameters = {
-        q: searchTerm,
-        // Campos donde buscar (en orden de importancia)
-        query_by: "codpro,desc_stock,desc_marca,desc_subrub,desc_rubro,desc_subrubro_intermedio",
-        // Peso de cada campo (de mayor a menor)
-        query_by_weights: "10,8,5,4,3,3",
-
-        // Typo tolerance: Typesense lo maneja automático según longitud de palabra
-        // 1 typo para palabras de 4-7 chars, 2 typos para 8+
-        num_typos: 2,
-        typo_tokens_threshold: 1,
-
-        // Priorizar resultados donde el término aparece al inicio
-        prefix: true,
-
-        // Filtros
-        ...(filterBy && { filter_by: filterBy }),
-
-        // Paginación
-        per_page: parseInt(limit) + 1,   // +1 para saber si hay más
-        page,
-
-        // Devolver los campos originales de MongoDB (no solo los de Typesense)
-        include_fields:
-            "id,codpro,desc_stock,desc_marca,desc_rubro,desc_subrub," +
-            "desc_subrubro_intermedio,precioimpre,stock,imageUrl,destacado,prod_details",
-
-        // Snippets de texto resaltado (útil si luego quieres mostrarlos)
-        highlight_full_fields: "desc_stock,desc_marca",
-        snippet_threshold: 30,
-
-        // Ordenar: primero destacados, luego por score de relevancia
-        sort_by: "destacado:desc,_text_match:desc,precioimpre:asc",
+    const textFilter = {
+        ...baseFilter,
+        $text: { $search: searchTerm },
     };
 
-    const result = await client
-        .collections(COLLECTION_NAME)
-        .documents()
-        .search(searchParameters);
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const limitInt = parseInt(limit);
 
-    return result;
+    // Ejecutar búsqueda y count en paralelo
+    const [products, total] = await Promise.all([
+        Product.find(
+            textFilter,
+            { score: { $meta: "textScore" } }   // Exponer score de relevancia
+        )
+            .sort({
+                destacado: -1,                        // Destacados primero
+                score: { $meta: "textScore" },        // Luego por relevancia de texto
+                precioimpre: 1                        // Luego por precio
+            })
+            .skip(skip)
+            .limit(limitInt + 1)                      // +1 para detectar hasMore
+            .lean(),
+
+        Product.countDocuments(textFilter),
+    ]);
+
+    return { products, total };
 }
 
 // ─── Controller principal ────────────────────────────────────────────────────
@@ -170,34 +156,18 @@ export const getProducts = async (req, res) => {
         let total = 0;
 
         if (search) {
-            // ── BÚSQUEDA POR TEXTO → Typesense ──────────────────────────────
+            // ── BÚSQUEDA POR TEXTO → MongoDB $text ──────────────────────────
             const decodedSearch = decodeURIComponent(search).trim();
 
-            const tsResult = await typesenseSearch(
-                decodedSearch,
-                filters,
-                parseInt(limit),
-                parseInt(page)
-            );
+            const { products: rawProducts, total: rawTotal } =
+                await mongoTextSearch(decodedSearch, filters, parseInt(limit), parseInt(page));
 
-            total = tsResult.found;
-
-            // Typesense devuelve los docs dentro de hits[].document
-            const rawDocs = tsResult.hits.map(h => h.document);
-            hasMore = rawDocs.length > parseInt(limit);
-            const pageDocs = hasMore ? rawDocs.slice(0, -1) : rawDocs;
-
-            // Hidratamos desde MongoDB para tener el documento Mongoose completo
-            // (con todos los campos, incluyendo los que no indexamos en Typesense)
-            const ids = pageDocs.map(d => d.id);
-            const mongoProducts = await Product.find({ _id: { $in: ids } }).lean();
-
-            // Mantener el orden de relevancia de Typesense
-            const mongoMap = Object.fromEntries(mongoProducts.map(p => [p._id.toString(), p]));
-            products = ids.map(id => mongoMap[id]).filter(Boolean);
+            total = rawTotal;
+            hasMore = rawProducts.length > parseInt(limit);
+            products = hasMore ? rawProducts.slice(0, -1) : rawProducts;
 
         } else {
-            // ── FILTROS SIN BÚSQUEDA → MongoDB (ya funcionaba bien) ─────────
+            // ── FILTROS SIN BÚSQUEDA → MongoDB (sin cambios) ────────────────
             const baseFilter = await buildBaseFilter(filters);
 
             let query = Product.find(baseFilter).sort({ _id: 1 }).limit(parseInt(limit) + 1);
@@ -210,12 +180,7 @@ export const getProducts = async (req, res) => {
             total = await Product.countDocuments(baseFilter);
         }
 
-        return res.json({
-            success: true,
-            products,
-            hasMore,
-            total,
-        });
+        return res.json({ success: true, products, hasMore, total });
 
     } catch (err) {
         console.error("Error en getProducts:", err);

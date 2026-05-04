@@ -34,7 +34,7 @@ export const AdminNavBar = () => {
     return (
         <>
             {/* DESKTOP SIDEBAR - Hidden on mobile */}
-            <nav className="hidden md:flex bg-deepGray md:basis-[20%] lg:basis-[15%] md:rounded-tl-2xl md:rounded-bl-2xl lg:rounded-tl-3xl lg:rounded-bl-3xl flex-col justify-between items-center py-4">
+            <nav className="hidden md:flex bg-cBlack md:basis-[20%] lg:basis-[15%] md:rounded-tl-2xl md:rounded-bl-2xl lg:rounded-tl-3xl lg:rounded-bl-3xl flex-col justify-between items-center py-4">
                 <div className="mt-1 px-2">
                     <Link to="/" className="text-[2.2rem] lg:text-[2.7rem] block text-center">
                         <span className="font-extrabold text-lightRed font-poppins tracking-tighter italic">SW</span>
@@ -55,13 +55,13 @@ export const AdminNavBar = () => {
 
                 <div className="flex flex-col w-full items-center px-3">
                     {/*  BACK TO HOME BUTTON */}
-                    <Link to={"/productos"} className="bg-lightRed text-cWhite w-full max-w-[180px] border text-center border-black rounded-md py-2 font-medium font-poppins mb-3 text-sm hover:bg-opacity-90 transition-all">
+                    <Link to={"/productos"} className="bg-lightRed text-cWhite w-full max-w-[180px] text-center rounded-md py-2 font-semibold font-poppins mb-3 text-sm hover:bg-opacity-90 transition-all">
                         VOLVER A PRODUCTOS
                     </Link>
                     {/* LOGOUT BUTTON */}
                     <button
                         type="button"
-                        className="bg-lightRed text-cWhite w-full max-w-[180px] border border-black rounded-md py-2 font-medium font-poppins mb-3 text-sm hover:bg-opacity-90 transition-all"
+                        className="bg-lightRed text-cWhite w-full max-w-[180px] rounded-md py-2 font-semibold font-poppins mb-3 text-sm hover:bg-opacity-90 transition-all"
                         onClick={handleLogOut}>
                         CERRAR SESIÓN
                     </button>
@@ -124,14 +124,14 @@ export const AdminNavBar = () => {
                     <div className="px-4 space-y-3 border-t border-gray-600 pt-4">
                         <Link
                             to="/productos"
-                            className="block bg-lightRed text-cWhite text-center border border-black rounded-md py-2 font-medium font-poppins text-sm hover:bg-opacity-90 transition-all"
+                            className="block bg-lightRed text-white text-center rounded-md py-2 font-medium font-poppins text-sm hover:bg-opacity-90 transition-all"
                             onClick={toggleMenu}
                         >
                             VOLVER A PRODUCTOS
                         </Link>
                         <button
                             type="button"
-                            className="w-full bg-lightRed text-cWhite border border-black rounded-md py-2 font-medium font-poppins text-sm hover:bg-opacity-90 transition-all"
+                            className="w-full bg-lightRed text-white rounded-md py-2 font-medium font-poppins text-sm hover:bg-opacity-90 transition-all"
                             onClick={() => {
                                 toggleMenu();
                                 handleLogOut();
