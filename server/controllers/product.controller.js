@@ -5,14 +5,15 @@ import _ from "lodash";
 import Product from "../models/product.model.js";
 import agendaModule from '../agenda.js'
 
+//typesense
+import client from "../typesense/client.js";
+import { mongoToTypesense } from "../typesense/typesenseSync.js";
+import { COLLECTION_NAME } from "../typesense/collection.js";
+
 /* const MOTOR_GROUPS = {
     engranaje: [149, 147, 146, 151, 140, 139, 141, 142, 143, 144, 145, 150, 148],
     bulones: [101, 102, 103]
 }; */
-
-/* import client from "../typesense/typesenseClient.js";
-import { COLLECTION_NAME } from "../typesense/typesenseSchema.js";
-import { mongoToTypesense } from "../typesense/typesenseSync.js"; */
 
 // product.controller.js  (versión con Typesense)
 // ─────────────────────────────────────────────────────────────────────────────
@@ -35,46 +36,138 @@ let intermediateSubrubrosCache = new Set();
 let lastCacheUpdate = 0;
 const CACHE_TTL = 5 * 60 * 1000;
 
-async function getIntermediateSubrubros() {
-    const now = Date.now();
-    if (now - lastCacheUpdate < CACHE_TTL && intermediateSubrubrosCache.size > 0) {
-        return intermediateSubrubrosCache;
-    }
-    const intermediates = await Product.distinct("desc_subrubro_intermedio", {
-        desc_subrubro_intermedio: { $ne: null },
-    });
-    intermediateSubrubrosCache = new Set(
-        intermediates.map(s => s?.toLowerCase()).filter(Boolean)
-    );
-    lastCacheUpdate = now;
-    return intermediateSubrubrosCache;
-}
-
 async function buildBaseFilter(params = {}) {
     const filter = {};
-    if (params.category) filter.desc_rubro = params.category.toString().toUpperCase();
-    if (params.brand) filter.desc_marca = params.brand.toString().toUpperCase();
+
+    if (params.category)
+        filter.desc_rubro = params.category.toString().toUpperCase();
+
+    if (params.brand)
+        filter.desc_marca = params.brand.toString().toUpperCase();
+
     if (params.subcategory) {
-        const subcategoryRaw = params.subcategory.toString().trim();
-        const subcategoryLower = subcategoryRaw.toLowerCase();
-        const intermediates = await getIntermediateSubrubros();
-        if (intermediates.has(subcategoryLower)) {
-            filter.desc_subrubro_intermedio = {
-                $regex: `^${escapeRegex(subcategoryRaw)}$`, $options: "i",
-            };
-        } else {
-            filter.desc_subrub = {
-                $regex: `^${escapeRegex(subcategoryRaw)}$`, $options: "i",
-            };
-        }
+        // Intentar match en desc_subrubro_intermedio primero, luego desc_subrub
+        const raw = params.subcategory.toString().trim();
+        const regex = { $regex: `^${escapeRegex(raw)}$`, $options: "i" };
+        const inIntermediate = await Product.exists({ desc_subrubro_intermedio: regex });
+        filter[inIntermediate ? "desc_subrubro_intermedio" : "desc_subrub"] = regex;
     }
+
     if (!isNaN(params.minPrice) || !isNaN(params.maxPrice)) {
         filter.precioimpre = {};
         if (!isNaN(params.minPrice)) filter.precioimpre.$gte = parseFloat(params.minPrice);
         if (!isNaN(params.maxPrice)) filter.precioimpre.$lte = parseFloat(params.maxPrice);
     }
+
     return filter;
 }
+
+
+
+
+// ─── Helpers de parsing ──────────────────────────────────────────────────────
+
+function parseSearchTokens(searchTerm) {
+    const tokens = searchTerm.trim().split(/\s+/);
+
+    // Token de código: contiene dígitos (pure "0580314523" o mixto "ren06")
+    const codeTokens = tokens.filter(t => /\d/.test(t));
+    const textTokens = tokens.filter(t => !/\d/.test(t));
+
+    return {
+        textQuery: textTokens.join(" "),
+        codeQuery: codeTokens.join(" "),
+        isCodeOnly: textTokens.length === 0 && codeTokens.length > 0,
+        isMixed: textTokens.length > 0 && codeTokens.length > 0,
+        isTextOnly: textTokens.length > 0 && codeTokens.length === 0,
+    };
+}
+
+// ─── Búsqueda simple (texto puro o código puro) ──────────────────────────────
+
+async function typesenseSingleSearch({ q, queryBy, weights, infix, numTypos, prefix, filterBy, limit, page }) {
+    const result = await client
+        .collections(COLLECTION_NAME)
+        .documents()
+        .search({
+            q,
+            query_by: queryBy,
+            query_by_weights: weights,
+            sort_by: "destacado:desc,_text_match:desc,precioimpre:asc",
+            infix,
+            num_typos: numTypos,
+            prefix,
+            per_page: parseInt(limit),
+            page: parseInt(page),
+            ...(filterBy && { filter_by: filterBy }),
+        });
+
+    return {
+        hits: result.hits,
+        found: result.found,
+    };
+}
+
+// ─── Búsqueda mixta: texto + código ─────────────────────────────────────────
+// Dos búsquedas en paralelo → los que matchean ambos van primero
+
+async function typesenseMixedSearch(textQuery, codeQuery, filterBy, limit, page) {
+    // fetchMore para tener suficientes candidatos al mergear
+    const fetchLimit = parseInt(limit) * 4;
+
+    const [textResult, codeResult] = await Promise.all([
+        // Búsqueda 1: texto en campos descriptivos
+        client.collections(COLLECTION_NAME).documents().search({
+            q: textQuery,
+            query_by: "desc_stock,desc_marca,desc_subrub,desc_subrubro_intermedio,desc_rubro",
+            query_by_weights: "5,3,3,3,2",
+            sort_by: "destacado:desc,_text_match:desc,precioimpre:asc",
+            num_typos: 1,
+            prefix: true,
+            per_page: fetchLimit,
+            page: 1,
+            ...(filterBy && { filter_by: filterBy }),
+        }),
+
+        // Búsqueda 2: código en codpro y codpro_suffix (infix)
+        client.collections(COLLECTION_NAME).documents().search({
+            q: codeQuery,
+            query_by: "codpro,codpro_suffix",
+            infix: "always,always",
+            num_typos: 0,
+            prefix: false,
+            per_page: fetchLimit,
+            page: 1,
+            ...(filterBy && { filter_by: filterBy }),
+        }),
+    ]);
+
+    const textHits = textResult.hits || [];
+    const codeHits = codeResult.hits || [];
+
+    const codeIds = new Set(codeHits.map(h => h.document.id));
+    const textIds = new Set(textHits.map(h => h.document.id));
+
+    // Prioridad: matchea texto Y código > solo código > solo texto
+    const bothMatch = textHits.filter(h => codeIds.has(h.document.id));
+    const codeOnly = codeHits.filter(h => !textIds.has(h.document.id));
+    const textOnly = textHits.filter(h => !codeIds.has(h.document.id));
+
+    const merged = [...bothMatch, ...codeOnly, ...textOnly];
+
+    // Paginar el resultado mergeado manualmente
+    const pageInt = parseInt(page);
+    const limitInt = parseInt(limit);
+    const start = (pageInt - 1) * limitInt;
+    const paginated = merged.slice(start, start + limitInt);
+
+    return {
+        products: paginated.map(h => ({ ...h.document, _id: h.document.id })),
+        total: merged.length,
+        hasMore: start + limitInt < merged.length,
+    };
+}
+
 
 // ─── Búsqueda con Typesense ──────────────────────────────────────────────────
 
@@ -82,22 +175,19 @@ async function buildBaseFilter(params = {}) {
  * Convierte los filtros de MongoDB al formato filter_by de Typesense.
  * Typesense usa una sintaxis especial: "campo:=VALOR && campo2:>=100"
  */
+// ─── Typesense: construir filtros ────────────────────────────────────────────
+
 function buildTypesenseFilter(params = {}) {
     const parts = [];
 
-    if (params.category) {
-        const cat = params.category.toString().toUpperCase();
-        parts.push(`desc_rubro:=\`${cat}\``);
-    }
+    if (params.category)
+        parts.push(`desc_rubro:=\`${params.category.toString().toUpperCase()}\``);
 
-    if (params.brand) {
-        const brand = params.brand.toString().toUpperCase();
-        parts.push(`desc_marca:=\`${brand}\``);
-    }
+    if (params.brand)
+        parts.push(`desc_marca:=\`${params.brand.toString().toUpperCase()}\``);
 
     if (params.subcategory) {
-        // Nota: Typesense no distingue intermedio/normal automáticamente.
-        // Buscamos en ambos campos con OR.
+        // Typesense: OR entre ambos campos, sin necesidad de cache
         const sub = params.subcategory.toString().trim();
         parts.push(`(desc_subrub:=\`${sub}\` || desc_subrubro_intermedio:=\`${sub}\`)`);
     }
@@ -110,39 +200,59 @@ function buildTypesenseFilter(params = {}) {
         parts.push(`precioimpre:<=${params.maxPrice}`);
     }
 
-    return parts.join(" && ") || undefined;
+    return parts.length ? parts.join(" && ") : undefined;
 }
 
-async function mongoTextSearch(searchTerm, params, limit, page = 1) {
-    const baseFilter = await buildBaseFilter(params);
+// ─── Typesense: búsqueda full-text ──────────────────────────────────────────
 
-    const textFilter = {
-        ...baseFilter,
-        $text: { $search: searchTerm },
+async function typesenseSearch(searchTerm, params, limit, page = 1) {
+    const filterBy = buildTypesenseFilter(params);
+    const { textQuery, codeQuery, isCodeOnly, isMixed, isTextOnly } = parseSearchTokens(searchTerm);
+
+    // ── Búsqueda mixta: "bomba de nafta 0580314523" ──────────────────────────
+    if (isMixed) {
+        return await typesenseMixedSearch(textQuery, codeQuery, filterBy, limit, page);
+    }
+
+    // ── Solo código: "0580314523", "ren06" ───────────────────────────────────
+    if (isCodeOnly) {
+        const { hits, found } = await typesenseSingleSearch({
+            q: searchTerm,
+            queryBy: "codpro,codpro_suffix",
+            weights: "10,8",
+            infix: "always,always",
+            numTypos: 0,
+            prefix: false,
+            filterBy,
+            limit,
+            page,
+        });
+
+        return {
+            products: hits.map(h => ({ ...h.document, _id: h.document.id })),
+            total: found,
+            hasMore: parseInt(page) * parseInt(limit) < found,
+        };
+    }
+
+    // ── Solo texto: "bomba de nafta", "filtro aceite" ────────────────────────
+    const { hits, found } = await typesenseSingleSearch({
+        q: searchTerm,
+        queryBy: "desc_stock,codpro,desc_marca,desc_subrub,desc_subrubro_intermedio,desc_rubro",
+        weights: "5,4,3,3,3,2",
+        infix: "off,off,off,off,off,off",
+        numTypos: 1,
+        prefix: true,
+        filterBy,
+        limit,
+        page,
+    });
+
+    return {
+        products: hits.map(h => ({ ...h.document, _id: h.document.id })),
+        total: found,
+        hasMore: parseInt(page) * parseInt(limit) < found,
     };
-
-    const skip = (parseInt(page) - 1) * parseInt(limit);
-    const limitInt = parseInt(limit);
-
-    // Ejecutar búsqueda y count en paralelo
-    const [products, total] = await Promise.all([
-        Product.find(
-            textFilter,
-            { score: { $meta: "textScore" } }   // Exponer score de relevancia
-        )
-            .sort({
-                destacado: -1,                        // Destacados primero
-                score: { $meta: "textScore" },        // Luego por relevancia de texto
-                precioimpre: 1                        // Luego por precio
-            })
-            .skip(skip)
-            .limit(limitInt + 1)                      // +1 para detectar hasMore
-            .lean(),
-
-        Product.countDocuments(textFilter),
-    ]);
-
-    return { products, total };
 }
 
 // ─── Controller principal ────────────────────────────────────────────────────
@@ -156,27 +266,32 @@ export const getProducts = async (req, res) => {
         let total = 0;
 
         if (search) {
-            // ── BÚSQUEDA POR TEXTO → MongoDB $text ──────────────────────────
+            // ── BÚSQUEDA → Typesense ─────────────────────────────────────
             const decodedSearch = decodeURIComponent(search).trim();
 
-            const { products: rawProducts, total: rawTotal } =
-                await mongoTextSearch(decodedSearch, filters, parseInt(limit), parseInt(page));
-
-            total = rawTotal;
-            hasMore = rawProducts.length > parseInt(limit);
-            products = hasMore ? rawProducts.slice(0, -1) : rawProducts;
+            ({ products, total, hasMore } = await typesenseSearch(
+                decodedSearch,
+                filters,
+                parseInt(limit),
+                parseInt(page),
+            ));
 
         } else {
-            // ── FILTROS SIN BÚSQUEDA → MongoDB (sin cambios) ────────────────
+            // ── BROWSE/FILTROS → MongoDB cursor pagination ────────────────
+            // Sin búsqueda, Typesense no aporta nada sobre MongoDB.
+            // Cursor pagination es más eficiente que offset para listas largas.
             const baseFilter = await buildBaseFilter(filters);
 
-            let query = Product.find(baseFilter).sort({ _id: 1 }).limit(parseInt(limit) + 1);
+            let query = Product
+                .find(baseFilter)
+                .sort({ _id: 1 })
+                .limit(parseInt(limit) + 1);
+
             if (lastId) query = query.where("_id").gt(lastId);
-            products = await query.exec();
 
-            hasMore = products.length > parseInt(limit);
-            if (hasMore) products = products.slice(0, -1);
-
+            const raw = await query.lean();
+            hasMore = raw.length > parseInt(limit);
+            products = hasMore ? raw.slice(0, -1) : raw;
             total = await Product.countDocuments(baseFilter);
         }
 
@@ -192,10 +307,8 @@ export const getProducts = async (req, res) => {
     }
 };
 
-// ─── Sync automático con Typesense ──────────────────────────────────────────
-// Agrega estos tres a tu product.model.js (o acá si usas mongoose hooks en el controller)
+// ─── Sync con Typesense (llamar desde create/update/delete) ─────────────────
 
-// ✅ Llama esto desde tu createProduct / updateProduct controllers:
 export async function upsertToTypesense(mongoDoc) {
     try {
         await client
@@ -204,11 +317,10 @@ export async function upsertToTypesense(mongoDoc) {
             .upsert(mongoToTypesense(mongoDoc));
     } catch (err) {
         console.error("⚠️ Typesense upsert error:", err.message);
-        // No lanzar el error — la DB principal (Mongo) ya guardó correctamente
+        // No propagar — MongoDB ya guardó, Typesense es secundario
     }
 }
 
-// ✅ Llama esto desde tu deleteProduct controller:
 export async function deleteFromTypesense(mongoId) {
     try {
         await client
@@ -219,6 +331,10 @@ export async function deleteFromTypesense(mongoId) {
         console.error("⚠️ Typesense delete error:", err.message);
     }
 }
+
+
+
+
 
 
 
@@ -339,7 +455,18 @@ export const getCategoriesAndSubcategories = async (req, res) => {
                                     $map: {
                                         input: "$grupos",
                                         as: "g",
-                                        in: { $ne: ["$$g.subrubroIntermedio", null] }
+                                        in: {
+                                            $gt: [
+                                                {
+                                                    $strLenCP: {
+                                                        $trim: {
+                                                            input: { $ifNull: ["$$g.subrubroIntermedio", ""] }
+                                                        }
+                                                    }
+                                                },
+                                                0
+                                            ]
+                                        }
                                     }
                                 }
                             },
@@ -352,7 +479,18 @@ export const getCategoriesAndSubcategories = async (req, res) => {
                                             as: "g",
                                             in: {
                                                 $cond: [
-                                                    { $ne: ["$$g.subrubroIntermedio", null] },
+                                                    {
+                                                        $gt: [
+                                                            {
+                                                                $strLenCP: {
+                                                                    $trim: {
+                                                                        input: { $ifNull: ["$$g.subrubroIntermedio", ""] }
+                                                                    }
+                                                                }
+                                                            },
+                                                            0
+                                                        ]
+                                                    },
                                                     {
                                                         nombre: "$$g.subrubroIntermedio",  // ✨ CLAVE: nombre
                                                         subrubros: "$$g.subrubros"
@@ -378,7 +516,18 @@ export const getCategoriesAndSubcategories = async (req, res) => {
                                     $map: {
                                         input: "$grupos",
                                         as: "g",
-                                        in: { $ne: ["$$g.subrubroIntermedio", null] }
+                                        in: {
+                                            $gt: [
+                                                {
+                                                    $strLenCP: {
+                                                        $trim: {
+                                                            input: { $ifNull: ["$$g.subrubroIntermedio", ""] }
+                                                        }
+                                                    }
+                                                },
+                                                0
+                                            ]
+                                        }
                                     }
                                 }
                             },

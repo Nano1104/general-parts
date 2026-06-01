@@ -8,47 +8,39 @@ const formatCUIT = (value) => {
     return `${nums.slice(0, 2)}-${nums.slice(2, 10)}-${nums.slice(10, 11)}`;
 };
 
+// Fix correcto:
 const validarCUIT = (cuit) => {
     const cuitLimpio = cuit.replace(/[-\s]/g, '');
-
-    // Validar longitud
     if (!/^\d{11}$/.test(cuitLimpio)) return "Debe tener 11 dígitos";
 
-    // Validar tipo (20, 23, 24, 27, 30, 33, 34)
     const tiposValidos = ['20', '23', '24', '27', '30', '33', '34'];
     if (!tiposValidos.includes(cuitLimpio.substring(0, 2))) {
         return "Tipos válidos: 20, 23, 24, 27, 30, 33, 34";
     }
 
-    // Validar dígito verificador
     const digitos = cuitLimpio.split('').map(Number);
     const factores = [5, 4, 3, 2, 7, 6, 5, 4, 3, 2];
-    let suma = 0;
+    const suma = factores.reduce((acc, f, i) => acc + digitos[i] * f, 0);
+    const resto = suma % 11;
 
-    for (let i = 0; i < 10; i++) {
-        suma += digitos[i] * factores[i];
-    }
+    // ← Este caso faltaba completamente
+    if (resto === 1) return "CUIT inválido";
 
-    const digitoEsperado = [0, 11].includes(suma % 11) ? 0 : 11 - (suma % 11);
-    if (digitos[10] !== digitoEsperado) {
-        return "Dígito verificador inválido";
-    }
+    const digitoEsperado = resto === 0 ? 0 : 11 - resto;
+    if (digitos[10] !== digitoEsperado) return "Dígito verificador inválido";
 
-    return true; // CUIT válido
+    return true;
 };
 
-export const CUITInput = ({ register, errors, name = "cuit" }) => {
-
+export const CUITInput = ({ register, errors, name = "cuit", labelClass, inputBase, errorClass }) => {
 
     return (
-        <div className="w-full flex flex-col items-center relative">
+        <div className="w-full flex flex-col relative">
+            <label htmlFor="password" className={labelClass}>CUIT</label>
             <input
                 type="text"
                 autoComplete="off"
-                className="w-full p-3 sm:p-4 bg-transparent outline-none text-cBlack
-                            border border-cBlack rounded-xl transition-all duration-200
-                            focus:border-lightRed focus:border-2 focus:shadow-md
-                            placeholder:text-gray-500"
+                className={inputBase + " " + (errors?.[name]?.message ? errorClass : "")}
                 placeholder="Ingrese su CUIT"
                 {...register(name, {
                     required: "El CUIT es obligatorio",
@@ -68,4 +60,3 @@ export const CUITInput = ({ register, errors, name = "cuit" }) => {
         </div>
     );
 };
-

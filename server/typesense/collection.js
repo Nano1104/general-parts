@@ -1,5 +1,5 @@
 // typesenseSchema.js
-import client from "./typesenseClient.js";
+import client from "./client.js";
 
 export const COLLECTION_NAME = "products";
 
@@ -9,7 +9,10 @@ export const productsSchema = {
     fields: [
         // ID y código
         { name: "id", type: "string" },   // = _id de MongoDB (string)
-        { name: "codpro", type: "string", facet: true },
+        { name: "codpro", type: "string", facet: true, infix: true },
+        
+        // "102REN06" → "REN06" | "3500580314523" → "" (todo números, queda vacío)
+        { name: "codpro_suffix", type: "string", infix: true, optional: true },
 
         // Textos buscables (más importantes)
         { name: "desc_stock", type: "string" },

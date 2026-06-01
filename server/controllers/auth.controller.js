@@ -9,17 +9,20 @@ export const getAuthUser = async (req, res) => {
     try {
         if (!req.user) return res.status(404).json({ message: "No authenticated user found" });
 
-        const user = await User.findById(req.user.userId).populate({
-            path: 'cart',
-            populate: {
-                path: 'products.product',
-                model: 'Product'    // Asegúrate de que este es el nombre correcto de tu modelo de producto
-            }
-        }).exec();
+        const user = await User.findById(req.user.userId)
+            .select("-password")   // ← excluye el campo password
+            .populate({
+                path: 'cart',
+                populate: {
+                    path: 'products.product',
+                    model: 'Product'    // Asegúrate de que este es el nombre correcto de tu modelo de producto
+                }
+            })
+            .exec();
 
         res.json(user);
     } catch (err) {
-        res.status(404).json({ message: "Error getting auth user", error: err.message });
+        res.status(500).json({ message: "Error getting auth user", error: err.message });
     }
 }
 
@@ -44,7 +47,7 @@ export const login = async (req, res) => {
 
         res.status(200).json({ message: "Login Successfull", user: user });
     } catch (err) {
-        res.status(404).json({ message: "Error trying to register", error: err.message });
+        res.status(500).json({ message: "Error trying to login", error: err.message });
     }
 }
 
@@ -61,7 +64,7 @@ export const register = async (req, res) => {
         const userToCreate = {
             ...req.body,
             password: createHash(password),
-            role: role || "user",
+            role: "user",              // ← hardcodeado, siempre
             discount_1: 0,
             discount_2: 0,
             discount_3: 0
@@ -70,12 +73,10 @@ export const register = async (req, res) => {
         if (email == "swrepuestos@yahoo.com.ar") userToCreate.role = "admin"
 
         const userFound = await User.findOne({ email: email });
-        if (userFound) return res.status(404).json({ message: "user already exists" })
-        console.log("HASTA ACA LLEGA    ")
+        if (userFound) return res.status(409).json({ message: "user already exists" })
+
         const user = await User.create({ ...userToCreate })     //user create 
-        const userPopulated = await User.findById(user._id)
-        console.log("🚀 ~ register ~ userPopulated:", userPopulated)
-        console.log("🚀 ~ register ~ user:", user)
+
         const cart = await Cart.create({ userId: user._id })    //cart create
 
         user.cart = cart._id;
@@ -83,10 +84,29 @@ export const register = async (req, res) => {
 
         res.status(200).json({ message: "Register Successfull" });
     } catch (err) {
-        res.status(404).json({ message: "Error trying to register", error: err.message });
+        // Mongoose duplicate key error
+        if (err.code === 11000) {
+            const duplicatedField = Object.keys(err.keyValue)[0];
+
+            const fieldMessages = {
+                email: "Este email ya está registrado",
+                phone: "Este número de teléfono ya está registrado",
+                cuit: "Este CUIT ya está registrado",
+            };
+
+            return res.status(409).json({
+                message: fieldMessages[duplicatedField] ?? "Un campo único ya está en uso"
+            });
+        }
+
+        // Error genérico real
+        console.error("Register error:", err);
+        res.status(500).json({ message: "Error interno del servidor" });
     }
 }
 
+
+////// LOGOUT CONTROLLER
 export const logout = async (req, res) => {
     try {
         res.clearCookie('token', {
@@ -97,6 +117,6 @@ export const logout = async (req, res) => {
 
         res.status(200).json({ message: "Success Logout" });
     } catch (err) {
-        res.status(400).json({ message: "Error trying to logout", error: err.message });
+        res.status(500).json({ message: "Error trying to logout", error: err.message });
     }
 }

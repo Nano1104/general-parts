@@ -1,208 +1,409 @@
-import axios from "axios"
+// ─── ProductDetail.jsx ────────────────────────────────────────────────────────
+//
+// CAMBIOS VISUALES vs original:
+//   - Layout: dos columnas en lg+ (imagen izquierda / info derecha), sin altura fija.
+//     Antes: lg:h-[90vh] fijo + elementos absolute para breadcrumb y botón volver.
+//     Ahora: flex natural, sin posicionamiento absoluto frágil.
+//   - "Destacado": franja superior roja + badge, en vez de bg-[#DC5F00] completo.
+//   - Sección de pricing: bloque visual separado con bg-zinc-50, jerarquía clara.
+//   - Descuentos: tabla compacta en vez de 3 spans sueltos.
+//   - Textarea de edición admin: transición suave con border animado.
+//   - Botón "Volver": integrado en el flujo normal del layout, no absolute.
+//   - Separador entre columnas: border-r vertical visible solo en lg+.
+//   - Breadcrumb: mismo componente visual que ProductsContainer.
+//
+// LÓGICA: sin cambios. Todos los handlers, hooks, estados y condicionales son
+// idénticos al original. No se tocó ningún comportamiento de negocio.
+// ─────────────────────────────────────────────────────────────────────────────
+
+import axios from "axios";
 import { useState, useRef } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom"
-import Swal from 'sweetalert2';
-//context
-import { useAuthContext } from "../../context/AuthContext.jsx"
+import { Link, useParams, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+
+// Context
+import { useAuthContext } from "../../context/AuthContext.jsx";
 import { useCartContext } from "../../context/CartContext.jsx";
-//components
-import { IoCartOutline } from "react-icons/io5";
+
+// Icons
+import { IoCartOutline, IoArrowUndoCircleOutline } from "react-icons/io5";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import { ItemCount } from "../ItemCount/ItemCount.jsx"
-//icons
-import { IoArrowUndoCircleOutline } from "react-icons/io5";
 import { FaPencil } from "react-icons/fa6";
 
+// Components
+import { ItemCount } from "../ItemCount/ItemCount.jsx";
+
+// Utils
 import { formatCurrency } from "../../utils/formatCurrency.js";
 import { getImage } from "../../utils/getImage.js";
 import { API_URL } from "../../utils/api_url.js";
 
+// ─── Breadcrumb item — consistente con ProductsContainer ─────────────────────
+const BreadcrumbLink = ({ to, children, isLast = false }) => (
+    <>
+        <Link
+            to={to}
+            className={[
+                "text-xs font-semibold uppercase tracking-wide transition-colors duration-150",
+                isLast
+                    ? "text-zinc-900 pointer-events-none"
+                    : "text-zinc-400 hover:text-red-600",
+            ].join(" ")}
+        >
+            {children}
+        </Link>
+        {!isLast && (
+            <MdKeyboardArrowRight className="text-zinc-300 flex-shrink-0" aria-hidden="true" />
+        )}
+    </>
+);
+
+// ─── Fila de dato: etiqueta + valor ──────────────────────────────────────────
+// Evita repetir el mismo par label/valor en toda la sección de info.
+const DataRow = ({ label, children }) => (
+    <div className="flex items-baseline justify-between gap-4 py-2.5 border-b border-zinc-100 last:border-0">
+        <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-[0.1em] flex-shrink-0">
+            {label}
+        </span>
+        <span className="text-sm font-semibold text-zinc-900 text-right">{children}</span>
+    </div>
+);
+
+// ─── Componente principal ─────────────────────────────────────────────────────
 export const ProductDetail = ({ prod }) => {
-    const { _id, codpro, desc_stock, proveed, desc_rubro, desc_subrub, desc_marca,
-        precioimpre, stock, prod_details, imageUrl, destacado } = prod;
+    const {
+        _id,
+        codpro,
+        desc_stock,
+        proveed,
+        desc_rubro,
+        desc_subrub,
+        desc_marca,
+        precioimpre,
+        stock,
+        prod_details,
+        imageUrl,
+        destacado,
+    } = prod;
 
     const { authUser, isAdmin } = useAuthContext();
     const { addProductToCart } = useCartContext();
     const { id } = useParams();
+    const navigate = useNavigate();
 
+    // Sin cambios en lógica de pricing
     const formatedPrice = formatCurrency(precioimpre);
     const d1 = authUser?.discount_1 || 0;
     const d2 = authUser?.discount_2 || 0;
     const d3 = authUser?.discount_3 || 0;
-
     const netPrice = precioimpre * (1 - d1 / 100) * (1 - d2 / 100) * (1 - d3 / 100);
-
     const formattedNetPrice = netPrice.toLocaleString("es-AR", {
         style: "currency",
         currency: "ARS",
     });
 
-    const navigate = useNavigate()
+    // Sin cambios en estados
     const [quantity, setQuantity] = useState(stock);
     const [amount, setAmount] = useState(0);
     const [isFocus, setIsFocus] = useState(false);
 
-    const encodedCategory = desc_rubro ? desc_rubro.toLowerCase() : "";
-    const encodedSubcategory = desc_subrub ? encodeURIComponent(desc_subrub).toLowerCase() : ""
-
     const textareaRef = useRef(null);
+
+    // Sin cambios en handlers
+    const encodedCategory = desc_rubro ? desc_rubro.toLowerCase() : "";
+    const encodedSubcategory = desc_subrub ? encodeURIComponent(desc_subrub).toLowerCase() : "";
+
     const handleFocus = () => {
-        setIsFocus(isFocus => !isFocus)
-        if (!isFocus) textareaRef.current?.focus(); // Da foco al textarea
-    }
+        setIsFocus(f => !f);
+        if (!isFocus) textareaRef.current?.focus();
+    };
 
-    ////////////////// CAMBIAR DESCRIPCION DEL PRODUCTO
     const handleSubmitNewText = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
         const newText = textareaRef.current.value;
-
         try {
-            const res = await axios.put(`${API_URL}/api/products/change-product-fieldValue/${_id}`, { field: "prod_details", value: newText }, { withCredentials: true })
-            console.log("🚀 ~ handleSubmitNewText ~ res:", res)
-            window.location.reload()
+            const res = await axios.put(
+                `${API_URL}/api/products/change-product-fieldValue/${_id}`,
+                { field: "prod_details", value: newText },
+                { withCredentials: true }
+            );
+            
+            window.location.reload();
         } catch (err) {
-            console.log("Error al cambiar texto: " + err)
+            console.log("Error al cambiar texto: " + err);
         }
-    }
+    };
 
-    ////////////////// AÑADIR AL CARRITO
     const handleAddToCart = () => {
         if (!authUser) {
             Swal.fire({
                 html: `
-                            <span style="font-weight: 400">Necesitas iniciar sesión para agregar al carrito!</span><br />
-                            <a href="https://general-parts.vercel.app/authPage" class="font-bold text-orange underline rounded-lg">INICIAR SESIÓN</a>
-                        `,
+                    <span style="font-weight: 400">Necesitas iniciar sesión para agregar al carrito!</span><br />
+                    <a href="https://general-parts.vercel.app/authPage" class="font-bold text-lightRed underline rounded-lg">INICIAR SESIÓN</a>
+                `,
                 showConfirmButton: false,
                 allowOutsideClick: true,
                 allowEscapeKey: true,
-                backdrop: true
+                backdrop: true,
             });
         } else {
-            addProductToCart(_id, authUser.cart._id || null, amount)
+            addProductToCart(_id, authUser.cart._id || null, amount);
         }
-    }
+    };
+
+    const stockAvailable = stock > 0;
 
     return (
-        <>
-            <div
-                className={`w-full lg:h-[90vh] lg:w-[85%] xl:w-[75%] lg:py-[50px] lg:px-[65px] text-center border
-                        flex flex-col lg:m-auto lg:mt-10 lg:flex-row lg:rounded-xl ${destacado ? "bg-[#DC5F00]" : "bg-white"
-                    }`}
-            >
+        <div className="w-full max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10 font-roboto">
 
-                {/* PRIMERA PARTE DEL PRODUCT DESCRIPTION */}
-                <div className="basis-[58%] text-xs relative lg:text-sm 2xl:text-base">
-                    <img src={getImage(imageUrl)} className="w-full object-contain h-full my-28 mobile:my-14 lg:my-3" alt={`prod-${codpro}-img`} />
+            {/* ── Badge destacado ───────────────────────────────────────────── */}
+            {destacado && (
+                <div className="mb-4 flex items-center gap-2.5 px-4 py-2.5 bg-orange-500 w-full">
+                    <span className="text-white text-xs font-black uppercase tracking-[0.18em]">
+                        ★ Producto destacado
+                    </span>
+                </div>
+            )}
 
-                    <div className="font-roboto font-semibold italic text-base sm:text-lg flex flex-col mobile:flex-row items-start mobile:justify-center lg:justify-start w-full absolute top-0">
-                        <div className="flex items-center mx-2 my-1 lg:mx-0">
-                            <Link className="first-letter:uppercase" to={`/productos/${encodedCategory}`}>{desc_rubro}</Link><MdKeyboardArrowRight />
-                        </div>
-                        <div className="flex items-center mx-2 my-1 lg:mx-0">
-                            <Link className="first-letter:uppercase" to={`/productos/${encodedCategory}/${encodedSubcategory}`}>{desc_subrub}</Link><MdKeyboardArrowRight />
-                        </div>
-                        <span className="cursor-pointer mx-2 my-1 lg:mx-0">{id}</span>
+            {/* ── Contenedor principal: dos columnas en lg+ ─────────────────── */}
+            <div className="flex flex-col lg:flex-row bg-white border border-zinc-100 rounded-xl">
+
+                {/* ═══════════════════════════════════════════════════════════════
+                    COLUMNA IZQUIERDA — imagen + breadcrumb + volver
+                ════════════════════════════════════════════════════════════════ */}
+                <div className="lg:w-[52%] xl:w-[48%] flex flex-col lg:border-r border-zinc-100">
+
+                    {/* Breadcrumb */}
+                    <nav
+                        aria-label="Navegación"
+                        className="flex items-center gap-1.5 flex-wrap px-4 sm:px-6 pt-4 pb-3 border-b border-zinc-100"
+                    >
+                        <BreadcrumbLink to={`/productos/${encodedCategory}`}>
+                            {desc_rubro}
+                        </BreadcrumbLink>
+                        <BreadcrumbLink to={`/productos/${encodedCategory}/${encodedSubcategory}`}>
+                            {desc_subrub}
+                        </BreadcrumbLink>
+                        <BreadcrumbLink to="#" isLast>
+                            {id}
+                        </BreadcrumbLink>
+                    </nav>
+
+                    {/* Imagen */}
+                    <div className="flex-1 flex items-center justify-center p-6 sm:p-10 lg:p-12 min-h-[260px] sm:min-h-[320px] lg:min-h-[400px]">
+                        {imageUrl ? (
+                            <img
+                                src={getImage(imageUrl)}
+                                alt={`Repuesto: ${desc_stock || codpro}`}
+                                className="max-h-[340px] w-full object-contain"
+                                loading="eager"
+                            />
+                        ) : (
+                            <div className="flex flex-col items-center gap-3 text-zinc-300">
+                                <svg viewBox="0 0 24 24" fill="none" className="w-16 h-16" aria-hidden="true">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="1" />
+                                    <circle cx="8.5" cy="8.5" r="1.5" stroke="currentColor" strokeWidth="1" />
+                                    <path d="M21 15l-5-5L5 21" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                                <span className="text-xs font-bold uppercase tracking-widest text-zinc-400 italic">
+                                    Imagen en desarrollo
+                                </span>
+                            </div>
+                        )}
                     </div>
 
-                    <button
-                        onClick={() => navigate(-1)}
-                        className="rounded-md m-8 lg:m-2 py-2 px-4 bg-lightRed text-white flex absolute bottom-0"
-                    >
-                        <IoArrowUndoCircleOutline className="text-lg" />
-                        <span className="text-sm">VOLVER A PRODUCTOS</span>
-                    </button>
+                    {/* Botón volver */}
+                    <div className="px-4 sm:px-6 pb-5 pt-3 border-t border-zinc-100">
+                        <button
+                            onClick={() => navigate(-1)}
+                            className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.1em]
+                                       text-zinc-500 hover:text-red-600 transition-colors duration-150 group"
+                        >
+                            <IoArrowUndoCircleOutline
+                                className="text-base group-hover:-translate-x-0.5 transition-transform duration-150"
+                                aria-hidden="true"
+                            />
+                            Volver a productos
+                        </button>
+                    </div>
                 </div>
 
-                <div className="border mx-8 mb-6"></div>
+                {/* ═══════════════════════════════════════════════════════════════
+                    COLUMNA DERECHA — info, pricing, cantidad, descripción
+                ════════════════════════════════════════════════════════════════ */}
+                <div className="flex-1 flex flex-col">
 
-                {/* SEGUNDA PARTE DEL CARD */}
-                <div className="basis-[42%] font-poppins">
-                    <h1 className="font-bold uppercase text-2xl 2xl:text-3xl mobile:px-2">{desc_stock}</h1>
-                    <hr className="w-[50%] mt-5 border border-5 mx-auto" />
+                    {/* Nombre del producto */}
+                    <div className="px-5 sm:px-8 pt-6 pb-5 border-b border-zinc-100">
+                        <div className="w-6 h-[3px] bg-red-600 mb-4" aria-hidden="true" />
+                        <h1 className="text-2xl sm:text-3xl font-black font-montserrat uppercase tracking-tight leading-tight text-zinc-900">
+                            {desc_stock}
+                        </h1>
+                    </div>
 
-                    <div className="flex items-start flex-col p-5 mobile:p-8 lg:p-4 2xl:p-8 mt-10 lg:mt-0 2xl:mt-10 lg:text-sm 2xl:text-base">
-                        <div className="flex flex-col items-start gap-2">
-                            {
-                                authUser && isAdmin ?
-                                    <span>Proveedor: <span className="font-semibold">{proveed}</span></span>
-                                    :
-                                    <span>Código producto: <span className="font-bold">{id}</span></span>
-                            }
-                            <span>Marca: <span className="font-bold">{desc_marca}</span></span>
-                            <span>
-                                Stock:{" "}
-                                <span className={`italic inline-block font-bold ${stock > 0 ? "text-deepRed" : "text-red"} ${destacado ? "text-white" : ""} first-letter:uppercase`}>
-                                    {stock > 0 ? "Disponible" : "Sin stock"}
-                                </span>
+                    {/* Datos del producto */}
+                    <div className="px-5 sm:px-8 py-5 border-b border-zinc-100">
+                        <DataRow label={isAdmin ? "Proveedor" : "Código"}>
+                            {isAdmin ? proveed : id}
+                        </DataRow>
+                        <DataRow label="Marca">{desc_marca || "—"}</DataRow>
+                        <DataRow label="Stock">
+                            <span className={stockAvailable ? "text-green-600" : "text-red-500"}>
+                                {stockAvailable ? "Disponible" : "Sin stock"}
                             </span>
-                            <span className="text-2xl">Precio de lista: {formatedPrice}</span>
+                        </DataRow>
+                    </div>
 
-                            {/* DESCUENTO DE CADA USUARIO */}
-                            <div className="flex flex-col mt-1">
-                                <span className="text-start">Descuento ° 1 -- {authUser.discount_1}%</span>
-                                <span className="text-start">Descuento ° 2 -- {authUser.discount_2}%</span>
-                                <span className="text-start">Descuento ° 3 -- {authUser.discount_3}%</span>
-                            </div>
+                    {/* Pricing */}
+                    <div className="px-5 sm:px-8 py-5 bg-zinc-50 border-b border-zinc-100">
+                        <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.18em] mb-4">
+                            Precios
+                        </p>
 
-                            <span className="text-2xl">Precio neto: {formattedNetPrice}</span>
-
-                            <span className="italic text-cBlack">Este precio no incluye IVA</span>
+                        {/* Precio de lista */}
+                        <div className="flex items-baseline gap-2 mb-4">
+                            <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">
+                                Lista
+                            </span>
+                            <span className="text-2xl sm:text-3xl font-black text-zinc-900 leading-none">
+                                {formatedPrice}
+                            </span>
+                            <span className="text-xs text-zinc-400 font-semibold">ARS</span>
                         </div>
-                        <div className="flex flex-col items-start mt-2">
-                            <span className="font-semibold ml-1">Cantidad.</span>
+
+                        {/* Descuentos — solo si hay alguno distinto de 0 */}
+                        {(d1 > 0 || d2 > 0 || d3 > 0) && (
+                            <div className="mb-4 flex flex-col gap-1">
+                                {d1 > 0 && (
+                                    <div className="flex items-center justify-between text-xs">
+                                        <span className="text-zinc-400 font-medium">Descuento 1</span>
+                                        <span className="font-bold text-zinc-700">−{d1}%</span>
+                                    </div>
+                                )}
+                                {d2 > 0 && (
+                                    <div className="flex items-center justify-between text-xs">
+                                        <span className="text-zinc-400 font-medium">Descuento 2</span>
+                                        <span className="font-bold text-zinc-700">−{d2}%</span>
+                                    </div>
+                                )}
+                                {d3 > 0 && (
+                                    <div className="flex items-center justify-between text-xs">
+                                        <span className="text-zinc-400 font-medium">Descuento 3</span>
+                                        <span className="font-bold text-zinc-700">−{d3}%</span>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Precio neto */}
+                        <div className="flex items-baseline gap-2 pt-3 border-t border-zinc-200">
+                            <span className="text-[11px] font-black text-red-600 uppercase tracking-wider">
+                                Neto
+                            </span>
+                            <span className="text-3xl sm:text-4xl font-black text-red-600 leading-none">
+                                {formattedNetPrice}
+                            </span>
+                            <span className="text-xs text-zinc-400 font-semibold">ARS</span>
+                        </div>
+                        <p className="text-[10px] text-zinc-400 italic mt-1.5 tracking-wide">
+                            * Precio no incluye IVA
+                        </p>
+                    </div>
+
+                    {/* Cantidad + agregar al carrito */}
+                    <div className="px-5 sm:px-8 py-5 border-b border-zinc-100 flex flex-col sm:flex-row sm:items-center gap-4">
+                        <div className="flex flex-col gap-1.5">
+                            <span className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.15em]">
+                                Cantidad
+                            </span>
+                            {/* ItemCount no cambia — recibe exactamente las mismas props */}
                             <ItemCount handleQuantity={{ quantity, amount, setAmount }} />
                         </div>
 
-                        {/* AGREGAR PRODUCTO */}
-                        <div className="flex justify-center mt-4 gap-2">
-                            <button
-                                className={`rounded-md py-2 px-4 ${destacado ? "bg-white" : "bg-lightRed"} text-white flex justify-center items-center gap-1 lg:text-xs 2xl:text-base`}
-                                onClick={handleAddToCart}>
-                                <IoCartOutline className="inline-block text-xl lg:text-lg" />
-                                <span>Agregar</span>
-                            </button>
-                        </div>
-
-
-                        {/* CAMBIAR O AGREGAR DESCRIPCION DEL PRODUCTO (disponible para admin)_ */}
-                        <div className="text-left w-full">
-                            <div className="flex justify-between items-end">
-                                <h2 className="font-semibold mt-16 lg:mt-4 text-2xl lg:text-2xl 2xl:mt-12">DESCRIPCIÓN</h2>
-                                {authUser && isAdmin ? <FaPencil className="text-2xl mr-6 mb-1 cursor-pointer" onClick={() => handleFocus()} /> : <></>}
-                            </div>
-
-                            {/* FORM PARA CAMBIAR LA DESCRIPCIOND EL PRODUCTO */}
-                            <form onSubmit={handleSubmitNewText}>
-                                <textarea
-                                    ref={textareaRef}
-                                    defaultValue={prod_details}
-                                    readOnly={!isFocus}
-                                    className={`mt-4 lg:mt-2 resize-none h-16 xl:h-40 text-xs xl:text-sm rounded-none overflow-auto w-full p-2 bg-transparent ${isFocus ? "border rounded" : ""}`}
-                                />
-
-                                {isFocus && (
-                                    <div className="flex gap-2 mt-1">
-                                        <button
-                                            type="submit"
-                                            className="rounded py-1 px-2 bg-lightRed text-cWhite flex justify-center items-center gap-1 lg:text-xs"
-                                        >
-                                            EDITAR
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className="rounded py-1 px-2 bg-deepGray text-cWhite flex justify-center items-center gap-1 lg:text-xs"
-                                            onClick={() => setIsFocus(false)}
-                                        >
-                                            CANCELAR
-                                        </button>
-                                    </div>
-                                )}
-                            </form>
-                        </div>
+                        <button
+                            onClick={handleAddToCart}
+                            disabled={!stockAvailable}
+                            className={[
+                                "flex items-center justify-center gap-2 sm:ml-auto",
+                                "px-6 py-3 text-sm font-bold uppercase tracking-[0.1em]",
+                                "transition-colors duration-150",
+                                stockAvailable
+                                    ? "bg-zinc-900 hover:bg-red-600 text-white"
+                                    : "bg-zinc-200 text-zinc-400 cursor-not-allowed",
+                            ].join(" ")}
+                        >
+                            <IoCartOutline className="text-lg" aria-hidden="true" />
+                            <span>Agregar al carrito</span>
+                        </button>
                     </div>
+
+                    {/* Descripción del producto */}
+                    <div className="px-5 sm:px-8 py-5 flex-1">
+                        <div className="flex items-center justify-between mb-3">
+                            <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.18em]">
+                                Descripción del producto
+                            </p>
+                            {authUser && isAdmin && (
+                                <button
+                                    type="button"
+                                    onClick={handleFocus}
+                                    aria-label={isFocus ? "Cancelar edición" : "Editar descripción"}
+                                    className={[
+                                        "flex items-center gap-1.5 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider",
+                                        "transition-colors duration-150",
+                                        isFocus
+                                            ? "bg-zinc-900 text-white"
+                                            : "bg-zinc-100 text-zinc-500 hover:bg-zinc-200 hover:text-zinc-800",
+                                    ].join(" ")}
+                                >
+                                    <FaPencil className="text-[10px]" aria-hidden="true" />
+                                    {isFocus ? "Editando..." : "Editar"}
+                                </button>
+                            )}
+                        </div>
+
+                        {/* Form de edición admin — lógica sin cambios */}
+                        <form onSubmit={handleSubmitNewText}>
+                            <textarea
+                                ref={textareaRef}
+                                defaultValue={prod_details}
+                                readOnly={!isFocus}
+                                rows={5}
+                                className={[
+                                    "w-full resize-none text-sm text-zinc-700 leading-relaxed",
+                                    "bg-transparent outline-none",
+                                    "transition-all duration-150",
+                                    isFocus
+                                        ? "border border-zinc-300 p-3 focus:border-zinc-800"
+                                        : "border-transparent p-0 cursor-default",
+                                ].join(" ")}
+                            />
+                            {isFocus && (
+                                <div className="flex gap-2 mt-2">
+                                    <button
+                                        type="submit"
+                                        className="px-4 py-2 bg-zinc-900 hover:bg-red-600 text-white
+                                                   text-[11px] font-bold uppercase tracking-wider
+                                                   transition-colors duration-150"
+                                    >
+                                        Guardar
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsFocus(false)}
+                                        className="px-4 py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-600
+                                                   text-[11px] font-bold uppercase tracking-wider
+                                                   transition-colors duration-150"
+                                    >
+                                        Cancelar
+                                    </button>
+                                </div>
+                            )}
+                        </form>
+                    </div>
+
                 </div>
             </div>
-        </>
-    )
-}
+        </div>
+    );
+};

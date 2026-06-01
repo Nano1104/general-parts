@@ -19,7 +19,7 @@ export const useAuth = () => {
             const { data } = await authService.login(email, password);
             setAuthUser(data.user);
             await Swal.fire({ title: "Sesión Iniciada", confirmButtonColor: CONFIRM_COLOR });
-            navigate("/authPage"); // ← en vez de reload()
+            navigate("/"); // ← en vez de reload()
         } catch (err) {
             const msg = err.response?.data?.message || "Error en la autenticación";
             setError(msg);
@@ -47,7 +47,7 @@ export const useAuth = () => {
             });
 
             await Swal.fire({ title: "Te has registrado", confirmButtonColor: "#D7263D" });
-            navigate("/authPage");
+            navigate("/"); // ← en vez de reload()
         } catch (err) {
             const msg = err.response?.data?.message || "Error en el registro";
             setError(msg);

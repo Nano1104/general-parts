@@ -2,16 +2,17 @@ export const FormLocalidades = ({
     localidades,
     register,
     errors,
-    name = "city" // Nombre del campo por defecto
+    name = "city",
+    labelClass,
+    inputBase,
+    errorClass
 }) => {
     return (
-        <div className="w-full flex flex-col items-center relative">
+        <div className="w-full flex flex-col relative">
+            <label htmlFor="password" className={labelClass}>Localidad</label>
             <select
                 id="localidades"
-                className="w-full p-3 sm:p-4 bg-transparent outline-none text-cBlack
-                            border border-cBlack rounded-xl transition-all duration-200
-                            focus:border-lightRed focus:border-2 focus:shadow-md
-                            placeholder:text-gray-500"
+                className={inputBase + " " + (errors?.[name]?.message ? errorClass : "")}
                 {...register(name, {
                     required: "Debe seleccionar una localidad"
                 })}

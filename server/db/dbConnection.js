@@ -1,6 +1,14 @@
+
 import mongoose from "mongoose";
 
 import { NODE_ENV, DB_USER_NAME, DB_PORT, DB_HOST, DB_USER_PASSWORD } from "../config/envConfig.js";
+
+console.log("🚀 ~ NODE_ENV:", NODE_ENV)
+console.log("🚀 ~ DB_USER_NAME:", DB_USER_NAME)
+console.log("🚀 ~ DB_PORT:", DB_PORT)
+console.log("🚀 ~ DB_HOST:", DB_HOST)
+console.log("🚀 ~ DB_USER_PASSWORD:", DB_USER_PASSWORD)
+
 
 const connectionOptions = {
     url: NODE_ENV === "production"
@@ -22,6 +30,7 @@ export const connectToDB = async () => {
         await mongoose.connect(connectionOptions.url, connectionOptions.options);
 
         console.log("======== Connected to MongoDB ===========");
+        console.log(`======== Environment: ${NODE_ENV} ===========`);
 
         if (mongoose.connection.db) {
             await mongoose.connection.db.admin().ping();
