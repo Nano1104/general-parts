@@ -4,6 +4,9 @@ import axios from "axios";
 import { API_URL } from "../utils/api_url.js";
 import { useDebounce } from "./useDebounce.js";
 
+// Fix 1: fetchProducts en las deps del useEffect
+// Fix 2: eliminar el parámetro isReset de buildParams (nunca se usó)
+
 export function useProducts({ searchValue, category, subcategory, brand, price }) {
     const debouncedSearch = useDebounce(searchValue, 300);
 
@@ -12,23 +15,25 @@ export function useProducts({ searchValue, category, subcategory, brand, price }
     const [hasMore, setHasMore] = useState(true);
     const [error, setError] = useState(null);
 
-    // Usamos refs para el estado de paginación — no necesitan re-render
     const pageRef = useRef(1);
     const lastIdRef = useRef(null);
-    const isLoadingRef = useRef(false);  // ref en lugar de state para el guard
+    const isLoadingRef = useRef(false);
     const abortControllerRef = useRef(null);
 
-    // ── Construir params ───────────────────────────────────────────────────
-    const buildParams = useCallback((isReset) => {
+    // ── Sin isReset (no se usaba) ──────────────────────────────────────────
+    const buildParams = useCallback(() => {
         const isSearch = !!debouncedSearch;
 
         const base = {
             limit: 10,
             ...(debouncedSearch && { search: debouncedSearch }),
-            // Los filtros aplican SIEMPRE, con o sin búsqueda
-            ...(category    && { category }),
-            ...(subcategory && { subcategory }),
-            ...(brand       && { brand }),
+            // ✅ Cuando hay búsqueda activa, ignorar categoría/subcategoría
+            // El usuario quiere resultados globales, no restringidos a la sección
+            ...(!isSearch && category && { category }),
+            ...(!isSearch && subcategory && { subcategory }),
+
+            // Precio y marca sí aplican siempre (el usuario los eligió explícitamente)
+            ...(brand && { brand }),
             ...(price?.length === 2 && { minPrice: price[0], maxPrice: price[1] }),
         };
 
@@ -37,19 +42,15 @@ export function useProducts({ searchValue, category, subcategory, brand, price }
         } else {
             return {
                 ...base,
-                ...(!isReset && lastIdRef.current && { lastId: lastIdRef.current }),
+                ...(lastIdRef.current && { lastId: lastIdRef.current }),
             };
         }
     }, [debouncedSearch, category, subcategory, brand, price]);
 
-    // ── Fetch central ──────────────────────────────────────────────────────
     const fetchProducts = useCallback(async (isReset = false) => {
         if (isLoadingRef.current) return;
 
-        // Cancelar request anterior si existe
-        if (abortControllerRef.current) {
-            abortControllerRef.current.abort();
-        }
+        abortControllerRef.current?.abort();
         abortControllerRef.current = new AbortController();
 
         isLoadingRef.current = true;
@@ -57,24 +58,21 @@ export function useProducts({ searchValue, category, subcategory, brand, price }
         if (isReset) setError(null);
 
         try {
-            const params = buildParams(isReset);
+            const params = buildParams();   // ← sin pasar isReset
 
             const { data } = await axios.get(`${API_URL}/api/products`, {
                 params,
                 withCredentials: true,
-                signal: abortControllerRef.current.signal,  // cancelación
+                signal: abortControllerRef.current.signal,
             });
 
             const newProducts = data.products || [];
 
             setProducts(prev => {
                 const updated = isReset ? newProducts : [...prev, ...newProducts];
-
-                // Guardar cursor para la próxima página
                 if (updated.length > 0) {
                     lastIdRef.current = updated[updated.length - 1]._id;
                 }
-
                 return updated;
             });
 
@@ -85,7 +83,7 @@ export function useProducts({ searchValue, category, subcategory, brand, price }
             }
 
         } catch (err) {
-            if (axios.isCancel(err)) return;  // request cancelado, no es error
+            if (axios.isCancel(err)) return;
             console.error("Error loading products:", err);
             setError(err.response?.data?.message || "Error al cargar productos");
             setHasMore(false);
@@ -95,15 +93,15 @@ export function useProducts({ searchValue, category, subcategory, brand, price }
         }
     }, [buildParams, debouncedSearch]);
 
-    // ── Reset cuando cambian los filtros o la búsqueda ─────────────────────
+    // Fix: fetchProducts en las deps ──────────────────────────────────────
     useEffect(() => {
         pageRef.current = 1;
         lastIdRef.current = null;
         fetchProducts(true);
-    }, [debouncedSearch, category, subcategory, brand, price]);
-    //   ↑ debouncedSearch, no searchValue — ya tiene el delay incorporado
+    }, [fetchProducts]);
+    // ↑ fetchProducts ya incluye debouncedSearch/category/etc via buildParams,
+    //   así que no necesitás listarlos de nuevo acá
 
-    // ── Cargar más (infinite scroll) ───────────────────────────────────────
     const loadMore = useCallback(() => {
         if (!isLoadingRef.current && hasMore) {
             fetchProducts(false);

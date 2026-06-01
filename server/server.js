@@ -4,7 +4,7 @@ import cors from "cors";
 import { NODE_ENV, PORT, CLIENT_URL } from "./config/envConfig.js";
 
 //connections 
-import { ensureCollection } from "./typesense/typesenseSchema.js";
+import { ensureCollection } from "./typesense/collection.js";
 import { connectToDB } from "./db/dbConnection.js";
 import agendaModule from "./agenda.js"
 
@@ -14,6 +14,7 @@ import authRouter from "./routes/auth.routes.js"
 import userRouter from "./routes/user.routes.js"
 import cartRouter from "./routes/cart.routes.js"
 import orderRouter from "./routes/order.routes.js"
+/* import typesenseRouter from "./routes/typesense.route.js" */
 
 const app = express();
 
@@ -51,6 +52,7 @@ app.use("/api/auth", authRouter)
 app.use("/api/user", userRouter)
 app.use("/api/cart", cartRouter)
 app.use("/api/order", orderRouter)
+/* app.use("/api/typesense", typesenseRouter) */
 
 
 const startServer = async () => {

@@ -8,10 +8,10 @@
 // ─────────────────────────────────────────────
 
 import mongoose from "mongoose";
-import "dotenv/config";
-import client from "./typesenseClient.js";
+/* import "dotenv/config"; */
+import client from "./client.js";
 import { connectToDB } from "../db/dbConnection.js";
-import { ensureCollection, recreateCollection, COLLECTION_NAME } from "./typesenseSchema.js";
+import { ensureCollection, recreateCollection, COLLECTION_NAME } from "./collection.js";
 import Product from "../models/product.model.js"; // ajusta el path
 
 const BATCH_SIZE = 500;
@@ -20,20 +20,24 @@ const BATCH_SIZE = 500;
 // ⚠️  Esta función también se importa en product.controller.js — no tocar la firma
 export function mongoToTypesense(doc) {
     const obj = doc.toObject ? doc.toObject() : doc;
+    const codpro = obj.codpro ?? "";
 
     return {
         id: obj._id.toString(),
-        codpro: obj.codpro ?? "",
+        codpro,
+        codpro_suffix: codpro.replace(/^\d+/, ""),
+
         desc_stock: obj.desc_stock ?? "",
         desc_marca: obj.desc_marca ?? "",
         desc_rubro: obj.desc_rubro ?? "",
         desc_subrub: obj.desc_subrub ?? "",
         desc_subrubro_intermedio: obj.desc_subrubro_intermedio ?? "",
         precioimpre: obj.precioimpre ?? 0,
-        stock: obj.stock ?? 0,
-        rubro: obj.rubro ?? 0,
-        subrub: obj.subrub ?? 0,
-        proveed: obj.proveed ?? 0,
+        // ✅ Seguro contra floats que vengan de Mongo
+        stock: Math.round(obj.stock ?? 0),
+        rubro: Math.round(obj.rubro ?? 0),
+        subrub: Math.round(obj.subrub ?? 0),
+        proveed: Math.round(obj.proveed ?? 0),
         destacado: obj.destacado ?? false,
         imageUrl: obj.imageUrl ?? "",
         prod_details: obj.prod_details ?? "",

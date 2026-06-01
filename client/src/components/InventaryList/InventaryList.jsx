@@ -1,31 +1,49 @@
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
-import { API_URL } from "../../utils/api_url.js"
+import { API_URL } from "../../utils/api_url.js";
 import { useAuthContext } from "../../context/AuthContext.jsx";
-//components
+
+// components
 import { Category } from "../Category/Category.jsx";
 import { Link } from "react-router-dom";
 
-//icons
+// icons
 import { HiOutlineBars3 } from "react-icons/hi2";
 import { FaChevronDown } from "react-icons/fa6";
 
-// InventoryList Component - Totalmente Responsivo con lógica completa
+/**
+ * InventaryList — Rediseño
+ *
+ * Correcciones respecto al original:
+ *  1. BUG FIX: menuRef ya no se asigna dos veces a dos nodos distintos.
+ *     Ahora envuelve AMBAS navs (desktop + mobile) en un único div wrapper.
+ *     Antes: el ref del mobile sobreescribía el del desktop silenciosamente.
+ *
+ *  2. handleClickOutside simplificado: el menuRef.current.contains() ya cubre
+ *     todos los elementos del árbol (incluyendo dropdowns). Las verificaciones
+ *     adicionales con .closest() eran redundantes y frágiles.
+ *
+ *  3. setIsRubrosOpen usa forma funcional (prev => !prev) para evitar
+ *     stale closures en entornos con batching concurrente (React 18+).
+ */
 export const InventaryList = ({ stateNews }) => {
     const { setShowNews } = stateNews;
     const [categories, setCategories] = useState([]);
     const { isAdmin } = useAuthContext();
+
+    // FIX: un solo ref que cubre el wrapper completo (desktop + mobile)
     const menuRef = useRef(null);
 
-    // Estados separados
-    const [isRubrosOpen, setIsRubrosOpen] = useState(false); // Para el menú principal
-    const [activeSubCategory, setActiveSubCategory] = useState(null); // Para subcategorías
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // Para móvil
+    const [isRubrosOpen, setIsRubrosOpen] = useState(false);
+    const [activeSubCategory, setActiveSubCategory] = useState(null);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await axios.get(`${API_URL}/api/products/rubro/get-categories-and-subcategories`);
+                const response = await axios.get(
+                    `${API_URL}/api/products/rubro/get-categories-and-subcategories`
+                );
                 setCategories(response.data.categories);
             } catch (err) {
                 console.error("Error fetching categories:", err);
@@ -33,151 +51,224 @@ export const InventaryList = ({ stateNews }) => {
         };
         fetchCategories();
 
+        // FIX: simplificado — .contains() ya cubre todo el subárbol del menú
         const handleClickOutside = (event) => {
             if (menuRef.current && !menuRef.current.contains(event.target)) {
-                // Solo cerrar si realmente es un click fuera del menú completo
-                // y no un click en elementos internos del menú
-                const isClickInsideDropdown = event.target.closest('.category-dropdown') ||
-                    event.target.closest('.subcategory-dropdown') ||
-                    event.target.closest('[data-category-menu]');
-
-                if (!isClickInsideDropdown) {
-                    setIsRubrosOpen(false);
-                    setActiveSubCategory(null);
-                    setIsMobileMenuOpen(false);
-                }
+                setIsRubrosOpen(false);
+                setActiveSubCategory(null);
+                setIsMobileMenuOpen(false);
             }
         };
 
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
     const handleRubrosClick = () => {
         setShowNews(false);
-        setIsRubrosOpen(!isRubrosOpen);
-        if (!isRubrosOpen) setActiveSubCategory(null); // Reset al abrir
+        setIsRubrosOpen((prev) => {
+            if (!prev) setActiveSubCategory(null); // reset al abrir
+            return !prev;
+        });
     };
 
     const handleDestacadoClick = () => {
         setShowNews(true);
         setIsRubrosOpen(false);
         setActiveSubCategory(null);
-        setIsMobileMenuOpen(false); // Cerrar menú móvil también
+        setIsMobileMenuOpen(false);
     };
 
     const handleMobileMenuToggle = () => {
-        setIsMobileMenuOpen(!isMobileMenuOpen);
-        if (isRubrosOpen) setIsRubrosOpen(false); // Cerrar rubros si están abiertos
+        setIsMobileMenuOpen((prev) => !prev);
+        if (isRubrosOpen) setIsRubrosOpen(false);
     };
 
     return (
-        <>
-            {/* NAVEGACIÓN DESKTOP */}
-            <nav className="hidden lg:flex bg-deepGray h-8 relative px-4 xl:px-7 text-xs xl:text-sm">
-                <div ref={menuRef} className="flex">
-                    <button
-                        className="flex items-center italic px-3 xl:px-4 h-full bg-black text-white uppercase font-montserrat font-bold tracking-tight cursor-pointer hover:bg-gray-100 transition-colors duration-200"
-                        onClick={handleRubrosClick}
-                        aria-expanded={isRubrosOpen}
-                        aria-label="Mostrar rubros"
-                    >
-                        RUBROS
-                    </button>
+        // Wrapper único con el ref — cubre desktop y mobile simultáneamente
+        <div ref={menuRef}>
 
-                    <button
-                        className="flex items-center italic ml-2 xl:ml-4 px-3 xl:px-4 h-full bg-lightRed text-white uppercase font-montserrat font-bold tracking-tight cursor-pointer hover:bg-red-600 transition-colors duration-200"
-                        onClick={handleDestacadoClick}
-                        aria-label="Ver productos destacados"
-                    >
-                        DESTACADO
-                    </button>
+            {/* ─── DESKTOP NAV ─────────────────────────────────────── */}
+            <nav className="hidden lg:flex items-center relative
+                            bg-zinc-900 border-b border-white/[0.07]
+                            h-11 px-5 xl:px-8">
 
-                    {isAdmin && (
+                {/* RUBROS */}
+                <button
+                    className={`
+                        relative flex items-center gap-2 h-full px-5 select-none
+                        font-montserrat text-[10px] tracking-[0.22em] uppercase font-medium
+                        transition-colors duration-200
+                        ${isRubrosOpen
+                            ? "text-white"
+                            : "text-white/60 hover:text-white/80"
+                        }
+                    `}
+                    onClick={handleRubrosClick}
+                    aria-expanded={isRubrosOpen}
+                    aria-label="Mostrar rubros"
+                >
+                    Rubros
+                    <FaChevronDown
+                        size={8}
+                        className={`
+                            transition-transform duration-300
+                            ${isRubrosOpen ? "rotate-180 text-lightRed" : ""}
+                        `}
+                    />
+                    {/* Indicador activo — línea roja inferior */}
+                    <span
+                        className={`
+                            absolute bottom-0 left-5 right-5 h-px bg-lightRed
+                            transition-transform duration-200 origin-left
+                            ${isRubrosOpen ? "scale-x-100" : "scale-x-0"}
+                        `}
+                    />
+                </button>
+
+                {/* Separador vertical */}
+                <span className="w-px h-3.5 bg-white/10 mx-1 flex-shrink-0" />
+
+                {/* DESTACADO */}
+                <button
+                    className="flex items-center h-full px-5 select-none
+                               font-montserrat text-[10px] tracking-[0.22em] uppercase font-medium
+                               text-white/60 hover:text-lightRed transition-colors duration-200"
+                    onClick={handleDestacadoClick}
+                    aria-label="Ver productos destacados"
+                >
+                    Destacado
+                </button>
+
+                {/* ADMIN — volver a inicio */}
+                {isAdmin && (
+                    <>
+                        <span className="w-px h-3.5 bg-white/10 mx-1 flex-shrink-0" />
                         <Link
                             to="/"
-                            className="flex items-center italic ml-2 xl:ml-4 px-3 xl:px-4 h-full bg-black text-white uppercase font-montserrat font-bold tracking-tight hover:bg-gray-100 transition-colors duration-200"
+                            className="flex items-center h-full px-5
+                                       font-montserrat text-[10px] tracking-[0.22em] uppercase font-medium
+                                       text-white/60 hover:text-white/65 transition-colors duration-200"
                             aria-label="Volver al inicio"
                         >
-                            VOLVER A INICIO
+                            ← Inicio
                         </Link>
-                    )}
+                    </>
+                )}
 
-                    {/* Dropdown de categorías para desktop */}
-                    {isRubrosOpen && (
-                        <div
-                            className="absolute top-8 left-0 z-50 bg-cWhite border-r-[1px] border-b-[1px] shadow-lg rounded-b-md max-h-96 category-dropdown"
-                            data-category-menu="true"
-                        >
-                            <div className="px-6 xl:px-10 py-4">
-                                <ul className="flex flex-col gap-2">
-                                    {categories.map((category, index) => (
-                                        <Category
-                                            key={`category-${category.rubro}-${index}`}
-                                            category={category.rubro}
-                                            isActive={activeSubCategory === category.rubro}
-                                            onClick={() => setActiveSubCategory(
-                                                activeSubCategory === category.rubro ? null : category.rubro
-                                            )}
-                                            categoryData={category}
-                                            isMobile={false}
-                                        />
-                                    ))}
-                                </ul>
-                            </div>
+                {/* ── Dropdown de categorías ── */}
+                {isRubrosOpen && (
+                    <div className="absolute top-full left-0 z-50 bg-white
+                                    border-x border-b border-zinc-200
+                                    shadow-[0_12px_32px_rgba(0,0,0,0.14)]">
+                        <div className="px-5 xl:px-6 pt-4 pb-3 min-w-[200px]">
+                            {/* Label de sección */}
+                            <p className="font-montserrat text-[10px] tracking-[0.16em] uppercase
+                                          text-black mb-3 pl-1">
+                                Categorías
+                            </p>
+
+                            <ul className="flex flex-col">
+                                {categories.map((category, index) => (
+                                    <Category
+                                        key={`category-${category.rubro}-${index}`}
+                                        category={category.rubro}
+                                        isActive={activeSubCategory === category.rubro}
+                                        onClick={() =>
+                                            setActiveSubCategory(
+                                                activeSubCategory === category.rubro
+                                                    ? null
+                                                    : category.rubro
+                                            )
+                                        }
+                                        categoryData={category}
+                                        isMobile={false}
+                                    />
+                                ))}
+                            </ul>
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
             </nav>
 
-            {/* NAVEGACIÓN MÓVIL */}
-            <nav className="lg:hidden bg-deepGray relative" ref={menuRef}>
-                {/* Header móvil */}
+            {/* ─── MOBILE NAV ──────────────────────────────────────── */}
+            <nav className="lg:hidden bg-zinc-900 border-b border-white/[0.07] relative">
+
+                {/* Barra superior móvil */}
                 <div className="flex items-center justify-between px-4 py-3">
                     <button
                         onClick={handleMobileMenuToggle}
-                        className="flex items-center gap-2 text-white font-montserrat font-bold text-sm uppercase"
+                        className="flex items-center gap-2.5 select-none
+                                   font-montserrat text-[10px] tracking-[0.22em] uppercase font-medium
+                                   text-white/50 hover:text-white/80 transition-colors duration-200"
                         aria-expanded={isMobileMenuOpen}
                         aria-label="Abrir menú de navegación"
                     >
-                        <HiOutlineBars3 className="text-lg" />
-                        MENÚ
+                        <HiOutlineBars3 size={17} />
+                        Menú
+                        <FaChevronDown
+                            size={8}
+                            className={`
+                                transition-transform duration-300
+                                ${isMobileMenuOpen ? "rotate-180" : ""}
+                            `}
+                        />
                     </button>
 
                     <button
-                        className="px-4 py-2 bg-lightRed text-white text-xs font-montserrat font-bold uppercase rounded hover:bg-red-600 transition-colors duration-200"
+                        className="px-4 py-1.5 bg-lightRed text-white select-none
+                                   font-montserrat text-[9px] tracking-[0.22em] uppercase font-medium
+                                   hover:bg-red-600 transition-colors duration-200"
                         onClick={handleDestacadoClick}
                         aria-label="Ver productos destacados"
                     >
-                        DESTACADO
+                        Destacado
                     </button>
                 </div>
 
-                {/* Menú móvil expandible */}
+                {/* Panel expandible móvil */}
                 {isMobileMenuOpen && (
-                    <div className="absolute top-full left-0 right-0 z-50 bg-white border-t border-gray-300 shadow-lg max-h-[70vh] overflow-y-auto">
-                        <div className="p-4">
-                            {/* Botón de rubros para móvil */}
+                    <div className="absolute top-full left-0 right-0 z-50
+                                    bg-white border-b border-zinc-200
+                                    shadow-[0_8px_24px_rgba(0,0,0,0.12)]
+                                    max-h-[70vh] overflow-y-auto">
+                        <div className="p-4 flex flex-col gap-2">
+
+                            {/* Botón acordeón de Rubros */}
                             <button
                                 onClick={handleRubrosClick}
-                                className="w-full flex items-center justify-between p-3 bg-gray-100 hover:bg-gray-200 rounded-lg mb-3 transition-colors duration-200"
+                                className="w-full flex items-center justify-between px-3 py-3
+                                           bg-zinc-50 hover:bg-zinc-100
+                                           border border-zinc-200
+                                           font-montserrat text-[10px] tracking-[0.22em] uppercase font-medium
+                                           text-zinc-600 transition-colors duration-200"
                                 aria-expanded={isRubrosOpen}
                             >
-                                <span className="font-montserrat font-bold uppercase text-sm">Rubros</span>
-                                <FaChevronDown className={`transform transition-transform duration-200 ${isRubrosOpen ? 'rotate-180' : ''}`} />
+                                <span>Rubros</span>
+                                <FaChevronDown
+                                    size={9}
+                                    className={`
+                                        transition-transform duration-300
+                                        ${isRubrosOpen ? "rotate-180 text-lightRed" : "text-zinc-400"}
+                                    `}
+                                />
                             </button>
 
-                            {/* Lista de categorías para móvil */}
+                            {/* Lista de categorías móvil */}
                             {isRubrosOpen && (
-                                <div className="space-y-2 pl-4">
+                                <div className="pl-2 flex flex-col gap-0.5">
                                     {categories.map((category, index) => (
                                         <Category
                                             key={`mobile-category-${category.rubro}-${index}`}
                                             category={category.rubro}
                                             isActive={activeSubCategory === category.rubro}
-                                            onClick={() => setActiveSubCategory(
-                                                activeSubCategory === category.rubro ? null : category.rubro
-                                            )}
+                                            onClick={() =>
+                                                setActiveSubCategory(
+                                                    activeSubCategory === category.rubro
+                                                        ? null
+                                                        : category.rubro
+                                                )
+                                            }
                                             categoryData={category}
                                             isMobile={true}
                                         />
@@ -185,26 +276,23 @@ export const InventaryList = ({ stateNews }) => {
                                 </div>
                             )}
 
-                            {/* Link adicional para admin */}
+                            {/* Admin — volver al inicio */}
                             {isAdmin && (
                                 <Link
                                     to="/"
-                                    className="block w-full p-3 bg-gray-100 hover:bg-gray-200 rounded-lg mt-3 font-montserrat font-bold uppercase text-sm text-center transition-colors duration-200"
+                                    className="block w-full px-3 py-3 text-center
+                                               bg-zinc-50 hover:bg-zinc-100
+                                               border border-zinc-200
+                                               font-montserrat text-[10px] tracking-[0.22em] uppercase font-medium
+                                               text-zinc-500 transition-colors duration-200"
                                 >
-                                    VOLVER A INICIO
+                                    ← Volver al inicio
                                 </Link>
                             )}
                         </div>
                     </div>
                 )}
             </nav>
-        </>
+        </div>
     );
 };
-
-
-
-
-
-
-

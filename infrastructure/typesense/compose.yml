@@ -1,0 +1,47 @@
+# typesense/compose.yml
+# Docker Compose v2 - No necesita "version:" al inicio (deprecado en Compose v2)
+
+services:
+  typesense:
+    # La imagen oficial de Typesense desde Docker Hub
+    image: typesense/typesense:${TYPESENSE_VERSION:-28.0}
+    
+    # Nombre descriptivo para el contenedor
+    container_name: typesense-local
+    
+    # Política de reinicio: si el contenedor falla, se reinicia automáticamente
+    # unless-stopped = se reinicia siempre, excepto cuando vos lo detenés manualmente
+    restart: unless-stopped
+    
+    # Mapeo de puertos: TU_MAQUINA:CONTENEDOR
+    ports:
+      - "${TYPESENSE_PORT:-8108}:8108"
+    
+    # Volúmenes: persistencia de datos
+    volumes:
+      # Montamos la carpeta local ./data dentro del contenedor en /data
+      - ./data:/data
+    
+    # Variables de entorno que pasan al proceso de Typesense
+    environment:
+      # La API key que usarán tus clientes para autenticarse
+      TYPESENSE_API_KEY: ${TYPESENSE_API_KEY}
+      # Carpeta donde Typesense guarda sus índices (dentro del contenedor)
+      TYPESENSE_DATA_DIR: /data
+      # Typesense escucha conexiones en este puerto interno
+      TYPESENSE_LISTEN_PORT: 8108
+      # Habilitar CORS para desarrollo local (permite requests desde browser)
+      TYPESENSE_ENABLE_CORS: "true"
+    
+    # Health check: Docker verifica periódicamente si Typesense está sano
+    healthcheck:
+      # Llama al endpoint de health de Typesense
+      test: ["CMD", "curl", "-f", "http://localhost:8108/health"]
+      # Esperar 10 segundos antes del primer check (Typesense necesita arrancar)
+      start_period: 10s
+      # Verificar cada 30 segundos
+      interval: 30s
+      # Si no responde en 5 segundos, considerar fallido
+      timeout: 5s
+      # Después de 3 fallos consecutivos, marcar como unhealthy
+      retries: 3

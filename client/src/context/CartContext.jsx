@@ -20,9 +20,10 @@ export const CartContextProvider = ({ children }) => {
         if (amountToAdd === 0) {
             Swal.fire({
                 icon: "warning",
+                iconColor: "#D7263D",
                 title: "Operación no válida",
                 text: "No se puede agregar un producto con cantidad 0",
-                confirmButtonColor: "#DC5F00"
+                confirmButtonColor: "#D7263D"
             });
             return; // Salimos de la función temprano
         }

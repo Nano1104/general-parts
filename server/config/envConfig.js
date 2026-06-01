@@ -1,7 +1,9 @@
 import { config } from "dotenv";
 
+const path = process.env.NODE_ENV == "production" ? ".env.production" : ".env";
+
 config({
-    path: `.env.${process.env.NODE_ENV}`
+    path: `${path}`
 })
 
 const { NODE_ENV,

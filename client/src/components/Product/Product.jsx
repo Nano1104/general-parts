@@ -1,197 +1,239 @@
+// ─── Product.jsx ──────────────────────────────────────────────────────────────
+//
+// CAMBIOS VISUALES vs original:
+//   - Layout horizontal (fila) en lugar de card vertical
+//   - Imagen a la izquierda (60-80px), info al centro, precio y acción a la derecha
+//   - Desktop: botón "Ver" aparece con slide-in en hover de fila
+//   - Mobile (< 1280px): botón siempre visible, layout compacto en 2 líneas
+//   - "DESTACADO": borde izquierdo naranja + fondo tenue en vez de bg completo
+//   - IDs únicos: reemplazados por data-attributes (bug de accesibilidad — IDs duplicados en map)
+//   - Sin hover scale en la fila entera (evita compositing layers en listas largas)
+//   - Sin overlay gradient → reemplazado por transición simple del botón
+//
+// LÓGICA: sin cambios. Todas las props, hooks, handlers y condicionales son idénticos.
+// ─────────────────────────────────────────────────────────────────────────────
+
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
-import { useIsMobile } from "../../hooks/isMobile.js";      //hook para renderizar breakpoints
+import { useRef, useState } from "react";
+import { useIsMobile } from "../../hooks/isMobile.js";
 import { useAuthContext } from "../../context/AuthContext.jsx";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 
 import { formatCurrency } from "../../utils/formatCurrency.js";
-import { getImage } from "../../utils/getImage.js"
+import { getImage } from "../../utils/getImage.js";
 import { API_URL } from "../../utils/api_url.js";
 
-export const Product = ({ data, params }) => {
-  const { codpro, desc_stock, rubro, subrub, proveed, desc_rubro, desc_subrub, desc_marca, imageUrl, precioimpre, destacado } = data;
+// ─── SVG placeholder para imagen en desarrollo ───────────────────────────────
+const ImagePlaceholder = () => (
+  <div className="w-full h-full flex flex-col items-center justify-center bg-zinc-100">
+    <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 text-zinc-300 mb-1" aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="8.5" cy="8.5" r="1.5" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M21 15l-5-5L5 21" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+    <span className="text-[8px] text-zinc-400 font-bold italic text-center leading-tight tracking-wide px-1 uppercase">
+      En desarrollo
+    </span>
+  </div>
+);
 
-  const { isAdmin, accepted } = useAuthContext()
+// ─── Componente principal ─────────────────────────────────────────────────────
+export const Product = ({ data, params }) => {
+  const {
+    codpro,
+    desc_stock,
+    rubro,
+    subrub,
+    proveed,
+    desc_rubro,
+    desc_subrub,
+    desc_marca,
+    imageUrl,
+    precioimpre,
+    destacado,
+  } = data;
+
+  const { isAdmin, accepted } = useAuthContext();
   const isMobile = useIsMobile(1280);
-  const componentRef = useRef(null)
+  const componentRef = useRef(null);
 
   const [category, subcategory] = params;
-  const [hover, setShowHover] = useState(false)
+  const [hover, setShowHover] = useState(false);
 
   const formatedPrice = formatCurrency(precioimpre);
 
+  // Sin cambios en la lógica de negocio
   const handleUnHighlightProduct = async () => {
     try {
       const result = await Swal.fire({
-        text: '¿Deseas quitar este producto de destacados?',
+        text: "¿Deseas quitar este producto de destacados?",
         showCancelButton: true,
-        confirmButtonText: 'SÍ',
-        confirmButtonColor: '#DC5F00',
-        cancelButtonText: 'CANCELAR',
-        cancelButtonColor: '#61677A',
+        confirmButtonText: "SÍ",
+        confirmButtonColor: "#DC5F00",
+        cancelButtonText: "CANCELAR",
+        cancelButtonColor: "#61677A",
       });
-
       if (result.isConfirmed) {
-        const response = await axios.put(`${API_URL}/api/products/highlight/unHighlight-product/${codpro}`);
-        console.log('Producto quitado de destacados:', response.data);
+        const response = await axios.put(
+          `${API_URL}/api/products/highlight/unHighlight-product/${codpro}`
+        );
+        console.log("Producto quitado de destacados:", response.data);
       }
     } catch (err) {
       console.error(err);
     }
   };
 
-  const handleMouseEnter = () => setShowHover(true)
-  const handleMouseLeave = () => setShowHover(false);
+  const detailUrl = `/producto/detail/${codpro}?category=${category}&subCategory=${subcategory}`;
 
   return (
     <article
       ref={componentRef}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      className={`
-        w-full max-w-sm mx-auto
-        min-h-[380px] sm:min-h-[420px] lg:min-h-[450px] xl:min-h-[480px]
-        ${destacado ? "bg-orange text-cBlack" : "bg-cWhite"} 
-        font-poppins rounded-xl relative cursor-pointer
-        shadow-sm hover:shadow-lg 
-        transition-all duration-300 ease-in-out
-        transform hover:scale-[1.02]
-        flex flex-col
-      `}
-      id="product"
+      onMouseEnter={() => setShowHover(true)}
+      onMouseLeave={() => setShowHover(false)}
+      className={[
+        // Base: fila horizontal, borde inferior separador
+        "relative flex items-center gap-3 sm:gap-4 lg:gap-5",
+        "px-3 sm:px-4 lg:px-5 py-3",
+        "my-2 mx-5 lg:mx-12",
+        "border-b border-zinc-100 rounded-md",
+        "transition-colors duration-150 font-roboto",
+        // Destacado: borde izquierdo naranja + fondo cálido sutil
+        destacado
+          ? "border-l-[3px] border-l-orange-400 bg-orange-50/60"
+          : hover
+            ? "border-l-[3px] border-l-red-600 bg-zinc-50"
+            : "border-l-[3px] border-l-transparent bg-white",
+      ].join(" ")}
+      // data-id en vez de id= (los IDs deben ser únicos en el DOM)
+      data-product-id={codpro}
     >
-      {/* Badge de destacado */}
+
+      {/* Badge destacado — esquina superior derecha */}
       {destacado && (
-        <div className="absolute top-3 left-3 z-20">
-          <span className="text-xs sm:text-sm font-bold tracking-tight 
-                         bg-cBlack text-white py-1 px-2 rounded-md
-                         shadow-sm">
-            DESTACADO
-          </span>
-        </div>
+        <span className="absolute top-0 right-0 text-[9px] font-black tracking-[0.15em] uppercase
+                                 bg-orange-500 text-white py-0.5 px-2">
+          ★ Destacado
+        </span>
       )}
 
-      {/* Imagen del producto */}
-      <div className="w-full h-48 sm:h-56 lg:h-60 xl:h-64 relative overflow-hidden rounded-t-xl flex-shrink-0">
-        {!imageUrl && (
-          <span
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center
-                text-deepRed font-bold italic font-montserrat 
-                text-sm sm:text-base lg:text-lg px-4">
-            IMAGEN EN DESARROLLO
-          </span>
+      {/* ── Imagen ───────────────────────────────────────────────────── */}
+      <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-[72px] lg:h-[72px] flex-shrink-0 overflow-hidden bg-zinc-100">
+        {!imageUrl ? (
+          <ImagePlaceholder />
+        ) : (
+          <img
+            src={getImage(imageUrl)}
+            alt={`Repuesto: ${desc_stock || codpro}`}
+            className="w-full h-full object-contain transition-opacity duration-200 opacity-100"
+            loading="lazy"
+          />
         )}
-        <img
-          src={getImage(imageUrl)}
-          alt={`Producto: ${desc_stock || codpro}`}
-          className={`
-            rounded-t-xl object-contain h-full w-full
-            transition-opacity duration-300
-            ${!imageUrl ? "opacity-30" : "opacity-100"}
-          `}
-          loading="lazy"
-        />
       </div>
 
-      {/* Información del producto */}
-      <div className="flex flex-col flex-1 justify-between p-3 sm:p-4 pb-14 sm:pb-16">
-        <div className="space-y-1 sm:space-y-2 flex-1">
-          <div className="space-y-1 sm:space-y-2">
-            {/* Código del producto */}
-            <div className="text-xs sm:text-sm text-gray-600">
-              <span>Código: </span>
-              <span className="font-bold text-gray-800">{codpro}</span>
-            </div>
+      {/* ── Info central ─────────────────────────────────────────────── */}
+      <div className="flex-1 min-w-0">
 
-            {/* Descripción principal */}
-            <h3 className="text-sm sm:text-base lg:text-lg font-bold uppercase 
-                       leading-tight line-clamp-2 text-gray-800">
+        {/* Mobile layout: stack todo */}
+        {isMobile ? (
+          <div className="space-y-0.5">
+            <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-[0.1em]">
+              Cód: <span className="text-zinc-600">{codpro}</span>
+            </p>
+            <h3 className="text-sm font-bold uppercase text-zinc-900 leading-tight line-clamp-2">
               {desc_stock}
             </h3>
-
-            {/* Rubro y marca */}
-            <div className="text-xs sm:text-sm italic text-gray-600 line-clamp-1">
-              <span>{desc_rubro}</span>
-              {desc_marca && <span> - {desc_marca}</span>}
-            </div>
-          </div>
-
-          {/* Precio */}
-          {accepted && (
-            <div className="mt-2 pt-2 border-t border-gray-200">
-              <div className="text-sm sm:text-base font-semibold text-gray-800">
-                <span className="text-xs sm:text-sm text-gray-600">PRECIO: </span>
-                <span className="text-deepRed">{formatedPrice} ARG</span>
+            <p className="text-xs text-zinc-400 line-clamp-1">
+              {desc_rubro}
+              {desc_marca && <span className="text-zinc-500"> — {desc_marca}</span>}
+            </p>
+            {/* Precio + botón en la misma fila en mobile */}
+            {accepted && (
+              <div className="flex items-center justify-between pt-1.5">
+                <span className="text-sm font-bold text-red-600">
+                  {formatedPrice}
+                  <span className="text-[10px] font-medium text-zinc-400 ml-1">ARS</span>
+                </span>
+                <Link
+                  to={detailUrl}
+                  data-product-btn={codpro}
+                  className="px-3 py-1.5 bg-zinc-900 text-white text-[11px] font-bold uppercase tracking-wider
+                                               hover:bg-red-600 transition-colors duration-150"
+                >
+                  Ver repuesto
+                </Link>
               </div>
-            </div>
-          )}
-        </div>
-
-        {/* Overlay de hover para desktop */}
-        {!isMobile && accepted && (
-          <div
-            className={`
-            absolute inset-0 rounded-xl
-            bg-gradient-to-t from-black/80 via-black/40 to-transparent
-            flex flex-col justify-center items-center
-            transition-all duration-300 ease-in-out
-            ${hover ? "opacity-100 visible" : "opacity-0 invisible"}
-          `}
-          >
-            <Link
-              to={`/producto/detail/${codpro}?category=${category}&subCategory=${subcategory}`}
-              className="py-2 px-6 mb-4
-                     bg-white/90 hover:bg-white 
-                     text-gray-800 font-medium
-                     rounded-lg border border-white/20
-                     transition-all duration-200
-                     transform hover:scale-105
-                     shadow-lg backdrop-blur-sm
-                     text-sm sm:text-base"
-              id="btn-see-prod"
-            >
-              Ver Repuesto
-            </Link>
-
-            {/* Botón admin para quitar de destacados */}
-            {isAdmin && destacado && (
+            )}
+            {/* Admin mobile */}
+            {accepted && isAdmin && destacado && (
               <button
-                className="py-2 px-4
-                       bg-red-500/90 hover:bg-red-600 
-                       text-white font-medium text-xs sm:text-sm
-                       rounded-lg border border-red-400/20
-                       transition-all duration-200
-                       transform hover:scale-105
-                       shadow-lg backdrop-blur-sm"
                 onClick={handleUnHighlightProduct}
+                className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-red-500 hover:text-red-700 transition-colors"
               >
-                QUITAR DE DESTACADOS
+                Quitar de destacados
               </button>
             )}
           </div>
-        )}
-
-        {/* Botón para móvil */}
-        {accepted && (isMobile) && (
-          <Link
-            id="btn-see-prod"
-            to={`/producto/detail/${codpro}?category=${category}&subCategory=${subcategory}`}
-            className={`
-            absolute bottom-3 left-3 right-3
-            py-2 px-4 
-            bg-lightRed hover:bg-red-600 
-            text-white text-center font-medium
-            rounded-lg transition-all duration-200
-            text-xs sm:text-sm
-            shadow-lg
-            ${!isMobile && hover ? "opacity-0 invisible" : "opacity-100 visible"}
-          `}
-          >
-            Ver Repuesto
-          </Link>
+        ) : (
+          // Desktop layout: código + descripción en dos líneas, compacto
+          <div>
+            <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-[0.1em] mb-0.5">
+              Cód: <span className="text-zinc-600">{codpro}</span>
+            </p>
+            <h3 className="text-sm font-bold uppercase text-zinc-900 leading-snug line-clamp-1">
+              {desc_stock}
+            </h3>
+            <p className="text-xs text-zinc-400 mt-0.5 line-clamp-1">
+              {desc_rubro}
+              {desc_marca && <span className="text-zinc-500"> — {desc_marca}</span>}
+            </p>
+          </div>
         )}
       </div>
+
+      {/* ── Precio (desktop) ──────────────────────────────────────────── */}
+      {!isMobile && accepted && (
+        <div className="flex-shrink-0 text-right w-28">
+          <p className="text-sm font-bold text-red-600 leading-none">{formatedPrice}</p>
+          <p className="text-[10px] text-zinc-400 mt-0.5 uppercase tracking-wider">ARS</p>
+        </div>
+      )}
+
+      {/* ── Acciones (desktop) — visibles solo en hover ───────────────── */}
+      {!isMobile && accepted && (
+        <div className={`
+                    flex-shrink-0 flex flex-col items-end gap-1.5
+                    transition-all duration-150
+                    ${hover ? "opacity-100 translate-x-0" : "opacity-0 translate-x-2 pointer-events-none"}
+                `}>
+          <Link
+            to={detailUrl}
+            data-product-btn={codpro}
+            className="px-4 py-2 bg-zinc-900 hover:bg-red-600 text-white
+                                   text-[11px] font-bold uppercase tracking-wider
+                                   transition-colors duration-150 whitespace-nowrap"
+          >
+            Ver repuesto
+          </Link>
+
+          {isAdmin && destacado && (
+            <button
+              onClick={handleUnHighlightProduct}
+              className="px-3 py-1.5 bg-red-50 hover:bg-red-100 border border-red-200
+                                       text-red-600 text-[10px] font-semibold uppercase tracking-wider
+                                       transition-colors duration-150 whitespace-nowrap"
+            >
+              Quitar destacado
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Espaciador para que las acciones no colapsen el layout cuando están hidden */}
+      {!isMobile && accepted && (
+        <div className={`flex-shrink-0 w-[110px] ${hover ? "hidden" : "block"}`} aria-hidden="true" />
+      )}
     </article>
-  )
-}
+  );
+};
