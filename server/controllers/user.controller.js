@@ -40,6 +40,9 @@ export const updateUser = async (req, res) => {
 export const emptyCartFromUser = async (req, res) => {
     try {
         const { userId, cartId } = req.params
+        if (req.user.userId !== userId) {
+            return res.status(403).json({ message: "No autorizado para modificar el carrito de otro usuario" });
+        }
 
         const userFound = await User.findById(userId);
         const cartFound = await Cart.findById(cartId);

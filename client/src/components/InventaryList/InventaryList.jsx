@@ -163,8 +163,8 @@ export const InventaryList = ({ stateNews }) => {
                                     shadow-[0_12px_32px_rgba(0,0,0,0.14)]">
                         <div className="px-5 xl:px-6 pt-4 pb-3 min-w-[200px]">
                             {/* Label de sección */}
-                            <p className="font-montserrat text-[10px] tracking-[0.16em] uppercase
-                                          text-black mb-3 pl-1">
+                            <p className="font-roboto text-[10px] tracking-[0.16em] uppercase
+                                          text-zinc-700 mb-3 pl-1">
                                 Categorías
                             </p>
 

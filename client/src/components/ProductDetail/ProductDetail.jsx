@@ -216,8 +216,8 @@ export const ProductDetail = ({ prod }) => {
                     <div className="px-4 sm:px-6 pb-5 pt-3 border-t border-zinc-100">
                         <button
                             onClick={() => navigate(-1)}
-                            className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.1em]
-                                       text-zinc-500 hover:text-red-600 transition-colors duration-150 group"
+                            className="flex items-center gap-2 text-xs font-bold uppercase
+                                       text-zinc-500 hover:text-lightRed transition-colors duration-150 group"
                         >
                             <IoArrowUndoCircleOutline
                                 className="text-base group-hover:-translate-x-0.5 transition-transform duration-150"
@@ -235,8 +235,8 @@ export const ProductDetail = ({ prod }) => {
 
                     {/* Nombre del producto */}
                     <div className="px-5 sm:px-8 pt-6 pb-5 border-b border-zinc-100">
-                        <div className="w-6 h-[3px] bg-red-600 mb-4" aria-hidden="true" />
-                        <h1 className="text-2xl sm:text-3xl font-black font-montserrat uppercase tracking-tight leading-tight text-zinc-900">
+                        <div className="w-6 h-[3px] bg-lightRed mb-4" aria-hidden="true" />
+                        <h1 className="text-2xl sm:text-3xl font-black font-poppins uppercase tracking-tight leading-tight text-zinc-900">
                             {desc_stock}
                         </h1>
                     </div>
@@ -248,7 +248,7 @@ export const ProductDetail = ({ prod }) => {
                         </DataRow>
                         <DataRow label="Marca">{desc_marca || "—"}</DataRow>
                         <DataRow label="Stock">
-                            <span className={stockAvailable ? "text-green-600" : "text-red-500"}>
+                            <span className={stockAvailable ? "text-green-600" : "text-lightRed"}>
                                 {stockAvailable ? "Disponible" : "Sin stock"}
                             </span>
                         </DataRow>
@@ -297,10 +297,10 @@ export const ProductDetail = ({ prod }) => {
 
                         {/* Precio neto */}
                         <div className="flex items-baseline gap-2 pt-3 border-t border-zinc-200">
-                            <span className="text-[11px] font-black text-red-600 uppercase tracking-wider">
+                            <span className="text-[11px] font-black text-lightRed uppercase tracking-wider">
                                 Neto
                             </span>
-                            <span className="text-3xl sm:text-4xl font-black text-red-600 leading-none">
+                            <span className="text-3xl sm:text-4xl font-black text-lightRed leading-none">
                                 {formattedNetPrice}
                             </span>
                             <span className="text-xs text-zinc-400 font-semibold">ARS</span>
@@ -313,7 +313,7 @@ export const ProductDetail = ({ prod }) => {
                     {/* Cantidad + agregar al carrito */}
                     <div className="px-5 sm:px-8 py-5 border-b border-zinc-100 flex flex-col sm:flex-row sm:items-center gap-4">
                         <div className="flex flex-col gap-1.5">
-                            <span className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.15em]">
+                            <span className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.08em]">
                                 Cantidad
                             </span>
                             {/* ItemCount no cambia — recibe exactamente las mismas props */}
@@ -324,11 +324,11 @@ export const ProductDetail = ({ prod }) => {
                             onClick={handleAddToCart}
                             disabled={!stockAvailable}
                             className={[
-                                "flex items-center justify-center gap-2 sm:ml-auto",
-                                "px-6 py-3 text-sm font-bold uppercase tracking-[0.1em]",
+                                "flex items-center justify-center gap-2 sm:ml-auto rounded-md",
+                                "px-6 py-3 text-sm font-bold uppercase",
                                 "transition-colors duration-150",
                                 stockAvailable
-                                    ? "bg-zinc-900 hover:bg-red-600 text-white"
+                                    ? "bg-zinc-900 hover:bg-lightRed text-white"
                                     : "bg-zinc-200 text-zinc-400 cursor-not-allowed",
                             ].join(" ")}
                         >
@@ -340,7 +340,7 @@ export const ProductDetail = ({ prod }) => {
                     {/* Descripción del producto */}
                     <div className="px-5 sm:px-8 py-5 flex-1">
                         <div className="flex items-center justify-between mb-3">
-                            <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.18em]">
+                            <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.08em]">
                                 Descripción del producto
                             </p>
                             {authUser && isAdmin && (
@@ -370,7 +370,7 @@ export const ProductDetail = ({ prod }) => {
                                 readOnly={!isFocus}
                                 rows={5}
                                 className={[
-                                    "w-full resize-none text-sm text-zinc-700 leading-relaxed",
+                                    "w-full resize-none text-sm text-zinc-700 leading-relaxed rounded-md",
                                     "bg-transparent outline-none",
                                     "transition-all duration-150",
                                     isFocus
@@ -382,7 +382,7 @@ export const ProductDetail = ({ prod }) => {
                                 <div className="flex gap-2 mt-2">
                                     <button
                                         type="submit"
-                                        className="px-4 py-2 bg-zinc-900 hover:bg-red-600 text-white
+                                        className="px-4 py-2 bg-zinc-900 hover:bg-lightRed text-white
                                                    text-[11px] font-bold uppercase tracking-wider
                                                    transition-colors duration-150"
                                     >
@@ -391,7 +391,7 @@ export const ProductDetail = ({ prod }) => {
                                     <button
                                         type="button"
                                         onClick={() => setIsFocus(false)}
-                                        className="px-4 py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-600
+                                        className="px-4 py-2 bg-zinc-100 hover:bg-lightRed text-zinc-600
                                                    text-[11px] font-bold uppercase tracking-wider
                                                    transition-colors duration-150"
                                     >

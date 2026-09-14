@@ -46,7 +46,7 @@ export const News = () => {
         const [codigo, dias] = formValues;
                 
         try {
-          const response = await axios.put(`${API_URL}/api/products/highlight-product/${codigo}`, { days: dias });
+          const response = await axios.put(`${API_URL}/api/products/highlight-product/${codigo}`, { days: dias }, { withCredentials: true });
           const data = response.data
           console.log("🚀 ~ pedirCodigoProducto ~ response:", response)
 

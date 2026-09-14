@@ -13,7 +13,7 @@ import { Orders } from "./pages/Orders/Orders.jsx"
 import { Cart } from "./pages/Cart/Cart.jsx";
 
 function App() {
-  const { authUser } = useAuthContext()
+  const { authUser, isAdmin } = useAuthContext()
 
 
   return (
@@ -32,9 +32,9 @@ function App() {
         <Route path="/productos/:category/:subcategory/:categories" element={ authUser ? <ProductosPage /> : <AuthPage /> } />     
         <Route path="/producto/detail/:id" element={ authUser ? <ProductDetailContainer /> : <AuthPage /> } />
 
-        <Route path="/admin" element={ authUser ? <AdminPage /> : <Navigate to="/" /> } />
-        <Route path="/admin/:manage" element={ authUser ? <AdminPage /> : <Navigate to="/" /> } />
-        <Route path="/reservas" element={ authUser ? <Orders /> : <Navigate to="/" /> } />
+        <Route path="/admin" element={ isAdmin ? <AdminPage /> : <Navigate to="/" /> } />
+        <Route path="/admin/:manage" element={ isAdmin ? <AdminPage /> : <Navigate to="/" /> } />
+        <Route path="/reservas" element={ isAdmin ? <Orders /> : <Navigate to="/" /> } />
         <Route path="/authPage" element={ !authUser ? <AuthPage /> : <Navigate to="/" /> } />
         <Route path="/contact" element={<Contact />} />
         <Route path="/cart-v" element={ authUser ? <Cart /> : <Navigate to="/" /> } />

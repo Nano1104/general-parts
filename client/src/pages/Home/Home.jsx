@@ -120,7 +120,7 @@ export const Home = () => {
                                 <Link
                                     to="/productos"
                                     className="group inline-flex items-center gap-5
-                                               bg-lightRed text-white
+                                               bg-lightRed text-white rounded-md
                                                font-montserrat font-medium
                                                text-[10px] tracking-[0.28em] uppercase
                                                px-8 py-4 sm:px-10 sm:py-[1.1rem]
@@ -138,12 +138,12 @@ export const Home = () => {
                                 <Link
                                     to="/authPage/"
                                     className="group inline-flex items-center gap-5
-                                               border border-white/30 text-white
+                                               border border-white/30 text-white rounded-md
                                                font-montserrat font-medium
-                                               text-[10px] tracking-[0.28em] uppercase
+                                               text-[10px] tracking-[0.20em] uppercase
                                                px-8 py-4 sm:px-10 sm:py-[1.1rem]
                                                transition-all duration-300 ease-out
-                                               hover:border-white hover:bg-white hover:text-zinc-900
+                                               hover:border-white hover:bg-white hover:text-black 
                                                focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                                 >
                                     Iniciar sesión
