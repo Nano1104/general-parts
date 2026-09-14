@@ -76,7 +76,9 @@ export const Product = ({ data, params }) => {
       });
       if (result.isConfirmed) {
         const response = await axios.put(
-          `${API_URL}/api/products/highlight/unHighlight-product/${codpro}`
+          `${API_URL}/api/products/highlight/unHighlight-product/${codpro}`,
+          {},
+          { withCredentials: true }
         );
         console.log("Producto quitado de destacados:", response.data);
       }
@@ -98,12 +100,12 @@ export const Product = ({ data, params }) => {
         "px-3 sm:px-4 lg:px-5 py-3",
         "my-2 mx-5 lg:mx-12",
         "border-b border-zinc-100 rounded-md",
-        "transition-colors duration-150 font-roboto",
+        "transition-colors duration-150 font-poppins",
         // Destacado: borde izquierdo naranja + fondo cálido sutil
         destacado
           ? "border-l-[3px] border-l-orange-400 bg-orange-50/60"
           : hover
-            ? "border-l-[3px] border-l-red-600 bg-zinc-50"
+            ? "border-l-[3px] border-l-lightRed bg-zinc-50"
             : "border-l-[3px] border-l-transparent bg-white",
       ].join(" ")}
       // data-id en vez de id= (los IDs deben ser únicos en el DOM)
@@ -151,7 +153,7 @@ export const Product = ({ data, params }) => {
             {/* Precio + botón en la misma fila en mobile */}
             {accepted && (
               <div className="flex items-center justify-between pt-1.5">
-                <span className="text-sm font-bold text-red-600">
+                <span className="text-sm font-bold text-lightRed">
                   {formatedPrice}
                   <span className="text-[10px] font-medium text-zinc-400 ml-1">ARS</span>
                 </span>
@@ -159,7 +161,7 @@ export const Product = ({ data, params }) => {
                   to={detailUrl}
                   data-product-btn={codpro}
                   className="px-3 py-1.5 bg-zinc-900 text-white text-[11px] font-bold uppercase tracking-wider
-                                               hover:bg-red-600 transition-colors duration-150"
+                                               hover:bg-lightRed transition-colors duration-150"
                 >
                   Ver repuesto
                 </Link>
@@ -169,7 +171,7 @@ export const Product = ({ data, params }) => {
             {accepted && isAdmin && destacado && (
               <button
                 onClick={handleUnHighlightProduct}
-                className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-red-500 hover:text-red-700 transition-colors"
+                className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-lightRed hover:text-red-700 transition-colors"
               >
                 Quitar de destacados
               </button>
@@ -195,7 +197,7 @@ export const Product = ({ data, params }) => {
       {/* ── Precio (desktop) ──────────────────────────────────────────── */}
       {!isMobile && accepted && (
         <div className="flex-shrink-0 text-right w-28">
-          <p className="text-sm font-bold text-red-600 leading-none">{formatedPrice}</p>
+          <p className="text-sm font-bold text-lightRed leading-none">{formatedPrice}</p>
           <p className="text-[10px] text-zinc-400 mt-0.5 uppercase tracking-wider">ARS</p>
         </div>
       )}
@@ -210,7 +212,7 @@ export const Product = ({ data, params }) => {
           <Link
             to={detailUrl}
             data-product-btn={codpro}
-            className="px-4 py-2 bg-zinc-900 hover:bg-red-600 text-white
+            className="px-4 py-2 bg-zinc-900 hover:bg-lightRed text-white rounded-md
                                    text-[11px] font-bold uppercase tracking-wider
                                    transition-colors duration-150 whitespace-nowrap"
           >
@@ -220,8 +222,8 @@ export const Product = ({ data, params }) => {
           {isAdmin && destacado && (
             <button
               onClick={handleUnHighlightProduct}
-              className="px-3 py-1.5 bg-red-50 hover:bg-red-100 border border-red-200
-                                       text-red-600 text-[10px] font-semibold uppercase tracking-wider
+              className="px-3 py-1.5 bg-lightRed hover:bg-red-100 border border-red-200
+                                       text-lightRed text-[10px] font-semibold uppercase tracking-wider
                                        transition-colors duration-150 whitespace-nowrap"
             >
               Quitar destacado

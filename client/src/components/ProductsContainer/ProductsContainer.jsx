@@ -120,7 +120,7 @@ export const ProductsContainer = ({ searchValue, setSearchValue }) => {
     <>
       {/* ── Barra superior: breadcrumb + botón filtros ───────────────── */}
       <div className="w-full mx-auto">
-        <div className="flex items-center justify-between gap-4 py-3 mt-5">
+        <div className="flex items-center justify-between gap-4 py-3 px-12 mt-5">
 
           {/* Breadcrumb */}
           <nav

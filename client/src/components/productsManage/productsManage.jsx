@@ -61,6 +61,7 @@ export const ProductsManage = () => {
 
             const response = await axios.post(`${API_URL}/api/products/upload-excel`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
+                withCredentials: true,
             });
 
             Swal.close();
@@ -124,7 +125,9 @@ export const ProductsManage = () => {
         try {
             console.log('🔍 Iniciando descarga para rubro:', rubro);
 
-            const response = await fetch(`${API_URL}/api/products/download-excel?rubro=${encodeURIComponent(rubro)}`);
+            const response = await fetch(`${API_URL}/api/products/download-excel?rubro=${encodeURIComponent(rubro)}`, {
+                credentials: 'include',
+            });
 
             console.log('📡 Response status:', response.status);
             console.log('📡 Response headers:', response.headers);

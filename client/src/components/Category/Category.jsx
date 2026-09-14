@@ -83,7 +83,7 @@ export const Category = ({
                             transition-colors duration-150
                             ${isActive
                                 ? "text-lightRed font-semibold"
-                                : "text-zinc-600 font-medium"
+                                : "text-zinc-900 font-semibold"
                             }
                         `}
                         onClick={(e) => e.stopPropagation()}
@@ -134,7 +134,7 @@ export const Category = ({
                                                     transition-colors duration-150
                                                     ${activeIntermediateSubCategory === intermediate.nombre
                                                         ? "text-lightRed font-semibold"
-                                                        : "text-zinc-500 font-medium"
+                                                        : "text-zinc-900 font-semibold"
                                                     }
                                                 `}
                                             >
@@ -169,7 +169,7 @@ export const Category = ({
                                                         key={`mobile-sub-${sub[1]}-${subIdx}`}
                                                         to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub[0])}`}
                                                         className="block px-8 py-2 text-[10px] tracking-[0.12em] uppercase
-                                                                   text-zinc-400 hover:text-lightRed
+                                                                   text-zinc-800 font-semibold hover:text-lightRed
                                                                    border-b border-zinc-50
                                                                    transition-colors duration-150"
                                                     >
@@ -189,7 +189,7 @@ export const Category = ({
                                         key={`mobile-${sub[1]}-${index}`}
                                         to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub[0])}`}
                                         className="block px-5 py-2.5 text-[10px] tracking-[0.15em] uppercase
-                                                   text-zinc-400 hover:text-lightRed
+                                                   text-zinc-800 font-semibold hover:text-lightRed
                                                    border-b border-zinc-100
                                                    transition-colors duration-150"
                                     >
@@ -208,7 +208,7 @@ export const Category = ({
     // VERSIÓN DESKTOP
     // ══════════════════════════════════════════════════════
     return (
-        <div className="font-montserrat relative">
+        <div className="font-roboto relative">
             <div className="flex items-center gap-0">
 
                 {/* Fila de la categoría */}
@@ -227,7 +227,7 @@ export const Category = ({
                             transition-colors duration-150
                             ${isActive
                                 ? "text-lightRed font-semibold"
-                                : "text-zinc-600 font-medium hover:text-zinc-900"
+                                : "text-black font-semibold hover:text-zinc-900"
                             }
                         `}
                         onClick={(e) => e.stopPropagation()}
@@ -239,7 +239,7 @@ export const Category = ({
                         onClick={handleCategoryClick}
                         className={`
                             flex-shrink-0 transition-colors duration-150
-                            ${isActive ? "text-lightRed" : "text-zinc-300 hover:text-zinc-500"}
+                            ${isActive ? "text-lightRed" : "text-zinc-500 hover:text-zinc-800"}
                         `}
                         aria-expanded={isActive}
                         aria-label={`${isActive ? "Cerrar" : "Abrir"} subcategorías de ${category}`}
@@ -293,7 +293,7 @@ export const Category = ({
                                                     transition-colors duration-150
                                                     ${activeIntermediateSubCategory === intermediate.nombre
                                                         ? "text-lightRed font-semibold"
-                                                        : "text-zinc-600 font-medium hover:text-zinc-900"
+                                                        : "text-zinc-900 font-semibold hover:text-zinc-900"
                                                     }
                                                 `}
                                                 onClick={(e) => e.stopPropagation()}
@@ -336,15 +336,15 @@ export const Category = ({
                                         {activeIntermediateSubCategory === intermediate.nombre && (
                                             <div
                                                 className="absolute left-full top-0 ml-px z-40
-                                                           bg-white border border-zinc-200
+                                                           bg-white border border-zinc-200 font-roboto
                                                            shadow-[0_4px_20px_rgba(0,0,0,0.09)]
                                                            min-w-[256px] xl:min-w-[296px] py-2"
                                                 data-category-menu="true"
                                                 onClick={(e) => e.stopPropagation()}
                                             >
                                                 {/* Label de sección */}
-                                                <p className="font-montserrat text-[8px] tracking-[0.28em] uppercase
-                                                               text-zinc-400 px-4 pt-1.5 pb-2 border-b border-zinc-100 mb-1">
+                                                <p className="text-[8px] tracking-[0.28em] uppercase
+                                                               text-zinc-700 px-4 pt-1.5 pb-2 border-b border-zinc-100 mb-1">
                                                     {intermediate.nombre}
                                                 </p>
 
@@ -353,7 +353,7 @@ export const Category = ({
                                                         key={`desktop-sub-${sub[1]}-${subIdx}`}
                                                         to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub[0])}`}
                                                         className="block px-4 py-2 text-[10px] tracking-[0.12em] uppercase
-                                                                   text-zinc-500 hover:text-lightRed hover:bg-zinc-50
+                                                                   text-black font-semibold hover:text-lightRed hover:bg-zinc-50
                                                                    transition-colors duration-150"
                                                         onClick={(e) => e.stopPropagation()}
                                                     >
@@ -370,13 +370,13 @@ export const Category = ({
                             // SIN subrubros intermedios (directo)
                             <div
                                 className="bg-white border border-zinc-200
-                                           shadow-[0_4px_20px_rgba(0,0,0,0.09)]
+                                           shadow-[0_4px_20px_rgba(0,0,0,0.09)] font-roboto
                                            min-w-[256px] xl:min-w-[296px] py-2"
                                 onClick={(e) => e.stopPropagation()}
                             >
                                 {/* Label de sección */}
-                                <p className="font-montserrat text-[8px] tracking-[0.28em] uppercase
-                                               text-zinc-400 px-4 pt-1.5 pb-2 border-b border-zinc-100 mb-1">
+                                <p className="text-[8px] tracking-[0.28em] uppercase
+                                               text-zinc-700 px-4 pt-1.5 pb-2 border-b border-zinc-100 mb-1">
                                     {category}
                                 </p>
 
@@ -385,7 +385,7 @@ export const Category = ({
                                         key={`${sub[1]}-${index}`}
                                         to={`/productos/${encodeURIComponent(category)}/${encodeURIComponent(sub[0])}`}
                                         className="block px-4 py-2 text-[10px] tracking-[0.12em] uppercase
-                                                   text-zinc-500 hover:text-lightRed hover:bg-zinc-50
+                                                   text-black font-semibold hover:text-lightRed hover:bg-zinc-50
                                                    transition-colors duration-150"
                                         onClick={(e) => e.stopPropagation()}
                                     >

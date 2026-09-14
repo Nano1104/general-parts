@@ -1,6 +1,21 @@
+import { useState, useEffect } from "react";
 
+const DISCOUNT_FIELDS = [
+    { field: "discount_1", label: "Descuento °1" },
+    { field: "discount_2", label: "Descuento °2" },
+    { field: "discount_3", label: "Descuento °3" },
+];
 
 export default function UserDetailAdmin({ user, onAccept, onDeny, onDelete, onDiscountChange }) {
+    const [editField, setEditField] = useState(null);
+    const [newValue, setNewValue] = useState("");
+
+    // Al cambiar de usuario seleccionado, salimos del modo edición
+    useEffect(() => {
+        setEditField(null);
+        setNewValue("");
+    }, [user?._id]);
+
     if (!user) {
         return (
             <div className="flex items-center justify-center h-full text-gray-400 text-sm">
@@ -10,6 +25,22 @@ export default function UserDetailAdmin({ user, onAccept, onDeny, onDelete, onDi
     }
 
     const isActive = user.accepted === true;
+
+    const handleEdit = (field, currentValue) => {
+        setEditField(field);
+        setNewValue(currentValue ?? 0);
+    };
+
+    const handleCancel = () => {
+        setEditField(null);
+        setNewValue("");
+    };
+
+    const handleSave = () => {
+        onDiscountChange(user._id, editField, Number(newValue));
+        setEditField(null);
+        setNewValue("");
+    };
 
     return (
         <div className="flex flex-col gap-4 p-4 h-full overflow-y-auto">
@@ -32,10 +63,49 @@ export default function UserDetailAdmin({ user, onAccept, onDeny, onDelete, onDi
 
             <hr />
 
-            {/* Descuentos — igual que antes */}
+            {/* Descuentos */}
             <div className="space-y-2">
                 <p className="text-xs font-semibold text-gray-500 uppercase">Descuentos</p>
-                {/* acá va tu componente de descuentos existente */}
+                <div className="space-y-1.5">
+                    {DISCOUNT_FIELDS.map(({ field, label }) => (
+                        <div key={field} className="flex items-center gap-2 text-sm">
+                            <span className="font-medium">{label}:</span>
+                            {editField === field ? (
+                                <>
+                                    <input
+                                        type="number"
+                                        value={newValue}
+                                        onChange={(e) => setNewValue(e.target.value)}
+                                        className="w-16 p-1 rounded border border-gray-300 text-sm"
+                                        autoFocus
+                                    />
+                                    <button
+                                        onClick={handleSave}
+                                        className="bg-lightRed text-cWhite text-xs px-2 py-1 rounded"
+                                    >
+                                        Guardar
+                                    </button>
+                                    <button
+                                        onClick={handleCancel}
+                                        className="bg-deepGray text-cWhite text-xs px-2 py-1 rounded"
+                                    >
+                                        Cancelar
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <span className="text-gray-600">{user[field] ?? 0}%</span>
+                                    <button
+                                        onClick={() => handleEdit(field, user[field])}
+                                        className="border border-gray-300 bg-cWhite text-black px-2 py-0.5 rounded text-xs"
+                                    >
+                                        Editar
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    ))}
+                </div>
             </div>
 
             <hr />

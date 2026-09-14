@@ -10,6 +10,9 @@ export const getCart = async (req, res) => {
           });
 
         if (!cart) return res.status(404).json({ message: `Cart not found with id: ${cartId}` })
+        if (cart.userId?.toString() !== req.user.userId) {
+            return res.status(403).json({ message: "No autorizado para ver este carrito" });
+        }
 
         res.status(200).json({ message: "Success getting cart", cart });
     } catch (err) {
@@ -30,6 +33,9 @@ export const postProductInCertainCart = async (req, res) => {
 
         if (!cartFound || !prodFound) {
             return res.status(404).json({ message: "Carrito o producto no encontrado" });
+        }
+        if (cartFound.userId?.toString() !== req.user.userId) {
+            return res.status(403).json({ message: "No autorizado para modificar este carrito" });
         }
 
         const prodInCart = cartFound.products.find(prod => prod.product.toString() === prodFound._id.toString())
@@ -59,6 +65,9 @@ export const deleteProdFromCart = async (req, res) => {
         const productFound = await Product.findById(productId)
         if (!cartFound) return res.status(404).json({ message: `Cart not found with id: ${cartId}` });
         if (!productFound) return res.status(404).json({ message: `Product not found with id: ${productId}` });
+        if (cartFound.userId?.toString() !== req.user.userId) {
+            return res.status(403).json({ message: "No autorizado para modificar este carrito" });
+        }
 
         productFound.stock += quantity; // Aumenta el stock del producto eliminado
         await productFound.save(); // Guarda los cambios en el producto

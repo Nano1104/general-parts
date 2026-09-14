@@ -1,4 +1,5 @@
 import express from 'express';
+import { authenticateJWT, requireAdmin } from "../utils/jwt.js";
 import {
     getUserById, getUsers, updateUser, emptyCartFromUser, acceptUser,
     deniedUser, deleteUser, addClientId, changeUserDiscount
@@ -6,16 +7,16 @@ import {
 
 const router = express.Router();
 // Rutas con prefijos específicos primero
-router.get("/", getUsers);
-router.put("/accept/:userId", acceptUser);
-router.put("/denied/:userId", deniedUser);
-router.put("/:userId/cart/:cartId", emptyCartFromUser);
-router.put("/add-clientId/:userId", addClientId)
-router.put("/change-discount/:uid", changeUserDiscount);
+router.get("/", authenticateJWT, requireAdmin, getUsers);
+router.put("/accept/:userId", authenticateJWT, requireAdmin, acceptUser);
+router.put("/denied/:userId", authenticateJWT, requireAdmin, deniedUser);
+router.put("/:userId/cart/:cartId", authenticateJWT, emptyCartFromUser); // ownership check en el controller
+router.put("/add-clientId/:userId", authenticateJWT, requireAdmin, addClientId)
+router.put("/change-discount/:uid", authenticateJWT, requireAdmin, changeUserDiscount);
 
 // Rutas genéricas después
-router.get("/:userId", getUserById);
-router.put("/:userId", updateUser);
-router.delete("/:userId", deleteUser);
+router.get("/:userId", authenticateJWT, requireAdmin, getUserById);
+router.put("/:userId", authenticateJWT, requireAdmin, updateUser);
+router.delete("/:userId", authenticateJWT, requireAdmin, deleteUser);
 
 export default router

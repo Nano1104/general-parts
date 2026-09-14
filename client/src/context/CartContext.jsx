@@ -89,7 +89,7 @@ export const CartContextProvider = ({ children }) => {
                 confirmButtonText: "Si, eliminar!"
             }).then(async (result) => {             // Añadir async aquí
                 if (result.isConfirmed) {           // Verificar si el usuario confirmó la acción
-                    const res = await axios.delete(`${API_URL}/api/cart/${cartId}/products/${prodId}`, { data: { quantity } }, { withCredentials: true });
+                    const res = await axios.delete(`${API_URL}/api/cart/${cartId}/products/${prodId}`, { data: { quantity }, withCredentials: true });
                     console.log("🚀 ~ handleDeleteProdFromCart ~ res:", res)
                     // Verificar si la respuesta es exitosa
                     if (res.status === 200) {
@@ -188,7 +188,7 @@ export const CartContextProvider = ({ children }) => {
             try {
                 const res = await axios.get(
                     `${API_URL}/api/cart/${authUser.cart._id}`,
-                    { cancelToken: source.token }
+                    { cancelToken: source.token, withCredentials: true }
                 );
                 setCart(res.data.cart);
             } catch (err) {

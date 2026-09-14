@@ -15,7 +15,8 @@ export const getOrders = async (req, res) => {
 
 export const createNewOrder = async (req, res) => {
     try {
-        const { userId, prods, totalPrice } = req.body
+        const { prods, totalPrice } = req.body
+        const userId = req.user.userId; // el dueño de la orden es siempre el usuario autenticado
 
         const userFound = await User.findById(userId);
         if(!userFound) return res.status(404).json({ message: "User not found in db" });

@@ -4,8 +4,8 @@ import { getCart, postProductInCertainCart, deleteProdFromCart } from "../contro
 
 const router = express.Router();
 
-router.get("/:cartId", getCart)
+router.get("/:cartId", authenticateJWT, getCart)
 router.post("/:cartId/products/:productId", authenticateJWT, postProductInCertainCart)
-router.delete("/:cartId/products/:productId", deleteProdFromCart)
+router.delete("/:cartId/products/:productId", authenticateJWT, deleteProdFromCart)
 
 export default router
