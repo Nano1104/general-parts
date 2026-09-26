@@ -11,7 +11,8 @@ import mongoose from "mongoose";
 /* import "dotenv/config"; */
 import client from "./client.js";
 import { connectToDB } from "../db/dbConnection.js";
-import { ensureCollection, recreateCollection, COLLECTION_NAME } from "./collection.js";
+import { ensureCollection, recreateCollection, assertCollectionMatchesEnv, COLLECTION_NAME } from "./collection.js";
+import { NODE_ENV, TYPESENSE_HOST } from "../config/envConfig.js";
 import Product from "../models/product.model.js"; // ajusta el path
 
 const BATCH_SIZE = 500;
@@ -47,6 +48,9 @@ export function mongoToTypesense(doc) {
 // 🚀 Función principal de sincronización
 async function syncAllProducts() {
     const isReset = process.argv.includes("--reset");
+
+    assertCollectionMatchesEnv();
+    console.log(`🔎 Mongo: ${NODE_ENV} → Typesense: ${TYPESENSE_HOST || "localhost"} / colección "${COLLECTION_NAME}"${isReset ? " (RESET)" : ""}`);
 
     await connectToDB();
 

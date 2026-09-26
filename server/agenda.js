@@ -1,6 +1,9 @@
 import Agenda from 'agenda'
 import mongoose from "mongoose"
 import { NODE_ENV, DB_USER_NAME, DB_PORT, DB_HOST, DB_USER_PASSWORD } from './config/envConfig.js';
+import client from './typesense/client.js';
+import { COLLECTION_NAME } from './typesense/collection.js';
+import { mongoToTypesense } from './typesense/typesenseSync.js';
 
 const MONGODB_URL = NODE_ENV === "production"
                 ? `mongodb+srv://${DB_USER_NAME}:${DB_USER_PASSWORD}@cluster-repuestos.kloz1gg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-Repuestos`
@@ -17,14 +20,24 @@ const agenda = new Agenda({
 agenda.define('unhighlight-product', async (job) => {
     const { productId } = job.attrs.data;
     
-    await mongoose.model('Product').updateOne(
+    const product = await mongoose.model('Product').findOneAndUpdate(
       { codpro: productId },
-      { 
+      {
         $set: { destacado: false },
         $unset: { fechaFinDestacado: 1, highlightJobId: 1 }
-      }
+      },
+      { new: true, lean: true }
     );
     console.log(`Producto ${productId} desactivado automáticamente`);
+
+    // Reflejar en el buscador; si Typesense falla, Mongo ya quedó bien
+    if (product) {
+      try {
+        await client.collections(COLLECTION_NAME).documents().upsert(mongoToTypesense(product));
+      } catch (err) {
+        console.error("⚠️ Typesense upsert error (unhighlight job):", err.message);
+      }
+    }
 });
 
 // Iniciar Agenda cuando la DB esté conectada
