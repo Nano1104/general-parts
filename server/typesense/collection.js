@@ -1,7 +1,25 @@
 // typesenseSchema.js
 import client from "./client.js";
+import { NODE_ENV } from "../config/envConfig.js";
 
-export const COLLECTION_NAME = "products";
+export const PROD_COLLECTION_NAME = "products";
+export const DEV_COLLECTION_NAME = "products_dev";
+
+// Desarrollo usa su propia colección: si el .env local apunta al servidor de Typesense
+// de producción, los productos de la Mongo local no se mezclan con los del buscador real.
+export const COLLECTION_NAME = NODE_ENV === "production" ? PROD_COLLECTION_NAME : DEV_COLLECTION_NAME;
+
+// Aborta si la colección destino no corresponde a la Mongo de este entorno.
+// Llamar antes de cualquier (re)indexado masivo.
+export function assertCollectionMatchesEnv() {
+    const expected = NODE_ENV === "production" ? PROD_COLLECTION_NAME : DEV_COLLECTION_NAME;
+    if (COLLECTION_NAME !== expected) {
+        throw new Error(
+            `Colección Typesense "${COLLECTION_NAME}" no corresponde a NODE_ENV=${NODE_ENV} (esperada "${expected}"). ` +
+            `Se mezclarían productos de otra base de datos.`
+        );
+    }
+}
 
 // 📋 Schema de la colección - espeja tu modelo de MongoDB
 export const productsSchema = {

@@ -332,6 +332,55 @@ export async function deleteFromTypesense(mongoId) {
     }
 }
 
+const TYPESENSE_SYNC_BATCH = 500;
+
+// Re-indexa en Typesense todos los productos de Mongo que matchean `filter`.
+// Usar después de updateMany/bulkWrite. Nunca lanza: Mongo ya guardó.
+export async function syncFilterToTypesense(filter) {
+    let synced = 0;
+    let failed = 0;
+    let error = null;
+    try {
+        let lastId = null;
+        while (true) {
+            const query = lastId ? { $and: [filter, { _id: { $gt: lastId } }] } : filter;
+            const batch = await Product.find(query).sort({ _id: 1 }).limit(TYPESENSE_SYNC_BATCH).lean();
+            if (batch.length === 0) break;
+
+            const results = await client
+                .collections(COLLECTION_NAME)
+                .documents()
+                .import(batch.map(mongoToTypesense), { action: "upsert" });
+
+            const errors = results.filter(r => !r.success);
+            failed += errors.length;
+            synced += batch.length - errors.length;
+            if (errors.length > 0) console.error("⚠️ Typesense import errors:", errors.slice(0, 3));
+
+            lastId = batch[batch.length - 1]._id;
+        }
+    } catch (err) {
+        error = err.message;
+        console.error("⚠️ Typesense sync error:", err.message);
+    }
+    return { synced, failed, error };
+}
+
+// Borra de Typesense los documentos con esos _id de Mongo (obtenerlos ANTES del deleteMany).
+export async function deleteIdsFromTypesense(mongoIds) {
+    try {
+        for (let i = 0; i < mongoIds.length; i += TYPESENSE_SYNC_BATCH) {
+            const ids = mongoIds.slice(i, i + TYPESENSE_SYNC_BATCH).map(id => id.toString());
+            await client
+                .collections(COLLECTION_NAME)
+                .documents()
+                .delete({ filter_by: `id:[${ids.join(",")}]` });
+        }
+    } catch (err) {
+        console.error("⚠️ Typesense delete error:", err.message);
+    }
+}
+
 
 
 
@@ -750,6 +799,11 @@ export const uploadExcelProducts = async (req, res) => {
             results.unchangedCount += (batch.length - batchResult.modifiedCount - batchResult.upsertedCount);
         }
         console.timeEnd(timers.operaciones);
+
+        // 7. Reflejar los cambios en el buscador (Typesense)
+        const typesenseResult = await syncFilterToTypesense({
+            codpro: { $in: productsToUpsert.map(p => p.codpro) }
+        });
         console.timeEnd(timers.total);
 
         res.json({
@@ -761,7 +815,10 @@ export const uploadExcelProducts = async (req, res) => {
                 actualizados: results.modifiedCount,
                 sinCambios: results.unchangedCount,
                 errores: invalidProducts.length,
+                sincronizadosBuscador: typesenseResult.synced,
+                erroresBuscador: typesenseResult.failed,
             },
+            ...(typesenseResult.error && { errorBuscador: typesenseResult.error }),
             ...(invalidProducts.length > 0 && { erroresDetallados: invalidProducts.slice(0, 50) })
         });
 
@@ -937,6 +994,7 @@ export const highlightProduct = async (req, res) => {
             },
             { new: true }
         );
+        await upsertToTypesense(productUpdated);
 
         // Programar desactivación automática (solo para demostración)
         /* setTimeout(async () => {
@@ -983,6 +1041,7 @@ export const unhighlightProduct = async (req, res) => {
             },
             { new: true }
         );
+        await upsertToTypesense(productUpdated);
 
         res.status(200).json({
             success: true,
@@ -1064,6 +1123,7 @@ export const changeProductFieldVal = async (req, res) => {
         );
 
         if (!updatedProduct) return res.status(500).json({ message: "Error renaming field in DB" });
+        await upsertToTypesense(updatedProduct);
 
         res.status(200).json({ message: "Success changing product field", updatedProduct });
     } catch (err) {
@@ -1127,6 +1187,7 @@ export const updateStock = async (req, res) => {
             { stock: prodFound.stock + Number(newStock) },
             { new: true } // Esto devuelve el documento actualizado
         );
+        await upsertToTypesense(updatedProduct);
 
         res.status(200).json({ message: "Success updating stock from product", updatedProduct });
     } catch (err) {
@@ -1142,7 +1203,9 @@ export const deleteProdsWithSubrub = async (req, res) => {
             throw new Error("Subrub parameter is required");
         }
 
+        const idsToDelete = await Product.find({ desc_subrub: subrub }).distinct("_id");
         const result = await Product.deleteMany({ desc_subrub: subrub });
+        await deleteIdsFromTypesense(idsToDelete);
 
         if (result.deletedCount === 0) {
             return res.status(404).json({
@@ -1183,7 +1246,9 @@ export const deleteProdsByRubro = async (req, res) => {
         const { rubro } = req.params;
         if (!rubro) throw new Error("Field rubro is required");
 
+        const idsToDelete = await Product.find({ desc_rubro: rubro.toUpperCase() }).distinct("_id");
         const result = await Product.deleteMany({ desc_rubro: rubro.toUpperCase() });
+        await deleteIdsFromTypesense(idsToDelete);
 
         res.status(200).json({
             message: `Deleted ${result.deletedCount} products with rubro ${rubro}`,
@@ -1206,6 +1271,7 @@ export const addImageToTornillos = async (req, res) => {
             { rubro: { $gte: 101, $lte: 103 } }, // filtro por rango
             { $set: { imageUrl: "https://res.cloudinary.com/dq7dwhqhh/image/upload/f_auto,q_auto,c_scale/v1755061135/bulones_by0zgv.png" } } // nuevo valor
         );
+        await syncFilterToTypesense({ rubro: { $gte: 101, $lte: 103 } });
 
         res.status(200).json({
             message: "Imagen agregada a los productos con rubro entre 101 y 103",
@@ -1234,6 +1300,7 @@ export const changeImageurlProd = async (req, res) => {
         if (!updatedProduct) {
             return res.status(404).json({ message: "Producto no encontrado" });
         }
+        await upsertToTypesense(updatedProduct);
 
         res.status(200).json({
             message: "Imagen actualizada correctamente",
@@ -1256,6 +1323,7 @@ export const addImageUrlToSubrub = async (req, res) => {
             { desc_subrub: subrub }, // Criterio de búsqueda
             { $set: { imageUrl: url } } // Campo a actualizar
         );
+        await syncFilterToTypesense({ desc_subrub: subrub });
 
         if (result.matchedCount === 0) {
             return res.status(404).json({
