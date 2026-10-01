@@ -88,6 +88,34 @@ export const UserManage = () => {
         }
     }, []);
 
+    const handleResetPassword = useCallback(async (userId) => {
+        const { isConfirmed, value: newPassword } = await Swal.fire({
+            title: "Cambiar contraseña",
+            text: "Ingresá la nueva contraseña para el usuario",
+            input: "text",
+            inputPlaceholder: "Nueva contraseña",
+            inputAttributes: { autocomplete: "off" },
+            showCancelButton: true,
+            confirmButtonColor: "#D7263D",
+            cancelButtonColor: "#BDC3C7",
+            confirmButtonText: "Cambiar",
+            cancelButtonText: "Cancelar",
+            inputValidator: (value) =>
+                (!value || value.length < 6) && "La contraseña debe tener al menos 6 caracteres",
+        });
+        if (!isConfirmed) return;
+        try {
+            await userService.resetPassword(userId, newPassword);
+            Swal.fire({
+                title: "Contraseña actualizada",
+                text: "Pasale la nueva contraseña al usuario",
+                icon: "success", confirmButtonColor: "#D7263D"
+            });
+        } catch (err) {
+            Swal.fire({ title: "Error", text: err.response?.data?.message, icon: "error", confirmButtonColor: "#DC5F00" });
+        }
+    }, []);
+
     const handleDiscountChange = useCallback(async (userId, field, value) => {
         setUsers(prev => prev.map(u =>
             u._id === userId ? { ...u, [field]: value } : u
@@ -137,6 +165,7 @@ export const UserManage = () => {
                     onDeny={handleDeny}
                     onDelete={handleDelete}
                     onDiscountChange={handleDiscountChange}
+                    onResetPassword={handleResetPassword}
                 />
             </div>
         </div>
