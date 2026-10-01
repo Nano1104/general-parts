@@ -13,4 +13,6 @@ export const userService = {
     remove: (id) => client.delete(`/${id}`),
     changeDiscount: (id, field, value) =>
         client.put(`/change-discount/${id}`, { field, value }),
+    resetPassword: (id, newPassword) =>
+        client.put(`/reset-password/${id}`, { newPassword }),
 };

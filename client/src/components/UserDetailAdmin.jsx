@@ -6,7 +6,7 @@ const DISCOUNT_FIELDS = [
     { field: "discount_3", label: "Descuento °3" },
 ];
 
-export default function UserDetailAdmin({ user, onAccept, onDeny, onDelete, onDiscountChange }) {
+export default function UserDetailAdmin({ user, onAccept, onDeny, onDelete, onDiscountChange, onResetPassword }) {
     const [editField, setEditField] = useState(null);
     const [newValue, setNewValue] = useState("");
 
@@ -129,6 +129,13 @@ export default function UserDetailAdmin({ user, onAccept, onDeny, onDelete, onDi
                         Dar de ALTA
                     </button>
                 )}
+                <button
+                    onClick={() => onResetPassword(user._id)}
+                    className="w-full rounded-md py-1.5 text-sm font-medium border border-gray-300
+                               bg-cWhite text-black hover:opacity-90 transition-opacity"
+                >
+                    Cambiar contraseña
+                </button>
                 <button
                     onClick={() => onDelete(user._id)}
                     className="w-full rounded-md py-1.5 text-sm font-medium bg-lightRed

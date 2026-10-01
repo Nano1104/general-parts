@@ -4,6 +4,7 @@ import User from "../models/user.model.js";
 import Cart from "../models/cart.model.js"
 import Order from "../models/order.model.js";
 import { trusted } from "mongoose";
+import { createHash } from "../utils/bcrypt.js";
 
 export const getUserById = async (req, res) => {
     try {
@@ -146,6 +147,39 @@ export const addClientId = async (req, res) => {
     } catch (err) {
         res.status(500).json({
             message: "Error al agregar clientId al usuario",
+            error: err.message,
+        });
+    }
+};
+
+// PUT /api/user/reset-password/:userId
+export const resetUserPassword = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { newPassword } = req.body;
+
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ message: "userId inválido" });
+        }
+
+        if (typeof newPassword !== "string" || newPassword.length < 6) {
+            return res.status(400).json({ message: "La contraseña debe tener al menos 6 caracteres" });
+        }
+
+        const result = await User.findByIdAndUpdate(
+            userId,
+            { $set: { password: createHash(newPassword) } },
+            { new: true }
+        );
+
+        if (!result) {
+            return res.status(404).json({ message: "Usuario no encontrado" });
+        }
+
+        res.status(200).json({ message: "Contraseña actualizada con éxito" });
+    } catch (err) {
+        res.status(500).json({
+            message: "Error al cambiar la contraseña del usuario",
             error: err.message,
         });
     }

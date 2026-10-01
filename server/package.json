@@ -11,6 +11,7 @@
     "typesense-sync:reset": "cross-env NODE_ENV=development node ./typesense/typesenseSync.js --reset",
 
     "update-users": "cross-env NODE_ENV=production node ./scripts/updateUsers.js",
+    "reset-password": "cross-env NODE_ENV=production node ./scripts/resetPassword.js",
     "fix-rubro-subrub:dry": "cross-env NODE_ENV=production node ./scripts/fix-rubros.js --dry-run",
     "fix-rubro-subrub": "cross-env NODE_ENV=production node ./scripts/fix-rubros.js",
     "fix-rubro-subrub-bulk": "cross-env NODE_ENV=production node ./scripts/fix_rubro_subrub_bulk.js",
