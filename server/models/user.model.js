@@ -17,12 +17,14 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        select: false,   // nunca sale en consultas/populate salvo .select("+password") explícito (login)
-        unique: true
+        select: false    // nunca sale en consultas/populate salvo .select("+password") explícito (login)
     },
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true,      // sin duplicados (verificado con integrity-report antes de agregarlo)
+        lowercase: true,   // se guarda normalizado: "Juan@Mail.com " -> "juan@mail.com"
+        trim: true
     },
     role: {
         type: String,

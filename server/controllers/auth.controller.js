@@ -4,6 +4,7 @@ import { createHash } from "../utils/bcrypt.js";
 import { isValidPassword } from "../utils/bcrypt.js";
 import { generateTokenAndSetCookie } from "../utils/jwt.js";
 import { NODE_ENV } from "../config/envConfig.js";
+import { normalizeEmail, CASE_INSENSITIVE } from "../utils/validation.js";
 import { userCanSeePrices, stripCartPrices } from "../utils/priceVisibility.js";
 
 // Hash contra el que se compara cuando el email no existe, para que la respuesta tarde lo mismo
@@ -50,7 +51,7 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: "Formato de datos inválido" });
         }
 
-        const user = await User.findOne({ email: email }).select("+password").populate({
+        const user = await User.findOne({ email: normalizeEmail(email) }).collation(CASE_INSENSITIVE).select("+password").populate({
             path: 'cart',
             populate: {
                 path: 'products.product',
@@ -99,7 +100,7 @@ export const register = async (req, res) => {
         const userToCreate = {
             first_name,
             last_name,
-            email,
+            email: normalizeEmail(email),
             phone,
             city,
             cuit,
@@ -111,7 +112,7 @@ export const register = async (req, res) => {
             discount_3: 0
         }
 
-        const userFound = await User.findOne({ email: email });
+        const userFound = await User.findOne({ email: normalizeEmail(email) }).collation(CASE_INSENSITIVE);
         if (userFound) return res.status(409).json({ message: "user already exists" })
 
         const user = await User.create({ ...userToCreate })     //user create 
