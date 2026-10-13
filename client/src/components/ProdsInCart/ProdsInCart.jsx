@@ -17,7 +17,7 @@ export const ProdsInCart = ({ cartId, prods }) => {
 
     return (
         <div className="space-y-4 lg:space-y-0">
-            {prods.map(prod => (
+            {prods.filter(prod => prod.product).map(prod => (
                 <div key={`prod-in-cart-${prod.product._id}`} className="lg:flex lg:justify-center lg:items-center">
                     <div className="flex w-full lg:w-[90%] rounded-lg justify-between items-center 
                                   bg-lightGray p-4 lg:px-5 lg:py-3 gap-3 lg:gap-4 font-poppins lg:my-4

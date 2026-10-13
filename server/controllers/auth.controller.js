@@ -13,6 +13,8 @@ const DUMMY_HASH = createHash("dummy-password-for-timing");
 const withVisibleCartPrices = (userDoc) => {
     const user = userDoc.toObject();
     delete user.password; // login lo trae con +password para validar; no se devuelve
+    // Ítems de productos borrados (populate -> null) no se envían; getCart los limpia de la DB
+    if (user.cart?.products) user.cart.products = user.cart.products.filter(item => item.product);
     if (!userCanSeePrices(user) && user.cart) user.cart = stripCartPrices(user.cart);
     return user;
 }

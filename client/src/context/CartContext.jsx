@@ -38,13 +38,13 @@ export const CartContextProvider = ({ children }) => {
                 console.log("🚀 ~ addProductToCart ~ prev:", prev);
 
                 // Asegúrate de que prev.products existe y es un array
-                const existingItem = prev.products.find(item => item.product._id === productId);
+                const existingItem = prev.products.find(item => item.product?._id === productId);
 
                 if (existingItem) {
                     return {
                         ...prev, // Mantén todas las otras propiedades del carrito
                         products: prev.products.map(item =>
-                            item.product._id === productId
+                            item.product?._id === productId
                                 ? { ...item, quantity: item.quantity + amountToAdd }
                                 : item
                         )
@@ -96,7 +96,7 @@ export const CartContextProvider = ({ children }) => {
                         // Actualizar el estado local del carrito
                         setCart(prevCart => ({
                             ...prevCart,
-                            products: prevCart.products.filter(prod => prod.product._id !== prodId)
+                            products: prevCart.products.filter(prod => prod.product?._id !== prodId)
                         }));
 
                         Swal.fire({

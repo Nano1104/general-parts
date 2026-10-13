@@ -16,6 +16,18 @@ export const getCart = async (req, res) => {
             return res.status(403).json({ message: "No autorizado para ver este carrito" });
         }
 
+        // Ítems de productos que ya no existen (populate -> null): se quitan del carrito, si no la
+        // página del carrito se rompía y el ítem no se podía borrar. No reinicia el plazo de vencimiento.
+        const dangling = cart.products.filter(item => !item.product);
+        if (dangling.length > 0) {
+            await Cart.updateOne(
+                { _id: cart._id },
+                { $pull: { products: { _id: { $in: dangling.map(item => item._id) } } } },
+                { timestamps: false }
+            );
+            cart.products = cart.products.filter(item => item.product);
+        }
+
         res.status(200).json({ message: "Success getting cart", cart: req.canSeePrices ? cart : stripCartPrices(cart) });
     } catch (err) {
         res.status(500).json({
@@ -72,7 +84,7 @@ export const deleteProdFromCart = async (req, res) => {
         const cartFound = await Cart.findById(cartId)
         const productFound = await Product.findById(productId)
         if (!cartFound) return res.status(404).json({ message: `Cart not found with id: ${cartId}` });
-        if (!productFound) return res.status(404).json({ message: `Product not found with id: ${productId}` });
+        // Si el producto ya no existe igual se quita del carrito (antes respondía 404 y el ítem quedaba trabado)
         if (cartFound.userId?.toString() !== req.user.userId) {
             return res.status(403).json({ message: "No autorizado para modificar este carrito" });
         }
@@ -83,7 +95,7 @@ export const deleteProdFromCart = async (req, res) => {
         return res.status(200).json({
             message: "Product removed from cart",
             cart: cartFound,
-            productDeleted: req.canSeePrices ? productFound : stripPrices(productFound)
+            productDeleted: productFound && (req.canSeePrices ? productFound : stripPrices(productFound))
         });
     } catch (err) {
         return res.status(500).json({ message: "Server error", error: err.message });
