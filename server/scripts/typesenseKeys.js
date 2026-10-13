@@ -36,7 +36,9 @@ const KEYS = [
     {
         env: "TYPESENSE_WRITE_KEY y TYPESENSE_SEARCH_KEY", where: "server/.env de desarrollo",
         description: "swparts dev (products_dev)",
-        actions: ["*"], collections: [DEV_COLLECTION_NAME],
+        // Explícito, NO "*": "*" incluye administrar keys (listar/crear) aunque la key esté
+        // limitada a una colección, lo que permitiría fabricarse una key con acceso total
+        actions: ["documents:*", "collections:*"], collections: [DEV_COLLECTION_NAME],
     },
 ];
 
@@ -51,6 +53,12 @@ const allowed = async (fn) => {
 const canSearch = (c, col) => allowed(() => c.collections(col).documents().search({ q: "*", query_by: "desc_stock", per_page: 1 }));
 const canWrite = (c, col) => allowed(() => c.collections(col).documents().upsert({ id: "__key_check__", codpro: "__key_check__", desc_stock: "x", desc_marca: "x", desc_rubro: "x", desc_subrub: "x", precioimpre: 0, stock: 0 }).then(() => c.collections(col).documents("__key_check__").delete()));
 const canDeleteCollection = (c, col) => allowed(() => c.collections(col + "__no_existe__").delete());
+const canListKeys = (c) => allowed(() => c.keys().retrieve());
+// Si la creación funciona (no debería), la key de prueba se borra enseguida con la maestra
+const canCreateKeys = (c) => allowed(async () => {
+    const k = await c.keys().create({ description: "__key_check__", actions: ["documents:search"], collections: [DEV_COLLECTION_NAME] });
+    await admin.keys(k.id).delete();
+});
 
 async function verify(key, value) {
     const c = clientWith(value);
@@ -65,6 +73,8 @@ async function verify(key, value) {
         : [["escribir en products_dev", await canWrite(c, DEV_COLLECTION_NAME), true],
            ["buscar en products (producción)", await canSearch(c, PROD_COLLECTION_NAME), false],
            ["escribir en products (producción)", await canWrite(c, PROD_COLLECTION_NAME), false]];
+    // Ninguna key de la app debe poder administrar keys
+    checks.push(["listar keys", await canListKeys(c), false], ["crear keys", await canCreateKeys(c), false]);
     let ok = true;
     for (const [label, got, expected] of checks) {
         ok &&= got === expected;
@@ -83,7 +93,11 @@ async function run() {
 
     for (const key of KEYS) {
         const found = existing.filter(k => k.description === key.description);
-        if (found.length && !RECREATE) {
+        const sameScope = (k) => [...k.actions].sort().join() === [...key.actions].sort().join()
+            && [...k.collections].sort().join() === [...key.collections].sort().join();
+        if (found.length && !RECREATE && !found.every(sameScope)) {
+            console.log(`• "${key.description}" existe con permisos distintos a los esperados: se vuelve a crear (la anterior deja de funcionar).`);
+        } else if (found.length && !RECREATE) {
             console.log(`• "${key.description}" ya existe (${found[0].value_prefix}…): no se puede volver a mostrar su valor.`);
             console.log(`   Si la perdiste: npm run typesense-keys -- --recreate\n`);
             continue;
