@@ -657,6 +657,16 @@ export const getHighlightedProducts = async (req, res) => {
     }
 }
 
+const VALID_BRANDS = Product.schema.path("desc_marca").enumValues;
+
+// Precio de una celda de Excel: número si la celda es numérica; si es texto, solo se acepta
+// "1500" o "1500.50" (un texto como "1.500,50" es ambiguo y se rechaza para no guardar un precio mal)
+function parseExcelPrice(raw, text) {
+    if (typeof raw === "number") return raw;
+    const s = String(text ?? raw ?? "").trim();
+    return /^\d+(\.\d+)?$/.test(s) ? Number(s) : NaN;
+}
+
 export const uploadExcelProducts = async (req, res) => {
     const timers = {
         total: 'TiempoTotalCarga',
@@ -675,8 +685,9 @@ export const uploadExcelProducts = async (req, res) => {
         }
 
         // 2. Obtener datos del formulario
-        const rubroPrincipal = req.body.rubro?.trim();
-        const subrubroIntermedio = req.body.subrubroIntermedio?.trim() || null; // 👈 NUEVO
+        // Siempre en mayúsculas: los filtros del catálogo comparan desc_rubro en mayúsculas
+        const rubroPrincipal = req.body.rubro?.trim().toUpperCase();
+        const subrubroIntermedio = req.body.subrubroIntermedio?.trim().toUpperCase() || null;
 
         if (!rubroPrincipal) {
             return res.status(400).json({ message: "El rubro principal es requerido" });
@@ -690,6 +701,9 @@ export const uploadExcelProducts = async (req, res) => {
             raw: false,
             dateNF: 'yyyy-mm-dd'
         });
+        // Mismas filas con el valor crudo de cada celda: el precio se toma de acá cuando la celda es
+        // numérica (con raw:false llega como texto formateado, ej. "1,500.00", y antes la fila se perdía al castear)
+        const rawItems = xlsx.utils.sheet_to_json(worksheet, { defval: undefined, raw: true });
         console.timeEnd(timers.lectura);
 
         // 3. Configuración
@@ -712,6 +726,7 @@ export const uploadExcelProducts = async (req, res) => {
         const BATCH_SIZE = 1000;
         let productsToUpsert = [];
         let invalidProducts = [];
+        const movedProducts = [];
 
         console.time(timers.procesamiento);
         for (let i = 0; i < excelItems.length; i++) {
@@ -744,9 +759,9 @@ export const uploadExcelProducts = async (req, res) => {
                 // Resto de campos
                 rubro: item.subrub !== undefined ? parseInt(item.subrub) : undefined,
                 proveed: item.proveed !== undefined ? parseInt(item.proveed) : undefined,
-                desc_marca: item.desc_marca?.toString().trim(),
+                desc_marca: item.desc_marca?.toString().trim().toUpperCase(),
                 porcen1: item.porcen1 !== undefined ? parseInt(item.porcen1) : undefined,
-                precioimpre: item.precioimpre !== undefined ? item.precioimpre : undefined,
+                precioimpre: item.precioimpre !== undefined ? parseExcelPrice(rawItems[i]?.precioimpre, item.precioimpre) : undefined,
                 stock: 10,
                 imageUrl: existingProduct?.imageUrl || null,
                 lastUpdated: new Date()
@@ -764,6 +779,29 @@ export const uploadExcelProducts = async (req, res) => {
                 );
                 invalidProducts.push(`Fila ${rowNumber}: Faltan campos (${missingFields.join(', ')})`);
                 continue;
+            }
+
+            // Validaciones de valores: antes estas filas se descartaban en silencio (bulkWrite no valida
+            // el enum y omite las que fallan al castear) o se guardaban con datos inválidos
+            // campo interno -> columna del Excel (rubro y subrub vienen intercambiados en el mapeo)
+            const EXCEL_COLUMN = { rubro: 'subrub', subrub: 'rubro', proveed: 'proveed', porcen1: 'porcen1' };
+            const notNumeric = Object.keys(EXCEL_COLUMN).filter(f => Number.isNaN(mappedItem[f]));
+            if (notNumeric.length) {
+                invalidProducts.push(`Fila ${rowNumber} (${codpro}): valores no numéricos en la columna ${notNumeric.map(f => EXCEL_COLUMN[f]).join(', ')}`);
+                continue;
+            }
+            if (!(mappedItem.precioimpre > 0)) {
+                invalidProducts.push(`Fila ${rowNumber} (${codpro}): precio inválido (${JSON.stringify(item.precioimpre)})`);
+                continue;
+            }
+            if (!VALID_BRANDS.includes(mappedItem.desc_marca)) {
+                invalidProducts.push(`Fila ${rowNumber} (${codpro}): marca "${mappedItem.desc_marca}" no está en la lista permitida`);
+                continue;
+            }
+
+            // El upsert es por codpro: si el producto existía en otro rubro, esta carga lo mueve
+            if (existingProduct && existingProduct.desc_rubro !== rubroPrincipal) {
+                movedProducts.push(`${codpro}: ${existingProduct.desc_rubro} → ${rubroPrincipal}`);
             }
 
             productsToUpsert.push(mappedItem);
@@ -818,11 +856,13 @@ export const uploadExcelProducts = async (req, res) => {
                 actualizados: results.modifiedCount,
                 sinCambios: results.unchangedCount,
                 errores: invalidProducts.length,
+                movidosDeRubro: movedProducts.length,
                 sincronizadosBuscador: typesenseResult.synced,
                 erroresBuscador: typesenseResult.failed,
             },
             ...(typesenseResult.error && { errorBuscador: typesenseResult.error }),
-            ...(invalidProducts.length > 0 && { erroresDetallados: invalidProducts.slice(0, 50) })
+            ...(invalidProducts.length > 0 && { erroresDetallados: invalidProducts.slice(0, 50) }),
+            ...(movedProducts.length > 0 && { movidosDetallados: movedProducts.slice(0, 50) })
         });
 
     } catch (err) {
