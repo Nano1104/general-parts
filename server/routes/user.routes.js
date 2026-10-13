@@ -1,4 +1,5 @@
 import express from 'express';
+import { validateObjectIdParam } from "../utils/validation.js";
 import { authenticateJWT, requireAdmin } from "../utils/jwt.js";
 import {
     getUserById, getUsers, updateUser, emptyCartFromUser, acceptUser,
@@ -6,6 +7,9 @@ import {
 } from '../controllers/user.controller.js';
 
 const router = express.Router();
+router.param("userId", validateObjectIdParam);
+router.param("cartId", validateObjectIdParam);
+router.param("uid", validateObjectIdParam);
 // Rutas con prefijos específicos primero
 router.get("/", authenticateJWT, requireAdmin, getUsers);
 router.put("/accept/:userId", authenticateJWT, requireAdmin, acceptUser);

@@ -5,6 +5,9 @@ import _ from "lodash";
 import Product from "../models/product.model.js";
 import agendaModule from '../agenda.js'
 import { stripPrices } from "../utils/priceVisibility.js";
+import { isObjectIdString } from "../utils/validation.js";
+
+const MAX_PAGE_SIZE = 50;
 
 //typesense
 import client from "../typesense/client.js";
@@ -178,27 +181,34 @@ async function typesenseMixedSearch(textQuery, codeQuery, filterBy, limit, page)
  */
 // ─── Typesense: construir filtros ────────────────────────────────────────────
 
+// Los valores van entre backticks en filter_by: un backtick en el input cerraría el valor y
+// permitiría inyectar condiciones (ej. sobre precioimpre), así que se eliminan.
+const tsFilterValue = (v) => v.toString().replace(/`/g, "").trim();
+
 function buildTypesenseFilter(params = {}) {
     const parts = [];
 
     if (params.category)
-        parts.push(`desc_rubro:=\`${params.category.toString().toUpperCase()}\``);
+        parts.push(`desc_rubro:=\`${tsFilterValue(params.category).toUpperCase()}\``);
 
     if (params.brand)
-        parts.push(`desc_marca:=\`${params.brand.toString().toUpperCase()}\``);
+        parts.push(`desc_marca:=\`${tsFilterValue(params.brand).toUpperCase()}\``);
 
     if (params.subcategory) {
         // Typesense: OR entre ambos campos, sin necesidad de cache
-        const sub = params.subcategory.toString().trim();
+        const sub = tsFilterValue(params.subcategory);
         parts.push(`(desc_subrub:=\`${sub}\` || desc_subrubro_intermedio:=\`${sub}\`)`);
     }
 
-    if (!isNaN(params.minPrice) && !isNaN(params.maxPrice)) {
-        parts.push(`precioimpre:[${params.minPrice}..${params.maxPrice}]`);
-    } else if (!isNaN(params.minPrice)) {
-        parts.push(`precioimpre:>=${params.minPrice}`);
-    } else if (!isNaN(params.maxPrice)) {
-        parts.push(`precioimpre:<=${params.maxPrice}`);
+    // Se interpolan números ya parseados, nunca el string original
+    const minPrice = parseFloat(params.minPrice);
+    const maxPrice = parseFloat(params.maxPrice);
+    if (Number.isFinite(minPrice) && Number.isFinite(maxPrice)) {
+        parts.push(`precioimpre:[${minPrice}..${maxPrice}]`);
+    } else if (Number.isFinite(minPrice)) {
+        parts.push(`precioimpre:>=${minPrice}`);
+    } else if (Number.isFinite(maxPrice)) {
+        parts.push(`precioimpre:<=${maxPrice}`);
     }
 
     return parts.length ? parts.join(" && ") : undefined;
@@ -260,7 +270,14 @@ async function typesenseSearch(searchTerm, params, limit, page = 1) {
 
 export const getProducts = async (req, res) => {
     try {
-        const { search, limit = 10, lastId, page = 1, ...filters } = req.query;
+        const { search, limit: rawLimit, lastId, page: rawPage, ...filters } = req.query;
+
+        // Tope de página: sin él, limit=100000 devolvía todo el catálogo en una request
+        const limit = Math.min(Math.max(parseInt(rawLimit) || 10, 1), MAX_PAGE_SIZE);
+        const page = Math.max(parseInt(rawPage) || 1, 1);
+        if (lastId !== undefined && !isObjectIdString(lastId)) {
+            return res.status(400).json({ success: false, message: "lastId inválido" });
+        }
 
         // Sin acceso a precios, filtrar por rango permitiría deducirlos
         if (!req.canSeePrices) {
@@ -274,13 +291,14 @@ export const getProducts = async (req, res) => {
 
         if (search) {
             // ── BÚSQUEDA → Typesense ─────────────────────────────────────
-            const decodedSearch = decodeURIComponent(search).trim();
+            // Express ya decodifica la query: un segundo decodeURIComponent tiraba 500 con "%"
+            const decodedSearch = String(search).trim();
 
             ({ products, total, hasMore } = await typesenseSearch(
                 decodedSearch,
                 filters,
-                parseInt(limit),
-                parseInt(page),
+                limit,
+                page,
             ));
 
         } else {
@@ -292,12 +310,12 @@ export const getProducts = async (req, res) => {
             let query = Product
                 .find(baseFilter)
                 .sort({ _id: 1 })
-                .limit(parseInt(limit) + 1);
+                .limit(limit + 1);
 
             if (lastId) query = query.where("_id").gt(lastId);
 
             const raw = await query.lean();
-            hasMore = raw.length > parseInt(limit);
+            hasMore = raw.length > limit;
             products = hasMore ? raw.slice(0, -1) : raw;
             total = await Product.countDocuments(baseFilter);
         }

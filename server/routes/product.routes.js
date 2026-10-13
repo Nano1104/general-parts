@@ -1,4 +1,5 @@
 import express from "express";
+import { validateObjectIdParam } from "../utils/validation.js";
 import { authenticateJWT, requireAdmin, resolvePriceAccess } from "../utils/jwt.js"
 import {
     getProducts, getProductById, getAllProducts, getCategoriesAndSubcategories, getHighlightedProducts, postProducts, uploadExcelProducts, highlightProduct, unhighlightProduct, addFieldToProducts,
@@ -14,6 +15,7 @@ const upload = multer({
 })
 
 const router = express.Router();
+router.param("prodId", validateObjectIdParam);
 
 // ========================================
 // REGLA DE ORO: Rutas estáticas PRIMERO, dinámicas DESPUÉS
