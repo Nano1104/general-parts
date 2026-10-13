@@ -4,7 +4,9 @@ import cors from "cors";
 import { NODE_ENV, PORT, CLIENT_URL } from "./config/envConfig.js";
 
 //connections 
+import mongoose from "mongoose";
 import { ensureCollection } from "./typesense/collection.js";
+import { searchClient } from "./typesense/client.js";
 import { connectToDB } from "./db/dbConnection.js";
 import { startMaintenanceJobs } from "./jobs/maintenance.js";
 
@@ -56,6 +58,17 @@ app.use(cors({
 
 
 //routes
+// GET informa el estado de las dependencias (el keep-alive de GitHub hace GET cada 5 min).
+// Con Typesense caído responde 200 igual: el sitio funciona con la búsqueda de respaldo.
+app.get('/api/health', async (req, res) => {
+  const mongo = mongoose.connection.readyState === 1;
+  let typesense = false;
+  try {
+    await searchClient.health.retrieve();
+    typesense = true;
+  } catch (_) { /* typesense: false */ }
+  res.status(mongo ? 200 : 503).json({ mongo, typesense });
+});
 app.head('/api/health', (req, res) => {
   res.status(200).end();
 });
@@ -71,22 +84,18 @@ const startServer = async () => {
   try {
     await connectToDB();
 
-    // ✅ Typesense aislado: si falla, el servidor sigue funcionando
-    try {
-      await ensureCollection();
-      console.log("✅ Typesense listo");
-    } catch (tsErr) {
-      console.error("⚠️  Typesense no disponible, búsquedas usarán MongoDB:", tsErr.message);
-      // El servidor sigue levantando normalmente
-    }
-
-    // Después de Typesense: las tareas sincronizan el buscador al aplicar cambios
-    startMaintenanceJobs();
-
     app.listen(PORT, () => {
       console.log("🚀 ~ allowedOrigins:", allowedOrigins);
       console.log(`App listening on port ${PORT} ${NODE_ENV}`);
     });
+
+    // Typesense en segundo plano: si está caído o colgado el servidor igual atiende
+    // (antes esperaba hasta 20 s antes de escuchar) y las búsquedas usan el respaldo en Mongo
+    ensureCollection()
+      .then(() => console.log("✅ Typesense listo"))
+      .catch(tsErr => console.error("⚠️  Typesense no disponible, búsquedas usarán MongoDB:", tsErr.message));
+
+    startMaintenanceJobs();
 
   } catch (err) {
     console.error("❌ Error al iniciar el servidor:", err);

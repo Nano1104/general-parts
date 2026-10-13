@@ -7,7 +7,7 @@ import { isObjectIdString } from "../utils/validation.js";
 const MAX_PAGE_SIZE = 50;
 
 //typesense
-import client from "../typesense/client.js";
+import client, { searchClient } from "../typesense/client.js";
 import { mongoToTypesense } from "../typesense/typesenseSync.js";
 import { COLLECTION_NAME } from "../typesense/collection.js";
 
@@ -85,7 +85,7 @@ function parseSearchTokens(searchTerm) {
 // ─── Búsqueda simple (texto puro o código puro) ──────────────────────────────
 
 async function typesenseSingleSearch({ q, queryBy, weights, infix, numTypos, prefix, filterBy, limit, page }) {
-    const result = await client
+    const result = await searchClient
         .collections(COLLECTION_NAME)
         .documents()
         .search({
@@ -110,13 +110,17 @@ async function typesenseSingleSearch({ q, queryBy, weights, infix, numTypos, pre
 // ─── Búsqueda mixta: texto + código ─────────────────────────────────────────
 // Dos búsquedas en paralelo → los que matchean ambos van primero
 
+// Máximo por request que acepta Typesense
+const TYPESENSE_MAX_PER_PAGE = 250;
+
 async function typesenseMixedSearch(textQuery, codeQuery, filterBy, limit, page) {
-    // fetchMore para tener suficientes candidatos al mergear
-    const fetchLimit = parseInt(limit) * 4;
+    // Candidatos de cada búsqueda para mergear: crece con la página pedida. Antes era fijo
+    // (limit*4 = 40) y a partir de ~80 resultados el resto nunca aparecía en el scroll.
+    const fetchLimit = Math.min(TYPESENSE_MAX_PER_PAGE, Math.max(limit * 4, page * limit * 2));
 
     const [textResult, codeResult] = await Promise.all([
         // Búsqueda 1: texto en campos descriptivos
-        client.collections(COLLECTION_NAME).documents().search({
+        searchClient.collections(COLLECTION_NAME).documents().search({
             q: textQuery,
             query_by: "desc_stock,desc_marca,desc_subrub,desc_subrubro_intermedio,desc_rubro",
             query_by_weights: "5,3,3,3,2",
@@ -129,7 +133,7 @@ async function typesenseMixedSearch(textQuery, codeQuery, filterBy, limit, page)
         }),
 
         // Búsqueda 2: código en codpro y codpro_suffix (infix)
-        client.collections(COLLECTION_NAME).documents().search({
+        searchClient.collections(COLLECTION_NAME).documents().search({
             q: codeQuery,
             query_by: "codpro,codpro_suffix",
             infix: "always,always",
@@ -160,10 +164,15 @@ async function typesenseMixedSearch(textQuery, codeQuery, filterBy, limit, page)
     const start = (pageInt - 1) * limitInt;
     const paginated = merged.slice(start, start + limitInt);
 
+    // Si alguna búsqueda tiene más resultados que los candidatos traídos, la página siguiente
+    // pide un pool más grande (hasta el máximo de Typesense)
+    const truncated = fetchLimit < TYPESENSE_MAX_PER_PAGE && (textResult.found > fetchLimit || codeResult.found > fetchLimit);
+
     return {
         products: paginated.map(h => ({ ...h.document, _id: h.document.id })),
-        total: merged.length,
-        hasMore: start + limitInt < merged.length,
+        // Unión de ambas búsquedas sin contar dos veces los que matchean las dos
+        total: Math.max(merged.length, textResult.found + codeResult.found - bothMatch.length),
+        hasMore: start + limitInt < merged.length || truncated,
     };
 }
 
@@ -261,6 +270,27 @@ async function typesenseSearch(searchTerm, params, limit, page = 1) {
     };
 }
 
+// ─── Respaldo: búsqueda en Mongo si Typesense falla ─────────────────────────
+// Más simple que Typesense (sin tolerancia a errores de tipeo ni ranking por relevancia),
+// pero mantiene el buscador funcionando. Cada palabra debe aparecer (como substring, sin
+// distinguir mayúsculas) en el código o en alguna descripción. Con ~2000 productos el
+// recorrido completo de la colección es rápido.
+const FALLBACK_FIELDS = ["codpro", "desc_stock", "desc_marca", "desc_rubro", "desc_subrub", "desc_subrubro_intermedio"];
+
+async function mongoFallbackSearch(searchTerm, params, limit, page) {
+    const tokens = searchTerm.split(/\s+/).filter(Boolean).slice(0, 10);
+    const tokenFilters = tokens.map(t => ({
+        $or: FALLBACK_FIELDS.map(f => ({ [f]: { $regex: escapeRegex(t), $options: "i" } })),
+    }));
+    const filter = { $and: [await buildBaseFilter(params), ...tokenFilters] };
+
+    const [raw, total] = await Promise.all([
+        Product.find(filter).sort({ destacado: -1, codpro: 1 }).skip((page - 1) * limit).limit(limit + 1).lean(),
+        Product.countDocuments(filter),
+    ]);
+    return { products: raw.slice(0, limit), total, hasMore: raw.length > limit };
+}
+
 // ─── Controller principal ────────────────────────────────────────────────────
 
 export const getProducts = async (req, res) => {
@@ -283,18 +313,21 @@ export const getProducts = async (req, res) => {
         let products = [];
         let hasMore = false;
         let total = 0;
+        let degraded = false; // true si la búsqueda vino del respaldo en Mongo
 
         if (search) {
             // ── BÚSQUEDA → Typesense ─────────────────────────────────────
             // Express ya decodifica la query: un segundo decodeURIComponent tiraba 500 con "%"
             const decodedSearch = String(search).trim();
 
-            ({ products, total, hasMore } = await typesenseSearch(
-                decodedSearch,
-                filters,
-                limit,
-                page,
-            ));
+            try {
+                ({ products, total, hasMore } = await typesenseSearch(decodedSearch, filters, limit, page));
+            } catch (tsErr) {
+                // Typesense caído o lento (searchClient corta a los 2 s): se busca en Mongo
+                console.error("⚠️ Typesense no disponible, búsqueda de respaldo en Mongo:", tsErr.message);
+                ({ products, total, hasMore } = await mongoFallbackSearch(decodedSearch, filters, limit, page));
+                degraded = true;
+            }
 
         } else {
             // ── BROWSE/FILTROS → MongoDB cursor pagination ────────────────
@@ -317,7 +350,7 @@ export const getProducts = async (req, res) => {
 
         if (!req.canSeePrices) products = products.map(stripPrices);
 
-        return res.json({ success: true, products, hasMore, total });
+        return res.json({ success: true, products, hasMore, total, ...(degraded && { degraded }) });
 
     } catch (err) {
         console.error("Error en getProducts:", err);
