@@ -68,18 +68,24 @@ export function useProducts({ searchValue, category, subcategory, brand, price }
 
             const newProducts = data.products || [];
 
+            // Cursor de la navegación (Mongo): el último de la página recibida
+            if (newProducts.length > 0) {
+                lastIdRef.current = newProducts[newProducts.length - 1]._id;
+            }
+
             setProducts(prev => {
-                const updated = isReset ? newProducts : [...prev, ...newProducts];
-                if (updated.length > 0) {
-                    lastIdRef.current = updated[updated.length - 1]._id;
-                }
-                return updated;
+                if (isReset) return newProducts;
+                // La búsqueda mixta puede reordenar levemente entre páginas: no repetir productos
+                const seen = new Set(prev.map(p => p._id));
+                return [...prev, ...newProducts.filter(p => !seen.has(p._id))];
             });
 
             setHasMore(data.hasMore || false);
 
-            if (debouncedSearch && !isReset) {
-                pageRef.current += 1;
+            // Próxima página a pedir. Antes no se incrementaba tras la primera carga,
+            // así que el primer "cargar más" volvía a traer la página 1 (resultados repetidos).
+            if (debouncedSearch) {
+                pageRef.current = isReset ? 2 : pageRef.current + 1;
             }
 
         } catch (err) {

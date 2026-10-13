@@ -4,17 +4,20 @@ import { IoTrashOutline } from "react-icons/io5";
 
 import { formatCurrency } from "../../utils/formatCurrency";
 import { getImage } from "../../utils/getImage.js";
+import { netFactor } from "../../utils/discounts.js";
 
 
 // ProdsInCart Component - Totalmente Responsivo
 export const ProdsInCart = ({ cartId, prods }) => {
     const { handleDeleteProdFromCart } = useCartContext();
-    const { accepted, isAdmin } = useAuthContext();
+    const { authUser, accepted, isAdmin } = useAuthContext();
     const canSeePrices = accepted || isAdmin;
+    // Precio por línea con los descuentos del cliente, igual que el total de la reserva
+    const factor = netFactor(authUser);
 
     return (
         <div className="space-y-4 lg:space-y-0">
-            {prods.map(prod => (
+            {prods.filter(prod => prod.product).map(prod => (
                 <div key={`prod-in-cart-${prod.product._id}`} className="lg:flex lg:justify-center lg:items-center">
                     <div className="flex w-full lg:w-[90%] rounded-lg justify-between items-center 
                                   bg-lightGray p-4 lg:px-5 lg:py-3 gap-3 lg:gap-4 font-poppins lg:my-4
@@ -44,7 +47,7 @@ export const ProdsInCart = ({ cartId, prods }) => {
                                 </span>
                                 {canSeePrices && (
                                     <span className="text-sm lg:text-base font-medium text-lightRed lg:text-black">
-                                        {formatCurrency(prod.quantity * prod.product.precioimpre)}
+                                        {formatCurrency(prod.quantity * prod.product.precioimpre * factor)}
                                     </span>
                                 )}
                             </div>

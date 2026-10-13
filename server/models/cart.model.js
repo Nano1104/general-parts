@@ -16,7 +16,7 @@ const cartSchema = new mongoose.Schema({
             }
         ]
     }
-})
+}, { timestamps: true }) // updatedAt marca la última modificación: el carrito se vacía tras 1 día sin cambios (jobs/maintenance.js)
 
 const Cart = mongoose.model("Cart", cartSchema);
 export default Cart;

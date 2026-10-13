@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 //context
 import { useCartContext } from "../../context/CartContext.jsx"
@@ -8,6 +9,7 @@ import { EmptyCart } from "../../components/EmptyCart/EmptyCart.jsx"
 
 import useCartTotal from "../../hooks/useCartTotal.js"
 import { formatCurrency } from "../../utils/formatCurrency.js"
+import { netFactor } from "../../utils/discounts.js"
 
 
 // Cart Component - Totalmente Responsivo
@@ -17,7 +19,22 @@ export const Cart = () => {
     const { cart } = useCartContext()
     const { finishPurchase } = useCartContext()
 
-    const totalPrice = useCartTotal(cart.products);
+    // Subtotal a precio de lista; el total aplica los descuentos del cliente (mismo cálculo que el servidor)
+    const subtotal = useCartTotal(cart.products);
+    const factor = netFactor(authUser);
+    const totalPrice = subtotal * factor;
+    const [submitting, setSubmitting] = useState(false);
+
+    const handleConfirm = async () => {
+        setSubmitting(true);
+        try {
+            await finishPurchase(cart);
+        } catch (_) {
+            // finishPurchase ya muestra el error al usuario
+        } finally {
+            setSubmitting(false);
+        }
+    };
     const navigate = useNavigate();
     const handleNavigate = () => navigate(-1);
 
@@ -63,15 +80,22 @@ export const Cart = () => {
                     <div className="px-4 lg:px-14 py-6 lg:mt-16 border-t lg:border-0 lg:bg-transparent">
                         <div className="lg:h-28 lg:text-cBlack lg:relative">
                             {canSeePrices && (
-                                <h3 className="text-lg sm:text-xl lg:text-[1.7rem] font-montserrat font-medium text-gray-800 lg:text-black">
-                                    Total de la reserva:
-                                    <span className="ml-2 text-lightRed font-bold">
-                                        {formatCurrency(totalPrice)}
-                                    </span>
-                                </h3>
+                                <>
+                                    {factor < 1 && (
+                                        <p className="text-sm text-gray-500 font-montserrat">
+                                            Subtotal a precio de lista: {formatCurrency(subtotal)}
+                                        </p>
+                                    )}
+                                    <h3 className="text-lg sm:text-xl lg:text-[1.7rem] font-montserrat font-medium text-gray-800 lg:text-black">
+                                        Total de la reserva{factor < 1 ? " con tus descuentos" : ""}:
+                                        <span className="ml-2 text-lightRed font-bold">
+                                            {formatCurrency(totalPrice)}
+                                        </span>
+                                    </h3>
+                                </>
                             )}
                             <p className="text-sm lg:text-base italic text-gray-600 lg:text-black mt-2 lg:absolute lg:top-[50px]">
-                                El carrito se vaciará en el plazo de 1 día en caso de no haber sido confirmada la reserva.
+                                El carrito se vaciará si pasa 1 día desde su último cambio sin confirmar la reserva.
                             </p>
                         </div>
                     </div>
@@ -105,10 +129,11 @@ export const Cart = () => {
                         <button
                             className="w-full text-sm bg-lightRed hover:bg-deepRed text-white py-4 lg:py-5 px-4 
                                      font-medium transition-colors duration-200 rounded-lg lg:rounded-none
-                                     focus:outline-none focus:ring-2 focus:ring-orange-500"
-                            onClick={() => finishPurchase(authUser._id, cart, totalPrice)}
+                                     focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:opacity-60 disabled:cursor-wait"
+                            onClick={handleConfirm}
+                            disabled={submitting}
                         >
-                            CONFIRMAR RESERVA
+                            {submitting ? "CONFIRMANDO..." : "CONFIRMAR RESERVA"}
                         </button>
                     </div>
                 </div>

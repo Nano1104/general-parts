@@ -1,6 +1,4 @@
 import mongoose from "mongoose";
-import Order from "./order.model.js";
-import Cart from "./cart.model.js";
 
 const userSchema = new mongoose.Schema({
     first_name: {
@@ -19,11 +17,14 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        unique: true
+        select: false    // nunca sale en consultas/populate salvo .select("+password") explícito (login)
     },
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true,      // sin duplicados (verificado con integrity-report antes de agregarlo)
+        lowercase: true,   // se guarda normalizado: "Juan@Mail.com " -> "juan@mail.com"
+        trim: true
     },
     role: {
         type: String,
@@ -65,21 +66,8 @@ const userSchema = new mongoose.Schema({
     }
 })
 
-// Middleware para eliminar en cascada - en caso de que se elimine un usuario, se eliminarán sus órdenes asociadas y su carrito
-// 🟢 Caso 1: cuando borrás con `user.remove()`
-userSchema.pre("remove", async function (next) {
-    await Cart.deleteOne({ user: this._id });
-    await Order.deleteMany({ user: this._id });
-    next();
-});
-
-// 🟢 Caso 2: cuando borrás con `User.findByIdAndDelete()` o `User.deleteOne()`
-userSchema.pre("findOneAndDelete", async function (next) {
-    const userId = this.getQuery()["_id"];
-    await Cart.deleteOne({ user: userId });
-    await Order.deleteMany({ user: userId });
-    next();
-});
+// Borrar un usuario (deleteUser en user.controller) borra su carrito pero CONSERVA sus reservas:
+// cada reserva guarda una copia de los datos del cliente para que siga siendo identificable.
 
 
 const User = mongoose.model("User", userSchema);

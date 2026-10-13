@@ -4,11 +4,18 @@ import { createHash } from "../utils/bcrypt.js";
 import { isValidPassword } from "../utils/bcrypt.js";
 import { generateTokenAndSetCookie } from "../utils/jwt.js";
 import { NODE_ENV } from "../config/envConfig.js";
+import { normalizeEmail, CASE_INSENSITIVE } from "../utils/validation.js";
 import { userCanSeePrices, stripCartPrices } from "../utils/priceVisibility.js";
+
+// Hash contra el que se compara cuando el email no existe, para que la respuesta tarde lo mismo
+const DUMMY_HASH = createHash("dummy-password-for-timing");
 
 // El carrito viene populado con productos: sin alta, no se envían sus precios
 const withVisibleCartPrices = (userDoc) => {
     const user = userDoc.toObject();
+    delete user.password; // login lo trae con +password para validar; no se devuelve
+    // Ítems de productos borrados (populate -> null) no se envían; getCart los limpia de la DB
+    if (user.cart?.products) user.cart.products = user.cart.products.filter(item => item.product);
     if (!userCanSeePrices(user) && user.cart) user.cart = stripCartPrices(user.cart);
     return user;
 }
@@ -18,7 +25,6 @@ export const getAuthUser = async (req, res) => {
         if (!req.user) return res.status(404).json({ message: "No authenticated user found" });
 
         const user = await User.findById(req.user.userId)
-            .select("-password")   // ← excluye el campo password
             .populate({
                 path: 'cart',
                 populate: {
@@ -40,8 +46,12 @@ export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
         if (!email || !password) return res.status(400).json({ message: "Some fields may be empty" });
+        // Solo strings: un objeto ({ $regex: ... }) en email permitía usar el login como oráculo de emails
+        if (typeof email !== "string" || typeof password !== "string") {
+            return res.status(400).json({ message: "Formato de datos inválido" });
+        }
 
-        const user = await User.findOne({ email: email }).populate({
+        const user = await User.findOne({ email: normalizeEmail(email) }).collation(CASE_INSENSITIVE).select("+password").populate({
             path: 'cart',
             populate: {
                 path: 'products.product',
@@ -49,9 +59,11 @@ export const login = async (req, res) => {
             }
         }).exec();
 
-        if (!user) return res.status(404).json({ message: "User does not exist" })   //si no se encuentra el user
-
-        if (!isValidPassword(password, user)) return res.status(401).json({ message: "password incorrect" })        //o si la contraseña es incorrecta 
+        // Mismo mensaje (y mismo costo de bcrypt) en ambos casos: no revelar qué emails están registrados
+        const passwordOk = await isValidPassword(password, user ?? { password: await DUMMY_HASH });
+        if (!user || !passwordOk) {
+            return res.status(401).json({ message: "Invalid credentials" });
+        }
 
         generateTokenAndSetCookie(user._id, res)
 
@@ -79,25 +91,28 @@ export const register = async (req, res) => {
             return res.status(400).json({ message: "Formato de datos inválido" });
         }
 
+        // Mismo mínimo que el formulario; 72 es el máximo que bcrypt realmente usa
+        if (password.length < 8 || password.length > 72) {
+            return res.status(400).json({ message: "La contraseña debe tener entre 8 y 72 caracteres" });
+        }
+
         // Whitelist explícita: role, accepted, descuentos, client_id, cart, etc. nunca vienen del cliente
         const userToCreate = {
             first_name,
             last_name,
-            email,
+            email: normalizeEmail(email),
             phone,
             city,
             cuit,
             ...(location && { location }),
-            password: createHash(password),
+            password: await createHash(password),
             role: "user",
             discount_1: 0,
             discount_2: 0,
             discount_3: 0
         }
 
-        if (email == "swrepuestos@yahoo.com.ar") userToCreate.role = "admin"
-
-        const userFound = await User.findOne({ email: email });
+        const userFound = await User.findOne({ email: normalizeEmail(email) }).collation(CASE_INSENSITIVE);
         if (userFound) return res.status(409).json({ message: "user already exists" })
 
         const user = await User.create({ ...userToCreate })     //user create 

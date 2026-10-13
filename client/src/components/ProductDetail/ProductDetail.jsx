@@ -35,6 +35,7 @@ import { ItemCount } from "../ItemCount/ItemCount.jsx";
 
 // Utils
 import { formatCurrency } from "../../utils/formatCurrency.js";
+import { userDiscounts, netFactor } from "../../utils/discounts.js";
 import { getImage } from "../../utils/getImage.js";
 import { API_URL } from "../../utils/api_url.js";
 
@@ -95,10 +96,9 @@ export const ProductDetail = ({ prod }) => {
 
     // Sin cambios en lógica de pricing
     const formatedPrice = formatCurrency(precioimpre);
-    const d1 = authUser?.discount_1 || 0;
-    const d2 = authUser?.discount_2 || 0;
-    const d3 = authUser?.discount_3 || 0;
-    const netPrice = precioimpre * (1 - d1 / 100) * (1 - d2 / 100) * (1 - d3 / 100);
+    // Mismo cálculo que el carrito y el total de la reserva en el servidor
+    const [d1, d2, d3] = userDiscounts(authUser);
+    const netPrice = precioimpre * netFactor(authUser);
     const formattedNetPrice = netPrice.toLocaleString("es-AR", {
         style: "currency",
         currency: "ARS",

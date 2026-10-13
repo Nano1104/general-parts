@@ -1,13 +1,13 @@
-import { postProductsInDB } from "../utils/post-products-db.js";
-
 import xlsx from 'xlsx';
 import _ from "lodash";
 import Product from "../models/product.model.js";
-import agendaModule from '../agenda.js'
 import { stripPrices } from "../utils/priceVisibility.js";
+import { isObjectIdString } from "../utils/validation.js";
+
+const MAX_PAGE_SIZE = 50;
 
 //typesense
-import client from "../typesense/client.js";
+import client, { searchClient } from "../typesense/client.js";
 import { mongoToTypesense } from "../typesense/typesenseSync.js";
 import { COLLECTION_NAME } from "../typesense/collection.js";
 
@@ -64,8 +64,6 @@ async function buildBaseFilter(params = {}) {
 }
 
 
-
-
 // ─── Helpers de parsing ──────────────────────────────────────────────────────
 
 function parseSearchTokens(searchTerm) {
@@ -87,7 +85,7 @@ function parseSearchTokens(searchTerm) {
 // ─── Búsqueda simple (texto puro o código puro) ──────────────────────────────
 
 async function typesenseSingleSearch({ q, queryBy, weights, infix, numTypos, prefix, filterBy, limit, page }) {
-    const result = await client
+    const result = await searchClient
         .collections(COLLECTION_NAME)
         .documents()
         .search({
@@ -112,13 +110,17 @@ async function typesenseSingleSearch({ q, queryBy, weights, infix, numTypos, pre
 // ─── Búsqueda mixta: texto + código ─────────────────────────────────────────
 // Dos búsquedas en paralelo → los que matchean ambos van primero
 
+// Máximo por request que acepta Typesense
+const TYPESENSE_MAX_PER_PAGE = 250;
+
 async function typesenseMixedSearch(textQuery, codeQuery, filterBy, limit, page) {
-    // fetchMore para tener suficientes candidatos al mergear
-    const fetchLimit = parseInt(limit) * 4;
+    // Candidatos de cada búsqueda para mergear: crece con la página pedida. Antes era fijo
+    // (limit*4 = 40) y a partir de ~80 resultados el resto nunca aparecía en el scroll.
+    const fetchLimit = Math.min(TYPESENSE_MAX_PER_PAGE, Math.max(limit * 4, page * limit * 2));
 
     const [textResult, codeResult] = await Promise.all([
         // Búsqueda 1: texto en campos descriptivos
-        client.collections(COLLECTION_NAME).documents().search({
+        searchClient.collections(COLLECTION_NAME).documents().search({
             q: textQuery,
             query_by: "desc_stock,desc_marca,desc_subrub,desc_subrubro_intermedio,desc_rubro",
             query_by_weights: "5,3,3,3,2",
@@ -131,7 +133,7 @@ async function typesenseMixedSearch(textQuery, codeQuery, filterBy, limit, page)
         }),
 
         // Búsqueda 2: código en codpro y codpro_suffix (infix)
-        client.collections(COLLECTION_NAME).documents().search({
+        searchClient.collections(COLLECTION_NAME).documents().search({
             q: codeQuery,
             query_by: "codpro,codpro_suffix",
             infix: "always,always",
@@ -162,10 +164,15 @@ async function typesenseMixedSearch(textQuery, codeQuery, filterBy, limit, page)
     const start = (pageInt - 1) * limitInt;
     const paginated = merged.slice(start, start + limitInt);
 
+    // Si alguna búsqueda tiene más resultados que los candidatos traídos, la página siguiente
+    // pide un pool más grande (hasta el máximo de Typesense)
+    const truncated = fetchLimit < TYPESENSE_MAX_PER_PAGE && (textResult.found > fetchLimit || codeResult.found > fetchLimit);
+
     return {
         products: paginated.map(h => ({ ...h.document, _id: h.document.id })),
-        total: merged.length,
-        hasMore: start + limitInt < merged.length,
+        // Unión de ambas búsquedas sin contar dos veces los que matchean las dos
+        total: Math.max(merged.length, textResult.found + codeResult.found - bothMatch.length),
+        hasMore: start + limitInt < merged.length || truncated,
     };
 }
 
@@ -178,27 +185,34 @@ async function typesenseMixedSearch(textQuery, codeQuery, filterBy, limit, page)
  */
 // ─── Typesense: construir filtros ────────────────────────────────────────────
 
+// Los valores van entre backticks en filter_by: un backtick en el input cerraría el valor y
+// permitiría inyectar condiciones (ej. sobre precioimpre), así que se eliminan.
+const tsFilterValue = (v) => v.toString().replace(/`/g, "").trim();
+
 function buildTypesenseFilter(params = {}) {
     const parts = [];
 
     if (params.category)
-        parts.push(`desc_rubro:=\`${params.category.toString().toUpperCase()}\``);
+        parts.push(`desc_rubro:=\`${tsFilterValue(params.category).toUpperCase()}\``);
 
     if (params.brand)
-        parts.push(`desc_marca:=\`${params.brand.toString().toUpperCase()}\``);
+        parts.push(`desc_marca:=\`${tsFilterValue(params.brand).toUpperCase()}\``);
 
     if (params.subcategory) {
         // Typesense: OR entre ambos campos, sin necesidad de cache
-        const sub = params.subcategory.toString().trim();
+        const sub = tsFilterValue(params.subcategory);
         parts.push(`(desc_subrub:=\`${sub}\` || desc_subrubro_intermedio:=\`${sub}\`)`);
     }
 
-    if (!isNaN(params.minPrice) && !isNaN(params.maxPrice)) {
-        parts.push(`precioimpre:[${params.minPrice}..${params.maxPrice}]`);
-    } else if (!isNaN(params.minPrice)) {
-        parts.push(`precioimpre:>=${params.minPrice}`);
-    } else if (!isNaN(params.maxPrice)) {
-        parts.push(`precioimpre:<=${params.maxPrice}`);
+    // Se interpolan números ya parseados, nunca el string original
+    const minPrice = parseFloat(params.minPrice);
+    const maxPrice = parseFloat(params.maxPrice);
+    if (Number.isFinite(minPrice) && Number.isFinite(maxPrice)) {
+        parts.push(`precioimpre:[${minPrice}..${maxPrice}]`);
+    } else if (Number.isFinite(minPrice)) {
+        parts.push(`precioimpre:>=${minPrice}`);
+    } else if (Number.isFinite(maxPrice)) {
+        parts.push(`precioimpre:<=${maxPrice}`);
     }
 
     return parts.length ? parts.join(" && ") : undefined;
@@ -256,11 +270,39 @@ async function typesenseSearch(searchTerm, params, limit, page = 1) {
     };
 }
 
+// ─── Respaldo: búsqueda en Mongo si Typesense falla ─────────────────────────
+// Más simple que Typesense (sin tolerancia a errores de tipeo ni ranking por relevancia),
+// pero mantiene el buscador funcionando. Cada palabra debe aparecer (como substring, sin
+// distinguir mayúsculas) en el código o en alguna descripción. Con ~2000 productos el
+// recorrido completo de la colección es rápido.
+const FALLBACK_FIELDS = ["codpro", "desc_stock", "desc_marca", "desc_rubro", "desc_subrub", "desc_subrubro_intermedio"];
+
+async function mongoFallbackSearch(searchTerm, params, limit, page) {
+    const tokens = searchTerm.split(/\s+/).filter(Boolean).slice(0, 10);
+    const tokenFilters = tokens.map(t => ({
+        $or: FALLBACK_FIELDS.map(f => ({ [f]: { $regex: escapeRegex(t), $options: "i" } })),
+    }));
+    const filter = { $and: [await buildBaseFilter(params), ...tokenFilters] };
+
+    const [raw, total] = await Promise.all([
+        Product.find(filter).sort({ destacado: -1, codpro: 1 }).skip((page - 1) * limit).limit(limit + 1).lean(),
+        Product.countDocuments(filter),
+    ]);
+    return { products: raw.slice(0, limit), total, hasMore: raw.length > limit };
+}
+
 // ─── Controller principal ────────────────────────────────────────────────────
 
 export const getProducts = async (req, res) => {
     try {
-        const { search, limit = 10, lastId, page = 1, ...filters } = req.query;
+        const { search, limit: rawLimit, lastId, page: rawPage, ...filters } = req.query;
+
+        // Tope de página: sin él, limit=100000 devolvía todo el catálogo en una request
+        const limit = Math.min(Math.max(parseInt(rawLimit) || 10, 1), MAX_PAGE_SIZE);
+        const page = Math.max(parseInt(rawPage) || 1, 1);
+        if (lastId !== undefined && !isObjectIdString(lastId)) {
+            return res.status(400).json({ success: false, message: "lastId inválido" });
+        }
 
         // Sin acceso a precios, filtrar por rango permitiría deducirlos
         if (!req.canSeePrices) {
@@ -271,17 +313,21 @@ export const getProducts = async (req, res) => {
         let products = [];
         let hasMore = false;
         let total = 0;
+        let degraded = false; // true si la búsqueda vino del respaldo en Mongo
 
         if (search) {
             // ── BÚSQUEDA → Typesense ─────────────────────────────────────
-            const decodedSearch = decodeURIComponent(search).trim();
+            // Express ya decodifica la query: un segundo decodeURIComponent tiraba 500 con "%"
+            const decodedSearch = String(search).trim();
 
-            ({ products, total, hasMore } = await typesenseSearch(
-                decodedSearch,
-                filters,
-                parseInt(limit),
-                parseInt(page),
-            ));
+            try {
+                ({ products, total, hasMore } = await typesenseSearch(decodedSearch, filters, limit, page));
+            } catch (tsErr) {
+                // Typesense caído o lento (searchClient corta a los 2 s): se busca en Mongo
+                console.error("⚠️ Typesense no disponible, búsqueda de respaldo en Mongo:", tsErr.message);
+                ({ products, total, hasMore } = await mongoFallbackSearch(decodedSearch, filters, limit, page));
+                degraded = true;
+            }
 
         } else {
             // ── BROWSE/FILTROS → MongoDB cursor pagination ────────────────
@@ -292,19 +338,19 @@ export const getProducts = async (req, res) => {
             let query = Product
                 .find(baseFilter)
                 .sort({ _id: 1 })
-                .limit(parseInt(limit) + 1);
+                .limit(limit + 1);
 
             if (lastId) query = query.where("_id").gt(lastId);
 
             const raw = await query.lean();
-            hasMore = raw.length > parseInt(limit);
+            hasMore = raw.length > limit;
             products = hasMore ? raw.slice(0, -1) : raw;
             total = await Product.countDocuments(baseFilter);
         }
 
         if (!req.canSeePrices) products = products.map(stripPrices);
 
-        return res.json({ success: true, products, hasMore, total });
+        return res.json({ success: true, products, hasMore, total, ...(degraded && { degraded }) });
 
     } catch (err) {
         console.error("Error en getProducts:", err);
@@ -390,34 +436,6 @@ export async function deleteIdsFromTypesense(mongoIds) {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-export const getAllProducts = async (req, res) => {
-    const { rubro } = req.params
-
-    if (!rubro) {
-        return res.status(400).json({ message: "El parámetro 'desc_rubro' es requerido" });
-    }
-
-    try {
-        const products = await Product.find({ desc_rubro: rubro })
-        res.status(200).json({ message: "Success getting all products from db", productsQuantity: products.length });
-    } catch (err) {
-        res.status(400).json({ message: "Error getting all products from db", err });
-    }
-}
 
 export const getCategoriesAndSubcategories = async (req, res) => {
     try {
@@ -653,7 +671,12 @@ export const getProductById = async (req, res) => {
 
 export const getHighlightedProducts = async (req, res) => {
     try {
-        const products = await Product.find({ destacado: true }).lean()
+        // Filtra por fecha además del flag: un destacado vencido no se muestra aunque el job horario
+        // todavía no lo haya apagado (sin fecha de fin = destacado manual sin vencimiento)
+        const products = await Product.find({
+            destacado: true,
+            $or: [{ fechaFinDestacado: { $gt: new Date() } }, { fechaFinDestacado: null }]
+        }).lean()
         res.status(200).json({
             success: true,
             message: `Success getting highlighted products`,
@@ -665,6 +688,16 @@ export const getHighlightedProducts = async (req, res) => {
             message: "Error getting highlighted products",
         });
     }
+}
+
+const VALID_BRANDS = Product.schema.path("desc_marca").enumValues;
+
+// Precio de una celda de Excel: número si la celda es numérica; si es texto, solo se acepta
+// "1500" o "1500.50" (un texto como "1.500,50" es ambiguo y se rechaza para no guardar un precio mal)
+function parseExcelPrice(raw, text) {
+    if (typeof raw === "number") return raw;
+    const s = String(text ?? raw ?? "").trim();
+    return /^\d+(\.\d+)?$/.test(s) ? Number(s) : NaN;
 }
 
 export const uploadExcelProducts = async (req, res) => {
@@ -685,8 +718,9 @@ export const uploadExcelProducts = async (req, res) => {
         }
 
         // 2. Obtener datos del formulario
-        const rubroPrincipal = req.body.rubro?.trim();
-        const subrubroIntermedio = req.body.subrubroIntermedio?.trim() || null; // 👈 NUEVO
+        // Siempre en mayúsculas: los filtros del catálogo comparan desc_rubro en mayúsculas
+        const rubroPrincipal = req.body.rubro?.trim().toUpperCase();
+        const subrubroIntermedio = req.body.subrubroIntermedio?.trim().toUpperCase() || null;
 
         if (!rubroPrincipal) {
             return res.status(400).json({ message: "El rubro principal es requerido" });
@@ -700,6 +734,9 @@ export const uploadExcelProducts = async (req, res) => {
             raw: false,
             dateNF: 'yyyy-mm-dd'
         });
+        // Mismas filas con el valor crudo de cada celda: el precio se toma de acá cuando la celda es
+        // numérica (con raw:false llega como texto formateado, ej. "1,500.00", y antes la fila se perdía al castear)
+        const rawItems = xlsx.utils.sheet_to_json(worksheet, { defval: undefined, raw: true });
         console.timeEnd(timers.lectura);
 
         // 3. Configuración
@@ -722,6 +759,7 @@ export const uploadExcelProducts = async (req, res) => {
         const BATCH_SIZE = 1000;
         let productsToUpsert = [];
         let invalidProducts = [];
+        const movedProducts = [];
 
         console.time(timers.procesamiento);
         for (let i = 0; i < excelItems.length; i++) {
@@ -754,9 +792,9 @@ export const uploadExcelProducts = async (req, res) => {
                 // Resto de campos
                 rubro: item.subrub !== undefined ? parseInt(item.subrub) : undefined,
                 proveed: item.proveed !== undefined ? parseInt(item.proveed) : undefined,
-                desc_marca: item.desc_marca?.toString().trim(),
+                desc_marca: item.desc_marca?.toString().trim().toUpperCase(),
                 porcen1: item.porcen1 !== undefined ? parseInt(item.porcen1) : undefined,
-                precioimpre: item.precioimpre !== undefined ? item.precioimpre : undefined,
+                precioimpre: item.precioimpre !== undefined ? parseExcelPrice(rawItems[i]?.precioimpre, item.precioimpre) : undefined,
                 stock: 10,
                 imageUrl: existingProduct?.imageUrl || null,
                 lastUpdated: new Date()
@@ -774,6 +812,29 @@ export const uploadExcelProducts = async (req, res) => {
                 );
                 invalidProducts.push(`Fila ${rowNumber}: Faltan campos (${missingFields.join(', ')})`);
                 continue;
+            }
+
+            // Validaciones de valores: antes estas filas se descartaban en silencio (bulkWrite no valida
+            // el enum y omite las que fallan al castear) o se guardaban con datos inválidos
+            // campo interno -> columna del Excel (rubro y subrub vienen intercambiados en el mapeo)
+            const EXCEL_COLUMN = { rubro: 'subrub', subrub: 'rubro', proveed: 'proveed', porcen1: 'porcen1' };
+            const notNumeric = Object.keys(EXCEL_COLUMN).filter(f => Number.isNaN(mappedItem[f]));
+            if (notNumeric.length) {
+                invalidProducts.push(`Fila ${rowNumber} (${codpro}): valores no numéricos en la columna ${notNumeric.map(f => EXCEL_COLUMN[f]).join(', ')}`);
+                continue;
+            }
+            if (!(mappedItem.precioimpre > 0)) {
+                invalidProducts.push(`Fila ${rowNumber} (${codpro}): precio inválido (${JSON.stringify(item.precioimpre)})`);
+                continue;
+            }
+            if (!VALID_BRANDS.includes(mappedItem.desc_marca)) {
+                invalidProducts.push(`Fila ${rowNumber} (${codpro}): marca "${mappedItem.desc_marca}" no está en la lista permitida`);
+                continue;
+            }
+
+            // El upsert es por codpro: si el producto existía en otro rubro, esta carga lo mueve
+            if (existingProduct && existingProduct.desc_rubro !== rubroPrincipal) {
+                movedProducts.push(`${codpro}: ${existingProduct.desc_rubro} → ${rubroPrincipal}`);
             }
 
             productsToUpsert.push(mappedItem);
@@ -828,11 +889,13 @@ export const uploadExcelProducts = async (req, res) => {
                 actualizados: results.modifiedCount,
                 sinCambios: results.unchangedCount,
                 errores: invalidProducts.length,
+                movidosDeRubro: movedProducts.length,
                 sincronizadosBuscador: typesenseResult.synced,
                 erroresBuscador: typesenseResult.failed,
             },
             ...(typesenseResult.error && { errorBuscador: typesenseResult.error }),
-            ...(invalidProducts.length > 0 && { erroresDetallados: invalidProducts.slice(0, 50) })
+            ...(invalidProducts.length > 0 && { erroresDetallados: invalidProducts.slice(0, 50) }),
+            ...(movedProducts.length > 0 && { movidosDetallados: movedProducts.slice(0, 50) })
         });
 
     } catch (err) {
@@ -963,7 +1026,11 @@ export const downloadExcelProducts = async (req, res) => {
 export const highlightProduct = async (req, res) => {
     const { id } = req.params; // Cambia "id" por "codigo"
     const { days } = req.body
-    const { agenda } = agendaModule;
+
+    // Entero 1..365: un string ("3") hacía setDate(getDate() + "3") por concatenación y daba fechas absurdas
+    if (!Number.isInteger(days) || days < 1 || days > 365) {
+        return res.status(400).json({ success: false, message: "Los días deben ser un entero entre 1 y 365" });
+    }
 
     try {
         const product = await Product.findOne({ codpro: id });
@@ -979,43 +1046,19 @@ export const highlightProduct = async (req, res) => {
             });
         }
 
-        // Cancelar job anterior si existe
-        if (product.highlightJobId) {
-            await agenda.cancel({ _id: product.highlightJobId });
-        }
-
-        // Calcular fechas
         const ahora = new Date();
-        const fechaFin = new Date();
-        fechaFin.setDate(ahora.getDate() + days);
+        const fechaFin = new Date(ahora.getTime() + days * 24 * 60 * 60 * 1000);
 
-        // Crear job en Agenda
-        const job = await agenda.schedule(
-            fechaFin,
-            'unhighlight-product',
-            { productId: id }
-        );
-
-        // Actualizar producto
+        // El vencimiento lo aplica jobs/maintenance.js (expireHighlights) a partir de fechaFinDestacado
         const productUpdated = await Product.findOneAndUpdate(
             { codpro: id },
             {
-                destacado: true,
-                fechaDestacado: ahora,
-                fechaFinDestacado: fechaFin,
-                highlightJobId: job.attrs._id // Guardar referencia al job
+                $set: { destacado: true, fechaDestacado: ahora, fechaFinDestacado: fechaFin },
+                $unset: { highlightJobId: 1 }
             },
             { new: true }
         );
         await upsertToTypesense(productUpdated);
-
-        // Programar desactivación automática (solo para demostración)
-        /* setTimeout(async () => {
-            await Product.updateOne(
-                { codpro: id },
-                { destacado: false }
-            );
-        }, days * 24 * 60 * 60 * 1000); */
 
         res.status(200).json({
             success: true,
@@ -1033,17 +1076,11 @@ export const highlightProduct = async (req, res) => {
 
 export const unhighlightProduct = async (req, res) => {
     const { id } = req.params
-    const { agenda } = agendaModule;
 
     try {
         // Verificar si el producto existe
         const product = await Product.findOne({ codpro: id });
         if (!product) return res.status(404).json({ success: false, message: `Producto con código ${id} no encontrado` });
-
-        // Cancelar el job programado si existe
-        if (product.highlightJobId) {
-            await agenda.cancel({ _id: product.highlightJobId });
-        }
 
         // Actualizar producto
         const productUpdated = await Product.findOneAndUpdate(
@@ -1071,49 +1108,6 @@ export const unhighlightProduct = async (req, res) => {
     }
 }
 
-export const postProducts = async (req, res) => {
-    try {
-        const dataToPost = await postProductsInDB("./utils/json/inyeccion-sondas.json");
-        const result = await Product.insertMany(dataToPost);
-
-        console.log("Productos insertados correctamente");
-        res.status(201).json({  // 201 Created es más apropiado para POST
-            message: "Success posting products in MongoDB",
-            insertedCount: result.length,
-            data: result
-        });
-    } catch (err) {
-        console.error("Error posting products:", err);
-        res.status(500).json({  // 500 para errores del servidor
-            message: "Error posting products in MongoDB",
-            error: err.message
-        });
-    }
-}
-
-export const addFieldToProducts = async (req, res) => {
-    try {
-        const { field, value } = req.body
-        if (!field) throw new Error("Campos 'field' y 'newField' son requeridos en el cuerpo de la solicitud.");
-
-        const update = {};
-        update[field] = value;
-
-        //agrega el campo a todos los prods de la collection
-        const updatedProducts = await Product.updateMany(
-            {},  // Selecciona TODOS los productos
-            { $set: update }  // Añade/modifica el campo
-        );
-
-        if (updatedProducts.acknowledged && updatedProducts.modifiedCount > 0) {
-            res.status(200).json({ message: "Success adding field to all products in DB", updatedProducts });
-        } else {
-            res.status(200).json({ message: "No products were updated", updatedProducts });
-        }
-    } catch (err) {
-        res.status(400).json({ message: "Error adding field to products in DB", err });
-    }
-}
 
 export const changeProductFieldVal = async (req, res) => {
     try {
@@ -1144,214 +1138,4 @@ export const changeProductFieldVal = async (req, res) => {
     }
 }
 
-export const changeFieldValueToProducts = async (req, res) => {
-    try {
-        const { field, value } = req.body
-        if (!field || !value) throw new Error("Field does not exists")
 
-        const missingFieldCount = await Product.countDocuments({ [field]: { $exists: false } });
-        if (missingFieldCount > 0) throw new Error(`The field "${field}" is missing in ${missingFieldCount} documents`);
-
-        const updateObject = { [field]: value };
-
-        const updatedProducts = await Product.updateMany({}, { $set: updateObject });
-
-        res.status(200).json({ message: "Success changing field name and its value", updatedProducts });
-    } catch (err) {
-        res.status(400).json({ message: "Error changing field name and its value", err });
-    }
-}
-
-export const changeFieldToProducts = async (req, res) => {
-    try {
-        const { field, newField } = req.body
-        if (!field) throw new Error("Field does not exists")
-
-        const renameObject = {};
-        renameObject[field] = newField;
-
-        const updatedProducts = await Product.updateMany({}, { $rename: renameObject });
-
-        res.status(200).json({ message: "Success changing field to products in DB", updatedProducts });
-    } catch (err) {
-        res.status(400).json({ message: "Error changing field to products in DB", err });
-    }
-}
-
-export const deleteMongoDBCollection = async (req, res) => {
-    try {
-        await Product.deleteMany({})
-        res.status(200).json({ message: "Success deleting mongo DB collection" });
-    } catch (err) {
-        res.status(400).json({ message: "Error deleting mongo DB collection", err });
-    }
-}
-
-export const updateStock = async (req, res) => {
-    try {
-        const { productId } = req.params
-        const { newStock } = req.body
-
-        const prodFound = await Product.findById(productId);
-        if (!prodFound) return res.status(404).json({ message: "Product not found in db" });
-
-        const updatedProduct = await Product.findByIdAndUpdate(
-            productId,
-            { stock: prodFound.stock + Number(newStock) },
-            { new: true } // Esto devuelve el documento actualizado
-        );
-        await upsertToTypesense(updatedProduct);
-
-        res.status(200).json({ message: "Success updating stock from product", updatedProduct });
-    } catch (err) {
-        res.status(400).json({ message: "Error deleting mongo DB collection", err });
-    }
-}
-
-export const deleteProdsWithSubrub = async (req, res) => {
-    const { subrub } = req.body;
-
-    try {
-        if (!subrub) {
-            throw new Error("Subrub parameter is required");
-        }
-
-        const idsToDelete = await Product.find({ desc_subrub: subrub }).distinct("_id");
-        const result = await Product.deleteMany({ desc_subrub: subrub });
-        await deleteIdsFromTypesense(idsToDelete);
-
-        if (result.deletedCount === 0) {
-            return res.status(404).json({
-                message: `No products found with subrub: ${subrub}`
-            });
-        }
-
-        res.status(200).json({
-            message: `Successfully deleted ${result.deletedCount} products with subrub: ${subrub}`
-        });
-
-    } catch (err) {
-        res.status(400).json({
-            message: `Error deleting products with subrub: ${subrub}`,
-            error: err.message
-        });
-    }
-}
-
-export const deleteFieldFromProducts = async (req, res) => {
-    try {
-        const { field } = req.body
-        if (!field) throw new Error("Field does not exists")
-
-        const update = {};
-        update[field] = "";
-
-        const updatedProducts = await Product.updateMany({}, { $unset: update })
-
-        res.status(200).json({ message: "Success deleting field from products", updatedProducts });
-    } catch (err) {
-        res.status(400).json({ message: "Error deleting field from products", err });
-    }
-}
-
-export const deleteProdsByRubro = async (req, res) => {
-    try {
-        const { rubro } = req.params;
-        if (!rubro) throw new Error("Field rubro is required");
-
-        const idsToDelete = await Product.find({ desc_rubro: rubro.toUpperCase() }).distinct("_id");
-        const result = await Product.deleteMany({ desc_rubro: rubro.toUpperCase() });
-        await deleteIdsFromTypesense(idsToDelete);
-
-        res.status(200).json({
-            message: `Deleted ${result.deletedCount} products with rubro ${rubro}`,
-            deletedCount: result.deletedCount
-        });
-    } catch (err) {
-        res.status(400).json({
-            message: `Error deleting products`,
-            error: err.message
-        });
-    }
-};
-
-
-
-//funcion para agregar la imagen de tornillos a todos los productos tornillos (bulones)
-export const addImageToTornillos = async (req, res) => {
-    try {
-        const result = await Product.updateMany(
-            { rubro: { $gte: 101, $lte: 103 } }, // filtro por rango
-            { $set: { imageUrl: "https://res.cloudinary.com/dq7dwhqhh/image/upload/f_auto,q_auto,c_scale/v1755061135/bulones_by0zgv.png" } } // nuevo valor
-        );
-        await syncFilterToTypesense({ rubro: { $gte: 101, $lte: 103 } });
-
-        res.status(200).json({
-            message: "Imagen agregada a los productos con rubro entre 101 y 103",
-            matchedCount: result.matchedCount,
-            modifiedCount: result.modifiedCount
-        });
-
-    } catch (err) {
-        res.status(400).json({ message: "Error trying to add image", error: err.message });
-    }
-};
-
-export const changeImageurlProd = async (req, res) => {
-    try {
-        const { prodId } = req.params; // ID del producto desde la URL
-        const { url } = req.body
-
-        if (!prodId || !url) return res.status(400).json({ message: "Some paremeters may be empty" });
-
-        const updatedProduct = await Product.findByIdAndUpdate(
-            prodId, // filtro por _id
-            { $set: { imageUrl: url } }, // cambio de valor
-            { new: true } // devuelve el documento actualizado
-        );
-
-        if (!updatedProduct) {
-            return res.status(404).json({ message: "Producto no encontrado" });
-        }
-        await upsertToTypesense(updatedProduct);
-
-        res.status(200).json({
-            message: "Imagen actualizada correctamente",
-            product: updatedProduct
-        });
-
-    } catch (err) {
-        res.status(400).json({ message: "Error to change image field", error: err.message });
-    }
-};
-
-export const addImageUrlToSubrub = async (req, res) => {
-    const { subrub, url } = req.body; // También necesitas recibir la URL
-
-    try {
-        if (!subrub || !url) return res.status(400).json({ message: "Some paremeters may be empty" });
-
-        // Actualizar múltiples productos que coincidan con el subrubro
-        const result = await Product.updateMany(
-            { desc_subrub: subrub }, // Criterio de búsqueda
-            { $set: { imageUrl: url } } // Campo a actualizar
-        );
-        await syncFilterToTypesense({ desc_subrub: subrub });
-
-        if (result.matchedCount === 0) {
-            return res.status(404).json({
-                message: `No products found with subrub: ${subrub}`
-            });
-        }
-
-        res.status(200).json({
-            message: `Successfully added image URL to ${result.modifiedCount} products with subrub: ${subrub}`,
-            details: result
-        });
-    } catch (err) {
-        res.status(500).json({
-            message: `Error adding image url to subrub: ${subrub}`,
-            error: err.message
-        });
-    }
-}

@@ -4,6 +4,9 @@ import Swal from 'sweetalert2';
 import { API_URL } from "../../utils/api_url.js";
 import { useState } from "react";
 
+// Los textos vienen del Excel o del formulario y se muestran con Swal({ html })
+const escapeHtml = (s) => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
 export const ProductsManage = () => {
     const [file, setFile] = useState(null)
 
@@ -24,10 +27,22 @@ export const ProductsManage = () => {
             return;
         }
 
+        // Un rubro mal tipeado crea una categoría nueva: se avisa si no existe todavía
+        let rubroIsNew = false;
+        try {
+            const { data } = await axios.get(`${API_URL}/api/products/rubro/get-categories-and-subcategories`);
+            rubroIsNew = !data.categories.some(c => c.rubro === rubroValue);
+        } catch {
+            // Si no se pudo verificar, se sigue sin el aviso
+        }
+
         // Confirmación con info del subrubro intermedio si existe
-        const confirmText = subrubroIntermedioValue
-            ? `Rubro: <b>${rubroValue}</b><br>Subrubro: <b>${subrubroIntermedioValue}</b>`
-            : `Rubro: <b>${rubroValue}</b> (sin subrubro intermedio)`;
+        const confirmText = (subrubroIntermedioValue
+            ? `Rubro: <b>${escapeHtml(rubroValue)}</b><br>Subrubro: <b>${escapeHtml(subrubroIntermedioValue)}</b>`
+            : `Rubro: <b>${escapeHtml(rubroValue)}</b> (sin subrubro intermedio)`)
+            + (rubroIsNew
+                ? `<br><br><b style="color:#D7263D">⚠️ Este rubro no existe todavía.</b><br>Se va a crear una categoría nueva: verificá que esté bien escrito.`
+                : "");
 
         const result = await Swal.fire({
             title: "¿Estás seguro?",
@@ -74,9 +89,16 @@ export const ProductsManage = () => {
                 mensaje = "No se realizaron cambios. Verifica el archivo Excel.";
             }
 
+            // Filas rechazadas y productos que cambiaron de rubro: antes no se mostraban
+            const listado = (titulo, items, total) => items?.length
+                ? `<br><br><b>${titulo} (${total}):</b><div style="max-height:160px;overflow:auto;text-align:left;font-size:12px">${items.map(escapeHtml).join("<br>")}${total > items.length ? "<br>…" : ""}</div>`
+                : "";
+            mensaje += listado("Filas no cargadas", data.erroresDetallados, data.details.errores);
+            mensaje += listado("Productos movidos desde otro rubro", data.movidosDetallados, data.details.movidosDeRubro);
+
             Swal.fire({
                 html: mensaje,
-                icon: "info",
+                icon: data.details.errores > 0 ? "warning" : "info",
                 confirmButtonColor: "#DC5F00"
             });
 
@@ -141,13 +163,13 @@ export const ProductsManage = () => {
                 // Manejo específico según el status
                 if (response.status === 404) {
                     const rubrosDisponibles = error.rubrosDisponibles
-                        ? `<br><br><small>Algunos rubros disponibles: ${error.rubrosDisponibles.join(', ')}</small>`
+                        ? `<br><br><small>Algunos rubros disponibles: ${error.rubrosDisponibles.map(escapeHtml).join(', ')}</small>`
                         : '';
 
                     Swal.fire({
                         icon: 'error',
                         title: 'Rubro no encontrado',
-                        html: `No se encontraron productos para el rubro:<br><strong>"${rubro}"</strong><br><br>Verifique que el nombre esté escrito correctamente.${rubrosDisponibles}`,
+                        html: `No se encontraron productos para el rubro:<br><strong>"${escapeHtml(rubro)}"</strong><br><br>Verifique que el nombre esté escrito correctamente.${rubrosDisponibles}`,
                         confirmButtonColor: '#d33'
                     });
                 } else {

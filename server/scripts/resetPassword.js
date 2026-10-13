@@ -3,6 +3,7 @@
 import mongoose from "mongoose";
 import User from "../models/user.model.js";
 import { createHash } from "../utils/bcrypt.js";
+import { normalizeEmail, CASE_INSENSITIVE } from "../utils/validation.js";
 
 import { NODE_ENV, DB_USER_NAME, DB_PORT, DB_HOST, DB_USER_PASSWORD } from "../config/envConfig.js";
 
@@ -30,22 +31,22 @@ const run = async () => {
         await mongoose.connect(connectionOptions.url, connectionOptions.options);
         console.log(`✅ Conectado a MongoDB (${NODE_ENV})`);
 
-        // El login busca el email exacto, así que acá también
-        const users = await User.find({ email: email }).select("email first_name last_name");
+        // Igual que el login: sin distinguir mayúsculas ni espacios
+        const users = await User.find({ email: normalizeEmail(email) }).collation(CASE_INSENSITIVE).select("email first_name last_name");
 
         if (users.length === 0) {
             console.error(`❌ No se encontró ningún usuario con el email ${email}`);
             return;
         }
         if (users.length > 1) {
-            // email no es unique en el schema: no pisar contraseñas a ciegas
+            // No debería pasar (email es unique), pero no pisar contraseñas a ciegas
             console.error(`❌ Hay ${users.length} usuarios con el email ${email}, resolvelo a mano:`);
             users.forEach(u => console.error(`   ${u._id} - ${u.first_name} ${u.last_name}`));
             return;
         }
 
         const user = users[0];
-        await User.updateOne({ _id: user._id }, { $set: { password: createHash(newPassword) } });
+        await User.updateOne({ _id: user._id }, { $set: { password: await createHash(newPassword) } });
 
         console.log(`✅ Contraseña actualizada para ${user.email} (${user.first_name} ${user.last_name})`);
     } catch (error) {

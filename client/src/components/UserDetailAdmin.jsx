@@ -74,6 +74,8 @@ export default function UserDetailAdmin({ user, onAccept, onDeny, onDelete, onDi
                                 <>
                                     <input
                                         type="number"
+                                        min="0"
+                                        max="100"
                                         value={newValue}
                                         onChange={(e) => setNewValue(e.target.value)}
                                         className="w-16 p-1 rounded border border-gray-300 text-sm"

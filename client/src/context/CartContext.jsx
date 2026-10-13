@@ -38,13 +38,13 @@ export const CartContextProvider = ({ children }) => {
                 console.log("🚀 ~ addProductToCart ~ prev:", prev);
 
                 // Asegúrate de que prev.products existe y es un array
-                const existingItem = prev.products.find(item => item.product._id === productId);
+                const existingItem = prev.products.find(item => item.product?._id === productId);
 
                 if (existingItem) {
                     return {
                         ...prev, // Mantén todas las otras propiedades del carrito
                         products: prev.products.map(item =>
-                            item.product._id === productId
+                            item.product?._id === productId
                                 ? { ...item, quantity: item.quantity + amountToAdd }
                                 : item
                         )
@@ -96,7 +96,7 @@ export const CartContextProvider = ({ children }) => {
                         // Actualizar el estado local del carrito
                         setCart(prevCart => ({
                             ...prevCart,
-                            products: prevCart.products.filter(prod => prod.product._id !== prodId)
+                            products: prevCart.products.filter(prod => prod.product?._id !== prodId)
                         }));
 
                         Swal.fire({
@@ -116,35 +116,15 @@ export const CartContextProvider = ({ children }) => {
     }
 
     // ---- Finalizar compra ----
-    const finishPurchase = async (userId, cart, totalPrice) => {
-        if (!userId || !cart?._id || !Array.isArray(cart.products)) {
+    const finishPurchase = async (cart) => {
+        if (!cart?._id || !Array.isArray(cart.products)) {
             throw new Error("Datos de compra inválidos");
         }
 
         try {
-            // 1. Crear la orden
-            const orderResponse = await axios.post(
-                `${API_URL}/api/order`,
-                {
-                    userId,
-                    prods: cart.products,
-                    totalPrice
-                },
-                { withCredentials: true }
-            );
+            // El servidor arma la reserva desde el carrito guardado (con descuentos) y lo vacía en la misma operación
+            const orderResponse = await axios.post(`${API_URL}/api/order`, {}, { withCredentials: true });
 
-            if (orderResponse.status !== 200) {
-                throw new Error("Error en la creación de la orden");
-            }
-
-            // 2. Vaciar el carrito en el backend
-            await axios.put(
-                `${API_URL}/api/user/${userId}/cart/${cart._id}`,
-                {},
-                { withCredentials: true }
-            );
-
-            // 3. Actualizar estado del carrito en el frontend
             setCart({ ...cart, products: [] });
 
             // 4. Notificación de éxito

@@ -24,7 +24,8 @@ const { NODE_ENV,
     TYPESENSE_PORT,
     TYPESENSE_PROTOCOL,
     TYPESENSE_ADMIN_API_KEY,
-    TYPESENSE_SEARCH_API_KEY,
+    TYPESENSE_WRITE_KEY,   // key limitada a la colección (npm run typesense-keys)
+    TYPESENSE_SEARCH_KEY,  // key solo de búsqueda (npm run typesense-keys)
 } = process.env
 
 export {
@@ -45,5 +46,6 @@ export {
     TYPESENSE_PORT,
     TYPESENSE_PROTOCOL,
     TYPESENSE_ADMIN_API_KEY,
-    TYPESENSE_SEARCH_API_KEY,
+    TYPESENSE_WRITE_KEY,   // key limitada a la colección (npm run typesense-keys)
+    TYPESENSE_SEARCH_KEY,  // key solo de búsqueda (npm run typesense-keys)
 }

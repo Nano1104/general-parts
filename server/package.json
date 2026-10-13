@@ -6,25 +6,21 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./server.js",
     "dev": "cross-env NODE_ENV=development nodemon ./server.js",
-
     "typesense-sync": "cross-env NODE_ENV=production node ./typesense/typesenseSync.js",
     "typesense-sync:reset": "cross-env NODE_ENV=development node ./typesense/typesenseSync.js --reset",
-
-    "update-users": "cross-env NODE_ENV=production node ./scripts/updateUsers.js",
     "reset-password": "cross-env NODE_ENV=production node ./scripts/resetPassword.js",
     "restore-stock": "cross-env NODE_ENV=production node ./scripts/restoreStock.js",
     "restore-stock:apply": "cross-env NODE_ENV=production node ./scripts/restoreStock.js --apply",
-    "fix-rubro-subrub:dry": "cross-env NODE_ENV=production node ./scripts/fix-rubros.js --dry-run",
-    "fix-rubro-subrub": "cross-env NODE_ENV=production node ./scripts/fix-rubros.js",
-    "fix-rubro-subrub-bulk": "cross-env NODE_ENV=production node ./scripts/fix_rubro_subrub_bulk.js",
-    "fix-rubro-subrub-products": "cross-env NODE_ENV=production node ./scripts/update_products_swap_rubro.js"
+    "integrity-report": "cross-env NODE_ENV=production node ./scripts/integrityReport.js",
+    "fix-data": "cross-env NODE_ENV=production node ./scripts/fixData.js",
+    "fix-data:apply": "cross-env NODE_ENV=production node ./scripts/fixData.js --apply",
+    "typesense-keys": "cross-env NODE_ENV=production node ./scripts/typesenseKeys.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "agenda": "^5.0.0",
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
