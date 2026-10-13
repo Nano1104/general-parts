@@ -19,6 +19,18 @@ import orderRouter from "./routes/order.routes.js"
 const app = express();
 
 //middlewares
+// Cabeceras de seguridad básicas (equivalente mínimo a helmet para una API JSON)
+app.disable("x-powered-by");
+app.use((req, res, next) => {
+  res.set({
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Referrer-Policy": "no-referrer",
+  });
+  if (NODE_ENV === "production") res.set("Strict-Transport-Security", "max-age=15552000");
+  next();
+});
+
 app.use(express.json())
 app.use(cookieParser())
 
