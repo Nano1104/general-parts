@@ -6,7 +6,7 @@ import { NODE_ENV, PORT, CLIENT_URL } from "./config/envConfig.js";
 //connections 
 import { ensureCollection } from "./typesense/collection.js";
 import { connectToDB } from "./db/dbConnection.js";
-import agendaModule from "./agenda.js"
+import { startMaintenanceJobs } from "./jobs/maintenance.js";
 
 //routes
 import productRouter from "./routes/product.routes.js"
@@ -68,12 +68,8 @@ app.use("/api/order", orderRouter)
 
 
 const startServer = async () => {
-  const { agenda, startAgenda } = agendaModule;
-
   try {
     await connectToDB();
-    await startAgenda();
-    await agenda.cancel({ 'data.productId': { $exists: true } });
 
     // ✅ Typesense aislado: si falla, el servidor sigue funcionando
     try {
@@ -83,6 +79,9 @@ const startServer = async () => {
       console.error("⚠️  Typesense no disponible, búsquedas usarán MongoDB:", tsErr.message);
       // El servidor sigue levantando normalmente
     }
+
+    // Después de Typesense: las tareas sincronizan el buscador al aplicar cambios
+    startMaintenanceJobs();
 
     app.listen(PORT, () => {
       console.log("🚀 ~ allowedOrigins:", allowedOrigins);

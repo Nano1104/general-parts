@@ -1,7 +1,6 @@
 import xlsx from 'xlsx';
 import _ from "lodash";
 import Product from "../models/product.model.js";
-import agendaModule from '../agenda.js'
 import { stripPrices } from "../utils/priceVisibility.js";
 import { isObjectIdString } from "../utils/validation.js";
 
@@ -639,7 +638,12 @@ export const getProductById = async (req, res) => {
 
 export const getHighlightedProducts = async (req, res) => {
     try {
-        const products = await Product.find({ destacado: true }).lean()
+        // Filtra por fecha además del flag: un destacado vencido no se muestra aunque el job horario
+        // todavía no lo haya apagado (sin fecha de fin = destacado manual sin vencimiento)
+        const products = await Product.find({
+            destacado: true,
+            $or: [{ fechaFinDestacado: { $gt: new Date() } }, { fechaFinDestacado: null }]
+        }).lean()
         res.status(200).json({
             success: true,
             message: `Success getting highlighted products`,
@@ -949,7 +953,11 @@ export const downloadExcelProducts = async (req, res) => {
 export const highlightProduct = async (req, res) => {
     const { id } = req.params; // Cambia "id" por "codigo"
     const { days } = req.body
-    const { agenda } = agendaModule;
+
+    // Entero 1..365: un string ("3") hacía setDate(getDate() + "3") por concatenación y daba fechas absurdas
+    if (!Number.isInteger(days) || days < 1 || days > 365) {
+        return res.status(400).json({ success: false, message: "Los días deben ser un entero entre 1 y 365" });
+    }
 
     try {
         const product = await Product.findOne({ codpro: id });
@@ -965,43 +973,19 @@ export const highlightProduct = async (req, res) => {
             });
         }
 
-        // Cancelar job anterior si existe
-        if (product.highlightJobId) {
-            await agenda.cancel({ _id: product.highlightJobId });
-        }
-
-        // Calcular fechas
         const ahora = new Date();
-        const fechaFin = new Date();
-        fechaFin.setDate(ahora.getDate() + days);
+        const fechaFin = new Date(ahora.getTime() + days * 24 * 60 * 60 * 1000);
 
-        // Crear job en Agenda
-        const job = await agenda.schedule(
-            fechaFin,
-            'unhighlight-product',
-            { productId: id }
-        );
-
-        // Actualizar producto
+        // El vencimiento lo aplica jobs/maintenance.js (expireHighlights) a partir de fechaFinDestacado
         const productUpdated = await Product.findOneAndUpdate(
             { codpro: id },
             {
-                destacado: true,
-                fechaDestacado: ahora,
-                fechaFinDestacado: fechaFin,
-                highlightJobId: job.attrs._id // Guardar referencia al job
+                $set: { destacado: true, fechaDestacado: ahora, fechaFinDestacado: fechaFin },
+                $unset: { highlightJobId: 1 }
             },
             { new: true }
         );
         await upsertToTypesense(productUpdated);
-
-        // Programar desactivación automática (solo para demostración)
-        /* setTimeout(async () => {
-            await Product.updateOne(
-                { codpro: id },
-                { destacado: false }
-            );
-        }, days * 24 * 60 * 60 * 1000); */
 
         res.status(200).json({
             success: true,
@@ -1019,17 +1003,11 @@ export const highlightProduct = async (req, res) => {
 
 export const unhighlightProduct = async (req, res) => {
     const { id } = req.params
-    const { agenda } = agendaModule;
 
     try {
         // Verificar si el producto existe
         const product = await Product.findOne({ codpro: id });
         if (!product) return res.status(404).json({ success: false, message: `Producto con código ${id} no encontrado` });
-
-        // Cancelar el job programado si existe
-        if (product.highlightJobId) {
-            await agenda.cancel({ _id: product.highlightJobId });
-        }
 
         // Actualizar producto
         const productUpdated = await Product.findOneAndUpdate(
