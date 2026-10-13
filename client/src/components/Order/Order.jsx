@@ -2,17 +2,29 @@ import axios from "axios"
 import Swal from 'sweetalert2'
 
 import { API_URL } from "../../utils/api_url.js";
+import { formatCurrency } from "../../utils/formatCurrency.js";
+
+// Fecha de la reserva: createdAt en las nuevas; en las viejas se deduce del ObjectId
+const orderDate = (order) => new Date(order.createdAt ?? parseInt(order._id.substring(0, 8), 16) * 1000);
+
+// Las reservas nuevas guardan copia de cada línea; las viejas solo tienen el producto populado
+const orderLines = (products = []) => products.map(line => ({
+    codpro: line.codpro ?? line.product?.codpro,
+    desc: line.desc_stock ?? line.product?.desc_stock ?? "Producto eliminado",
+    unitPrice: line.unitPrice,
+    quantity: line.quantity,
+}));
 
 export const Order = ({ order }) => {
-    console.log("🚀 ~ Order ~ order:", order)
+    if (!order) return null;
 
-    // Validación temprana
-    if (!order || !order.userId) {
-        return null;
-    }
-
-    const { _id: orderId, userId, products, totalOrder } = order
-    console.log("🚀 ~ Order ~ userId:", userId.first_name)
+    const { _id: orderId, products, totalOrder, subtotal, discounts } = order
+    // Usuario actual si existe; si fue borrado, la copia guardada en la reserva (si la tiene)
+    const customer = order.userId ?? order.customer ?? {}
+    const userDeleted = !order.userId
+    const appliedDiscounts = discounts
+        ? [discounts.discount_1, discounts.discount_2, discounts.discount_3].filter(d => d > 0)
+        : []
 
     const handleDeleteOrder = async () => {
         try {
@@ -53,11 +65,21 @@ export const Order = ({ order }) => {
         >
             {/* Nombre del usuario */}
             <h3 className="text-center text-xl sm:text-2xl font-medium mb-4 break-words">
-                {userId.first_name} {userId.last_name}
+                {customer.first_name ?? "Usuario eliminado"} {customer.last_name ?? ""}
+                {userDeleted && customer.first_name && (
+                    <span className="block text-sm font-normal">(usuario eliminado)</span>
+                )}
             </h3>
 
             {/* Información de la reserva */}
             <div className="flex flex-col gap-2 text-sm sm:text-base">
+                <div className="flex flex-col sm:flex-row sm:gap-2">
+                    <span className="font-normal">Fecha:</span>
+                    <span className="font-semibold">
+                        {orderDate(order).toLocaleString("es-AR", { dateStyle: "short", timeStyle: "short" })}
+                    </span>
+                </div>
+
                 <div className="flex flex-col sm:flex-row sm:gap-2">
                     <span className="font-normal">Id de reserva:</span>
                     <span className="font-semibold break-all">{orderId}</span>
@@ -65,22 +87,31 @@ export const Order = ({ order }) => {
 
                 <div className="flex flex-col sm:flex-row sm:gap-2">
                     <span className="font-normal">Teléfono/Celular:</span>
-                    <span className="font-semibold">{userId.phone}</span>
+                    <span className="font-semibold">{customer.phone ?? "—"}</span>
                 </div>
 
                 <div className="flex flex-col sm:flex-row sm:gap-2">
                     <span className="font-normal">Mail:</span>
-                    <span className="font-semibold break-all">{userId.email}</span>
+                    <span className="font-semibold break-all">{customer.email ?? "—"}</span>
                 </div>
 
                 <div className="flex flex-col sm:flex-row sm:gap-2">
-                    <span className="font-normal">Rol:</span>
-                    <span className="font-semibold capitalize">{userId.role}</span>
+                    <span className="font-normal">CUIT:</span>
+                    <span className="font-semibold">{customer.cuit ?? "—"}</span>
                 </div>
+
+                {subtotal !== undefined && appliedDiscounts.length > 0 && (
+                    <div className="flex flex-col sm:flex-row sm:gap-2">
+                        <span className="font-normal">Subtotal (lista):</span>
+                        <span className="font-semibold">
+                            {formatCurrency(subtotal)} — descuentos {appliedDiscounts.map(d => `${d}%`).join(" + ")}
+                        </span>
+                    </div>
+                )}
 
                 <div className="flex flex-col sm:flex-row sm:gap-2">
                     <span className="font-normal">Total de reserva:</span>
-                    <span className="font-semibold">${totalOrder}</span>
+                    <span className="font-semibold">{formatCurrency(totalOrder)}</span>
                 </div>
             </div>
 
@@ -90,23 +121,21 @@ export const Order = ({ order }) => {
             <div key={`${orderId}-productsDiv`} className="max-h-[300px] overflow-y-auto">
                 <h3 className="text-lg sm:text-xl font-semibold mb-3">Productos:</h3>
                 <div className="space-y-2">
-                    {
-                        products
-                            ?.filter(prod => prod.product !== null && prod.product !== undefined)
-                            .map(prod => (
-                                <div
-                                    key={prod.product._id}
-                                    className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 ml-2 pb-2 border-b-[1px] text-sm sm:text-base"
-                                >
-                                    <span className="first-letter:uppercase break-words">
-                                        {prod.product.desc_stock}
-                                    </span>
-                                    <span className="whitespace-nowrap">
-                                        Cantidad: <span className="font-semibold">x{prod.quantity}</span>
-                                    </span>
-                                </div>
-                            ))
-                    }
+                    {orderLines(products).map((line, i) => (
+                        <div
+                            key={`${orderId}-${i}`}
+                            className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-4 ml-2 pb-2 border-b-[1px] text-sm sm:text-base"
+                        >
+                            <span className="first-letter:uppercase break-words">
+                                {line.codpro && <span className="font-semibold mr-2">{line.codpro}</span>}
+                                {line.desc}
+                            </span>
+                            <span className="whitespace-nowrap">
+                                Cantidad: <span className="font-semibold">x{line.quantity}</span>
+                                {line.unitPrice !== undefined && <> · {formatCurrency(line.unitPrice)} c/u</>}
+                            </span>
+                        </div>
+                    ))}
                 </div>
             </div>
 

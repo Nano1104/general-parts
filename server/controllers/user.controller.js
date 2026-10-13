@@ -16,30 +16,6 @@ export const getUsers = async (req, res) => {
 }
 
 
-export const emptyCartFromUser = async (req, res) => {
-    try {
-        const { userId, cartId } = req.params
-        if (req.user.userId !== userId) {
-            return res.status(403).json({ message: "No autorizado para modificar el carrito de otro usuario" });
-        }
-
-        const userFound = await User.findById(userId);
-        const cartFound = await Cart.findById(cartId);
-        if (!userFound || !cartFound) throw new Error("User or cart may not exists")
-        // userId es el del usuario logueado, pero el cartId también tiene que ser suyo
-        if (cartFound.userId?.toString() !== req.user.userId) {
-            return res.status(403).json({ message: "No autorizado para modificar este carrito" });
-        }
-
-        cartFound.products = [];
-        await cartFound.save();  // Guardar los cambios en el carrito
-
-        res.status(200).json({ message: "Success empty cart from user" });
-    } catch (err) {
-        res.status(404).json({ message: "Error trying to empty cart from user", error: err.message });
-    }
-}
-
 export const acceptUser = async (req, res) => {
     try {
         const { userId } = req.params
