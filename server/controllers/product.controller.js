@@ -4,6 +4,7 @@ import xlsx from 'xlsx';
 import _ from "lodash";
 import Product from "../models/product.model.js";
 import agendaModule from '../agenda.js'
+import { stripPrices } from "../utils/priceVisibility.js";
 
 //typesense
 import client from "../typesense/client.js";
@@ -261,6 +262,12 @@ export const getProducts = async (req, res) => {
     try {
         const { search, limit = 10, lastId, page = 1, ...filters } = req.query;
 
+        // Sin acceso a precios, filtrar por rango permitiría deducirlos
+        if (!req.canSeePrices) {
+            delete filters.minPrice;
+            delete filters.maxPrice;
+        }
+
         let products = [];
         let hasMore = false;
         let total = 0;
@@ -294,6 +301,8 @@ export const getProducts = async (req, res) => {
             products = hasMore ? raw.slice(0, -1) : raw;
             total = await Product.countDocuments(baseFilter);
         }
+
+        if (!req.canSeePrices) products = products.map(stripPrices);
 
         return res.json({ success: true, products, hasMore, total });
 
@@ -631,7 +640,7 @@ export const getProductById = async (req, res) => {
         res.status(200).json({
             success: true,
             message: `Success getting product by id: ${id}`,
-            product,
+            product: req.canSeePrices ? product : stripPrices(product),
         });
     } catch (err) {
         res.status(500).json({
@@ -644,8 +653,12 @@ export const getProductById = async (req, res) => {
 
 export const getHighlightedProducts = async (req, res) => {
     try {
-        const products = await Product.find({ destacado: true })
-        res.status(200).json({ success: true, message: `Success getting highlighted products`, products });
+        const products = await Product.find({ destacado: true }).lean()
+        res.status(200).json({
+            success: true,
+            message: `Success getting highlighted products`,
+            products: req.canSeePrices ? products : products.map(stripPrices)
+        });
     } catch (err) {
         res.status(500).json({
             success: false,

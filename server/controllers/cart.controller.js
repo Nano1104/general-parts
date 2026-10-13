@@ -1,5 +1,6 @@
 import Cart from "../models/cart.model.js";
 import Product from "../models/product.model.js";
+import { stripPrices, stripCartPrices } from "../utils/priceVisibility.js";
 import { isValidQuantity, MAX_QUANTITY } from "../utils/quantity.js";
 
 export const getCart = async (req, res) => {
@@ -15,7 +16,7 @@ export const getCart = async (req, res) => {
             return res.status(403).json({ message: "No autorizado para ver este carrito" });
         }
 
-        res.status(200).json({ message: "Success getting cart", cart });
+        res.status(200).json({ message: "Success getting cart", cart: req.canSeePrices ? cart : stripCartPrices(cart) });
     } catch (err) {
         res.status(500).json({
             message: "Error getting cart",
@@ -54,7 +55,10 @@ export const postProductInCertainCart = async (req, res) => {
         // El stock no se toca desde el carrito: es solo un indicador de disponibilidad que fija la carga de Excel
         await cartFound.save();
         
-        res.status(200).json({message: "Success adding product in cart", prodFound});
+        res.status(200).json({
+            message: "Success adding product in cart",
+            prodFound: req.canSeePrices ? prodFound : stripPrices(prodFound)
+        });
     } catch (err) {
         res.status(400).json({message: "Error posting product in cart", err});
     }
@@ -79,7 +83,7 @@ export const deleteProdFromCart = async (req, res) => {
         return res.status(200).json({
             message: "Product removed from cart",
             cart: cartFound,
-            productDeleted: productFound
+            productDeleted: req.canSeePrices ? productFound : stripPrices(productFound)
         });
     } catch (err) {
         return res.status(500).json({ message: "Server error", error: err.message });

@@ -96,7 +96,7 @@ export const News = () => {
       const fetchData = async () => {
         setLoading(true);
         try {
-          const response = await axios.get(`${API_URL}/api/products/highlight/products`);
+          const response = await axios.get(`${API_URL}/api/products/highlight/products`, { withCredentials: true });
           setProdsDestacados(response.data.products); // Actualiza el estado con los productos
         } catch (err) {
           console.error("Error en la petición:", err);

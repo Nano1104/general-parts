@@ -1,4 +1,5 @@
 import { useCartContext } from "../../context/CartContext";
+import { useAuthContext } from "../../context/AuthContext";
 import { IoTrashOutline } from "react-icons/io5";
 
 import { formatCurrency } from "../../utils/formatCurrency";
@@ -8,6 +9,8 @@ import { getImage } from "../../utils/getImage.js";
 // ProdsInCart Component - Totalmente Responsivo
 export const ProdsInCart = ({ cartId, prods }) => {
     const { handleDeleteProdFromCart } = useCartContext();
+    const { accepted, isAdmin } = useAuthContext();
+    const canSeePrices = accepted || isAdmin;
 
     return (
         <div className="space-y-4 lg:space-y-0">
@@ -39,9 +42,11 @@ export const ProdsInCart = ({ cartId, prods }) => {
                                 <span className="text-sm lg:text-base">
                                     x<span className="font-bold">{prod.quantity}</span>
                                 </span>
-                                <span className="text-sm lg:text-base font-medium text-lightRed lg:text-black">
-                                    {formatCurrency(prod.quantity * prod.product.precioimpre)}
-                                </span>
+                                {canSeePrices && (
+                                    <span className="text-sm lg:text-base font-medium text-lightRed lg:text-black">
+                                        {formatCurrency(prod.quantity * prod.product.precioimpre)}
+                                    </span>
+                                )}
                             </div>
 
                             {/* BOTÓN ELIMINAR */}

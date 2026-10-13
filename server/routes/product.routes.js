@@ -1,5 +1,5 @@
 import express from "express";
-import { authenticateJWT, requireAdmin } from "../utils/jwt.js"
+import { authenticateJWT, requireAdmin, resolvePriceAccess } from "../utils/jwt.js"
 import {
     getProducts, getProductById, getAllProducts, getCategoriesAndSubcategories, getHighlightedProducts, postProducts, uploadExcelProducts, highlightProduct, unhighlightProduct, addFieldToProducts,
     changeProductFieldVal, changeFieldToProducts, changeFieldValueToProducts, deleteFieldFromProducts, updateStock, deleteProdsWithSubrub, deleteMongoDBCollection, addImageToTornillos, changeImageurlProd,
@@ -20,14 +20,14 @@ const router = express.Router();
 // ========================================
 
 // GET ROUTES - Rutas estáticas primero
-// Lectura pública del catálogo: sin auth.
-router.get("/highlight/products", getHighlightedProducts)
+// Lectura pública del catálogo: auth opcional, los precios solo van a usuarios dados de alta.
+router.get("/highlight/products", resolvePriceAccess, getHighlightedProducts)
 router.get("/rubro/get-categories-and-subcategories", getCategoriesAndSubcategories)
 router.get('/download-excel', authenticateJWT, requireAdmin, downloadExcelProducts)  // ANTES de /rubro/:rubro
 
 // GET ROUTES - Rutas dinámicas después
-router.get("/", getProducts)
-router.get("/id/:id", getProductById)
+router.get("/", resolvePriceAccess, getProducts)
+router.get("/id/:id", resolvePriceAccess, getProductById)
 router.get("/rubro/:rubro", authenticateJWT, requireAdmin, getAllProducts)  // Esta debe ir DESPUÉS de las rutas estáticas
 
 // POST ROUTES - todas administrativas

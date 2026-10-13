@@ -4,6 +4,14 @@ import { createHash } from "../utils/bcrypt.js";
 import { isValidPassword } from "../utils/bcrypt.js";
 import { generateTokenAndSetCookie } from "../utils/jwt.js";
 import { NODE_ENV } from "../config/envConfig.js";
+import { userCanSeePrices, stripCartPrices } from "../utils/priceVisibility.js";
+
+// El carrito viene populado con productos: sin alta, no se envían sus precios
+const withVisibleCartPrices = (userDoc) => {
+    const user = userDoc.toObject();
+    if (!userCanSeePrices(user) && user.cart) user.cart = stripCartPrices(user.cart);
+    return user;
+}
 
 export const getAuthUser = async (req, res) => {
     try {
@@ -19,8 +27,10 @@ export const getAuthUser = async (req, res) => {
                 }
             })
             .exec();
+        // Token válido pero usuario borrado: se trata como no autenticado
+        if (!user) return res.status(401).json({ message: "No authenticated user found" });
 
-        res.json(user);
+        res.json(withVisibleCartPrices(user));
     } catch (err) {
         res.status(500).json({ message: "Error getting auth user", error: err.message });
     }
@@ -45,7 +55,7 @@ export const login = async (req, res) => {
 
         generateTokenAndSetCookie(user._id, res)
 
-        res.status(200).json({ message: "Login Successfull", user: user });
+        res.status(200).json({ message: "Login Successfull", user: withVisibleCartPrices(user) });
     } catch (err) {
         res.status(500).json({ message: "Error trying to login", error: err.message });
     }

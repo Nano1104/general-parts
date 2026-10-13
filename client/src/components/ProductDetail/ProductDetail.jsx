@@ -86,7 +86,9 @@ export const ProductDetail = ({ prod }) => {
         destacado,
     } = prod;
 
-    const { authUser, isAdmin } = useAuthContext();
+    const { authUser, isAdmin, accepted } = useAuthContext();
+    // El backend solo envía precios a usuarios dados de alta (o admins)
+    const canSeePrices = accepted || isAdmin;
     const { addProductToCart } = useCartContext();
     const { id } = useParams();
     const navigate = useNavigate();
@@ -255,6 +257,16 @@ export const ProductDetail = ({ prod }) => {
                     </div>
 
                     {/* Pricing */}
+                    {!canSeePrices ? (
+                        <div className="px-5 sm:px-8 py-5 bg-zinc-50 border-b border-zinc-100">
+                            <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.18em] mb-2">
+                                Precios
+                            </p>
+                            <p className="text-sm text-zinc-500">
+                                Los precios se muestran una vez que tu cuenta es dada de alta.
+                            </p>
+                        </div>
+                    ) : (
                     <div className="px-5 sm:px-8 py-5 bg-zinc-50 border-b border-zinc-100">
                         <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.18em] mb-4">
                             Precios
@@ -309,6 +321,7 @@ export const ProductDetail = ({ prod }) => {
                             * Precio no incluye IVA
                         </p>
                     </div>
+                    )}
 
                     {/* Cantidad + agregar al carrito */}
                     <div className="px-5 sm:px-8 py-5 border-b border-zinc-100 flex flex-col sm:flex-row sm:items-center gap-4">
