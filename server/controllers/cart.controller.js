@@ -1,5 +1,6 @@
 import Cart from "../models/cart.model.js";
 import Product from "../models/product.model.js";
+import { isValidQuantity, MAX_QUANTITY } from "../utils/quantity.js";
 
 export const getCart = async (req, res) => {
     const { cartId } = req.params
@@ -27,7 +28,10 @@ export const postProductInCertainCart = async (req, res) => {
     try {
         const { productId, cartId } = req.params
         const { amountToAdd } = req.body
-        
+        if (!isValidQuantity(amountToAdd)) {
+            return res.status(400).json({ message: `La cantidad debe ser un entero entre 1 y ${MAX_QUANTITY}` });
+        }
+
         const cartFound = await Cart.findById(cartId)
         const prodFound = await Product.findById(productId)
 
@@ -40,12 +44,14 @@ export const postProductInCertainCart = async (req, res) => {
 
         const prodInCart = cartFound.products.find(prod => prod.product.toString() === prodFound._id.toString())
         if(prodInCart) {   //caso de que ya se haya agregado el prod previamente en el cart
+            if (!isValidQuantity(prodInCart.quantity + amountToAdd)) {
+                return res.status(400).json({ message: `No se pueden reservar más de ${MAX_QUANTITY} unidades de un producto` });
+            }
             prodInCart.quantity += amountToAdd
         } else {
             cartFound.products.push({ product: prodFound, quantity: amountToAdd })      //agrega el prod al carrito 
         }
-        prodFound.stock = Math.max(prodFound.stock - amountToAdd, 0); //actualiza el stock del producto, asegurando que no sea negativo
-        await prodFound.save(); // Guarda los cambios en el producto
+        // El stock no se toca desde el carrito: es solo un indicador de disponibilidad que fija la carga de Excel
         await cartFound.save();
         
         res.status(200).json({message: "Success adding product in cart", prodFound});
@@ -56,9 +62,7 @@ export const postProductInCertainCart = async (req, res) => {
 
 export const deleteProdFromCart = async (req, res) => {
     const { cartId, productId } = req.params
-    const { quantity } = req.body;
-    console.log("🚀 ~ deleteProdFromCart ~ quantity:", quantity, typeof quantity)
-    if(!cartId || !productId) return res.status(400).json({message: "cartId or productId are required", err});
+    if(!cartId || !productId) return res.status(400).json({message: "cartId or productId are required"});
 
     try {
         const cartFound = await Cart.findById(cartId)
@@ -68,9 +72,6 @@ export const deleteProdFromCart = async (req, res) => {
         if (cartFound.userId?.toString() !== req.user.userId) {
             return res.status(403).json({ message: "No autorizado para modificar este carrito" });
         }
-
-        productFound.stock += quantity; // Aumenta el stock del producto eliminado
-        await productFound.save(); // Guarda los cambios en el producto
 
         cartFound.products = cartFound.products.filter(prod => prod.product.toString() !== productId);
         await cartFound.save();
