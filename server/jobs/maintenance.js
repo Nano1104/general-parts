@@ -5,7 +5,9 @@
 
 import Product from "../models/product.model.js";
 import Cart from "../models/cart.model.js";
-import { syncFilterToTypesense } from "../controllers/product.controller.js";
+import { syncFilterToTypesense, deleteIdsFromTypesense } from "../controllers/product.controller.js";
+import client from "../typesense/client.js";
+import { COLLECTION_NAME } from "../typesense/collection.js";
 
 const HOUR = 60 * 60 * 1000;
 export const CART_TTL = 24 * HOUR;
@@ -41,7 +43,43 @@ export async function expireCarts(now = new Date()) {
     return result.modifiedCount;
 }
 
-const TASKS = [expireHighlights, expireCarts];
+// Reconciliación Mongo → Typesense una vez por día (y al arrancar): reindexa todos los productos
+// y borra del buscador los que ya no existen en Mongo. Repara lo que haya quedado desactualizado
+// si Typesense falló durante una carga de Excel. Con ~2000 productos son unos pocos requests.
+const DAY = 24 * HOUR;
+let lastReconcile = 0;
+
+export async function reconcileTypesense({ force = false } = {}) {
+    if (!force && Date.now() - lastReconcile < DAY) return null;
+
+    const sync = await syncFilterToTypesense({});
+    if (sync.error) {
+        // No se marca como hecha: se reintenta en la próxima corrida horaria
+        console.error(`⚠️  Reconciliación con Typesense falló (${sync.error}); se reintenta en 1 hora`);
+        return { ...sync, deleted: 0 };
+    }
+
+    const exported = await client.collections(COLLECTION_NAME).documents().export({ include_fields: "id" });
+    const typesenseIds = exported.split("\n").filter(Boolean).map(line => JSON.parse(line).id);
+    const mongoIds = new Set((await Product.distinct("_id")).map(String));
+    const orphans = typesenseIds.filter(id => !mongoIds.has(id));
+
+    let deleted = 0;
+    if (orphans.length > 0 && (mongoIds.size === 0 || orphans.length > typesenseIds.length / 2)) {
+        // Protección: si Mongo devolviera 0 productos o faltaran más de la mitad (DB equivocada,
+        // falla de lectura), no se vacía el buscador; que lo revise una persona
+        console.warn(`⚠️  Reconciliación: ${orphans.length} de ${typesenseIds.length} documentos no están en Mongo; no se borran automáticamente`);
+    } else if (orphans.length > 0) {
+        await deleteIdsFromTypesense(orphans);
+        deleted = orphans.length;
+    }
+
+    lastReconcile = Date.now();
+    console.log(`🔎 Reconciliación con Typesense: ${sync.synced} sincronizados, ${sync.failed} con error, ${deleted} huérfanos borrados`);
+    return { ...sync, deleted };
+}
+
+const TASKS = [expireHighlights, expireCarts, reconcileTypesense];
 
 async function runAll() {
     for (const task of TASKS) {
