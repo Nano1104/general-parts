@@ -12,6 +12,7 @@ const DUMMY_HASH = createHash("dummy-password-for-timing");
 // El carrito viene populado con productos: sin alta, no se envían sus precios
 const withVisibleCartPrices = (userDoc) => {
     const user = userDoc.toObject();
+    delete user.password; // login lo trae con +password para validar; no se devuelve
     if (!userCanSeePrices(user) && user.cart) user.cart = stripCartPrices(user.cart);
     return user;
 }
@@ -21,7 +22,6 @@ export const getAuthUser = async (req, res) => {
         if (!req.user) return res.status(404).json({ message: "No authenticated user found" });
 
         const user = await User.findById(req.user.userId)
-            .select("-password")   // ← excluye el campo password
             .populate({
                 path: 'cart',
                 populate: {
@@ -48,7 +48,7 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: "Formato de datos inválido" });
         }
 
-        const user = await User.findOne({ email: email }).populate({
+        const user = await User.findOne({ email: email }).select("+password").populate({
             path: 'cart',
             populate: {
                 path: 'products.product',

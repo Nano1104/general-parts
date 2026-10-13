@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
+        select: false,   // nunca sale en consultas/populate salvo .select("+password") explícito (login)
         unique: true
     },
     email: {
