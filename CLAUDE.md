@@ -36,6 +36,9 @@ npm run typesense-sync:reset   # drop + recreate the Typesense collection and re
 npm run reset-password -- <email> <nuevaContraseña>   # emergency password reset (production)
 npm run restore-stock          # dry-run: lists products with stock <= 0
 npm run restore-stock:apply    # sets them to stock 10 and syncs Typesense
+npm run integrity-report       # read-only data integrity report (no PII), run before data migrations
+npm run fix-data               # dry-run of the E2 data fixes (emails, orphan carts, bad prices, indexes)
+npm run fix-data:apply
 ```
 No test runner is configured for the server. `scripts/` contains maintenance scripts that run against production (`NODE_ENV=production`, reads `server/.env.production`) — read a script before running it. Old one-off rubro/subrub migration scripts were removed (they weren't idempotent; see git history if needed).
 

@@ -11,7 +11,9 @@
     "reset-password": "cross-env NODE_ENV=production node ./scripts/resetPassword.js",
     "restore-stock": "cross-env NODE_ENV=production node ./scripts/restoreStock.js",
     "restore-stock:apply": "cross-env NODE_ENV=production node ./scripts/restoreStock.js --apply",
-    "integrity-report": "cross-env NODE_ENV=production node ./scripts/integrityReport.js"
+    "integrity-report": "cross-env NODE_ENV=production node ./scripts/integrityReport.js",
+    "fix-data": "cross-env NODE_ENV=production node ./scripts/fixData.js",
+    "fix-data:apply": "cross-env NODE_ENV=production node ./scripts/fixData.js --apply"
   },
   "keywords": [],
   "author": "",
