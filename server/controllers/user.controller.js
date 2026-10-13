@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import User from "../models/user.model.js";
 import Cart from "../models/cart.model.js"
 import { createHash } from "../utils/bcrypt.js";
+import { isValidDiscount } from "../utils/discounts.js";
 
 
 export const getUsers = async (req, res) => {
@@ -112,6 +113,10 @@ export const changeUserDiscount = async (req, res) => {
 
     if (!["discount_1", "discount_2", "discount_3"].includes(field)) {
         return res.status(400).json({ error: "Campo inválido" });
+    }
+    // Un valor fuera de 0..100 (o no numérico) daba precios netos negativos o NaN
+    if (!isValidDiscount(value)) {
+        return res.status(400).json({ message: "El descuento debe ser un número entre 0 y 100" });
     }
 
     try {

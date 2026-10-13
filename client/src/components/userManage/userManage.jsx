@@ -122,12 +122,12 @@ export const UserManage = () => {
         ));
         try {
             await userService.changeDiscount(userId, field, value);
-        } catch {
+        } catch (err) {
             // revert optimistic update si falla
             setUsers(prev => prev.map(u =>
                 u._id === userId ? { ...u, [field]: selectedUser?.[field] } : u
             ));
-            Swal.fire({ title: "Error al cambiar descuento", icon: "error", confirmButtonColor: "#D7263D" });
+            Swal.fire({ title: "Error al cambiar descuento", text: err.response?.data?.message, icon: "error", confirmButtonColor: "#D7263D" });
         }
     }, [selectedUser]);
 
