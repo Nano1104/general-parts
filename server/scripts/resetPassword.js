@@ -45,7 +45,7 @@ const run = async () => {
         }
 
         const user = users[0];
-        await User.updateOne({ _id: user._id }, { $set: { password: createHash(newPassword) } });
+        await User.updateOne({ _id: user._id }, { $set: { password: await createHash(newPassword) } });
 
         console.log(`✅ Contraseña actualizada para ${user.email} (${user.first_name} ${user.last_name})`);
     } catch (error) {

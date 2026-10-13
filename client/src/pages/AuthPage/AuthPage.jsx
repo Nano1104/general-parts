@@ -75,8 +75,7 @@ const localidadesOrdenadas = [...localidades].sort((a, b) =>
 );
 
 const ERROR_MESSAGES = {
-    "User does not exist": "No existe usuario con este email",
-    "password incorrect": "Contraseña incorrecta",
+    "Invalid credentials": "Email o contraseña incorrectos",
     "user already exists": "Este email ya está registrado",
 };
 

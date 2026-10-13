@@ -168,7 +168,7 @@ export const resetUserPassword = async (req, res) => {
 
         const result = await User.findByIdAndUpdate(
             userId,
-            { $set: { password: createHash(newPassword) } },
+            { $set: { password: await createHash(newPassword) } },
             { new: true }
         );
 

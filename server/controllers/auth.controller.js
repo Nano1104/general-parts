@@ -6,6 +6,9 @@ import { generateTokenAndSetCookie } from "../utils/jwt.js";
 import { NODE_ENV } from "../config/envConfig.js";
 import { userCanSeePrices, stripCartPrices } from "../utils/priceVisibility.js";
 
+// Hash contra el que se compara cuando el email no existe, para que la respuesta tarde lo mismo
+const DUMMY_HASH = createHash("dummy-password-for-timing");
+
 // El carrito viene populado con productos: sin alta, no se envían sus precios
 const withVisibleCartPrices = (userDoc) => {
     const user = userDoc.toObject();
@@ -40,6 +43,10 @@ export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
         if (!email || !password) return res.status(400).json({ message: "Some fields may be empty" });
+        // Solo strings: un objeto ({ $regex: ... }) en email permitía usar el login como oráculo de emails
+        if (typeof email !== "string" || typeof password !== "string") {
+            return res.status(400).json({ message: "Formato de datos inválido" });
+        }
 
         const user = await User.findOne({ email: email }).populate({
             path: 'cart',
@@ -49,9 +56,11 @@ export const login = async (req, res) => {
             }
         }).exec();
 
-        if (!user) return res.status(404).json({ message: "User does not exist" })   //si no se encuentra el user
-
-        if (!isValidPassword(password, user)) return res.status(401).json({ message: "password incorrect" })        //o si la contraseña es incorrecta 
+        // Mismo mensaje (y mismo costo de bcrypt) en ambos casos: no revelar qué emails están registrados
+        const passwordOk = await isValidPassword(password, user ?? { password: await DUMMY_HASH });
+        if (!user || !passwordOk) {
+            return res.status(401).json({ message: "Invalid credentials" });
+        }
 
         generateTokenAndSetCookie(user._id, res)
 
@@ -88,7 +97,7 @@ export const register = async (req, res) => {
             city,
             cuit,
             ...(location && { location }),
-            password: createHash(password),
+            password: await createHash(password),
             role: "user",
             discount_1: 0,
             discount_2: 0,
