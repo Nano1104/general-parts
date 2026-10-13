@@ -53,18 +53,33 @@ export const login = async (req, res) => {
 
 export const register = async (req, res) => {
     try {
-        const { first_name, email, phone, password, role, city, cuit } = req.body
+        const { first_name, last_name, email, phone, password, city, cuit, location } = req.body
 
-        if (!first_name || !email || !phone || !password || !city || !cuit) {
+        if (!first_name || !last_name || !email || !phone || !password || !city || !cuit) {
             return res.status(400).json({
                 message: "Faltan campos requeridos en el registro"
             });
         }
 
+        // Solo strings: evita que un objeto ({ $ne: null }) llegue como operador a las queries de Mongo
+        const textFields = { first_name, last_name, email, password, city, cuit };
+        if (Object.values(textFields).some(v => typeof v !== "string") ||
+            !["string", "number"].includes(typeof phone) ||
+            (location !== undefined && typeof location !== "string")) {
+            return res.status(400).json({ message: "Formato de datos inválido" });
+        }
+
+        // Whitelist explícita: role, accepted, descuentos, client_id, cart, etc. nunca vienen del cliente
         const userToCreate = {
-            ...req.body,
+            first_name,
+            last_name,
+            email,
+            phone,
+            city,
+            cuit,
+            ...(location && { location }),
             password: createHash(password),
-            role: "user",              // ← hardcodeado, siempre
+            role: "user",
             discount_1: 0,
             discount_2: 0,
             discount_3: 0
