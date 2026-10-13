@@ -88,6 +88,11 @@ export const register = async (req, res) => {
             return res.status(400).json({ message: "Formato de datos inválido" });
         }
 
+        // Mismo mínimo que el formulario; 72 es el máximo que bcrypt realmente usa
+        if (password.length < 8 || password.length > 72) {
+            return res.status(400).json({ message: "La contraseña debe tener entre 8 y 72 caracteres" });
+        }
+
         // Whitelist explícita: role, accepted, descuentos, client_id, cart, etc. nunca vienen del cliente
         const userToCreate = {
             first_name,
