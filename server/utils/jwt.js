@@ -26,6 +26,23 @@ export const authenticateJWT = (req, res, next) => {
     });
 };
 
+// Auth opcional para endpoints públicos del catálogo: nunca corta la request.
+// Setea req.canSeePrices = true solo para usuarios dados de alta (accepted) o admins.
+export const resolvePriceAccess = async (req, res, next) => {
+    req.canSeePrices = false;
+    const token = req.cookies.token;
+    if (!token) return next();
+
+    try {
+        const { userId } = jwt.verify(token, JWT_TOKEN_KEY);
+        const user = await User.findById(userId).select("role accepted").lean();
+        req.canSeePrices = !!user && (user.accepted === true || user.role === "admin");
+    } catch (_) {
+        // Token inválido/expirado o error de DB: se responde sin precios
+    }
+    next();
+};
+
 // Debe usarse siempre después de authenticateJWT (necesita req.user.userId)
 export const requireAdmin = async (req, res, next) => {
     try {

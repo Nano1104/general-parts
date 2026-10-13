@@ -6,10 +6,13 @@ import { IoIosArrowBack } from "react-icons/io"; //flecha izquierda
 import { FaChevronDown } from "react-icons/fa6";
 //hook
 import { useIsMobile } from "../../hooks/isMobile.js";
+import { useAuthContext } from "../../context/AuthContext.jsx";
 
 export const Filters = ({ filtered }) => {
     const { setBrand, price, setPrice, setShowFilter } = filtered;
     const isMobile = useIsMobile(768);
+    const { accepted, isAdmin } = useAuthContext();
+    const canSeePrices = accepted || isAdmin;
 
     // Estados para controlar secciones expandibles
     const [showBrands, setShowBrands] = useState(true);
@@ -130,7 +133,8 @@ export const Filters = ({ filtered }) => {
                         )}
                     </div>
 
-                    {/* Sección de Precios */}
+                    {/* Sección de Precios — solo para usuarios dados de alta (el backend ignora el filtro si no) */}
+                    {canSeePrices && (
                     <div className="space-y-4">
                         <button
                             onClick={() => handleToggleSection("prices")}
@@ -188,6 +192,7 @@ export const Filters = ({ filtered }) => {
                             </div>
                         )}
                     </div>
+                    )}
                 </div>
 
                 {/* Botón flotante para aplicar (opcional) */}
@@ -266,7 +271,8 @@ export const Filters = ({ filtered }) => {
                     )}
                 </div>
 
-                {/* Sección de Precios Desktop */}
+                {/* Sección de Precios Desktop — solo para usuarios dados de alta */}
+                {canSeePrices && (
                 <div>
                     <button
                         onClick={() => handleToggleSection("prices")}
@@ -327,6 +333,7 @@ export const Filters = ({ filtered }) => {
                         </>
                     )}
                 </div>
+                )}
             </div>
         </div>
     );

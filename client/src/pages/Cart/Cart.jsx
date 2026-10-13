@@ -12,7 +12,8 @@ import { formatCurrency } from "../../utils/formatCurrency.js"
 
 // Cart Component - Totalmente Responsivo
 export const Cart = () => {
-    const { authUser } = useAuthContext()
+    const { authUser, accepted, isAdmin } = useAuthContext()
+    const canSeePrices = accepted || isAdmin
     const { cart } = useCartContext()
     const { finishPurchase } = useCartContext()
 
@@ -61,12 +62,14 @@ export const Cart = () => {
                     {/* TOTAL */}
                     <div className="px-4 lg:px-14 py-6 lg:mt-16 border-t lg:border-0 lg:bg-transparent">
                         <div className="lg:h-28 lg:text-cBlack lg:relative">
-                            <h3 className="text-lg sm:text-xl lg:text-[1.7rem] font-montserrat font-medium text-gray-800 lg:text-black">
-                                Total de la reserva:
-                                <span className="ml-2 text-lightRed font-bold">
-                                    {formatCurrency(totalPrice)}
-                                </span>
-                            </h3>
+                            {canSeePrices && (
+                                <h3 className="text-lg sm:text-xl lg:text-[1.7rem] font-montserrat font-medium text-gray-800 lg:text-black">
+                                    Total de la reserva:
+                                    <span className="ml-2 text-lightRed font-bold">
+                                        {formatCurrency(totalPrice)}
+                                    </span>
+                                </h3>
+                            )}
                             <p className="text-sm lg:text-base italic text-gray-600 lg:text-black mt-2 lg:absolute lg:top-[50px]">
                                 El carrito se vaciará en el plazo de 1 día en caso de no haber sido confirmada la reserva.
                             </p>
