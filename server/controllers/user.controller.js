@@ -48,6 +48,10 @@ export const emptyCartFromUser = async (req, res) => {
         const userFound = await User.findById(userId);
         const cartFound = await Cart.findById(cartId);
         if (!userFound || !cartFound) throw new Error("User or cart may not exists")
+        // userId es el del usuario logueado, pero el cartId también tiene que ser suyo
+        if (cartFound.userId?.toString() !== req.user.userId) {
+            return res.status(403).json({ message: "No autorizado para modificar este carrito" });
+        }
 
         cartFound.products = [];
         await cartFound.save();  // Guardar los cambios en el carrito
