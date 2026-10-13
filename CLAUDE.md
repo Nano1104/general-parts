@@ -33,13 +33,11 @@ npm run start       # node, NODE_ENV=production
 npm run typesense-sync         # one-time reindex of MongoDB products -> Typesense
 npm run typesense-sync:reset   # drop + recreate the Typesense collection and reindex
 
-npm run update-users
-npm run fix-rubro-subrub:dry     # --dry-run
-npm run fix-rubro-subrub
-npm run fix-rubro-subrub-bulk
-npm run fix-rubro-subrub-products
+npm run reset-password -- <email> <nuevaContraseña>   # emergency password reset (production)
+npm run restore-stock          # dry-run: lists products with stock <= 0
+npm run restore-stock:apply    # sets them to stock 10 and syncs Typesense
 ```
-No test runner is configured for the server. `scripts/` contains one-off/maintenance data-migration scripts (category/subcategory ("rubro"/"subrub") cleanups) — read a script before running it against production data.
+No test runner is configured for the server. `scripts/` contains maintenance scripts that run against production (`NODE_ENV=production`, reads `server/.env.production`) — read a script before running it. Old one-off rubro/subrub migration scripts were removed (they weren't idempotent; see git history if needed).
 
 ### Typesense (local dev)
 ```
@@ -69,12 +67,13 @@ The Express server degrades gracefully if Typesense is unreachable (search falls
 - **Search architecture**: `controllers/product.controller.js` is the core of the app.
   - `GET /api/products` with a `search` param routes to Typesense (`typesenseSearch`), which tokenizes the query into "code" tokens (contain digits, e.g. part codes) vs "text" tokens and runs different strategies: pure code (infix match on `codpro`/`codpro_suffix`), pure text (fielded search across description/brand/category with typo tolerance), or mixed (two parallel Typesense queries merged/ranked so results matching both code and text outrank partial matches).
   - `GET /api/products` without `search` (plain category/brand/price browsing) queries MongoDB directly with cursor-based (`lastId`) pagination instead of Typesense, since exact filters don't benefit from search.
-  - Typesense is kept eventually-consistent with Mongo: single-doc mutations call `upsertToTypesense`/`deleteFromTypesense`; bulk ones (Excel upload, `updateMany`-by-filter, `deleteMany`) call `syncFilterToTypesense(filter)` / `deleteIdsFromTypesense(ids)` (fetch ids *before* deleting). All of these swallow errors so Typesense outages never fail a Mongo write. Any new product-mutating code must do the same, or search results (which come from Typesense) go stale. Maintenance endpoints that `updateMany({})` the whole collection don't sync — run `npm run typesense-sync` after using them. The `unhighlight-product` Agenda job syncs too.
+  - Typesense is kept eventually-consistent with Mongo: single-doc mutations call `upsertToTypesense`/`deleteFromTypesense`; bulk ones (Excel upload, `updateMany`-by-filter, `deleteMany`) call `syncFilterToTypesense(filter)` / `deleteIdsFromTypesense(ids)` (fetch ids *before* deleting). All of these swallow errors so Typesense outages never fail a Mongo write. Any new product-mutating code must do the same, or search results (which come from Typesense) go stale. Any direct Mongo edit outside the API (scripts, Atlas UI) needs `npm run typesense-sync` afterwards. The `unhighlight-product` Agenda job syncs too.
+  - The old Postman-only bulk maintenance endpoints (add/rename/delete fields on all products, delete whole collection/rubro, image bulk-setters, update-stock, `GET/PUT /api/user/:userId`, add-clientId) were removed for security; recover them from git history only if really needed, and add Typesense sync + validation if so.
   - Collection name depends on `NODE_ENV` (`typesense/collection.js`): `products` in production, `products_dev` otherwise, because the dev `.env` may point at the production Typesense host. Never write to `products` from a dev Mongo — that previously left ~1500 duplicate docs with stale prices in production search. The sync script enforces this via `assertCollectionMatchesEnv()`. `typesense/typesenseSync.js` is the batch/one-time (re)indexer and also exports `mongoToTypesense`, the canonical Mongo→Typesense document mapper reused by the controller — its signature is depended on, don't change it casually.
   - The Typesense collection schema lives in `typesense/collection.js` and is expected to mirror the `Product` model's searchable fields.
 - **Background jobs**: `agenda.js` configures Agenda (Mongo-backed job queue) with a single job type, `unhighlight-product`, used to auto-expire a product's "destacado" (featured) flag after N days (`highlightProduct`/`unhighlightProduct` in `product.controller.js`). Agenda uses its own Mongo connection string built the same way as `db/dbConnection.js` (duplicated, not shared).
 - **Bulk product import/export**: `uploadExcelProducts`/`downloadExcelProducts` use `xlsx` + `multer` (in-memory, 10MB limit) to bulk upsert/export products by category from Excel files — this is the primary way the admin maintains the catalog, not a one-off script.
-- **Images**: Cloudinary (`config/cloudinaryConfig.js`) is configured but most image-URL mutations in `product.controller.js` are ad-hoc admin endpoints that just set a `imageUrl` string field directly (e.g. `addImageToTornillos`, `addImageUrlToSubrub`) rather than going through an upload flow in this repo.
+- **Images**: Cloudinary (`config/cloudinaryConfig.js`) is configured but not imported anywhere; products just store an `imageUrl` string (preserved across Excel uploads). There is currently no API endpoint to change a product's image.
 - **DB connection**: `db/dbConnection.js` picks Mongo Atlas (`mongodb+srv://...cluster-repuestos...`) in production vs. local `mongodb://DB_HOST:DB_PORT` in development, with pooling/timeout options tuned for a free-tier cluster; exits the process (`process.exit(1)`) if the initial connection fails.
 
 ### Environment variables

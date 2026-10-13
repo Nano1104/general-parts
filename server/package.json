@@ -10,14 +10,9 @@
     "typesense-sync": "cross-env NODE_ENV=production node ./typesense/typesenseSync.js",
     "typesense-sync:reset": "cross-env NODE_ENV=development node ./typesense/typesenseSync.js --reset",
 
-    "update-users": "cross-env NODE_ENV=production node ./scripts/updateUsers.js",
     "reset-password": "cross-env NODE_ENV=production node ./scripts/resetPassword.js",
     "restore-stock": "cross-env NODE_ENV=production node ./scripts/restoreStock.js",
-    "restore-stock:apply": "cross-env NODE_ENV=production node ./scripts/restoreStock.js --apply",
-    "fix-rubro-subrub:dry": "cross-env NODE_ENV=production node ./scripts/fix-rubros.js --dry-run",
-    "fix-rubro-subrub": "cross-env NODE_ENV=production node ./scripts/fix-rubros.js",
-    "fix-rubro-subrub-bulk": "cross-env NODE_ENV=production node ./scripts/fix_rubro_subrub_bulk.js",
-    "fix-rubro-subrub-products": "cross-env NODE_ENV=production node ./scripts/update_products_swap_rubro.js"
+    "restore-stock:apply": "cross-env NODE_ENV=production node ./scripts/restoreStock.js --apply"
   },
   "keywords": [],
   "author": "",
