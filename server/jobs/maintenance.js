@@ -4,9 +4,11 @@
 // Reemplazan a Agenda, que perdía los vencimientos programados en cada reinicio.
 
 import Product from "../models/product.model.js";
+import Cart from "../models/cart.model.js";
 import { syncFilterToTypesense } from "../controllers/product.controller.js";
 
 const HOUR = 60 * 60 * 1000;
+export const CART_TTL = 24 * HOUR;
 
 // Quita el destacado a los productos cuya fecha de fin ya pasó y refleja el cambio en Typesense
 export async function expireHighlights(now = new Date()) {
@@ -22,7 +24,24 @@ export async function expireHighlights(now = new Date()) {
     return ids.length;
 }
 
-const TASKS = [expireHighlights];
+// Vacía los carritos con productos que pasaron 1 día sin cambios ni reserva confirmada.
+// Agregar o quitar un producto actualiza updatedAt y reinicia el plazo.
+export async function expireCarts(now = new Date()) {
+    // Carritos de antes de que existiera updatedAt: el plazo empieza a correr ahora, no se vacían de golpe
+    await Cart.collection.updateMany(
+        { "products.0": { $exists: true }, updatedAt: { $exists: false } },
+        { $set: { updatedAt: now } }
+    );
+
+    const result = await Cart.updateMany(
+        { "products.0": { $exists: true }, updatedAt: { $lte: new Date(now.getTime() - CART_TTL) } },
+        { $set: { products: [] } }
+    );
+    if (result.modifiedCount > 0) console.log(`⏱️  ${result.modifiedCount} carritos vencidos vaciados`);
+    return result.modifiedCount;
+}
+
+const TASKS = [expireHighlights, expireCarts];
 
 async function runAll() {
     for (const task of TASKS) {

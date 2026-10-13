@@ -95,7 +95,7 @@ export const Cart = () => {
                                 </>
                             )}
                             <p className="text-sm lg:text-base italic text-gray-600 lg:text-black mt-2 lg:absolute lg:top-[50px]">
-                                El carrito se vaciará en el plazo de 1 día en caso de no haber sido confirmada la reserva.
+                                El carrito se vaciará si pasa 1 día desde su último cambio sin confirmar la reserva.
                             </p>
                         </div>
                     </div>
