@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 
 import User from "../models/user.model.js";
 import Cart from "../models/cart.model.js"
-import Order from "../models/order.model.js";
 import { createHash } from "../utils/bcrypt.js";
 
 
@@ -57,14 +56,11 @@ export const deleteUser = async (req, res) => {
             return res.status(404).json({ message: "Usuario no encontrado" });
         }
 
-        // 2. Eliminar carrito si existe
-        await Cart.deleteOne({ _id: deletedUser.cart });
-
-        // 3. Eliminar órdenes asociadas al usuario
-        await Order.deleteMany({ user: userId });
+        // 2. Eliminar su carrito. Las reservas se conservan como historial (tienen copia del cliente)
+        await Cart.deleteMany({ $or: [{ _id: deletedUser.cart }, { userId: deletedUser._id }] });
 
         res.status(200).json({
-            message: "Usuario, carrito y órdenes eliminados con éxito",
+            message: "Usuario y carrito eliminados; sus reservas se conservan",
             deletedUser,
         });
     } catch (err) {
