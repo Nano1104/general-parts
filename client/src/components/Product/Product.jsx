@@ -15,13 +15,14 @@
 
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useIsMobile } from "../../hooks/isMobile.js";
 import { useAuthContext } from "../../context/AuthContext.jsx";
 import Swal from "sweetalert2";
 
 import { formatCurrency } from "../../utils/formatCurrency.js";
-import { getImage } from "../../utils/getImage.js";
+import { thumbnailUrl, fullImageUrl } from "../../utils/getImage.js";
+import { ImageLightbox } from "../ImageLightbox/ImageLightbox.jsx";
 import { API_URL } from "../../utils/api_url.js";
 
 // ─── SVG placeholder para imagen en desarrollo ───────────────────────────────
@@ -60,6 +61,9 @@ export const Product = ({ data, params }) => {
 
   const [category, subcategory] = params;
   const [hover, setShowHover] = useState(false);
+  const [imageOpen, setImageOpen] = useState(false);
+  const openImage = useCallback(() => setImageOpen(true), []);
+  const closeImage = useCallback(() => setImageOpen(false), []);
 
   const formatedPrice = formatCurrency(precioimpre);
 
@@ -121,18 +125,33 @@ export const Product = ({ data, params }) => {
       )}
 
       {/* ── Imagen ───────────────────────────────────────────────────── */}
-      <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-[72px] lg:h-[72px] flex-shrink-0 overflow-hidden bg-zinc-100">
+      <div className={`w-14 h-14 sm:w-16 sm:h-16 lg:w-[72px] lg:h-[72px] flex-shrink-0 overflow-hidden rounded ${imageUrl ? "bg-white" : "bg-zinc-100"}`}>
         {!imageUrl ? (
           <ImagePlaceholder />
         ) : (
-          <img
-            src={getImage(imageUrl)}
-            alt={`Repuesto: ${desc_stock || codpro}`}
-            className="w-full h-full object-contain transition-opacity duration-200 opacity-100"
-            loading="lazy"
-          />
+          // Clic en la miniatura: se abre la imagen en grande
+          <button
+            type="button"
+            onClick={openImage}
+            aria-label={`Ver imagen ampliada de ${desc_stock || codpro}`}
+            className="group/img w-full h-full cursor-zoom-in focus-visible:outline focus-visible:outline-2 focus-visible:outline-lightRed"
+          >
+            <img
+              src={thumbnailUrl(imageUrl)}
+              alt={`Repuesto: ${desc_stock || codpro}`}
+              className="w-full h-full object-contain transition-transform duration-200 group-hover/img:scale-105"
+              loading="lazy"
+            />
+          </button>
         )}
       </div>
+      {imageOpen && (
+        <ImageLightbox
+          src={fullImageUrl(imageUrl)}
+          alt={`Repuesto: ${desc_stock || codpro}`}
+          onClose={closeImage}
+        />
+      )}
 
       {/* ── Info central ─────────────────────────────────────────────── */}
       <div className="flex-1 min-w-0">

@@ -36,7 +36,7 @@ import { ItemCount } from "../ItemCount/ItemCount.jsx";
 // Utils
 import { formatCurrency } from "../../utils/formatCurrency.js";
 import { userDiscounts, netFactor } from "../../utils/discounts.js";
-import { getImage } from "../../utils/getImage.js";
+import { fullImageUrl } from "../../utils/getImage.js";
 import { API_URL } from "../../utils/api_url.js";
 
 // ─── Breadcrumb item — consistente con ProductsContainer ─────────────────────
@@ -195,7 +195,7 @@ export const ProductDetail = ({ prod }) => {
                     <div className="flex-1 flex items-center justify-center p-6 sm:p-10 lg:p-12 min-h-[260px] sm:min-h-[320px] lg:min-h-[400px]">
                         {imageUrl ? (
                             <img
-                                src={getImage(imageUrl)}
+                                src={fullImageUrl(imageUrl)}
                                 alt={`Repuesto: ${desc_stock || codpro}`}
                                 className="max-h-[340px] w-full object-contain"
                                 loading="eager"

@@ -1,24 +1,45 @@
 {
     "rewrites": [
-        { "source": "/(.*)", "destination": "/" }
+        {
+            "source": "/(.*)",
+            "destination": "/"
+        }
     ],
     "headers": [
         {
             "source": "/assets/(.*)",
             "headers": [
-                { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+                {
+                    "key": "Cache-Control",
+                    "value": "public, max-age=31536000, immutable"
+                }
             ]
         },
         {
             "source": "/fonts/(.*)",
             "headers": [
-                { "key": "Cache-Control", "value": "public, max-age=2592000" }
+                {
+                    "key": "Cache-Control",
+                    "value": "public, max-age=2592000"
+                }
             ]
         },
         {
             "source": "/home-bg-(.*)",
             "headers": [
-                { "key": "Cache-Control", "value": "public, max-age=2592000" }
+                {
+                    "key": "Cache-Control",
+                    "value": "public, max-age=2592000"
+                }
+            ]
+        },
+        {
+            "source": "/products/(.*)",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "public, max-age=2592000"
+                }
             ]
         }
     ]

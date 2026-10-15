@@ -3,7 +3,7 @@ import { useAuthContext } from "../../context/AuthContext";
 import { IoTrashOutline } from "react-icons/io5";
 
 import { formatCurrency } from "../../utils/formatCurrency";
-import { getImage } from "../../utils/getImage.js";
+import { thumbnailUrl } from "../../utils/getImage.js";
 import { netFactor } from "../../utils/discounts.js";
 
 
@@ -27,7 +27,7 @@ export const ProdsInCart = ({ cartId, prods }) => {
                         <div className="flex-1 lg:basis-[50%] flex items-center min-w-0">
                             <div className="flex-shrink-0 w-12 h-12 lg:w-10 lg:h-10 mr-3 lg:mr-20">
                                 <img 
-                                    src={getImage(prod.product.imageUrl)} 
+                                    src={thumbnailUrl(prod.product.imageUrl)} 
                                     alt={`Producto ${prod.product.desc_stock}`}
                                     className="w-full h-full object-cover rounded" 
                                 />
