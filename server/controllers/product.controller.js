@@ -3,6 +3,8 @@ import _ from "lodash";
 import Product from "../models/product.model.js";
 import { stripPrices } from "../utils/priceVisibility.js";
 import { isObjectIdString } from "../utils/validation.js";
+import { createValueCache } from "../utils/memoCache.js";
+import { ruleImageFor } from "../utils/productImages.js";
 
 const MAX_PAGE_SIZE = 50;
 
@@ -32,10 +34,23 @@ function escapeRegex(s = "") {
     return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-// Caché de subrubros intermedios (igual que antes)
-let intermediateSubrubrosCache = new Set();
-let lastCacheUpdate = 0;
-const CACHE_TTL = 5 * 60 * 1000;
+// ─── Cachés del catálogo ────────────────────────────────────────────────────
+// Datos que solo cambian al subir un Excel o destacar productos: se guardan en memoria para no
+// repetir consultas a Mongo (~200 ms cada una con Atlas en São Paulo y Render en Oregon).
+// Se invalidan al escribir (invalidateCatalogCaches) y además vencen solas por si la DB se edita
+// por fuera de la API (scripts, Atlas).
+const CATALOG_CACHE_TTL = 10 * 60 * 1000;
+
+// Nombres de subrubros intermedios (en mayúsculas) para saber en qué campo filtrar una subcategoría
+const intermediateSubrubrosCache = createValueCache(CATALOG_CACHE_TTL, async () =>
+    new Set((await Product.distinct("desc_subrubro_intermedio"))
+        .filter(Boolean).map(s => String(s).trim().toUpperCase())));
+
+export function invalidateCatalogCaches() {
+    intermediateSubrubrosCache.invalidate();
+    categoriesCache.invalidate();
+    highlightedCache.invalidate();
+}
 
 async function buildBaseFilter(params = {}) {
     const filter = {};
@@ -50,7 +65,7 @@ async function buildBaseFilter(params = {}) {
         // Intentar match en desc_subrubro_intermedio primero, luego desc_subrub
         const raw = params.subcategory.toString().trim();
         const regex = { $regex: `^${escapeRegex(raw)}$`, $options: "i" };
-        const inIntermediate = await Product.exists({ desc_subrubro_intermedio: regex });
+        const inIntermediate = (await intermediateSubrubrosCache.get()).has(raw.toUpperCase());
         filter[inIntermediate ? "desc_subrubro_intermedio" : "desc_subrub"] = regex;
     }
 
@@ -342,10 +357,15 @@ export const getProducts = async (req, res) => {
 
             if (lastId) query = query.where("_id").gt(lastId);
 
-            const raw = await query.lean();
+            // El total solo en la primera página y en paralelo con el listado: antes era otra consulta
+            // secuencial en cada página del scroll (~200 ms), y el frontend no lo usa al paginar
+            const [raw, count] = await Promise.all([
+                query.lean(),
+                lastId ? null : Product.countDocuments(baseFilter),
+            ]);
             hasMore = raw.length > limit;
             products = hasMore ? raw.slice(0, -1) : raw;
-            total = await Product.countDocuments(baseFilter);
+            total = count;
         }
 
         if (!req.canSeePrices) products = products.map(stripPrices);
@@ -437,9 +457,9 @@ export async function deleteIdsFromTypesense(mongoIds) {
 }
 
 
-export const getCategoriesAndSubcategories = async (req, res) => {
-    try {
-        const result = await Product.aggregate([
+// Árbol de rubros/subrubros para el menú del catálogo: una agregación sobre todo el catálogo que
+// solo cambia al subir un Excel. Se calcula una vez y se reutiliza (ver invalidateCatalogCaches).
+const categoriesCache = createValueCache(CATALOG_CACHE_TTL, () => Product.aggregate([
             // 1. Agrupar por rubro + subrubro intermedio + subrubro
             {
                 $group: {
@@ -624,7 +644,11 @@ export const getCategoriesAndSubcategories = async (req, res) => {
             {
                 $sort: { rubro: 1 }
             }
-        ]);
+        ]));
+
+export const getCategoriesAndSubcategories = async (req, res) => {
+    try {
+        const result = await categoriesCache.get();
 
         res.status(200).json({
             success: true,
@@ -669,14 +693,18 @@ export const getProductById = async (req, res) => {
     }
 };
 
+// Destacados (se piden en cada visita al catálogo). Se invalida al destacar/quitar destacado,
+// al subir un Excel (cambian precios) y cuando el job horario vence destacados.
+const highlightedCache = createValueCache(CATALOG_CACHE_TTL, () =>
+    Product.find({ destacado: true }).lean());
+
 export const getHighlightedProducts = async (req, res) => {
     try {
-        // Filtra por fecha además del flag: un destacado vencido no se muestra aunque el job horario
-        // todavía no lo haya apagado (sin fecha de fin = destacado manual sin vencimiento)
-        const products = await Product.find({
-            destacado: true,
-            $or: [{ fechaFinDestacado: { $gt: new Date() } }, { fechaFinDestacado: null }]
-        }).lean()
+        // Filtra por fecha en cada request (no al cachear): un destacado vencido no se muestra aunque el
+        // job horario todavía no lo haya apagado (sin fecha de fin = destacado manual sin vencimiento)
+        const now = new Date();
+        const products = (await highlightedCache.get())
+            .filter(p => !p.fechaFinDestacado || new Date(p.fechaFinDestacado) > now);
         res.status(200).json({
             success: true,
             message: `Success getting highlighted products`,
@@ -796,7 +824,8 @@ export const uploadExcelProducts = async (req, res) => {
                 porcen1: item.porcen1 !== undefined ? parseInt(item.porcen1) : undefined,
                 precioimpre: item.precioimpre !== undefined ? parseExcelPrice(rawItems[i]?.precioimpre, item.precioimpre) : undefined,
                 stock: 10,
-                imageUrl: existingProduct?.imageUrl || null,
+                // Conserva la foto que ya tenía; si no tiene, la de las reglas (ej. MOTOR 102* -> lienzo)
+                imageUrl: existingProduct?.imageUrl || ruleImageFor({ codpro, desc_rubro: rubroPrincipal }),
                 lastUpdated: new Date()
             };
 
@@ -875,6 +904,8 @@ export const uploadExcelProducts = async (req, res) => {
         console.timeEnd(timers.operaciones);
 
         // 7. Reflejar los cambios en el buscador (Typesense)
+        // Cambian rubros, subrubros y precios: el menú y los destacados en caché quedan viejos
+        invalidateCatalogCaches();
         const typesenseResult = await syncFilterToTypesense({
             codpro: { $in: productsToUpsert.map(p => p.codpro) }
         });
@@ -1058,6 +1089,7 @@ export const highlightProduct = async (req, res) => {
             },
             { new: true }
         );
+        invalidateCatalogCaches();
         await upsertToTypesense(productUpdated);
 
         res.status(200).json({
@@ -1091,6 +1123,7 @@ export const unhighlightProduct = async (req, res) => {
             },
             { new: true }
         );
+        invalidateCatalogCaches();
         await upsertToTypesense(productUpdated);
 
         res.status(200).json({
@@ -1130,6 +1163,7 @@ export const changeProductFieldVal = async (req, res) => {
         );
 
         if (!updatedProduct) return res.status(500).json({ message: "Error renaming field in DB" });
+        invalidateCatalogCaches();
         await upsertToTypesense(updatedProduct);
 
         res.status(200).json({ message: "Success changing product field", updatedProduct });

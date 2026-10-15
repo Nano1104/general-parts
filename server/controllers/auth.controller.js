@@ -1,5 +1,7 @@
+import mongoose from "mongoose";
 import User from "../models/user.model.js";
 import Cart from "../models/cart.model.js";
+import Product from "../models/product.model.js";
 import { createHash } from "../utils/bcrypt.js";
 import { isValidPassword } from "../utils/bcrypt.js";
 import { generateTokenAndSetCookie } from "../utils/jwt.js";
@@ -12,7 +14,7 @@ const DUMMY_HASH = createHash("dummy-password-for-timing");
 
 // El carrito viene populado con productos: sin alta, no se envían sus precios
 const withVisibleCartPrices = (userDoc) => {
-    const user = userDoc.toObject();
+    const user = userDoc.toObject ? userDoc.toObject() : userDoc;
     delete user.password; // login lo trae con +password para validar; no se devuelve
     // Ítems de productos borrados (populate -> null) no se envían; getCart los limpia de la DB
     if (user.cart?.products) user.cart.products = user.cart.products.filter(item => item.product);
@@ -20,19 +22,44 @@ const withVisibleCartPrices = (userDoc) => {
     return user;
 }
 
+// Usuario con su carrito y los productos del carrito en UNA consulta ($lookup). Con populate eran
+// 3 viajes a Mongo en fila (usuario -> carrito -> productos), ~650 ms con Atlas en São Paulo, y
+// authUser bloquea la carga de todo el sitio. hydrate() aplica los defaults del schema, así que la
+// respuesta queda igual que con populate (un producto borrado del carrito queda en null, igual).
+async function findUserWithCart(userId) {
+    const [raw] = await User.aggregate([
+        { $match: { _id: new mongoose.Types.ObjectId(userId) } },
+        { $project: { password: 0 } },
+        {
+            $lookup: {
+                from: Cart.collection.name, localField: "cart", foreignField: "_id", as: "_cart",
+                pipeline: [
+                    { $lookup: { from: Product.collection.name, localField: "products.product", foreignField: "_id", as: "_products" } },
+                ],
+            },
+        },
+    ]);
+    if (!raw) return null;
+
+    const { _cart: [rawCart], ...rawUser } = raw;
+    const user = User.hydrate(rawUser).toObject();
+    if (!rawCart) {
+        if (user.cart) user.cart = null; // como populate: id de un carrito que no existe -> null
+        return user;
+    }
+    const { _products, ...cartFields } = rawCart;
+    const productsById = new Map(_products.map(p => [String(p._id), Product.hydrate(p).toObject()]));
+    const cart = Cart.hydrate(cartFields).toObject();
+    cart.products = cart.products.map(item => ({ ...item, product: productsById.get(String(item.product)) ?? null }));
+    user.cart = cart;
+    return user;
+}
+
 export const getAuthUser = async (req, res) => {
     try {
         if (!req.user) return res.status(404).json({ message: "No authenticated user found" });
 
-        const user = await User.findById(req.user.userId)
-            .populate({
-                path: 'cart',
-                populate: {
-                    path: 'products.product',
-                    model: 'Product'    // Asegúrate de que este es el nombre correcto de tu modelo de producto
-                }
-            })
-            .exec();
+        const user = await findUserWithCart(req.user.userId);
         // Token válido pero usuario borrado: se trata como no autenticado
         if (!user) return res.status(401).json({ message: "No authenticated user found" });
 

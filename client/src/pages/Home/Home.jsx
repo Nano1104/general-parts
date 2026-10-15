@@ -58,7 +58,19 @@ export const Home = () => {
             ─────────────────────────────────────────────────────────────── */}
 
             {/* Capa 1: imagen de fondo */}
-            <div className="absolute inset-0 bg-homeBg bg-cover bg-center" />
+            {/* <img> con srcset en vez de background-image: el navegador elige 1024 o 1920 px según la
+                pantalla y lo pide con prioridad alta (es el LCP). El original era 6720 px y 2,4 MB. */}
+            <img
+                src="/home-bg-1920.jpg"
+                srcSet="/home-bg-1024.jpg 1024w, /home-bg-1920.jpg 1920w"
+                sizes="100vw"
+                alt=""
+                aria-hidden="true"
+                // React 18 no conoce fetchPriority (llega en React 19); en minúsculas se pasa tal cual al HTML
+                // eslint-disable-next-line react/no-unknown-property
+                fetchpriority="high"
+                className="absolute inset-0 w-full h-full object-cover object-center"
+            />
 
             {/* Capa 2: overlay oscuro base */}
             <div className="absolute inset-0 bg-zinc-950/70" />

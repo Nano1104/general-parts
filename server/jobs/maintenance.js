@@ -5,7 +5,7 @@
 
 import Product from "../models/product.model.js";
 import Cart from "../models/cart.model.js";
-import { syncFilterToTypesense, deleteIdsFromTypesense } from "../controllers/product.controller.js";
+import { syncFilterToTypesense, deleteIdsFromTypesense, invalidateCatalogCaches } from "../controllers/product.controller.js";
 import client from "../typesense/client.js";
 import { COLLECTION_NAME } from "../typesense/collection.js";
 
@@ -21,6 +21,7 @@ export async function expireHighlights(now = new Date()) {
         { _id: { $in: ids } },
         { $set: { destacado: false }, $unset: { fechaFinDestacado: 1, highlightJobId: 1 } }
     );
+    invalidateCatalogCaches();
     await syncFilterToTypesense({ _id: { $in: ids } });
     console.log(`⏱️  ${ids.length} destacados vencidos desactivados`);
     return ids.length;
