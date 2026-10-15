@@ -162,6 +162,14 @@ export const CartContextProvider = ({ children }) => {
             return;
         }
 
+        // authUser (login / /api/auth/authUser) ya trae el carrito con los productos populados:
+        // usarlo evita un segundo request al cargar el sitio (~200 ms con Mongo lejos)
+        const products = authUser.cart.products;
+        if (Array.isArray(products) && products.every(item => typeof item.product === "object")) {
+            setCart(authUser.cart);
+            return;
+        }
+
         const source = axios.CancelToken.source();
 
         const loadCart = async () => {
@@ -181,7 +189,7 @@ export const CartContextProvider = ({ children }) => {
         loadCart();
 
         return () => source.cancel();
-    }, [authUser?.cart?._id]);
+    }, [authUser?.cart]);
 
     return (
         <CartContext.Provider value={{ cart, setCart, addProductToCart, handleDeleteProdFromCart, finishPurchase }}>
