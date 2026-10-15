@@ -14,7 +14,9 @@
     "integrity-report": "cross-env NODE_ENV=production node ./scripts/integrityReport.js",
     "fix-data": "cross-env NODE_ENV=production node ./scripts/fixData.js",
     "fix-data:apply": "cross-env NODE_ENV=production node ./scripts/fixData.js --apply",
-    "typesense-keys": "cross-env NODE_ENV=production node ./scripts/typesenseKeys.js"
+    "typesense-keys": "cross-env NODE_ENV=production node ./scripts/typesenseKeys.js",
+    "apply-product-images": "cross-env NODE_ENV=production node ./scripts/applyProductImages.js",
+    "apply-product-images:apply": "cross-env NODE_ENV=production node ./scripts/applyProductImages.js --apply"
   },
   "keywords": [],
   "author": "",

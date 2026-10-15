@@ -4,6 +4,7 @@ import Product from "../models/product.model.js";
 import { stripPrices } from "../utils/priceVisibility.js";
 import { isObjectIdString } from "../utils/validation.js";
 import { createValueCache } from "../utils/memoCache.js";
+import { ruleImageFor } from "../utils/productImages.js";
 
 const MAX_PAGE_SIZE = 50;
 
@@ -823,7 +824,8 @@ export const uploadExcelProducts = async (req, res) => {
                 porcen1: item.porcen1 !== undefined ? parseInt(item.porcen1) : undefined,
                 precioimpre: item.precioimpre !== undefined ? parseExcelPrice(rawItems[i]?.precioimpre, item.precioimpre) : undefined,
                 stock: 10,
-                imageUrl: existingProduct?.imageUrl || null,
+                // Conserva la foto que ya tenía; si no tiene, la de las reglas (ej. MOTOR 102* -> lienzo)
+                imageUrl: existingProduct?.imageUrl || ruleImageFor({ codpro, desc_rubro: rubroPrincipal }),
                 lastUpdated: new Date()
             };
 
