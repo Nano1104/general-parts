@@ -4,6 +4,7 @@ import User from "../models/user.model.js";
 import Cart from "../models/cart.model.js"
 import { createHash } from "../utils/bcrypt.js";
 import { isValidDiscount } from "../utils/discounts.js";
+import { invalidatePriceAccess } from "../utils/jwt.js";
 
 
 export const getUsers = async (req, res) => {
@@ -24,6 +25,7 @@ export const acceptUser = async (req, res) => {
 
         userFound.accepted = true;
         await userFound.save();
+        invalidatePriceAccess(userId); // que vea precios ya, sin esperar el vencimiento de la caché
 
         res.status(200).json({ message: "Success accepting user", userFound });
     } catch (err) {
@@ -40,6 +42,7 @@ export const deniedUser = async (req, res) => {
 
         userFound.accepted = false;
         await userFound.save();
+        invalidatePriceAccess(userId); // deja de ver precios ya
 
         res.status(200).json({ message: "Success denying user", userFound });
     } catch (error) {
@@ -53,6 +56,7 @@ export const deleteUser = async (req, res) => {
 
         // 1. Buscar y eliminar usuario
         const deletedUser = await User.findByIdAndDelete(userId);
+        invalidatePriceAccess(userId);
         if (!deletedUser) {
             return res.status(404).json({ message: "Usuario no encontrado" });
         }

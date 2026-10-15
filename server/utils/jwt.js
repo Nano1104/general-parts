@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 
 import { NODE_ENV, JWT_TOKEN_KEY } from "../config/envConfig.js";
 import User from "../models/user.model.js";
+import { createKeyedCache } from "./memoCache.js";
 
 export const generateTokenAndSetCookie = (userId, res) => {
     const token = jwt.sign({userId}, JWT_TOKEN_KEY, {expiresIn: '1h'})
@@ -26,6 +27,11 @@ export const authenticateJWT = (req, res, next) => {
     });
 };
 
+// Acceso a precios por usuario, cacheado 60 s: cada request del catálogo hacía una consulta extra
+// a Mongo (~200 ms con Atlas en São Paulo). Aceptar/denegar/borrar un usuario invalida su entrada.
+const priceAccessCache = createKeyedCache(60 * 1000);
+export const invalidatePriceAccess = (userId) => priceAccessCache.delete(userId);
+
 // Auth opcional para endpoints públicos del catálogo: nunca corta la request.
 // Setea req.canSeePrices = true solo para usuarios dados de alta (accepted) o admins.
 export const resolvePriceAccess = async (req, res, next) => {
@@ -35,8 +41,13 @@ export const resolvePriceAccess = async (req, res, next) => {
 
     try {
         const { userId } = jwt.verify(token, JWT_TOKEN_KEY);
-        const user = await User.findById(userId).select("role accepted").lean();
-        req.canSeePrices = !!user && (user.accepted === true || user.role === "admin");
+        let canSee = priceAccessCache.get(String(userId));
+        if (canSee === undefined) {
+            const user = await User.findById(userId).select("role accepted").lean();
+            canSee = !!user && (user.accepted === true || user.role === "admin");
+            priceAccessCache.set(String(userId), canSee);
+        }
+        req.canSeePrices = canSee;
     } catch (_) {
         // Token inválido/expirado o error de DB: se responde sin precios
     }
